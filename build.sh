@@ -12,30 +12,62 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 # ============================================
-# FIX: Reset migration history to fix InconsistentMigrationHistory
+# FIX: Drop all tables and start fresh
 # ============================================
 echo ""
-echo "🗄️  Resetting migration history to fix dependencies..."
+echo "🗄️  Resetting database completely..."
+
+# Drop all tables
+python manage.py flush --noinput || true
+
+# Fake all migrations to zero
+echo "Faking all migrations to zero..."
 python manage.py migrate --fake analytics zero || true
 python manage.py migrate --fake articles zero || true
+python manage.py migrate --fake accounts zero || true
+python manage.py migrate --fake categories zero || true
+python manage.py migrate --fake tags zero || true
+python manage.py migrate --fake comments zero || true
+python manage.py migrate --fake advertisements zero || true
+python manage.py migrate --fake media_library zero || true
+python manage.py migrate --fake newsletter zero || true
+python manage.py migrate --fake contacts zero || true
+python manage.py migrate --fake search zero || true
+python manage.py migrate --fake notifications zero || true
+python manage.py migrate --fake dashboard zero || true
+python manage.py migrate --fake settings_manager zero || true
 
-# 1. Apply database migrations
+# Delete existing tables if they exist
+echo "Dropping existing tables..."
+python manage.py dbshell << SQL
+DROP TABLE IF EXISTS articles CASCADE;
+DROP TABLE IF EXISTS analytics CASCADE;
+DROP TABLE IF EXISTS accounts CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS tags CASCADE;
+DROP TABLE IF EXISTS comments CASCADE;
+DROP TABLE IF EXISTS advertisements CASCADE;
+DROP TABLE IF EXISTS media_library CASCADE;
+DROP TABLE IF EXISTS newsletter CASCADE;
+DROP TABLE IF EXISTS contacts CASCADE;
+DROP TABLE IF EXISTS search CASCADE;
+DROP TABLE IF EXISTS notifications CASCADE;
+DROP TABLE IF EXISTS dashboard CASCADE;
+DROP TABLE IF EXISTS settings_manager CASCADE;
+DROP TABLE IF EXISTS django_migrations CASCADE;
+SQL
+
+# Now run migrations fresh
 echo ""
-echo "🗄️  Applying database migrations..."
+echo "🗄️  Applying fresh migrations..."
 python manage.py migrate
 
-# 2. Load initial data (optional)
-# if [ -f "load_data.py" ]; then
-#     echo "📥 Loading initial data..."
-#     python load_data.py
-# fi
-
-# 3. Collect static files
+# Collect static files
 echo ""
 echo "📁 Collecting static files..."
 python manage.py collectstatic --noinput
 
-# 4. Create superuser and demo users
+# Create users
 echo ""
 echo "👤 Creating users..."
 
@@ -48,12 +80,7 @@ from apps.accounts.models import User, UserProfile
 
 User = get_user_model()
 
-# ============================================
-# CREATE SUPERUSER (ADMIN)
-# ============================================
 print("\nCreating Superuser...")
-
-# Remove existing admin if present
 User.objects.filter(username='admin').delete()
 
 admin = User.objects.create_superuser(
@@ -66,22 +93,11 @@ admin = User.objects.create_superuser(
     is_verified=True,
     is_active=True
 )
-
-# Create profile for admin
 UserProfile.objects.get_or_create(user=admin)
+print("✅ Superuser created (admin/Admin@123!)")
 
-print("✅ Superuser created successfully!")
-print("   Username: admin")
-print("   Email: admin@theegertonadvertiser.com")
-print("   Password: Admin@123!")
-
-# ============================================
-# CREATE EDITOR USER
-# ============================================
 print("\nCreating Editor...")
-
 User.objects.filter(username='editor').delete()
-
 editor = User.objects.create_user(
     username='editor',
     email='editor@theegertonadvertiser.com',
@@ -93,21 +109,11 @@ editor = User.objects.create_user(
     is_active=True,
     department='editorial'
 )
-
 UserProfile.objects.get_or_create(user=editor)
+print("✅ Editor created (editor/Editor@123)")
 
-print("✅ Editor created successfully!")
-print("   Username: editor")
-print("   Email: editor@theegertonadvertiser.com")
-print("   Password: Editor@123")
-
-# ============================================
-# CREATE JOURNALIST USER
-# ============================================
 print("\nCreating Journalist...")
-
 User.objects.filter(username='journalist').delete()
-
 journalist = User.objects.create_user(
     username='journalist',
     email='journalist@theegertonadvertiser.com',
@@ -119,21 +125,11 @@ journalist = User.objects.create_user(
     is_active=True,
     department='news'
 )
-
 UserProfile.objects.get_or_create(user=journalist)
+print("✅ Journalist created (journalist/Journalist@123)")
 
-print("✅ Journalist created successfully!")
-print("   Username: journalist")
-print("   Email: journalist@theegertonadvertiser.com")
-print("   Password: Journalist@123")
-
-# ============================================
-# CREATE ADVERTISER USER
-# ============================================
 print("\nCreating Advertiser...")
-
 User.objects.filter(username='advertiser').delete()
-
 advertiser = User.objects.create_user(
     username='advertiser',
     email='advertiser@theegertonadvertiser.com',
@@ -145,21 +141,11 @@ advertiser = User.objects.create_user(
     is_active=True,
     department='advertising'
 )
-
 UserProfile.objects.get_or_create(user=advertiser)
+print("✅ Advertiser created (advertiser/Advertiser@123)")
 
-print("✅ Advertiser created successfully!")
-print("   Username: advertiser")
-print("   Email: advertiser@theegertonadvertiser.com")
-print("   Password: Advertiser@123")
-
-# ============================================
-# CREATE SUBSCRIBER USER
-# ============================================
 print("\nCreating Subscriber...")
-
 User.objects.filter(username='subscriber').delete()
-
 subscriber = User.objects.create_user(
     username='subscriber',
     email='subscriber@theegertonadvertiser.com',
@@ -170,43 +156,19 @@ subscriber = User.objects.create_user(
     is_verified=True,
     is_active=True
 )
-
 UserProfile.objects.get_or_create(user=subscriber)
+print("✅ Subscriber created (subscriber/Subscriber@123)")
 
-print("✅ Subscriber created successfully!")
-print("   Username: subscriber")
-print("   Email: subscriber@theegertonadvertiser.com")
-print("   Password: Subscriber@123")
-
-# ============================================
-# SUMMARY
-# ============================================
 print("\n" + "="*50)
 print("  USER SUMMARY")
 print("="*50)
 print("")
-print("🔑 ADMIN (Full System Access)")
-print("   Username: admin")
-print("   Password: Admin@123!")
+print("🔑 ADMIN: admin / Admin@123!")
+print("📝 EDITOR: editor / Editor@123")
+print("✍️  JOURNALIST: journalist / Journalist@123")
+print("📢 ADVERTISER: advertiser / Advertiser@123")
+print("👤 SUBSCRIBER: subscriber / Subscriber@123")
 print("")
-print("📝 EDITOR (Content Management)")
-print("   Username: editor")
-print("   Password: Editor@123")
-print("")
-print("✍️  JOURNALIST (Article Writing)")
-print("   Username: journalist")
-print("   Password: Journalist@123")
-print("")
-print("📢 ADVERTISER (Ad Management)")
-print("   Username: advertiser")
-print("   Password: Advertiser@123")
-print("")
-print("👤 SUBSCRIBER (Content Reader)")
-print("   Username: subscriber")
-print("   Password: Subscriber@123")
-print("")
-print("="*50)
-print("  BUILD COMPLETED SUCCESSFULLY!")
 print("="*50)
 EOF
 
@@ -214,8 +176,8 @@ echo ""
 echo "✅ The Egerton Advertiser build completed successfully!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  🚀 Visit your site at: http://localhost:8000/"
-echo "  🔑 Admin Login: http://localhost:8000/admin/"
-echo "  📊 Admin Dashboard: http://localhost:8000/dashboard/admin/"
-echo "  👤 User Login: http://localhost:8000/accounts/login/"
+echo "  🚀 Visit your site at: https://egerton-advertiser.onrender.com"
+echo "  🔑 Admin Login: https://egerton-advertiser.onrender.com/admin/"
+echo "  📊 Admin Dashboard: https://egerton-advertiser.onrender.com/dashboard/admin/"
+echo "  👤 User Login: https://egerton-advertiser.onrender.com/accounts/login/"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
