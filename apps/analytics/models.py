@@ -4,6 +4,7 @@ from django.utils import timezone
 
 User = get_user_model()
 
+
 class AnalyticsEvent(models.Model):
     EVENT_TYPES = (
         ('page_view', 'Page View'),
@@ -27,7 +28,7 @@ class AnalyticsEvent(models.Model):
     referer = models.URLField(blank=True)
     title = models.CharField(max_length=200, blank=True)
     
-    # User
+    # User - REMOVED user_id field (was causing clash with user field)
     user = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -36,7 +37,7 @@ class AnalyticsEvent(models.Model):
         related_name='analytics_events'
     )
     session_id = models.CharField(max_length=100, blank=True)
-    user_id = models.CharField(max_length=100, blank=True)
+    # user_id = models.CharField(max_length=100, blank=True)  # ← REMOVED - was causing clash
     
     # Device and browser
     user_agent = models.TextField(blank=True)
@@ -73,6 +74,7 @@ class AnalyticsEvent(models.Model):
     
     def __str__(self):
         return f"{self.event_type} - {self.path} - {self.created_at}"
+
 
 class AnalyticsPageView(models.Model):
     """Aggregated page view statistics"""
@@ -112,6 +114,7 @@ class AnalyticsPageView(models.Model):
     def __str__(self):
         return f"{self.path} - {self.date} - {self.views} views"
 
+
 class AnalyticsTrafficSource(models.Model):
     """Track where traffic comes from"""
     SOURCE_TYPES = (
@@ -147,6 +150,7 @@ class AnalyticsTrafficSource(models.Model):
     
     def __str__(self):
         return f"{self.source_type} - {self.source_name} - {self.date}"
+
 
 class AnalyticsRealTime(models.Model):
     """Real-time visitor tracking"""

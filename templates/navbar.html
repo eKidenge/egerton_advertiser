@@ -1,15 +1,21 @@
+{% load static %}
 <nav class="main-navigation navbar navbar-expand-lg navbar-dark">
     <div class="container">
-        <!-- Mobile logo -->
-        <a class="navbar-brand d-lg-none" href="{% url 'home' %}">
-            <img src="{% static 'images/logo-small.png' %}" alt="The Egerton Advertiser" height="40">
+        <!-- Brand/Logo - Always Visible -->
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'images/logo1.png' %}" alt="The Egerton Advertiser" height="40" class="d-inline-block align-top">
+            <span class="brand-text d-none d-sm-inline-block">THE EGERTON ADVERTISER</span>
         </a>
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+        <!-- Navbar Toggler - Always Visible on Mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" 
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
+        <!-- Collapsible Menu -->
         <div class="collapse navbar-collapse" id="mainNavbar">
+            <!-- Main Navigation Links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
@@ -25,10 +31,10 @@
                 <!-- Politics Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if 'politics' in request.path %}active{% endif %}" 
-                       href="#" id="politicsDropdown" role="button" data-bs-toggle="dropdown">
+                       href="#" id="politicsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-gavel"></i> Politics
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" aria-labelledby="politicsDropdown">
                         <li><a class="dropdown-item" href="{% url 'categories:detail' slug='politics' %}">
                             <i class="fas fa-landmark"></i> National Politics
                         </a></li>
@@ -48,10 +54,10 @@
                 <!-- Business Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if 'business' in request.path %}active{% endif %}" 
-                       href="#" id="businessDropdown" role="button" data-bs-toggle="dropdown">
+                       href="#" id="businessDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-chart-line"></i> Business
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" aria-labelledby="businessDropdown">
                         <li><a class="dropdown-item" href="{% url 'categories:detail' slug='business' %}">
                             <i class="fas fa-briefcase"></i> Economy
                         </a></li>
@@ -71,10 +77,10 @@
                 <!-- Sports Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if 'sports' in request.path %}active{% endif %}" 
-                       href="#" id="sportsDropdown" role="button" data-bs-toggle="dropdown">
+                       href="#" id="sportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-futbol"></i> Sports
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" aria-labelledby="sportsDropdown">
                         <li><a class="dropdown-item" href="{% url 'categories:detail' slug='sports' %}">
                             <i class="fas fa-running"></i> Local Sports
                         </a></li>
@@ -94,10 +100,10 @@
                 <!-- Entertainment Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if 'entertainment' in request.path %}active{% endif %}" 
-                       href="#" id="entertainmentDropdown" role="button" data-bs-toggle="dropdown">
+                       href="#" id="entertainmentDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-film"></i> Entertainment
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" aria-labelledby="entertainmentDropdown">
                         <li><a class="dropdown-item" href="{% url 'categories:detail' slug='entertainment' %}">
                             <i class="fas fa-theater-masks"></i> Arts & Culture
                         </a></li>
@@ -116,10 +122,10 @@
                 
                 <!-- More Dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-ellipsis-h"></i> More
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" aria-labelledby="moreDropdown">
                         <li><a class="dropdown-item" href="{% url 'articles:breaking_news' %}">
                             <i class="fas fa-bolt"></i> Breaking News
                         </a></li>
@@ -165,16 +171,16 @@
                 <!-- Notifications -->
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-bell"></i>
-                        <span class="badge bg-danger notification-badge" id="notificationBadge">
+                        <span class="notification-badge" id="notificationBadge">
                             {{ unread_notifications|default:0 }}
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end notification-dropdown" id="notificationList">
-                        <li class="dropdown-header">Notifications</li>
+                        <li class="dropdown-header"><i class="fas fa-bell"></i> Notifications</li>
                         <li><hr class="dropdown-divider"></li>
-                        <li class="text-center py-2">Loading notifications...</li>
+                        <li class="text-center py-2 text-muted">Loading notifications...</li>
                     </ul>
                 </li>
                 {% endif %}
@@ -182,3 +188,442 @@
         </div>
     </div>
 </nav>
+
+<style>
+/* ============================================
+   MAIN NAVIGATION - COMPLETE
+   ============================================ */
+.main-navigation {
+    background: #0a1a2a;
+    border-bottom: 2px solid #c9a84c;
+    font-family: 'Times New Roman', serif;
+    padding: 6px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    min-height: 60px;
+}
+
+/* ============================================
+   BRAND / LOGO
+   ============================================ */
+.main-navigation .navbar-brand {
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+}
+.main-navigation .navbar-brand .brand-text {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #c9a84c;
+    margin-left: 10px;
+    font-weight: 700;
+}
+.main-navigation .navbar-brand:hover {
+    color: #c9a84c;
+}
+
+/* ============================================
+   NAV LINKS
+   ============================================ */
+.main-navigation .nav-link {
+    color: #e0d5c8;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 16px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+}
+.main-navigation .nav-link i {
+    margin-right: 6px;
+    color: #c9a84c;
+    width: 18px;
+    text-align: center;
+}
+.main-navigation .nav-link:hover,
+.main-navigation .nav-link.active {
+    color: #c9a84c;
+    background: rgba(201,168,76,0.05);
+}
+.main-navigation .nav-link.active {
+    color: #c9a84c;
+}
+
+/* ============================================
+   DROPDOWN
+   ============================================ */
+.main-navigation .dropdown-menu {
+    background: #0a1a2a;
+    border: 1px solid #c9a84c;
+    border-radius: 0;
+    padding: 0;
+    min-width: 220px;
+    margin-top: 0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.main-navigation .dropdown-item {
+    color: #e0d5c8;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    transition: all 0.3s ease;
+}
+.main-navigation .dropdown-item i {
+    margin-right: 10px;
+    color: #c9a84c;
+    width: 20px;
+    text-align: center;
+}
+.main-navigation .dropdown-item:hover {
+    background: rgba(201,168,76,0.12);
+    color: #c9a84c;
+}
+.main-navigation .dropdown-divider {
+    border-top: 1px solid rgba(201,168,76,0.12);
+}
+.main-navigation .dropdown-toggle::after {
+    margin-left: 6px;
+    border-top-color: #c9a84c;
+}
+
+/* ============================================
+   TOGGLER / HAMBURGER MENU
+   ============================================ */
+.main-navigation .navbar-toggler {
+    border-color: rgba(255,255,255,0.2);
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+.main-navigation .navbar-toggler:hover {
+    border-color: #c9a84c;
+}
+.main-navigation .navbar-toggler:focus {
+    box-shadow: 0 0 0 2px rgba(201,168,76,0.3);
+}
+.main-navigation .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ============================================
+   NOTIFICATION BADGE
+   ============================================ */
+.notification-badge {
+    font-family: 'Times New Roman', serif;
+    font-size: 9px;
+    padding: 2px 6px;
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dc3545;
+    color: #fff;
+    font-weight: 700;
+}
+
+/* ============================================
+   NOTIFICATION DROPDOWN
+   ============================================ */
+.notification-dropdown {
+    min-width: 340px;
+    max-height: 450px;
+    overflow-y: auto;
+    background: #0a1a2a;
+    border: 1px solid #c9a84c;
+    border-radius: 0;
+}
+.notification-dropdown .dropdown-header {
+    color: #c9a84c;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 1px;
+    padding: 12px 18px;
+    background: rgba(201,168,76,0.05);
+}
+.notification-dropdown .dropdown-item {
+    white-space: normal;
+    padding: 10px 18px;
+    border-bottom: 1px solid rgba(201,168,76,0.05);
+}
+.notification-dropdown .dropdown-item:hover {
+    background: rgba(201,168,76,0.08);
+}
+.notification-dropdown .dropdown-item .notif-title {
+    font-weight: 600;
+    color: #fff;
+}
+.notification-dropdown .dropdown-item .notif-message {
+    color: #b0a89a;
+    font-size: 12px;
+}
+.notification-dropdown .dropdown-item .notif-time {
+    color: #6c757d;
+    font-size: 11px;
+}
+
+/* ============================================
+   SEARCH
+   ============================================ */
+.main-navigation .input-group {
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+}
+.main-navigation .input-group:focus-within {
+    border-color: #c9a84c;
+    background: rgba(255,255,255,0.08);
+}
+.main-navigation .input-group .form-control {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    padding: 6px 12px;
+}
+.main-navigation .input-group .form-control::placeholder {
+    color: #6c757d;
+}
+.main-navigation .input-group .form-control:focus {
+    box-shadow: none;
+}
+.main-navigation .input-group .btn-light {
+    background: transparent;
+    border: none;
+    color: #c9a84c;
+}
+.main-navigation .input-group .btn-light:hover {
+    background: rgba(201,168,76,0.1);
+    color: #c9a84c;
+}
+
+/* ============================================
+   RESPONSIVE - TABLET & MOBILE
+   ============================================ */
+@media (max-width: 991.98px) {
+    .main-navigation {
+        padding: 4px 0;
+    }
+    .main-navigation .navbar-brand .brand-text {
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+    .main-navigation .navbar-collapse {
+        background: #0d1f2e;
+        padding: 15px 20px;
+        border-top: 1px solid rgba(201,168,76,0.15);
+        max-height: calc(100vh - 180px);
+        overflow-y: auto;
+        margin-top: 8px;
+    }
+    .main-navigation .nav-link {
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        font-size: 13px;
+        text-transform: none;
+    }
+    .main-navigation .nav-link:last-child {
+        border-bottom: none;
+    }
+    .main-navigation .dropdown-menu {
+        background: rgba(255,255,255,0.04);
+        border: none;
+        border-left: 2px solid #c9a84c;
+        margin-left: 15px;
+        min-width: auto;
+        box-shadow: none;
+    }
+    .main-navigation .dropdown-item {
+        padding: 8px 15px;
+        font-size: 13px;
+        border-bottom: none;
+    }
+    .main-navigation .navbar-nav .dropdown-toggle::after {
+        float: right;
+        margin-top: 6px;
+    }
+    .main-navigation .ms-auto {
+        margin-left: 0 !important;
+        border-top: 1px solid rgba(201,168,76,0.1);
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+    .main-navigation .ms-auto .nav-item {
+        width: 100%;
+    }
+    .main-navigation .ms-auto .d-flex {
+        width: 100%;
+    }
+    .main-navigation .ms-auto .input-group {
+        width: 100%;
+    }
+    .notification-dropdown {
+        min-width: 100%;
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .main-navigation .navbar-brand img {
+        height: 30px;
+    }
+    .main-navigation .navbar-brand .brand-text {
+        font-size: 10px;
+        letter-spacing: 1px;
+        display: none !important;
+    }
+    .main-navigation .nav-link {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+    .main-navigation .nav-link i {
+        width: 16px;
+        font-size: 13px;
+    }
+    .main-navigation .dropdown-item {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    .notification-dropdown {
+        min-width: 100%;
+        max-height: 250px;
+    }
+    .main-navigation .input-group .form-control {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+    .main-navigation .input-group .btn-light {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+.notification-dropdown::-webkit-scrollbar {
+    width: 4px;
+}
+.notification-dropdown::-webkit-scrollbar-track {
+    background: #0a1a2a;
+}
+.notification-dropdown::-webkit-scrollbar-thumb {
+    background: #c9a84c;
+    border-radius: 2px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ============================================
+    // NOTIFICATION DROPDOWN LOADER
+    // ============================================
+    const notificationBtn = document.getElementById('notificationDropdown');
+    if (notificationBtn) {
+        notificationBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadNotifications();
+        });
+    }
+
+    function loadNotifications() {
+        const container = document.getElementById('notificationList');
+        if (!container) return;
+        
+        fetch('/notifications/api/recent/')
+            .then(response => response.json())
+            .then(data => {
+                let html = '<li class="dropdown-header"><i class="fas fa-bell"></i> Notifications</li><li><hr class="dropdown-divider"></li>';
+                
+                if (data.notifications && data.notifications.length > 0) {
+                    data.notifications.forEach(notification => {
+                        const unreadClass = notification.is_read ? '' : 'bg-light';
+                        html += `
+                            <li class="dropdown-item ${unreadClass}">
+                                <div class="notif-title">${notification.title}</div>
+                                <div class="notif-message">${notification.message}</div>
+                                <div class="notif-time">${notification.created_at}</div>
+                            </li>
+                        `;
+                    });
+                    
+                    html += '<li><hr class="dropdown-divider"></li>';
+                    html += '<li class="text-center"><a href="/notifications/" class="dropdown-item" style="color:#c9a84c;">View All Notifications</a></li>';
+                } else {
+                    html += '<li class="text-center py-3 text-muted">No notifications</li>';
+                }
+                
+                container.innerHTML = html;
+                
+                const badge = document.getElementById('notificationBadge');
+                if (badge) {
+                    const count = data.unread_count || 0;
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'flex' : 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading notifications:', error);
+                container.innerHTML = '<li class="text-center py-3 text-danger">Failed to load</li>';
+            });
+    }
+
+    // ============================================
+    // CLOSE MOBILE MENU ON LINK CLICK
+    // ============================================
+    const navLinks = document.querySelectorAll('#mainNavbar .nav-link, #mainNavbar .dropdown-item');
+    const toggler = document.querySelector('.navbar-toggler');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth < 992 && toggler) {
+                const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+                if (isExpanded) {
+                    toggler.click();
+                }
+            }
+        });
+    });
+
+    // ============================================
+    // HANDLE DROPDOWN ON MOBILE
+    // ============================================
+    const dropdownToggles = document.querySelectorAll('.main-navigation .dropdown-toggle');
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            if (window.innerWidth < 992) {
+                e.preventDefault();
+                const parent = this.closest('.dropdown');
+                const menu = parent.querySelector('.dropdown-menu');
+                if (menu) {
+                    const isOpen = menu.classList.contains('show');
+                    // Close all other dropdowns
+                    document.querySelectorAll('.main-navigation .dropdown-menu.show').forEach(m => {
+                        if (m !== menu) m.classList.remove('show');
+                    });
+                    if (isOpen) {
+                        menu.classList.remove('show');
+                    } else {
+                        menu.classList.add('show');
+                    }
+                }
+            }
+        });
+    });
+});
+</script>

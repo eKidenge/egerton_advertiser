@@ -34,6 +34,373 @@ from apps.settings_manager.forms import GeneralSettingsForm, EmailSettingsForm, 
 
 
 # ============================================
+# USER DASHBOARD - MAIN (ADD THIS)
+# ============================================
+
+@login_required
+def dashboard(request):
+    """Main user dashboard - role based"""
+    user = request.user
+    role = user.role
+    
+    # Get or create preferences
+    preferences, created = DashboardPreference.objects.get_or_create(user=user)
+    
+    # Get widgets
+    widgets = DashboardWidget.objects.filter(user=user, is_active=True).order_by('column', 'position')
+    
+    # Get quick actions
+    quick_actions = QuickAction.objects.filter(user=user, is_active=True).order_by('order')
+    
+    # Get role-based statistics
+    stats = get_role_based_stats(user, role)
+    
+    # Get recent activity
+    recent_activity = DashboardActivityFeed.objects.filter(user=user)[:10]
+    
+    # Get role-based recent items
+    recent_items = get_role_based_recent_items(user, role)
+    
+    # Get notifications
+    notifications = DashboardActivityFeed.objects.filter(user=user, is_read=False)[:5]
+    
+    context = {
+        'preferences': preferences,
+        'widgets': widgets,
+        'quick_actions': quick_actions,
+        'stats': stats,
+        'recent_activity': recent_activity,
+        'recent_items': recent_items,
+        'notifications': notifications,
+        'role': role,
+        'is_super_admin': role == 'super_admin',
+        'is_admin': role == 'admin',
+        'is_editor': role == 'editor',
+        'is_journalist': role == 'journalist',
+        'is_subscriber': role == 'subscriber',
+        'is_advertiser': role == 'advertiser',
+    }
+    
+    return render(request, 'dashboard/dashboard.html', context)
+
+
+def get_role_based_stats(user, role):
+    """Get statistics based on user role"""
+    stats = {}
+    
+    if role == 'super_admin' or role == 'admin':
+        # Admin Stats - Full System Overview
+        stats['total_users'] = User.objects.count()
+        stats['active_users'] = User.objects.filter(is_active=True).count()
+        stats['total_articles'] = Article.objects.count()
+        stats['published_articles'] = Article.objects.filter(status='published').count()
+        stats['draft_articles'] = Article.objects.filter(status='draft').count()
+        stats['pending_articles'] = Article.objects.filter(status='pending').count()
+        stats['total_views'] = Article.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0
+        stats['total_comments'] = Comment.objects.count()
+        stats['pending_comments'] = Comment.objects.filter(status='pending').count()
+        stats['total_subscribers'] = Subscriber.objects.filter(status='active').count()
+        stats['total_ads'] = Advertisement.objects.count()
+        stats['active_ads'] = Advertisement.objects.filter(status='active').count()
+        
+        # Growth calculations
+        last_week = timezone.now() - timedelta(days=7)
+        stats['user_growth'] = calculate_growth(User, 'date_joined', last_week)
+        stats['article_growth'] = calculate_growth(Article, 'created_at', last_week)
+        stats['view_growth'] = calculate_view_growth(last_week)
+        
+    elif role == 'editor':
+        # Editor Stats - Article Management
+        stats['total_articles'] = Article.objects.count()
+        stats['published_articles'] = Article.objects.filter(status='published').count()
+        stats['draft_articles'] = Article.objects.filter(status='draft').count()
+        stats['pending_articles'] = Article.objects.filter(status='pending').count()
+        stats['scheduled_articles'] = Article.objects.filter(status='scheduled').count()
+        stats['archived_articles'] = Article.objects.filter(status='archived').count()
+        stats['total_views'] = Article.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0
+        stats['pending_comments'] = Comment.objects.filter(status='pending').count()
+        stats['total_comments'] = Comment.objects.count()
+        stats['featured_articles'] = Article.objects.filter(is_featured=True).count()
+        stats['breaking_news'] = Article.objects.filter(is_breaking=True).count()
+        
+    elif role == 'journalist':
+        # Journalist Stats - My Articles
+        my_articles = Article.objects.filter(author=user)
+        stats['my_articles'] = my_articles.count()
+        stats['my_published'] = my_articles.filter(status='published').count()
+        stats['my_drafts'] = my_articles.filter(status='draft').count()
+        stats['my_pending'] = my_articles.filter(status='pending').count()
+        stats['my_views'] = my_articles.aggregate(Sum('views_count'))['views_count__sum'] or 0
+        stats['my_comments'] = Comment.objects.filter(article__author=user).count()
+        stats['total_articles'] = Article.objects.count()
+        stats['total_views'] = Article.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0
+        
+    elif role == 'subscriber':
+        # Subscriber Stats - Personal
+        stats['saved_articles'] = 0
+        stats['my_comments'] = Comment.objects.filter(user=user).count()
+        stats['subscription_status'] = 'Active' if Subscriber.objects.filter(email=user.email, status='active').exists() else 'Inactive'
+        stats['total_articles'] = Article.objects.filter(status='published').count()
+        
+    elif role == 'advertiser':
+        # Advertiser Stats - Ad Campaigns
+        my_ads = Advertisement.objects.filter(advertiser=user)
+        stats['total_ads'] = my_ads.count()
+        stats['active_ads'] = my_ads.filter(status='active').count()
+        stats['pending_ads'] = my_ads.filter(status='pending').count()
+        stats['expired_ads'] = my_ads.filter(status='expired').count()
+        stats['ad_views'] = my_ads.aggregate(Sum('views_count'))['views_count__sum'] or 0
+        stats['ad_clicks'] = my_ads.aggregate(Sum('clicks_count'))['clicks_count__sum'] or 0
+        
+        # Calculate CTR
+        total_views = stats['ad_views']
+        total_clicks = stats['ad_clicks']
+        stats['ctr'] = round((total_clicks / total_views * 100), 2) if total_views > 0 else 0
+        
+        # Ad performance
+        stats['top_ad'] = my_ads.order_by('-views_count').first()
+    
+    return stats
+
+
+def calculate_growth(model, field, since_date):
+    """Calculate percentage growth"""
+    current_count = model.objects.count()
+    previous_count = model.objects.filter(**{f'{field}__lt': since_date}).count()
+    
+    if previous_count == 0:
+        return 0 if current_count == 0 else 100
+    
+    return round(((current_count - previous_count) / previous_count) * 100, 1)
+
+
+def calculate_view_growth(since_date):
+    """Calculate view growth"""
+    current_views = Article.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0
+    previous_views = Article.objects.filter(created_at__lt=since_date).aggregate(Sum('views_count'))['views_count__sum'] or 0
+    
+    if previous_views == 0:
+        return 0 if current_views == 0 else 100
+    
+    return round(((current_views - previous_views) / previous_views) * 100, 1)
+
+
+def get_role_based_recent_items(user, role):
+    """Get recent items based on role"""
+    items = {}
+    
+    if role in ['super_admin', 'admin']:
+        # Recent users
+        items['recent_users'] = User.objects.order_by('-date_joined')[:5]
+        # Recent articles
+        items['recent_articles'] = Article.objects.order_by('-created_at')[:5]
+        # Recent comments
+        items['recent_comments'] = Comment.objects.order_by('-created_at')[:5]
+        
+    elif role == 'editor':
+        # Pending articles
+        items['pending_articles'] = Article.objects.filter(status='pending').order_by('-created_at')[:10]
+        # Recent articles
+        items['recent_articles'] = Article.objects.order_by('-created_at')[:5]
+        # Pending comments
+        items['pending_comments'] = Comment.objects.filter(status='pending').order_by('-created_at')[:5]
+        
+    elif role == 'journalist':
+        # My recent articles
+        items['my_articles'] = Article.objects.filter(author=user).order_by('-created_at')[:10]
+        # My drafts
+        items['my_drafts'] = Article.objects.filter(author=user, status='draft').order_by('-created_at')[:5]
+        
+    elif role == 'subscriber':
+        # Latest articles
+        items['latest_articles'] = Article.objects.filter(status='published').order_by('-published_at')[:10]
+        # My comments
+        items['my_comments'] = Comment.objects.filter(user=user).order_by('-created_at')[:5]
+        
+    elif role == 'advertiser':
+        # My ads
+        items['my_ads'] = Advertisement.objects.filter(advertiser=user).order_by('-created_at')[:10]
+        # Top performing ads
+        items['top_ads'] = Advertisement.objects.filter(advertiser=user).order_by('-views_count')[:5]
+    
+    return items
+
+
+# ============================================
+# WIDGET MANAGEMENT
+# ============================================
+
+@login_required
+@require_http_methods(["POST"])
+def add_widget(request):
+    form = DashboardWidgetForm(request.POST)
+    if form.is_valid():
+        widget = form.save(commit=False)
+        widget.user = request.user
+        widget.save()
+        
+        messages.success(request, f'Widget "{widget.title}" added successfully!')
+        return JsonResponse({'success': True, 'widget_id': widget.id})
+    
+    return JsonResponse({'success': False, 'errors': form.errors})
+
+
+@login_required
+def edit_widget(request, widget_id):
+    widget = get_object_or_404(DashboardWidget, id=widget_id, user=request.user)
+    
+    if request.method == 'POST':
+        form = DashboardWidgetForm(request.POST, instance=widget)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Widget updated successfully!')
+            return redirect('dashboard:dashboard')
+    else:
+        form = DashboardWidgetForm(instance=widget)
+    
+    return render(request, 'dashboard/edit_widget.html', {'form': form, 'widget': widget})
+
+
+@login_required
+@require_http_methods(["POST"])
+def delete_widget(request, widget_id):
+    widget = get_object_or_404(DashboardWidget, id=widget_id, user=request.user)
+    widget.delete()
+    messages.success(request, 'Widget deleted successfully!')
+    return JsonResponse({'success': True})
+
+
+@login_required
+@require_http_methods(["POST"])
+def reorder_widgets(request):
+    try:
+        data = request.POST.get('data')
+        widget_data = json.loads(data)
+        
+        for item in widget_data:
+            widget = DashboardWidget.objects.get(id=item['id'], user=request.user)
+            widget.column = item['column']
+            widget.position = item['position']
+            widget.save()
+        
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+# ============================================
+# USER DASHBOARD VIEWS
+# ============================================
+
+@login_required
+def profile(request):
+    user = request.user
+    
+    # Get user statistics
+    articles = Article.objects.filter(author=user)
+    comments = Comment.objects.filter(user=user)
+    
+    context = {
+        'user': user,
+        'total_articles': articles.count(),
+        'published_articles': articles.filter(status='published').count(),
+        'total_comments': comments.count(),
+        'total_views': articles.aggregate(Sum('views_count'))['views_count__sum'] or 0,
+    }
+    return render(request, 'dashboard/profile.html', context)
+
+
+@login_required
+def activity_log(request):
+    user = request.user
+    
+    if user.can_manage_users:
+        activities = UserActivityLog.objects.all().select_related('user')
+    else:
+        activities = UserActivityLog.objects.filter(user=user)
+    
+    # Filtering
+    action = request.GET.get('action')
+    if action:
+        activities = activities.filter(action=action)
+    
+    date_from = request.GET.get('date_from')
+    if date_from:
+        activities = activities.filter(timestamp__gte=date_from)
+    
+    date_to = request.GET.get('date_to')
+    if date_to:
+        activities = activities.filter(timestamp__lte=date_to)
+    
+    activities = activities.order_by('-timestamp')
+    
+    paginator = Paginator(activities, 50)
+    page = request.GET.get('page')
+    try:
+        activities = paginator.page(page)
+    except PageNotAnInteger:
+        activities = paginator.page(1)
+    except EmptyPage:
+        activities = paginator.page(paginator.num_pages)
+    
+    context = {
+        'activities': activities,
+        'action_filter': action,
+    }
+    return render(request, 'dashboard/activity_log.html', context)
+
+
+@login_required
+def notifications(request):
+    user = request.user
+    
+    # Get notifications from activity feed
+    notifications = DashboardActivityFeed.objects.filter(user=user).order_by('-created_at')
+    
+    # Mark as read
+    if request.GET.get('mark_read'):
+        notifications.filter(is_read=False).update(is_read=True)
+        messages.success(request, 'All notifications marked as read.')
+        return redirect('dashboard:notifications')
+    
+    paginator = Paginator(notifications, 20)
+    page = request.GET.get('page')
+    try:
+        notifications = paginator.page(page)
+    except PageNotAnInteger:
+        notifications = paginator.page(1)
+    except EmptyPage:
+        notifications = paginator.page(paginator.num_pages)
+    
+    return render(request, 'dashboard/notifications.html', {'notifications': notifications})
+
+
+@login_required
+@require_http_methods(["POST"])
+def mark_notification_read(request, notification_id):
+    notification = get_object_or_404(DashboardActivityFeed, id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return JsonResponse({'success': True})
+
+
+@login_required
+def settings(request):
+    user = request.user
+    
+    if request.method == 'POST':
+        form = DashboardPreferenceForm(request.POST, instance=user.dashboard_preferences)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Dashboard settings updated successfully!')
+            return redirect('dashboard:settings')
+    else:
+        form = DashboardPreferenceForm(instance=user.dashboard_preferences)
+    
+    return render(request, 'dashboard/settings.html', {'form': form})
+
+
+# ============================================
 # ADMIN DASHBOARD - MAIN VIEW
 # ============================================
 

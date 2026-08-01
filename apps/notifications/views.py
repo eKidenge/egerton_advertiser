@@ -5,8 +5,10 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.utils import timezone  # ← ADD THIS IMPORT
 from .models import Notification, NotificationPreference
 from .forms import NotificationPreferenceForm
+
 
 @login_required
 def notification_list(request):
@@ -48,6 +50,7 @@ def notification_list(request):
     }
     return render(request, 'notifications/notification_list.html', context)
 
+
 @login_required
 def notification_detail(request, notification_id):
     notification = get_object_or_404(Notification, id=notification_id, user=request.user)
@@ -60,6 +63,7 @@ def notification_detail(request, notification_id):
     }
     return render(request, 'notifications/notification_detail.html', context)
 
+
 @login_required
 @require_http_methods(["POST"])
 def mark_read(request, notification_id):
@@ -70,6 +74,7 @@ def mark_read(request, notification_id):
         return JsonResponse({'success': True})
     
     return redirect('notifications:list')
+
 
 @login_required
 @require_http_methods(["POST"])
@@ -85,6 +90,7 @@ def mark_all_read(request):
     messages.success(request, 'All notifications marked as read.')
     return redirect('notifications:list')
 
+
 @login_required
 @require_http_methods(["POST"])
 def delete_notification(request, notification_id):
@@ -97,12 +103,14 @@ def delete_notification(request, notification_id):
     messages.success(request, 'Notification deleted.')
     return redirect('notifications:list')
 
+
 @login_required
 @require_http_methods(["POST"])
 def delete_all_notifications(request):
     Notification.objects.filter(user=request.user).delete()
     messages.success(request, 'All notifications deleted.')
     return redirect('notifications:list')
+
 
 @login_required
 def notification_preferences(request):
@@ -123,11 +131,13 @@ def notification_preferences(request):
     }
     return render(request, 'notifications/notification_preferences.html', context)
 
+
 @login_required
 def get_unread_count(request):
     """API endpoint to get unread notification count"""
     count = Notification.objects.filter(user=request.user, is_read=False).count()
     return JsonResponse({'count': count})
+
 
 @login_required
 def get_notifications_ajax(request):

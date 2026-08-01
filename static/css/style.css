@@ -422,3 +422,252 @@ a:hover {
     font-family: 'Times New Roman', serif;
     color: #6c757d;
 }
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+/* Mobile Motto */
+.mobile-motto {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: #c9a84c;
+    letter-spacing: 1px;
+}
+.motto-text-small {
+    font-size: 12px;
+}
+
+/* Announcement Bar Responsive */
+.announcement-bar {
+    background: #0a1a2a;
+    color: #c9a84c;
+    padding: 4px 0;
+    font-size: 11px;
+    font-family: 'Times New Roman', serif;
+    letter-spacing: 0.5px;
+}
+.announcement-text {
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+.current-date {
+    color: #c9a84c;
+    font-size: 11px;
+}
+.weather-info {
+    font-size: 11px;
+}
+
+/* Header Responsive */
+.main-header {
+    background: linear-gradient(135deg, #0a1a2a 0%, #1a3c5e 50%, #2c5a7a 100%);
+    border-bottom: 3px solid #c9a84c;
+    padding: 8px 0;
+}
+.site-logo {
+    height: 50px;
+    width: auto;
+    margin-right: 10px;
+}
+.logo-text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: 1px;
+    line-height: 1.1;
+}
+.logo-text small {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #c9a84c;
+    display: block;
+}
+.header-motto {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #c9a84c;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+.motto-text {
+    position: relative;
+}
+.motto-text::before,
+.motto-text::after {
+    content: '"';
+    color: #c9a84c;
+    font-size: 20px;
+}
+.header-actions .btn {
+    font-family: 'Times New Roman', serif;
+    border-radius: 3px;
+    font-size: 11px;
+    padding: 4px 12px;
+    letter-spacing: 0.5px;
+}
+.header-actions .btn-outline-light {
+    border-color: rgba(255,255,255,0.3);
+    color: #fff;
+}
+.header-actions .btn-outline-light:hover {
+    background: rgba(201,168,76,0.2);
+    border-color: #c9a84c;
+    color: #c9a84c;
+}
+
+/* Responsive Header */
+@media (max-width: 767.98px) {
+    .site-logo {
+        height: 35px;
+    }
+    .logo-text {
+        font-size: 14px;
+    }
+    .logo-text small {
+        font-size: 8px;
+        letter-spacing: 2px;
+    }
+    .header-actions .btn {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+    .header-motto {
+        font-size: 11px;
+    }
+    .announcement-text {
+        font-size: 9px;
+    }
+    .current-date {
+        font-size: 9px;
+    }
+    .weather-info {
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .site-logo {
+        height: 30px;
+        margin-right: 5px;
+    }
+    .logo-text {
+        font-size: 12px;
+    }
+    .logo-text small {
+        font-size: 7px;
+        letter-spacing: 1px;
+    }
+    .header-actions .btn {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+    .header-actions .btn-sm {
+        padding: 2px 6px;
+        font-size: 9px;
+    }
+    .announcement-text {
+        font-size: 8px;
+    }
+    .announcement-bar {
+        padding: 2px 0;
+    }
+    .breaking-news-ticker {
+        padding: 3px 0;
+    }
+    .breaking-label {
+        font-size: 9px;
+        padding: 1px 8px;
+    }
+    .ticker-item {
+        font-size: 11px;
+    }
+}
+
+/* ============================================
+   HEADER - MOBILE RESPONSIVE
+   ============================================ */
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    flex-wrap: nowrap;
+}
+.header-actions .btn {
+    font-family: 'Times New Roman', serif;
+    border-radius: 3px;
+    font-size: 11px;
+    padding: 4px 10px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.header-actions .btn-outline-light {
+    border-color: rgba(255,255,255,0.3);
+    color: #fff;
+}
+.header-actions .btn-outline-light:hover {
+    background: rgba(201,168,76,0.2);
+    border-color: #c9a84c;
+    color: #c9a84c;
+}
+.header-actions .btn-primary {
+    background: #c9a84c;
+    border: none;
+    color: #0a1a2a;
+}
+.header-actions .btn-primary:hover {
+    background: #b89a3a;
+}
+
+/* Mobile Header Actions */
+@media (max-width: 575.98px) {
+    .header-actions .btn {
+        font-size: 9px;
+        padding: 2px 6px;
+        min-width: 28px;
+    }
+    .header-actions .btn-sm {
+        padding: 2px 6px;
+        font-size: 9px;
+    }
+    .header-actions .dropdown-toggle {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+    .header-actions .dropdown-toggle .fa-user-circle {
+        font-size: 14px;
+    }
+    .header-actions .dropdown-menu {
+        min-width: 160px;
+        font-size: 12px;
+    }
+    .header-actions .dropdown-item {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    .header-actions .dropdown-item i {
+        width: 18px;
+    }
+}
+
+@media (max-width: 380px) {
+    .header-actions {
+        gap: 2px;
+    }
+    .header-actions .btn {
+        font-size: 8px;
+        padding: 1px 4px;
+        min-width: 24px;
+    }
+    .header-actions .btn-sm {
+        padding: 1px 4px;
+        font-size: 8px;
+    }
+}

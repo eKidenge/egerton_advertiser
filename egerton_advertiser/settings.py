@@ -69,7 +69,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'django_ratelimit',
     'django_recaptcha',
-    'django_db_logger',
+    # 'django_db_logger',  # REMOVED - was causing errors
     
     # Local apps
     'apps.accounts',
@@ -106,7 +106,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
-    'django_db_logger.middleware.DatabaseLogMiddleware',
+    # 'django_db_logger.middleware.DatabaseLogMiddleware',  # REMOVED
     'apps.accounts.middleware.ActivityLogMiddleware',
     'apps.analytics.middleware.AnalyticsMiddleware',
     'apps.notifications.middleware.NotificationMiddleware',
@@ -555,7 +555,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.egertonadvertiser.com',
 ]
 
-# Logging configuration
+# Logging configuration - REMOVED 'db' handler
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -568,10 +568,10 @@ LOGGING = {
             'format': '{levelname} {message}',
             'style': '{',
         },
-        'db': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
+        # 'db': {  # REMOVED
+        #     'format': '{levelname} {asctime} {module} {message}',
+        #     'style': '{',
+        # },
     },
     'filters': {
         'require_debug_false': {
@@ -597,11 +597,11 @@ LOGGING = {
             'formatter': 'verbose',
             'filters': ['require_debug_false'],
         },
-        'db': {
-            'level': 'ERROR',
-            'class': 'django_db_logger.db_log_handler.DatabaseLogHandler',
-            'formatter': 'db',
-        },
+        # 'db': {  # REMOVED - was causing errors
+        #     'level': 'ERROR',
+        #     'class': 'django_db_logger.db_log_handler.DatabaseLogHandler',
+        #     'formatter': 'db',
+        # },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -618,12 +618,12 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file', 'db', 'mail_admins'],
+            'handlers': ['console', 'file', 'mail_admins'],
             'level': 'INFO',
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['console', 'file', 'db', 'mail_admins'],
+            'handlers': ['console', 'file', 'mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
@@ -633,22 +633,22 @@ LOGGING = {
             'propagate': True,
         },
         'apps': {
-            'handlers': ['console', 'file', 'db'],
+            'handlers': ['console', 'file'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': True,
         },
         'apps.accounts': {
-            'handlers': ['console', 'security', 'db'],
+            'handlers': ['console', 'security'],
             'level': 'INFO',
             'propagate': True,
         },
         'apps.analytics': {
-            'handlers': ['console', 'file', 'db'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
         },
         'celery': {
-            'handlers': ['console', 'file', 'db'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
         },

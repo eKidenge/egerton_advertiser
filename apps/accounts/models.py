@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator, MinLengthValidator
 from django.core.exceptions import ValidationError
 import re
 
+
 class User(AbstractUser):
     ROLE_CHOICES = (
         ('super_admin', 'Super Administrator'),
@@ -55,7 +56,6 @@ class User(AbstractUser):
     
     # Social media
     social_links = models.JSONField(default=dict, blank=True)
-    # Example: {"twitter": "https://twitter.com/username", "facebook": "https://facebook.com/username"}
     
     # Status fields
     is_verified = models.BooleanField(default=False)

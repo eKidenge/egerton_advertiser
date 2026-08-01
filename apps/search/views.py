@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 from django.db.models import Q, Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
@@ -10,6 +11,7 @@ from apps.articles.models import Article
 from apps.categories.models import Category
 from apps.tags.models import Tag
 from apps.accounts.models import User
+
 
 def search(request):
     query = request.GET.get('q', '').strip()
@@ -106,6 +108,7 @@ def search(request):
     
     return render(request, 'search/search_results.html', context)
 
+
 @login_required
 def advanced_search(request):
     if request.method == 'POST':
@@ -197,6 +200,7 @@ def advanced_search(request):
     
     return render(request, 'search/advanced_search.html', context)
 
+
 @require_http_methods(["POST"])
 def track_click(request):
     """Track search result clicks for analytics"""
@@ -224,9 +228,11 @@ def track_click(request):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def search_statistics(request):
+    """Search statistics view - Admin only"""
     # Search query statistics
     total_searches = SearchQuery.objects.count()
     unique_searches = SearchQuery.objects.values('query').distinct().count()

@@ -626,3 +626,29 @@ def activity_log(request):
         'form': form,
     }
     return render(request, 'dashboard/activity_log.html', context)
+
+
+# ============================================
+# ERROR HANDLERS - ADD THESE
+# ============================================
+
+def handler403(request, exception=None):
+    """403 Forbidden error handler"""
+    return render(request, '403.html', status=403)
+
+def handler404(request, exception=None):
+    """404 Not Found error handler"""
+    return render(request, '404.html', status=404)
+
+def handler500(request):
+    """500 Internal Server Error handler"""
+    return render(request, '500.html', status=500)
+
+
+# ============================================
+# RATE LIMIT EXCEEDED VIEW
+# ============================================
+
+def rate_limit_exceeded(request, exception=None):
+    """Rate limit exceeded handler"""
+    return render(request, '429.html', status=429)

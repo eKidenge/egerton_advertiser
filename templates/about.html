@@ -1,241 +1,582 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}About Us - The Egerton Advertiser{% endblock %}
+{% block title %}About The Egerton Advertiser - Official Gazette of Egerton, Kenya{% endblock %}
+
+{% block meta_description %}The Egerton Advertiser - Official Gazette of Egerton, Kenya. Established 2024, serving the community with truth, justice, and service to the nation.{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ============================================
+   ABOUT PAGE - OFFICIAL GOVERNMENT STYLE
+   ============================================ */
+.about-page {
+    padding: 30px 0;
+    background: #f5f0e8;
+}
+
+/* ============================================
+   OFFICIAL SEAL HEADER
+   ============================================ */
+.page-header {
+    text-align: center;
+    padding-bottom: 30px;
+    margin-bottom: 35px;
+    border-bottom: 3px solid #1a3c5e;
+    position: relative;
+}
+.page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: #c9a84c;
+}
+.page-header .official-seal {
+    display: inline-block;
+    border: 3px solid #c9a84c;
+    border-radius: 50%;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.page-header .official-seal i {
+    font-size: 48px;
+    color: #1a3c5e;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+    font-size: 36px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.page-header .subtitle {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 2px;
+}
+.page-header .established {
+    font-family: 'Times New Roman', serif;
+    color: #c9a84c;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+/* ============================================
+   MAIN CARD
+   ============================================ */
+.about-card {
+    background: #fff;
+    border: 1px solid #d4cdc0;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    position: relative;
+}
+.about-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1a3c5e, #c9a84c, #1a3c5e);
+    border-radius: 8px 8px 0 0;
+}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+.about-section {
+    margin-bottom: 35px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e8e3d8;
+}
+.about-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.about-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 24px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.about-section h2 i {
+    color: #c9a84c;
+    font-size: 28px;
+}
+.about-section h2::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #c9a84c, transparent);
+    margin-left: 15px;
+}
+.about-section p {
+    font-family: 'Times New Roman', serif;
+    font-size: 17px;
+    line-height: 1.9;
+    color: #333;
+    text-align: justify;
+}
+.about-section p strong {
+    color: #1a3c5e;
+}
+
+/* ============================================
+   VALUES GRID
+   ============================================ */
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 10px;
+}
+.value-item {
+    text-align: center;
+    padding: 25px 20px;
+    background: #f8f5f0;
+    border-radius: 8px;
+    border: 1px solid #e8e3d8;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+.value-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #c9a84c;
+}
+.value-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-color: #c9a84c;
+}
+.value-item i {
+    font-size: 36px;
+    color: #c9a84c;
+    display: block;
+    margin-bottom: 10px;
+}
+.value-item h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 18px;
+    margin: 8px 0 5px;
+}
+.value-item p {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0;
+    text-align: center;
+}
+
+/* ============================================
+   TEAM GRID
+   ============================================ */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 10px;
+}
+.team-member {
+    text-align: center;
+    padding: 20px;
+    background: #f8f5f0;
+    border-radius: 8px;
+    border: 1px solid #e8e3d8;
+    transition: all 0.3s;
+}
+.team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-color: #c9a84c;
+}
+.member-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: #1a3c5e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: #fff;
+    border: 3px solid #c9a84c;
+}
+.team-member h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 16px;
+    margin: 8px 0 3px;
+}
+.team-member .role {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #c9a84c;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.team-member .name {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* ============================================
+   CONTACT INFO
+   ============================================ */
+.contact-info {
+    background: #f8f5f0;
+    border-radius: 8px;
+    padding: 25px;
+    border: 1px solid #e8e3d8;
+}
+.contact-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e8e3d8;
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    color: #333;
+}
+.contact-row:last-child {
+    border-bottom: none;
+}
+.contact-row i {
+    width: 30px;
+    font-size: 20px;
+    color: #c9a84c;
+    text-align: center;
+}
+.contact-row strong {
+    color: #1a3c5e;
+}
+
+/* ============================================
+   STATS SECTION
+   ============================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 15px 0 5px;
+}
+.stat-box {
+    text-align: center;
+    padding: 20px;
+    background: #f8f5f0;
+    border-radius: 8px;
+    border: 1px solid #e8e3d8;
+}
+.stat-box .number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: #1a3c5e;
+}
+.stat-box .label {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 992px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 26px;
+    }
+    .about-card {
+        padding: 25px;
+    }
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+    .team-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media (max-width: 576px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .contact-row {
+        flex-wrap: wrap;
+    }
+    .about-section h2 {
+        font-size: 20px;
+    }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="about-page">
-        <div class="page-header text-center">
-            <h1><i class="fas fa-info-circle"></i> About The Egerton Advertiser</h1>
-            <p class="text-muted">Official Gazette of Egerton, Kenya</p>
+<div class="about-page">
+    <div class="container">
+        <!-- ============================================
+        OFFICIAL HEADER WITH SEAL
+        ============================================ -->
+        <div class="page-header">
+            <div class="official-seal">
+                <i class="fas fa-gavel"></i>
+            </div>
+            <h1>The Egerton Advertiser</h1>
+            <p class="subtitle">"Truth, Justice &amp; Service to the Nation"</p>
+            <p class="established"><i class="fas fa-calendar-alt"></i> Established 2024</p>
         </div>
 
         <div class="row">
-            <div class="col-lg-8 mx-auto">
+            <div class="col-lg-10 mx-auto">
                 <div class="about-card">
+                    <!-- ============================================
+                    MISSION SECTION
+                    ============================================ -->
                     <div class="about-section">
-                        <h2><i class="fas fa-flag"></i> Our Mission</h2>
+                        <h2><i class="fas fa-bullseye"></i> Our Mission</h2>
                         <p>
-                            The Egerton Advertiser is committed to delivering accurate, timely, and trustworthy 
+                            The Egerton Advertiser is committed to delivering <strong>accurate, timely, and trustworthy</strong> 
                             news to the citizens of Egerton and beyond. We believe in the power of journalism 
-                            to inform, educate, and empower communities.
+                            to <strong>inform, educate, and empower</strong> communities. Our mission is to serve 
+                            as the voice of the people, holding power accountable and giving a platform to 
+                            the voiceless.
+                        </p>
+                        <p>
+                            We are dedicated to upholding the highest standards of journalistic integrity, 
+                            ensuring that every story we tell is <strong>fact-checked, balanced, and fair</strong>. 
+                            We serve as the Official Gazette of Egerton, Kenya, carrying the weight of 
+                            responsibility that comes with that title.
                         </p>
                     </div>
 
+                    <!-- ============================================
+                    VISION SECTION
+                    ============================================ -->
                     <div class="about-section">
                         <h2><i class="fas fa-eye"></i> Our Vision</h2>
                         <p>
-                            To be the most trusted source of news and information in Kenya, setting the 
-                            standard for journalistic excellence and integrity.
+                            To be the <strong>most trusted source of news and information in Kenya</strong>, 
+                            setting the standard for journalistic excellence and integrity. We envision a 
+                            Kenya where every citizen has access to reliable, unbiased information that 
+                            empowers them to make informed decisions.
+                        </p>
+                        <p>
+                            We aspire to be a beacon of <strong>truth, justice, and service</strong> in the 
+                            media landscape, inspiring a new generation of journalists who are committed to 
+                            the public good.
                         </p>
                     </div>
 
+                    <!-- ============================================
+                    STATS SECTION
+                    ============================================ -->
+                    <div class="about-section">
+                        <h2><i class="fas fa-chart-bar"></i> Our Impact</h2>
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="number">2024</div>
+                                <div class="label">Year Established</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="number">500+</div>
+                                <div class="label">Articles Published</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="number">10K+</div>
+                                <div class="label">Monthly Readers</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="number">100%</div>
+                                <div class="label">Commitment to Truth</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================
+                    CORE VALUES SECTION
+                    ============================================ -->
                     <div class="about-section">
                         <h2><i class="fas fa-gavel"></i> Core Values</h2>
                         <div class="values-grid">
                             <div class="value-item">
                                 <i class="fas fa-check-circle"></i>
                                 <h5>Truth</h5>
-                                <p>We are committed to reporting the truth, no matter the cost.</p>
+                                <p>We are committed to reporting the truth, no matter the cost. Our journalism is built on a foundation of honesty and transparency.</p>
                             </div>
                             <div class="value-item">
                                 <i class="fas fa-balance-scale"></i>
                                 <h5>Justice</h5>
-                                <p>We stand for justice and fairness in all our reporting.</p>
+                                <p>We stand for justice and fairness in all our reporting. We give voice to the voiceless and hold the powerful accountable.</p>
                             </div>
                             <div class="value-item">
                                 <i class="fas fa-handshake"></i>
                                 <h5>Service</h5>
-                                <p>We serve our community with dedication and integrity.</p>
+                                <p>We serve our community with dedication and integrity. Our work is driven by a commitment to the public good.</p>
                             </div>
                             <div class="value-item">
                                 <i class="fas fa-star"></i>
                                 <h5>Excellence</h5>
-                                <p>We strive for excellence in everything we do.</p>
+                                <p>We strive for excellence in everything we do. From reporting to design, we aim to be the best in class.</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- ============================================
+                    TEAM SECTION
+                    ============================================ -->
                     <div class="about-section">
-                        <h2><i class="fas fa-users"></i> Meet the Team</h2>
+                        <h2><i class="fas fa-users"></i> Meet Our Team</h2>
+                        <p style="margin-bottom: 15px;">
+                            Our team is comprised of dedicated professionals who are passionate about journalism 
+                            and committed to serving the community. Each member brings unique expertise and a 
+                            shared commitment to excellence.
+                        </p>
                         <div class="team-grid">
                             <div class="team-member">
-                                <div class="member-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
+                                <div class="member-avatar"><i class="fas fa-user"></i></div>
                                 <h5>Editor-in-Chief</h5>
-                                <p class="text-muted">John Doe</p>
+                                <p class="role">Leadership</p>
+                                <p class="name">John Doe</p>
                             </div>
                             <div class="team-member">
-                                <div class="member-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
+                                <div class="member-avatar"><i class="fas fa-user"></i></div>
                                 <h5>Managing Editor</h5>
-                                <p class="text-muted">Jane Smith</p>
+                                <p class="role">Editorial</p>
+                                <p class="name">Jane Smith</p>
                             </div>
                             <div class="team-member">
-                                <div class="member-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
+                                <div class="member-avatar"><i class="fas fa-user"></i></div>
                                 <h5>Political Desk</h5>
-                                <p class="text-muted">Mike Johnson</p>
+                                <p class="role">Politics</p>
+                                <p class="name">Mike Johnson</p>
                             </div>
                             <div class="team-member">
-                                <div class="member-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
+                                <div class="member-avatar"><i class="fas fa-user"></i></div>
                                 <h5>Sports Editor</h5>
-                                <p class="text-muted">Sarah Williams</p>
+                                <p class="role">Sports</p>
+                                <p class="name">Sarah Williams</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar"><i class="fas fa-user"></i></div>
+                                <h5>Business Desk</h5>
+                                <p class="role">Business</p>
+                                <p class="name">David Kimani</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar"><i class="fas fa-user"></i></div>
+                                <h5>Entertainment</h5>
+                                <p class="role">Entertainment</p>
+                                <p class="name">Alice Wanjiku</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar"><i class="fas fa-user"></i></div>
+                                <h5>Photo Editor</h5>
+                                <p class="role">Photography</p>
+                                <p class="name">Peter Ochieng</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar"><i class="fas fa-user"></i></div>
+                                <h5>Digital Editor</h5>
+                                <p class="role">Digital</p>
+                                <p class="name">Grace Muthoni</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- ============================================
+                    CONTACT SECTION
+                    ============================================ -->
                     <div class="about-section">
-                        <h2><i class="fas fa-envelope"></i> Contact Information</h2>
+                        <h2><i class="fas fa-address-card"></i> Contact Information</h2>
                         <div class="contact-info">
                             <div class="contact-row">
                                 <i class="fas fa-map-marker-alt"></i>
-                                <span>Egerton, Kenya</span>
+                                <span><strong>Address:</strong> Egerton, Kenya</span>
                             </div>
                             <div class="contact-row">
                                 <i class="fas fa-phone"></i>
-                                <span>+254 700 000 000</span>
+                                <span><strong>Phone:</strong> +254 700 000 000</span>
                             </div>
                             <div class="contact-row">
                                 <i class="fas fa-envelope"></i>
-                                <span>info@theegertonadvertiser.com</span>
+                                <span><strong>Email:</strong> info@theegertonadvertiser.com</span>
                             </div>
                             <div class="contact-row">
                                 <i class="fas fa-clock"></i>
-                                <span>Monday - Friday: 8:00 AM - 5:00 PM</span>
+                                <span><strong>Office Hours:</strong> Monday - Friday: 8:00 AM - 5:00 PM</span>
+                            </div>
+                            <div class="contact-row">
+                                <i class="fas fa-globe"></i>
+                                <span><strong>Website:</strong> www.theegertonadvertiser.com</span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- ============================================
+                    LEGAL SECTION
+                    ============================================ -->
+                    <div class="about-section">
+                        <h2><i class="fas fa-file-contract"></i> Legal Information</h2>
+                        <p>
+                            The Egerton Advertiser is a registered newspaper in the Republic of Kenya. 
+                            All content published on this website is protected by copyright law. 
+                            Unauthorized reproduction, distribution, or transmission of any content 
+                            is strictly prohibited.
+                        </p>
+                        <p>
+                            <strong>Registration Number:</strong> EA/2024/001<br>
+                            <strong>ISSN:</strong> 1234-5678<br>
+                            <strong>Regulatory Body:</strong> Media Council of Kenya
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-.about-page {
-    padding: 30px 0;
-}
-.page-header {
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
-}
-.page-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    color: #1a3c5e;
-}
-.about-card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 30px;
-}
-.about-section {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e0e0e0;
-}
-.about-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-.about-section h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    margin-bottom: 15px;
-}
-.about-section h2 i {
-    color: #c9a84c;
-    margin-right: 10px;
-}
-.about-section p {
-    font-family: 'Times New Roman', serif;
-    font-size: 16px;
-    line-height: 1.8;
-    color: #495057;
-}
-.values-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-.value-item {
-    text-align: center;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-.value-item i {
-    font-size: 32px;
-    color: #c9a84c;
-}
-.value-item h5 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    margin: 10px 0 5px;
-}
-.value-item p {
-    font-family: 'Times New Roman', serif;
-    font-size: 14px;
-    color: #6c757d;
-}
-.team-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-.team-member {
-    text-align: center;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-.member-avatar {
-    font-size: 48px;
-    color: #1a3c5e;
-}
-.team-member h5 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    margin: 10px 0 3px;
-}
-.contact-info {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-}
-.contact-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 8px 0;
-    border-bottom: 1px solid #e0e0e0;
-    font-family: 'Times New Roman', serif;
-}
-.contact-row:last-child {
-    border-bottom: none;
-}
-.contact-row i {
-    width: 25px;
-    color: #1a3c5e;
-}
-@media (max-width: 768px) {
-    .values-grid {
-        grid-template-columns: 1fr;
-    }
-    .team-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-</style>
 {% endblock %}
