@@ -30,10 +30,10 @@ django-htmx==1.16.0
 # ============================================
 # CELERY (Background tasks) - FIXED VERSIONS
 # ============================================
-celery==5.4.0
-redis==5.0.1
-django-celery-beat==2.7.0
-django-celery-results==2.5.1
+#celery==5.4.0
+#redis==5.0.1
+#django-celery-beat==2.7.0
+#django-celery-results==2.5.1
 
 # ============================================
 # CACHING
