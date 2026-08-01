@@ -4,6 +4,8 @@
 Django>=4.2,<5.0
 django-environ==0.11.2
 dj-database-url==2.1.0
+setuptools==75.6.0
+packaging==24.2
 
 # ============================================
 # DATABASE
@@ -54,11 +56,10 @@ whitenoise==6.5.0
 django-compressor==4.4
 
 # ============================================
-# API & REST
+# API & REST - KEEP drf-yasg
 # ============================================
 djangorestframework==3.14.0
-#drf-yasg==1.21.7  # Swagger/OpenAPI
-drf-spectacular==0.27.2  # ADD THIS - Replacement for drf-yasg
+drf-yasg==1.21.7  # KEPT - Important for API docs
 django-filter==23.5
 
 # ============================================
