@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Moderate Comment - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="moderate-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="moderate-card">
+                    <div class="moderate-header">
+                        <h2><i class="fas fa-check-double"></i> Moderate Comment</h2>
+                        <p class="text-muted">Review and moderate this comment</p>
+                    </div>
+
+                    <div class="comment-preview">
+                        <div class="comment-header">
+                            <img src="{% if comment.user.profile_picture %}{{ comment.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                 alt="{{ comment.user.get_full_name }}" class="comment-avatar">
+                            <div>
+                                <strong>{{ comment.user.get_full_name|default:comment.user.username }}</strong>
+                                <br>
+                                <small class="text-muted">{{ comment.user.get_role_display }} • {{ comment.created_at|timesince }} ago</small>
+                            </div>
+                        </div>
+                        <div class="comment-body">
+                            <p>{{ comment.content }}</p>
+                        </div>
+                        <div class="comment-article">
+                            <small class="text-muted">On: <a href="{{ comment.article.get_absolute_url }}">{{ comment.article.title }}</a></small>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_action"><i class="fas fa-flag"></i> Action</label>
+                            <select name="action" id="id_action" class="form-select">
+                                <option value="approve">Approve Comment</option>
+                                <option value="reject">Reject Comment</option>
+                                <option value="spam">Mark as Spam</option>
+                            </select>
+                            {% if form.action.errors %}
+                            <small class="text-danger">{{ form.action.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_notes"><i class="fas fa-pencil-alt"></i> Moderation Notes</label>
+                            <textarea name="notes" id="id_notes" class="form-control" rows="3" 
+                                      placeholder="Optional notes about this moderation"></textarea>
+                            {% if form.notes.errors %}
+                            <small class="text-danger">{{ form.notes.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="moderate-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Apply Moderation
+                            </button>
+                            <a href="{% url 'comments:pending' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <a href="{% url 'comments:delete' comment.id %}" class="btn btn-outline-danger" onclick="return confirm('Delete this comment?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.moderate-page {
+    padding: 30px 0;
+}
+.moderate-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.moderate-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.moderate-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.comment-preview {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.comment-body p {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    padding-left: 50px;
+}
+.comment-article {
+    padding-left: 50px;
+    margin-top: 5px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-select, .form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-select:focus, .form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.moderate-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.moderate-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+{% endblock %}

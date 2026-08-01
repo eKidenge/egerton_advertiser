@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Comments - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-page {
+    padding: 20px 0;
+    background: #f5f0e8;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.page-header h1 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.filters-bar {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.table-container {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    padding: 20px;
+    overflow-x: auto;
+}
+.table {
+    font-family: 'Times New Roman', serif;
+    margin-bottom: 0;
+}
+.table thead th {
+    background: #1a3c5e;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    padding: 12px 15px;
+}
+.table tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+.comment-content {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.badge-pending { background: #b8860b; color: #fff; }
+.badge-approved { background: #1a5a3a; color: #fff; }
+.badge-rejected { background: #8b1a1a; color: #fff; }
+.badge-spam { background: #6c757d; color: #fff; }
+.action-buttons {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="container-fluid">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-comments"></i> Manage Comments</h1>
+                <p class="text-muted">Moderate and manage all comments</p>
+            </div>
+            <div>
+                <span class="badge bg-warning text-dark">Pending: {{ pending_comments|default:0 }}</span>
+                <span class="badge bg-success ms-1">Approved: {{ approved_comments|default:0 }}</span>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#1a3c5e;">{{ total_comments|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Total</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #b8860b;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#b8860b;">{{ pending_comments|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Pending</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #1a5a3a;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#1a5a3a;">{{ approved_comments|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Approved</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #6c757d;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#6c757d;">{{ spam_comments|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Spam</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="get" class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" placeholder="Search comments..." 
+                           value="{{ search|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        {% for code, name in status_choices %}
+                        <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'dashboard:admin_comments' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo"></i> Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Comment</th>
+                        <th>User</th>
+                        <th>Article</th>
+                        <th>Status</th>
+                        <th>Posted</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comment in comments %}
+                    <tr>
+                        <td>
+                            <div class="comment-content" title="{{ comment.content }}">
+                                {{ comment.content|truncatewords:10 }}
+                            </div>
+                        </td>
+                        <td>{{ comment.user.get_full_name|default:comment.user.username }}</td>
+                        <td>
+                            <a href="{{ comment.article.get_absolute_url }}" target="_blank">
+                                {{ comment.article.title|truncatewords:5 }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ comment.status }}">{{ comment.get_status_display }}</span>
+                        </td>
+                        <td>{{ comment.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                {% if comment.status == 'pending' %}
+                                <a href="{% url 'dashboard:admin_comment_moderate' comment.id %}" class="btn btn-sm btn-outline-success" title="Moderate">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'dashboard:admin_comment_delete' comment.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Delete this comment?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="fas fa-comments fa-3x text-muted"></i>
+                            <p class="text-muted mt-2">No comments found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+{% endblock %}

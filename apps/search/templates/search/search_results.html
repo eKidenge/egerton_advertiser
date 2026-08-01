@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="search-page">
+        <div class="page-header">
+            <h1><i class="fas fa-search"></i> Search Results</h1>
+            {% if query %}
+            <p>Showing results for: <strong>"{{ query }}"</strong></p>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Search Form -->
+                <div class="search-form-box">
+                    <form method="get" action="{% url 'search:search' %}" class="d-flex">
+                        <input type="text" name="q" class="form-control" placeholder="Search for news, articles, topics..." 
+                               value="{{ query|default:'' }}" required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results Summary -->
+                <div class="results-summary">
+                    <span class="result-count">{{ total_results }} results found</span>
+                    <div class="result-filters">
+                        <a href="?q={{ query }}&type=all" class="btn btn-sm {% if search_type == 'all' %}btn-primary{% else %}btn-outline-secondary{% endif %}">All</a>
+                        <a href="?q={{ query }}&type=articles" class="btn btn-sm {% if search_type == 'articles' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Articles</a>
+                        <a href="?q={{ query }}&type=categories" class="btn btn-sm {% if search_type == 'categories' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Categories</a>
+                        <a href="?q={{ query }}&type=tags" class="btn btn-sm {% if search_type == 'tags' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Tags</a>
+                        <a href="?q={{ query }}&type=authors" class="btn btn-sm {% if search_type == 'authors' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Authors</a>
+                    </div>
+                </div>
+
+                <!-- Article Results -->
+                {% if results.articles %}
+                <div class="results-section">
+                    <h4><i class="fas fa-newspaper"></i> Articles</h4>
+                    {% for article in articles_page %}
+                    <div class="result-item">
+                        <div class="result-title">
+                            <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                        </div>
+                        <div class="result-snippet">{{ article.excerpt|truncatewords:30 }}</div>
+                        <div class="result-meta">
+                            <span><i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}</span>
+                            <span><i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}</span>
+                            <span><i class="fas fa-folder"></i> {{ article.category.name }}</span>
+                            <span><i class="fas fa-eye"></i> {{ article.views_count }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <!-- Pagination for articles -->
+                    {% if articles_page.has_other_pages %}
+                    <nav aria-label="Article pagination">
+                        <ul class="pagination">
+                            {% if articles_page.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?q={{ query }}&type={{ search_type }}&page={{ articles_page.previous_page_number }}">Previous</a>
+                            </li>
+                            {% endif %}
+                            {% for num in articles_page.paginator.page_range %}
+                                {% if articles_page.number == num %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                                {% elif num > articles_page.number|add:'-3' and num < articles_page.number|add:'3' %}
+                                <li class="page-item"><a class="page-link" href="?q={{ query }}&type={{ search_type }}&page={{ num }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if articles_page.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?q={{ query }}&type={{ search_type }}&page={{ articles_page.next_page_number }}">Next</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Category Results -->
+                {% if results.categories %}
+                <div class="results-section">
+                    <h4><i class="fas fa-folder"></i> Categories</h4>
+                    <div class="category-results">
+                        {% for category in results.categories %}
+                        <a href="{{ category.get_absolute_url }}" class="category-tag">
+                            <i class="fas fa-{{ category.icon|default:'folder' }}"></i>
+                            {{ category.name }}
+                            <span class="badge bg-secondary">{{ category.article_count }} articles</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Tag Results -->
+                {% if results.tags %}
+                <div class="results-section">
+                    <h4><i class="fas fa-tags"></i> Tags</h4>
+                    <div class="tag-results">
+                        {% for tag in results.tags %}
+                        <a href="{% url 'tags:detail' tag.slug %}" class="tag-link">
+                            #{{ tag.name }}
+                            <span class="badge bg-secondary">{{ tag.article_count }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Author Results -->
+                {% if results.authors %}
+                <div class="results-section">
+                    <h4><i class="fas fa-users"></i> Authors</h4>
+                    <div class="author-results">
+                        {% for author in results.authors %}
+                        <div class="author-result">
+                            <a href="{% url 'articles:author_articles' author.id %}">
+                                <strong>{{ author.get_full_name|default:author.username }}</strong>
+                            </a>
+                            <span class="text-muted">{{ author.email }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- No Results -->
+                {% if not has_results and query %}
+                <div class="no-results">
+                    <i class="fas fa-search fa-4x text-muted"></i>
+                    <h4>No Results Found</h4>
+                    <p class="text-muted">We couldn't find any results for <strong>"{{ query }}"</strong></p>
+                    <ul class="suggestions">
+                        <li>Check your spelling</li>
+                        <li>Try using fewer keywords</li>
+                        <li>Try different keywords</li>
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Empty Query -->
+                {% if not query %}
+                <div class="search-prompt">
+                    <i class="fas fa-search fa-4x text-muted"></i>
+                    <h4>Search The Egerton Advertiser</h4>
+                    <p class="text-muted">Enter a search term above to find articles, categories, and more</p>
+                    <div class="quick-links">
+                        <span>Quick links:</span>
+                        <a href="{% url 'articles:latest' %}">Latest News</a>
+                        <a href="{% url 'articles:breaking_news' %}">Breaking News</a>
+                        <a href="{% url 'categories:list' %}">Categories</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Sidebar -->
+                {% include 'sidebar_ads.html' %}
+
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-fire"></i> Popular Searches
+                    </div>
+                    <div class="popular-searches">
+                        <a href="?q=politics">Politics</a>
+                        <a href="?q=economy">Economy</a>
+                        <a href="?q=sports">Sports</a>
+                        <a href="?q=education">Education</a>
+                        <a href="?q=health">Health</a>
+                        <a href="?q=technology">Technology</a>
+                    </div>
+                </div>
+
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-calendar-alt"></i> Recent Searches
+                    </div>
+                    <div class="recent-searches">
+                        <!-- Will be populated dynamically -->
+                        <p class="text-muted">No recent searches</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.search-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.search-form-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+.search-form-box .form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ced4da;
+}
+.search-form-box .btn {
+    border-radius: 0 4px 4px 0;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+.results-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+.result-count {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.result-filters .btn {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+}
+.results-section {
+    margin-bottom: 30px;
+}
+.results-section h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.result-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+.result-item:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+.result-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 18px;
+}
+.result-title a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.result-title a:hover {
+    text-decoration: underline;
+}
+.result-snippet {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    margin: 5px 0;
+}
+.result-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.result-meta i {
+    margin-right: 3px;
+}
+.category-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.category-tag {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 8px 15px;
+    font-family: 'Times New Roman', serif;
+    color: #1a3c5e;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.category-tag:hover {
+    background: #1a3c5e;
+    color: #fff;
+    text-decoration: none;
+}
+.category-tag i {
+    margin-right: 5px;
+}
+.tag-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.tag-link {
+    background: #f8f9fa;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    color: #1a3c5e;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+.tag-link:hover {
+    background: #1a3c5e;
+    color: #fff;
+    text-decoration: none;
+}
+.author-result {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.author-result:last-child {
+    border-bottom: none;
+}
+.author-result a {
+    font-family: 'Times New Roman', serif;
+    color: #1a3c5e;
+    text-decoration: none;
+    font-weight: 700;
+}
+.author-result a:hover {
+    text-decoration: underline;
+}
+.no-results {
+    text-align: center;
+    padding: 40px 0;
+}
+.no-results h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin: 15px 0;
+}
+.suggestions {
+    list-style: none;
+    padding: 0;
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+}
+.search-prompt {
+    text-align: center;
+    padding: 40px 0;
+}
+.search-prompt h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin: 15px 0;
+}
+.quick-links {
+    margin-top: 15px;
+    font-family: 'Times New Roman', serif;
+}
+.quick-links a {
+    color: #1a3c5e;
+    text-decoration: none;
+    margin: 0 10px;
+}
+.quick-links a:hover {
+    text-decoration: underline;
+}
+.sidebar-widget {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.widget-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 18px;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.widget-title i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.popular-searches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.popular-searches a {
+    background: #f8f9fa;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-family: 'Times New Roman', serif;
+    color: #1a3c5e;
+    text-decoration: none;
+    font-size: 13px;
+}
+.popular-searches a:hover {
+    background: #1a3c5e;
+    color: #fff;
+}
+@media (max-width: 768px) {
+    .results-summary {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .result-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+}
+</style>
+{% endblock %}

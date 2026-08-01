@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block title %}Site Settings - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="settings-page">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="settings-sidebar">
+                    <h5><i class="fas fa-cog"></i> Settings</h5>
+                    <div class="settings-nav">
+                        <a href="{% url 'settings:general' %}" class="settings-nav-item {% if category == 'general' %}active{% endif %}">
+                            <i class="fas fa-globe"></i> General
+                        </a>
+                        <a href="{% url 'settings:appearance' %}" class="settings-nav-item {% if category == 'appearance' %}active{% endif %}">
+                            <i class="fas fa-palette"></i> Appearance
+                        </a>
+                        <a href="{% url 'settings:email' %}" class="settings-nav-item {% if category == 'email' %}active{% endif %}">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                        <a href="{% url 'settings:seo' %}" class="settings-nav-item {% if category == 'seo' %}active{% endif %}">
+                            <i class="fas fa-search"></i> SEO
+                        </a>
+                        <a href="{% url 'settings:social' %}" class="settings-nav-item {% if category == 'social_media' %}active{% endif %}">
+                            <i class="fas fa-share-alt"></i> Social Media
+                        </a>
+                        <a href="{% url 'settings:advertisement' %}" class="settings-nav-item {% if category == 'advertisement' %}active{% endif %}">
+                            <i class="fas fa-ad"></i> Advertisements
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h2><i class="fas fa-{% if category == 'general' %}globe{% elif category == 'appearance' %}palette{% elif category == 'email' %}envelope{% elif category == 'seo' %}search{% elif category == 'social_media' %}share-alt{% else %}ad{% endif %}"></i> 
+                        {{ category|title }} Settings</h2>
+                        <p class="text-muted">Configure your site settings</p>
+                    </div>
+
+                    <div class="settings-list">
+                        {% for setting in settings %}
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <label for="setting_{{ setting.id }}"><strong>{{ setting.key|title }}</strong></label>
+                                <p class="text-muted">{{ setting.description }}</p>
+                            </div>
+                            <div class="setting-control">
+                                {% if setting.value|length < 100 %}
+                                <input type="text" class="form-control" id="setting_{{ setting.id }}" 
+                                       value="{{ setting.value }}" data-setting-id="{{ setting.id }}"
+                                       data-category="{{ setting.category }}" data-key="{{ setting.key }}">
+                                {% else %}
+                                <textarea class="form-control" id="setting_{{ setting.id }}" rows="3"
+                                          data-setting-id="{{ setting.id }}"
+                                          data-category="{{ setting.category }}" data-key="{{ setting.key }}">{{ setting.value }}</textarea>
+                                {% endif %}
+                                <button class="btn btn-primary btn-sm save-setting mt-1" data-setting-id="{{ setting.id }}">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No settings in this category.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.settings-page {
+    padding: 30px 0;
+}
+.settings-sidebar {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+}
+.settings-sidebar h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.settings-nav-item {
+    display: block;
+    padding: 10px 15px;
+    color: #495057;
+    font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+.settings-nav-item:hover {
+    background: #f8f9fa;
+    color: #1a3c5e;
+}
+.settings-nav-item.active {
+    background: #1a3c5e;
+    color: #fff;
+}
+.settings-nav-item i {
+    width: 25px;
+}
+.settings-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.settings-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.settings-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.settings-header p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    margin: 0;
+}
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.setting-item:last-child {
+    border-bottom: none;
+}
+.setting-info {
+    flex: 1;
+    padding-right: 20px;
+}
+.setting-info label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.setting-info p {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    margin: 0;
+}
+.setting-control {
+    flex: 1;
+    max-width: 400px;
+}
+.setting-control .form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+}
+.setting-control .form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.save-setting {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+@media (max-width: 768px) {
+    .setting-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .setting-control {
+        max-width: 100%;
+        margin-top: 10px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.save-setting').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.dataset.settingId;
+            const input = document.getElementById(`setting_${id}`);
+            const value = input.value;
+            const category = input.dataset.category;
+            const key = input.dataset.key;
+            
+            fetch('/settings/api/update/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    category: category,
+                    key: key,
+                    value: value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const btn = this;
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-success');
+                    setTimeout(() => {
+                        btn.innerHTML = originalHtml;
+                        btn.classList.remove('btn-success');
+                        btn.classList.add('btn-primary');
+                    }, 2000);
+                } else {
+                    alert('Failed to save setting: ' + (data.error || 'Unknown error'));
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

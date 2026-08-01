@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Message Detail - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="message-detail-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="message-card">
+                    <div class="message-header">
+                        <div class="message-title">
+                            <h2>{{ message.subject }}</h2>
+                            <span class="badge bg-{% if message.status == 'new' %}danger{% elif message.status == 'read' %}secondary{% elif message.status == 'replied' %}success{% elif message.status == 'archived' %}info{% else %}secondary{% endif %}">
+                                {{ message.get_status_display }}
+                            </span>
+                        </div>
+                        <div class="message-meta">
+                            <span><i class="fas fa-user"></i> {{ message.name }}</span>
+                            <span><i class="fas fa-envelope"></i> {{ message.email }}</span>
+                            <span><i class="fas fa-phone"></i> {{ message.phone|default:"N/A" }}</span>
+                            <span><i class="fas fa-calendar-alt"></i> {{ message.created_at|date:"F d, Y H:i" }}</span>
+                            <span><i class="fas fa-flag"></i> {{ message.get_priority_display }}</span>
+                        </div>
+                    </div>
+
+                    <div class="message-body">
+                        <h5>Message</h5>
+                        <p>{{ message.message|linebreaks }}</p>
+                    </div>
+
+                    {% if message.response %}
+                    <div class="message-response">
+                        <h5><i class="fas fa-reply"></i> Response</h5>
+                        <div class="response-content">
+                            <p>{{ message.response|linebreaks }}</p>
+                            <div class="response-meta">
+                                <span><i class="fas fa-user"></i> {{ message.responded_by.get_full_name|default:message.responded_by.username }}</span>
+                                <span><i class="fas fa-calendar-alt"></i> {{ message.responded_at|date:"F d, Y H:i" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="message-actions">
+                        {% if message.status != 'replied' %}
+                        <a href="{% url 'contacts:message_reply' message.id %}" class="btn btn-success">
+                            <i class="fas fa-reply"></i> Reply
+                        </a>
+                        {% endif %}
+                        {% if message.status == 'new' %}
+                        <a href="{% url 'contacts:mark_read' message.id %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-check"></i> Mark Read
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'contacts:archive' message.id %}" class="btn btn-outline-info">
+                            <i class="fas fa-archive"></i> Archive
+                        </a>
+                        <a href="{% url 'contacts:delete' message.id %}" class="btn btn-outline-danger" onclick="return confirm('Delete this message?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                        <a href="{% url 'contacts:messages' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.message-detail-page {
+    padding: 30px 0;
+}
+.message-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.message-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+.message-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.message-title h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.message-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+}
+.message-meta i {
+    margin-right: 5px;
+}
+.message-body {
+    padding: 15px 0;
+    min-height: 150px;
+}
+.message-body h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.message-body p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    line-height: 1.8;
+}
+.message-response {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    border-left: 4px solid #1a3c5e;
+}
+.message-response h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.response-content p {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    line-height: 1.8;
+}
+.response-meta {
+    display: flex;
+    gap: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.message-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.message-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 8px 20px;
+}
+</style>
+{% endblock %}

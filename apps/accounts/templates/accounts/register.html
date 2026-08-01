@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - The Egerton Advertiser{% endblock %}
+
+{% block extra_css %}
+<style>
+.register-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    padding: 40px;
+    border: 1px solid #e0e0e0;
+}
+.register-header {
+    text-align: center;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+.register-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+.register-header p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 16px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 15px;
+}
+.form-control, .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.25);
+}
+.btn-register {
+    background: #1a3c5e;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 4px;
+    width: 100%;
+    transition: all 0.3s;
+}
+.btn-register:hover {
+    background: #0e2a44;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26,60,94,0.3);
+}
+.register-footer {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.register-footer a {
+    color: #1a3c5e;
+    font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    font-weight: 600;
+}
+.register-footer a:hover {
+    text-decoration: underline;
+}
+.password-requirements {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+.password-requirements ul {
+    margin: 5px 0 0 20px;
+    padding: 0;
+}
+.password-requirements li {
+    list-style-type: none;
+}
+.password-requirements li.valid {
+    color: #28a745;
+}
+.password-requirements li.invalid {
+    color: #dc3545;
+}
+.gov-seal {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.gov-seal i {
+    font-size: 48px;
+    color: #1a3c5e;
+    opacity: 0.3;
+}
+.alert {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="register-container">
+        <div class="gov-seal">
+            <i class="fas fa-gavel"></i>
+        </div>
+        
+        <div class="register-header">
+            <h2>OFFICIAL REGISTRATION</h2>
+            <p>Create your account to access all features</p>
+        </div>
+        
+        <form method="post" action="{% url 'accounts:register' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="id_first_name"><i class="fas fa-user"></i> First Name</label>
+                        <input type="text" name="first_name" id="id_first_name" class="form-control" 
+                               placeholder="Enter your first name" required
+                               value="{{ form.first_name.value|default:'' }}">
+                        {% if form.first_name.errors %}
+                            <small class="text-danger">{{ form.first_name.errors }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="id_last_name"><i class="fas fa-user"></i> Last Name</label>
+                        <input type="text" name="last_name" id="id_last_name" class="form-control" 
+                               placeholder="Enter your last name" required
+                               value="{{ form.last_name.value|default:'' }}">
+                        {% if form.last_name.errors %}
+                            <small class="text-danger">{{ form.last_name.errors }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_username"><i class="fas fa-id-card"></i> Username</label>
+                <input type="text" name="username" id="id_username" class="form-control" 
+                       placeholder="Choose a username" required
+                       value="{{ form.username.value|default:'' }}">
+                <small class="text-muted" style="font-family: 'Times New Roman', serif;">3-150 characters. Letters, digits, and @/./+/-/_ only.</small>
+                {% if form.username.errors %}
+                    <small class="text-danger">{{ form.username.errors }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_email"><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" name="email" id="id_email" class="form-control" 
+                       placeholder="Enter your email address" required
+                       value="{{ form.email.value|default:'' }}">
+                {% if form.email.errors %}
+                    <small class="text-danger">{{ form.email.errors }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_role"><i class="fas fa-user-tag"></i> Account Type</label>
+                <select name="role" id="id_role" class="form-select">
+                    <option value="subscriber">Subscriber - Read news</option>
+                    <option value="journalist">Journalist - Write articles</option>
+                    <option value="advertiser">Advertiser - Post ads</option>
+                </select>
+                {% if form.role.errors %}
+                    <small class="text-danger">{{ form.role.errors }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password"><i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="password" id="id_password" class="form-control" 
+                       placeholder="Create a strong password" required>
+                <div class="password-requirements">
+                    <small>Password must contain:</small>
+                    <ul>
+                        <li id="length" class="invalid"><i class="fas fa-times"></i> At least 8 characters</li>
+                        <li id="digit" class="invalid"><i class="fas fa-times"></i> At least one number</li>
+                        <li id="uppercase" class="invalid"><i class="fas fa-times"></i> At least one uppercase letter</li>
+                        <li id="lowercase" class="invalid"><i class="fas fa-times"></i> At least one lowercase letter</li>
+                        <li id="special" class="invalid"><i class="fas fa-times"></i> At least one special character</li>
+                    </ul>
+                </div>
+                {% if form.password.errors %}
+                    <small class="text-danger">{{ form.password.errors }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password2"><i class="fas fa-check-circle"></i> Confirm Password</label>
+                <input type="password" name="password2" id="id_password2" class="form-control" 
+                       placeholder="Confirm your password" required>
+                {% if form.password2.errors %}
+                    <small class="text-danger">{{ form.password2.errors }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" name="terms" id="id_terms" class="form-check-input" required>
+                    <label for="id_terms" class="form-check-label" style="font-family: 'Times New Roman', serif;">
+                        I agree to the <a href="{% url 'terms_of_service' %}" class="text-decoration-none">Terms of Service</a> and 
+                        <a href="{% url 'privacy_policy' %}" class="text-decoration-none">Privacy Policy</a>
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-register">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+        
+        <div class="register-footer">
+            <p class="mb-2" style="font-family: 'Times New Roman', serif;">Already have an account?</p>
+            <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary" style="font-family: 'Times New Roman', serif; font-weight: 700;">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </a>
+        </div>
+        
+        <div class="text-center mt-3">
+            <small class="text-muted" style="font-family: 'Times New Roman', serif;">
+                <i class="fas fa-shield-alt"></i> Your information is secure and confidential
+            </small>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('id_password');
+    const length = document.getElementById('length');
+    const digit = document.getElementById('digit');
+    const uppercase = document.getElementById('uppercase');
+    const lowercase = document.getElementById('lowercase');
+    const special = document.getElementById('special');
+    
+    password.addEventListener('input', function() {
+        const val = this.value;
+        
+        if (val.length >= 8) {
+            length.className = 'valid';
+            length.innerHTML = '<i class="fas fa-check"></i> At least 8 characters';
+        } else {
+            length.className = 'invalid';
+            length.innerHTML = '<i class="fas fa-times"></i> At least 8 characters';
+        }
+        
+        if (/\d/.test(val)) {
+            digit.className = 'valid';
+            digit.innerHTML = '<i class="fas fa-check"></i> At least one number';
+        } else {
+            digit.className = 'invalid';
+            digit.innerHTML = '<i class="fas fa-times"></i> At least one number';
+        }
+        
+        if (/[A-Z]/.test(val)) {
+            uppercase.className = 'valid';
+            uppercase.innerHTML = '<i class="fas fa-check"></i> At least one uppercase letter';
+        } else {
+            uppercase.className = 'invalid';
+            uppercase.innerHTML = '<i class="fas fa-times"></i> At least one uppercase letter';
+        }
+        
+        if (/[a-z]/.test(val)) {
+            lowercase.className = 'valid';
+            lowercase.innerHTML = '<i class="fas fa-check"></i> At least one lowercase letter';
+        } else {
+            lowercase.className = 'invalid';
+            lowercase.innerHTML = '<i class="fas fa-times"></i> At least one lowercase letter';
+        }
+        
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(val)) {
+            special.className = 'valid';
+            special.innerHTML = '<i class="fas fa-check"></i> At least one special character';
+        } else {
+            special.className = 'invalid';
+            special.innerHTML = '<i class="fas fa-times"></i> At least one special character';
+        }
+    });
+});
+</script>
+{% endblock %}

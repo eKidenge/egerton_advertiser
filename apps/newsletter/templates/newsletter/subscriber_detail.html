@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ subscriber.email }} - Subscriber Detail - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="subscriber-detail-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="subscriber-card">
+                    <div class="subscriber-header">
+                        <h2><i class="fas fa-envelope"></i> Subscriber Detail</h2>
+                        <span class="badge bg-{% if subscriber.status == 'active' %}success{% elif subscriber.status == 'inactive' %}secondary{% else %}danger{% endif %}">
+                            {{ subscriber.get_status_display }}
+                        </span>
+                    </div>
+
+                    <div class="subscriber-info">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Email</span>
+                                <span class="value">{{ subscriber.email }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Name</span>
+                                <span class="value">{{ subscriber.name|default:"Not provided" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Frequency</span>
+                                <span class="value">{{ subscriber.get_frequency_display }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Status</span>
+                                <span class="value">
+                                    <span class="badge bg-{% if subscriber.status == 'active' %}success{% elif subscriber.status == 'inactive' %}secondary{% else %}danger{% endif %}">
+                                        {{ subscriber.get_status_display }}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Joined</span>
+                                <span class="value">{{ subscriber.created_at|date:"F d, Y H:i" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Confirmed</span>
+                                <span class="value">{{ subscriber.confirmed_at|date:"F d, Y"|default:"Not confirmed" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Opens</span>
+                                <span class="value">{{ subscriber.opens }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Clicks</span>
+                                <span class="value">{{ subscriber.clicks }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Source</span>
+                                <span class="value">{{ subscriber.source|default:"Website" }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    {% if subscriber.categories.all %}
+                    <div class="subscriber-categories">
+                        <h5><i class="fas fa-folder"></i> Preferred Categories</h5>
+                        <div class="category-tags">
+                            {% for category in subscriber.categories.all %}
+                            <span class="category-tag">{{ category.name }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Tags -->
+                    {% if subscriber.tags.all %}
+                    <div class="subscriber-tags">
+                        <h5><i class="fas fa-tags"></i> Preferred Tags</h5>
+                        <div class="tag-tags">
+                            {% for tag in subscriber.tags.all %}
+                            <span class="tag-tag">{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Tracking History -->
+                    <div class="tracking-history">
+                        <h5><i class="fas fa-history"></i> Tracking History</h5>
+                        {% if tracking %}
+                        <div class="tracking-list">
+                            {% for track in tracking|slice:":20" %}
+                            <div class="tracking-item">
+                                <span class="action badge bg-{% if track.action == 'open' %}success{% elif track.action == 'click' %}info{% elif track.action == 'unsubscribe' %}danger{% else %}secondary{% endif %}">
+                                    {{ track.get_action_display }}
+                                </span>
+                                <span class="time">{{ track.created_at|timesince }} ago</span>
+                                {% if track.link %}
+                                <span class="link">{{ track.link|truncatechars:30 }}</span>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No tracking data available</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="subscriber-actions">
+                        {% if subscriber.status == 'active' %}
+                        <a href="#" class="btn btn-danger" onclick="return confirm('Unsubscribe this subscriber?')">
+                            <i class="fas fa-times"></i> Unsubscribe
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'newsletter:subscriber_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.subscriber-detail-page {
+    padding: 30px 0;
+}
+.subscriber-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.subscriber-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+.subscriber-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.subscriber-info {
+    margin: 20px 0;
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.info-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+}
+.info-item .label {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.info-item .value {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-weight: 600;
+    color: #1a3c5e;
+    font-size: 14px;
+}
+.subscriber-categories,
+.subscriber-tags {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.subscriber-categories h5,
+.subscriber-tags h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.category-tags,
+.tag-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+.category-tag {
+    background: #1a3c5e;
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+}
+.tag-tag {
+    background: #e8f0f8;
+    color: #1a3c5e;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+}
+.tracking-history {
+    margin: 20px 0;
+}
+.tracking-history h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.tracking-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: 'Times New Roman', serif;
+}
+.tracking-item .time {
+    color: #6c757d;
+    font-size: 13px;
+}
+.tracking-item .link {
+    color: #1a3c5e;
+    font-size: 13px;
+}
+.subscriber-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+}
+.subscriber-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+</style>
+{% endblock %}

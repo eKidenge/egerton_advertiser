@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Logout - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="logout-page">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="logout-card">
+                    <div class="gov-seal">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <div class="logout-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <h3>You Have Been Logged Out</h3>
+                    <p class="text-muted">Thank you for using The Egerton Advertiser</p>
+                    <p class="text-muted small">You have been successfully logged out of your account.</p>
+                    
+                    <div class="logout-divider"></div>
+                    
+                    <div class="logout-actions">
+                        <a href="{% url 'accounts:login' %}" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Login Again
+                        </a>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-home"></i> Go Home
+                        </a>
+                    </div>
+                    
+                    <div class="logout-footer">
+                        <p class="text-muted">
+                            <i class="fas fa-shield-alt"></i> 
+                            Your session has been securely terminated.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.logout-page {
+    padding: 60px 0;
+    background: #f5f0e8;
+    min-height: calc(100vh - 300px);
+}
+.logout-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.gov-seal i {
+    font-size: 48px;
+    color: #1a3c5e;
+    opacity: 0.3;
+    margin-bottom: 15px;
+}
+.logout-icon {
+    font-size: 64px;
+    color: #1a3c5e;
+    margin-bottom: 15px;
+}
+.logout-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 10px;
+}
+.logout-card p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+.logout-card .text-muted {
+    color: #6c757d;
+}
+.logout-divider {
+    width: 80px;
+    height: 3px;
+    background: #c9a84c;
+    margin: 20px auto;
+}
+.logout-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.logout-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 4px;
+}
+.btn-primary {
+    background: #1a3c5e;
+    border: none;
+    color: #fff;
+}
+.btn-primary:hover {
+    background: #0e2a44;
+}
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+}
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: #fff;
+}
+.logout-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+.logout-footer p {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.logout-footer i {
+    color: #c9a84c;
+}
+@media (max-width: 768px) {
+    .logout-card {
+        padding: 30px 20px;
+    }
+    .logout-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    .logout-actions .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+</style>
+{% endblock %}

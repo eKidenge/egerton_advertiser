@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block title %}Subscribers - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="subscriber-management">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-envelope"></i> Subscriber Management</h1>
+                <p class="text-muted">Manage all newsletter subscribers</p>
+            </div>
+            <div>
+                <span class="badge bg-primary">Total: {{ stats.total }}</span>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row row mb-4">
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number">{{ stats.active|default:0 }}</div>
+                    <div class="stat-label">Active</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-warning">
+                    <div class="stat-number">{{ stats.inactive|default:0 }}</div>
+                    <div class="stat-label">Inactive</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-danger text-white">
+                    <div class="stat-number">{{ stats.unsubscribed|default:0 }}</div>
+                    <div class="stat-label">Unsubscribed</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-success text-white">
+                    <div class="stat-number">{{ stats.new_week|default:0 }}</div>
+                    <div class="stat-label">New This Week</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="get" class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" placeholder="Search subscribers..." 
+                           value="{{ search|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                        <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option>
+                        <option value="unsubscribed" {% if status_filter == 'unsubscribed' %}selected{% endif %}>Unsubscribed</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="frequency" class="form-select">
+                        <option value="">All Frequencies</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="instant">Instant</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'newsletter:subscriber_list' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo"></i> Clear Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Subscribers Table -->
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Frequency</th>
+                        <th>Opens</th>
+                        <th>Clicks</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subscriber in subscribers %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'newsletter:subscriber_detail' subscriber.id %}">
+                                <strong>{{ subscriber.email }}</strong>
+                            </a>
+                        </td>
+                        <td>{{ subscriber.name|default:"-" }}</td>
+                        <td>
+                            <span class="badge bg-{% if subscriber.status == 'active' %}success{% elif subscriber.status == 'inactive' %}secondary{% else %}danger{% endif %}">
+                                {{ subscriber.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ subscriber.get_frequency_display }}</td>
+                        <td>{{ subscriber.opens }}</td>
+                        <td>{{ subscriber.clicks }}</td>
+                        <td>{{ subscriber.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'newsletter:subscriber_detail' subscriber.id %}" class="btn btn-outline-primary" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if subscriber.status == 'active' %}
+                                <a href="#" class="btn btn-outline-danger" title="Unsubscribe" onclick="return confirm('Unsubscribe this subscriber?')">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-4">
+                            <i class="fas fa-envelope-open fa-3x text-muted"></i>
+                            <p class="text-muted mt-2">No subscribers found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.subscriber-management {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.stat-box {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+.stat-box .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+}
+.stat-box .stat-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.filters-bar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.filters-bar .form-control,
+.filters-bar .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+}
+.table thead th {
+    background: #1a3c5e;
+    color: #fff;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    border: none;
+    padding: 12px 15px;
+}
+.table tbody td {
+    font-family: 'Times New Roman', serif;
+    vertical-align: middle;
+    padding: 12px 15px;
+}
+.badge {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 4px 12px;
+}
+</style>
+{% endblock %}

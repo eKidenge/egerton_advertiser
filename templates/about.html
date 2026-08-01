@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="about-page">
+        <div class="page-header text-center">
+            <h1><i class="fas fa-info-circle"></i> About The Egerton Advertiser</h1>
+            <p class="text-muted">Official Gazette of Egerton, Kenya</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="about-card">
+                    <div class="about-section">
+                        <h2><i class="fas fa-flag"></i> Our Mission</h2>
+                        <p>
+                            The Egerton Advertiser is committed to delivering accurate, timely, and trustworthy 
+                            news to the citizens of Egerton and beyond. We believe in the power of journalism 
+                            to inform, educate, and empower communities.
+                        </p>
+                    </div>
+
+                    <div class="about-section">
+                        <h2><i class="fas fa-eye"></i> Our Vision</h2>
+                        <p>
+                            To be the most trusted source of news and information in Kenya, setting the 
+                            standard for journalistic excellence and integrity.
+                        </p>
+                    </div>
+
+                    <div class="about-section">
+                        <h2><i class="fas fa-gavel"></i> Core Values</h2>
+                        <div class="values-grid">
+                            <div class="value-item">
+                                <i class="fas fa-check-circle"></i>
+                                <h5>Truth</h5>
+                                <p>We are committed to reporting the truth, no matter the cost.</p>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-balance-scale"></i>
+                                <h5>Justice</h5>
+                                <p>We stand for justice and fairness in all our reporting.</p>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-handshake"></i>
+                                <h5>Service</h5>
+                                <p>We serve our community with dedication and integrity.</p>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-star"></i>
+                                <h5>Excellence</h5>
+                                <p>We strive for excellence in everything we do.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2><i class="fas fa-users"></i> Meet the Team</h2>
+                        <div class="team-grid">
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <h5>Editor-in-Chief</h5>
+                                <p class="text-muted">John Doe</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <h5>Managing Editor</h5>
+                                <p class="text-muted">Jane Smith</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <h5>Political Desk</h5>
+                                <p class="text-muted">Mike Johnson</p>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <h5>Sports Editor</h5>
+                                <p class="text-muted">Sarah Williams</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <h2><i class="fas fa-envelope"></i> Contact Information</h2>
+                        <div class="contact-info">
+                            <div class="contact-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Egerton, Kenya</span>
+                            </div>
+                            <div class="contact-row">
+                                <i class="fas fa-phone"></i>
+                                <span>+254 700 000 000</span>
+                            </div>
+                            <div class="contact-row">
+                                <i class="fas fa-envelope"></i>
+                                <span>info@theegertonadvertiser.com</span>
+                            </div>
+                            <div class="contact-row">
+                                <i class="fas fa-clock"></i>
+                                <span>Monday - Friday: 8:00 AM - 5:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.about-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.about-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.about-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.about-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+.about-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 15px;
+}
+.about-section h2 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.about-section p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #495057;
+}
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.value-item {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.value-item i {
+    font-size: 32px;
+    color: #c9a84c;
+}
+.value-item h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin: 10px 0 5px;
+}
+.value-item p {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+}
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.team-member {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.member-avatar {
+    font-size: 48px;
+    color: #1a3c5e;
+}
+.team-member h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin: 10px 0 3px;
+}
+.contact-info {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+}
+.contact-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: 'Times New Roman', serif;
+}
+.contact-row:last-child {
+    border-bottom: none;
+}
+.contact-row i {
+    width: 25px;
+    color: #1a3c5e;
+}
+@media (max-width: 768px) {
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+{% endblock %}

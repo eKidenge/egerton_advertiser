@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Reply to Message - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="reply-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="reply-card">
+                    <div class="reply-header">
+                        <h2><i class="fas fa-reply"></i> Reply to {{ message.name }}</h2>
+                        <p class="text-muted">Subject: {{ message.subject }}</p>
+                    </div>
+
+                    <div class="original-message">
+                        <h5>Original Message</h5>
+                        <div class="original-content">
+                            <p><strong>From:</strong> {{ message.name }} ({{ message.email }})</p>
+                            <p><strong>Received:</strong> {{ message.created_at|date:"F d, Y H:i" }}</p>
+                            <hr>
+                            <p>{{ message.message|linebreaks }}</p>
+                        </div>
+                    </div>
+
+                    <form method="post" action="{% url 'contacts:message_reply' message.id %}">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_response"><i class="fas fa-comment-dots"></i> Your Response</label>
+                            <textarea name="response" id="id_response" class="form-control" rows="6" 
+                                      placeholder="Type your response here..." required></textarea>
+                            {% if form.response.errors %}
+                            <small class="text-danger">{{ form.response.errors }}</small>
+                            {% endif %}
+                            <small class="help-text">This response will be sent via email to the sender</small>
+                        </div>
+
+                        <div class="reply-actions">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-paper-plane"></i> Send Reply
+                            </button>
+                            <a href="{% url 'contacts:message_detail' message.id %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.reply-page {
+    padding: 30px 0;
+}
+.reply-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.reply-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.reply-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.original-message {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+.original-message h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.original-content {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+}
+.original-content hr {
+    margin: 10px 0;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.reply-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+}
+.reply-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+{% endblock %}

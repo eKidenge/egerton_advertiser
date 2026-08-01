@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+
+{% block title %}Email Settings - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="settings-page">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="settings-sidebar">
+                    <h5><i class="fas fa-cog"></i> Settings</h5>
+                    <div class="settings-nav">
+                        <a href="{% url 'settings:general' %}" class="settings-nav-item">
+                            <i class="fas fa-globe"></i> General
+                        </a>
+                        <a href="{% url 'settings:appearance' %}" class="settings-nav-item">
+                            <i class="fas fa-palette"></i> Appearance
+                        </a>
+                        <a href="{% url 'settings:email' %}" class="settings-nav-item active">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                        <a href="{% url 'settings:seo' %}" class="settings-nav-item">
+                            <i class="fas fa-search"></i> SEO
+                        </a>
+                        <a href="{% url 'settings:social' %}" class="settings-nav-item">
+                            <i class="fas fa-share-alt"></i> Social Media
+                        </a>
+                        <a href="{% url 'settings:advertisement' %}" class="settings-nav-item">
+                            <i class="fas fa-ad"></i> Advertisements
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h2><i class="fas fa-envelope"></i> Email Settings</h2>
+                        <p class="text-muted">Configure your email server settings</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_smtp_host"><i class="fas fa-server"></i> SMTP Host</label>
+                            <input type="text" name="smtp_host" id="id_smtp_host" class="form-control" 
+                                   value="{{ form.smtp_host.value|default:'' }}" placeholder="smtp.gmail.com">
+                            {% if form.smtp_host.errors %}
+                            <small class="text-danger">{{ form.smtp_host.errors }}</small>
+                            {% endif %}
+                            <small class="help-text">Your SMTP server address</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_smtp_port"><i class="fas fa-plug"></i> SMTP Port</label>
+                                    <input type="number" name="smtp_port" id="id_smtp_port" class="form-control" 
+                                           value="{{ form.smtp_port.value|default:'587' }}" placeholder="587">
+                                    {% if form.smtp_port.errors %}
+                                    <small class="text-danger">{{ form.smtp_port.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_use_tls"><i class="fas fa-shield-alt"></i> Use TLS</label>
+                                    <div class="form-check mt-2">
+                                        <input type="checkbox" name="use_tls" id="id_use_tls" 
+                                               class="form-check-input" {% if form.use_tls.value %}checked{% endif %}>
+                                        <label for="id_use_tls" class="form-check-label">Enable TLS encryption</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_smtp_username"><i class="fas fa-user"></i> SMTP Username</label>
+                            <input type="text" name="smtp_username" id="id_smtp_username" class="form-control" 
+                                   value="{{ form.smtp_username.value|default:'' }}" placeholder="your-email@gmail.com">
+                            {% if form.smtp_username.errors %}
+                            <small class="text-danger">{{ form.smtp_username.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_smtp_password"><i class="fas fa-key"></i> SMTP Password</label>
+                            <input type="password" name="smtp_password" id="id_smtp_password" class="form-control" 
+                                   placeholder="Enter your SMTP password">
+                            <small class="help-text">Leave blank to keep current password</small>
+                            {% if form.smtp_password.errors %}
+                            <small class="text-danger">{{ form.smtp_password.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_from_email"><i class="fas fa-envelope"></i> From Email</label>
+                                    <input type="email" name="from_email" id="id_from_email" class="form-control" 
+                                           value="{{ form.from_email.value|default:'' }}" placeholder="noreply@theegertonadvertiser.com">
+                                    {% if form.from_email.errors %}
+                                    <small class="text-danger">{{ form.from_email.errors }}</small>
+                                    {% endif %}
+                                    <small class="help-text">Email address used in the "From" field</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_from_name"><i class="fas fa-user"></i> From Name</label>
+                                    <input type="text" name="from_name" id="id_from_name" class="form-control" 
+                                           value="{{ form.from_name.value|default:'The Egerton Advertiser' }}" placeholder="The Egerton Advertiser">
+                                    {% if form.from_name.errors %}
+                                    <small class="text-danger">{{ form.from_name.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Email Settings
+                            </button>
+                            <button type="button" class="btn btn-success" id="testEmailBtn">
+                                <i class="fas fa-paper-plane"></i> Send Test Email
+                            </button>
+                            <a href="{% url 'settings:general' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.settings-page {
+    padding: 30px 0;
+}
+.settings-sidebar {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+}
+.settings-sidebar h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.settings-nav-item {
+    display: block;
+    padding: 10px 15px;
+    color: #495057;
+    font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+.settings-nav-item:hover {
+    background: #f8f9fa;
+    color: #1a3c5e;
+}
+.settings-nav-item.active {
+    background: #1a3c5e;
+    color: #fff;
+}
+.settings-nav-item i {
+    width: 25px;
+}
+.settings-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.settings-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.settings-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.form-check-label {
+    font-family: 'Times New Roman', serif;
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('testEmailBtn').addEventListener('click', function() {
+        const btn = this;
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        btn.disabled = true;
+
+        // Get form data
+        const form = this.closest('form');
+        const formData = new FormData(form);
+        
+        fetch('/settings/api/test-email/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Test email sent successfully! Please check your inbox.');
+            } else {
+                alert('Failed to send test email: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            alert('An error occurred while sending test email.');
+        })
+        .finally(() => {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Newsletter - The Egerton Advertiser{% endblock %}
+
+{% block extra_css %}
+{{ form.media }}
+<style>
+.newsletter-form-container {
+    padding: 30px 0;
+}
+.form-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.form-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.form-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-control, .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 4px;
+}
+.preview-area {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 300px;
+}
+.article-select {
+    max-height: 200px;
+    overflow-y: auto;
+}
+.article-checkbox {
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.article-checkbox:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="newsletter-form-container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2><i class="fas fa-envelope-open-text"></i> Create Newsletter</h2>
+                        <p class="text-muted">Design and send email newsletters to your subscribers</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_subject"><i class="fas fa-heading"></i> Subject Line</label>
+                            <input type="text" name="subject" id="id_subject" class="form-control" 
+                                   placeholder="Enter newsletter subject" required
+                                   value="{{ form.subject.value|default:'' }}">
+                            {% if form.subject.errors %}
+                            <small class="text-danger">{{ form.subject.errors }}</small>
+                            {% endif %}
+                            <small class="help-text">A compelling subject line increases open rates</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_preview_text"><i class="fas fa-align-left"></i> Preview Text</label>
+                            <input type="text" name="preview_text" id="id_preview_text" class="form-control" 
+                                   placeholder="Preview text shown in email clients"
+                                   value="{{ form.preview_text.value|default:'' }}">
+                            <small class="help-text">Short preview text displayed next to the subject line</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_content"><i class="fas fa-file-alt"></i> Content</label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                            <small class="text-danger">{{ form.content.errors }}</small>
+                            {% endif %}
+                            <small class="help-text">Use the editor to create your newsletter content</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_template"><i class="fas fa-palette"></i> Template</label>
+                                    <select name="template" id="id_template" class="form-select">
+                                        <option value="default" {% if form.template.value == 'default' %}selected{% endif %}>Default</option>
+                                        <option value="minimal" {% if form.template.value == 'minimal' %}selected{% endif %}>Minimal</option>
+                                        <option value="featured" {% if form.template.value == 'featured' %}selected{% endif %}>Featured</option>
+                                        <option value="digest" {% if form.template.value == 'digest' %}selected{% endif %}>Digest</option>
+                                        <option value="custom" {% if form.template.value == 'custom' %}selected{% endif %}>Custom</option>
+                                    </select>
+                                    {% if form.template.errors %}
+                                    <small class="text-danger">{{ form.template.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_status"><i class="fas fa-flag"></i> Status</label>
+                                    <select name="status" id="id_status" class="form-select">
+                                        <option value="draft" {% if form.status.value == 'draft' %}selected{% endif %}>Draft</option>
+                                        <option value="scheduled" {% if form.status.value == 'scheduled' %}selected{% endif %}>Schedule</option>
+                                    </select>
+                                    {% if form.status.errors %}
+                                    <small class="text-danger">{{ form.status.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_scheduled_for"><i class="fas fa-calendar-plus"></i> Schedule Date</label>
+                                    <input type="datetime-local" name="scheduled_for" id="id_scheduled_for" 
+                                           class="form-control" value="{{ form.scheduled_for.value|default:''|date:'Y-m-d\TH:i' }}">
+                                    <small class="help-text">Leave blank to save as draft</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_frequency"><i class="fas fa-clock"></i> Frequency</label>
+                                    <select name="frequency" id="id_frequency" class="form-select">
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly" selected>Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                        <option value="instant">Instant</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Articles Selection -->
+                        <div class="form-group">
+                            <label><i class="fas fa-newspaper"></i> Include Articles</label>
+                            <div class="article-select">
+                                {% for article in articles %}
+                                <div class="article-checkbox">
+                                    <input type="checkbox" name="articles" value="{{ article.id }}" 
+                                           id="article_{{ article.id }}"
+                                           {% if article.id in selected_articles %}checked{% endif %}>
+                                    <label for="article_{{ article.id }}">
+                                        {{ article.title }} - 
+                                        <small class="text-muted">{{ article.published_at|date:"M d, Y" }}</small>
+                                    </label>
+                                </div>
+                                {% empty %}
+                                <p class="text-muted">No published articles available</p>
+                                {% endfor %}
+                            </div>
+                            <small class="help-text">Select articles to include in this newsletter</small>
+                        </div>
+
+                        <!-- Target Categories -->
+                        <div class="form-group">
+                            <label><i class="fas fa-folder"></i> Target Categories</label>
+                            <div class="category-select">
+                                {% for category in categories %}
+                                <div class="category-checkbox">
+                                    <input type="checkbox" name="target_categories" value="{{ category.id }}" 
+                                           id="cat_{{ category.id }}">
+                                    <label for="cat_{{ category.id }}">{{ category.name }}</label>
+                                </div>
+                                {% empty %}
+                                <p class="text-muted">No categories available</p>
+                                {% endfor %}
+                            </div>
+                            <small class="help-text">Send to subscribers interested in these categories (leave blank for all)</small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Newsletter
+                            </button>
+                            <button type="submit" name="preview" value="1" class="btn btn-outline-info">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <a href="{% url 'newsletter:list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

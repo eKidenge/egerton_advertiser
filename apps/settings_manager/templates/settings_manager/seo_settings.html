@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block title %}SEO Settings - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="settings-page">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="settings-sidebar">
+                    <h5><i class="fas fa-cog"></i> Settings</h5>
+                    <div class="settings-nav">
+                        <a href="{% url 'settings:general' %}" class="settings-nav-item">
+                            <i class="fas fa-globe"></i> General
+                        </a>
+                        <a href="{% url 'settings:appearance' %}" class="settings-nav-item">
+                            <i class="fas fa-palette"></i> Appearance
+                        </a>
+                        <a href="{% url 'settings:email' %}" class="settings-nav-item">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                        <a href="{% url 'settings:seo' %}" class="settings-nav-item active">
+                            <i class="fas fa-search"></i> SEO
+                        </a>
+                        <a href="{% url 'settings:social' %}" class="settings-nav-item">
+                            <i class="fas fa-share-alt"></i> Social Media
+                        </a>
+                        <a href="{% url 'settings:advertisement' %}" class="settings-nav-item">
+                            <i class="fas fa-ad"></i> Advertisements
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h2><i class="fas fa-search"></i> SEO Settings</h2>
+                        <p class="text-muted">Optimize your website for search engines</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_meta_title"><i class="fas fa-heading"></i> Default Meta Title</label>
+                            <input type="text" name="meta_title" id="id_meta_title" class="form-control" 
+                                   value="{{ form.meta_title.value|default:'The Egerton Advertiser' }}" maxlength="70">
+                            <small class="help-text">Recommended: 50-60 characters. This appears in search results.</small>
+                            <div class="character-count" id="metaTitleCount">0/70</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_meta_description"><i class="fas fa-align-left"></i> Default Meta Description</label>
+                            <textarea name="meta_description" id="id_meta_description" class="form-control" rows="3" maxlength="160">{{ form.meta_description.value|default:'' }}</textarea>
+                            <small class="help-text">Recommended: 150-160 characters. Appears below the title in search results.</small>
+                            <div class="character-count" id="metaDescCount">0/160</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_meta_keywords"><i class="fas fa-tags"></i> Meta Keywords</label>
+                            <input type="text" name="meta_keywords" id="id_meta_keywords" class="form-control" 
+                                   value="{{ form.meta_keywords.value|default:'' }}" placeholder="keyword1, keyword2, keyword3">
+                            <small class="help-text">Comma-separated keywords relevant to your site</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_google_analytics_id"><i class="fab fa-google"></i> Google Analytics ID</label>
+                                    <input type="text" name="google_analytics_id" id="id_google_analytics_id" class="form-control" 
+                                           value="{{ form.google_analytics_id.value|default:'' }}" placeholder="UA-XXXXXXXXX-X">
+                                    <small class="help-text">Your Google Analytics tracking ID</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_google_verification"><i class="fab fa-google"></i> Google Verification</label>
+                                    <input type="text" name="google_verification" id="id_google_verification" class="form-control" 
+                                           value="{{ form.google_verification.value|default:'' }}" placeholder="Google verification code">
+                                    <small class="help-text">For Google Search Console verification</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_bing_verification"><i class="fab fa-microsoft"></i> Bing Verification</label>
+                            <input type="text" name="bing_verification" id="id_bing_verification" class="form-control" 
+                                   value="{{ form.bing_verification.value|default:'' }}" placeholder="Bing verification code">
+                            <small class="help-text">For Bing Webmaster Tools verification</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_robots_txt"><i class="fas fa-file-code"></i> Robots.txt</label>
+                            <textarea name="robots_txt" id="id_robots_txt" class="form-control" rows="6">{{ form.robots_txt.value|default:'User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /accounts/' }}</textarea>
+                            <small class="help-text">Instructions for search engine crawlers</small>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="enable_sitemap" id="id_enable_sitemap" 
+                                       class="form-check-input" {% if form.enable_sitemap.value %}checked{% endif %}>
+                                <label for="id_enable_sitemap" class="form-check-label">
+                                    <i class="fas fa-sitemap"></i> Enable Sitemap Generation
+                                </label>
+                            </div>
+                            <small class="help-text">Automatically generate and update sitemap.xml</small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save SEO Settings
+                            </button>
+                            <button type="reset" class="btn btn-outline-secondary">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                            <a href="/sitemap.xml" target="_blank" class="btn btn-outline-info">
+                                <i class="fas fa-sitemap"></i> View Sitemap
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.settings-page {
+    padding: 30px 0;
+}
+.settings-sidebar {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+}
+.settings-sidebar h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.settings-nav-item {
+    display: block;
+    padding: 10px 15px;
+    color: #495057;
+    font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+.settings-nav-item:hover {
+    background: #f8f9fa;
+    color: #1a3c5e;
+}
+.settings-nav-item.active {
+    background: #1a3c5e;
+    color: #fff;
+}
+.settings-nav-item i {
+    width: 25px;
+}
+.settings-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.settings-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.settings-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.form-check-label {
+    font-family: 'Times New Roman', serif;
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.character-count {
+    text-align: right;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 3px;
+}
+.character-count.warning {
+    color: #ffc107;
+}
+.character-count.danger {
+    color: #dc3545;
+}
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Meta Title character counter
+    const titleInput = document.getElementById('id_meta_title');
+    const titleCount = document.getElementById('metaTitleCount');
+    
+    titleInput.addEventListener('input', function() {
+        const length = this.value.length;
+        titleCount.textContent = `${length}/70`;
+        titleCount.className = 'character-count';
+        if (length > 60) titleCount.classList.add('warning');
+        if (length > 70) titleCount.classList.add('danger');
+    });
+    titleInput.dispatchEvent(new Event('input'));
+
+    // Meta Description character counter
+    const descInput = document.getElementById('id_meta_description');
+    const descCount = document.getElementById('metaDescCount');
+    
+    descInput.addEventListener('input', function() {
+        const length = this.value.length;
+        descCount.textContent = `${length}/160`;
+        descCount.className = 'character-count';
+        if (length > 150) descCount.classList.add('warning');
+        if (length > 160) descCount.classList.add('danger');
+    });
+    descInput.dispatchEvent(new Event('input'));
+});
+</script>
+{% endblock %}

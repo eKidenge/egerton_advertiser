@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Spam Comments - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="comments-status-page">
+        <div class="page-header">
+            <h1><i class="fas fa-ban"></i> Spam Comments</h1>
+            <p class="text-muted">Comments marked as spam</p>
+        </div>
+
+        <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment-status-item spam">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="comment-content">
+                            <strong>{{ comment.user.get_full_name|default:comment.user.username }}</strong>
+                            <p>{{ comment.content|truncatewords:20 }}</p>
+                            <div class="comment-meta">
+                                <span><i class="fas fa-article"></i> <a href="{{ comment.article.get_absolute_url }}">{{ comment.article.title }}</a></span>
+                                <span><i class="fas fa-calendar-alt"></i> {{ comment.created_at|timesince }} ago</span>
+                                <span><i class="fas fa-flag"></i> Flagged as spam</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="btn-group">
+                            <a href="{% url 'comments:moderate' comment.id %}" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-check"></i> Approve
+                            </a>
+                            <a href="{% url 'comments:delete' comment.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this comment?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-ban fa-4x text-muted"></i>
+                <h4 class="mt-3">No Spam Comments</h4>
+                <p class="text-muted">Your comment section is clean!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+{% endblock %}

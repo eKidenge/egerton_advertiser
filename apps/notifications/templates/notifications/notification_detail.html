@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ notification.title }} - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="notification-detail-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="notification-card">
+                    <div class="notification-header">
+                        <div class="notification-icon">
+                            <i class="fas fa-{% if notification.notification_type == 'info' %}info-circle text-primary{% elif notification.notification_type == 'success' %}check-circle text-success{% elif notification.notification_type == 'warning' %}warning text-warning{% elif notification.notification_type == 'error' %}exclamation-circle text-danger{% elif notification.notification_type == 'comment' %}comment text-info{% elif notification.notification_type == 'like' %}heart text-danger{% elif notification.notification_type == 'share' %}share-alt text-success{% else %}bell text-secondary{% endif %} fa-3x"></i>
+                        </div>
+                        <div class="notification-title">
+                            <h2>{{ notification.title }}</h2>
+                            <span class="badge bg-{% if notification.notification_type == 'info' %}primary{% elif notification.notification_type == 'success' %}success{% elif notification.notification_type == 'warning' %}warning{% elif notification.notification_type == 'error' %}danger{% else %}secondary{% endif %}">
+                                {{ notification.get_notification_type_display }}
+                            </span>
+                        </div>
+                        <div class="notification-meta">
+                            <span><i class="fas fa-clock"></i> {{ notification.created_at|date:"F d, Y H:i" }}</span>
+                            <span><i class="fas fa-clock"></i> {{ notification.created_at|timesince }} ago</span>
+                            {% if notification.is_read %}
+                            <span><i class="fas fa-check-circle text-success"></i> Read</span>
+                            {% else %}
+                            <span><i class="fas fa-circle text-warning"></i> Unread</span>
+                            {% endif %}
+                            {% if notification.actor %}
+                            <span><i class="fas fa-user"></i> From: {{ notification.actor.get_full_name|default:notification.actor.username }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="notification-body">
+                        <p>{{ notification.message|linebreaks }}</p>
+                    </div>
+
+                    {% if notification.link %}
+                    <div class="notification-link">
+                        <a href="{{ notification.link }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-right"></i> {{ notification.link_text|default:"View Details" }}
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="notification-actions">
+                        {% if not notification.is_read %}
+                        <button class="btn btn-outline-success mark-read-btn" data-id="{{ notification.id }}">
+                            <i class="fas fa-check"></i> Mark as Read
+                        </button>
+                        {% endif %}
+                        <a href="{% url 'notifications:delete' notification.id %}" class="btn btn-outline-danger" onclick="return confirm('Delete this notification?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                        <a href="{% url 'notifications:list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Notifications
+                        </a>
+                    </div>
+
+                    <!-- Object Reference -->
+                    {% if notification.object_type and notification.object_id %}
+                    <div class="notification-object">
+                        <h5><i class="fas fa-link"></i> Related Content</h5>
+                        <p class="text-muted">This notification is related to: {{ notification.object_type }} #{{ notification.object_id }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.notification-detail-page {
+    padding: 30px 0;
+}
+.notification-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.notification-header {
+    text-align: center;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+.notification-icon {
+    margin-bottom: 15px;
+}
+.notification-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.notification-title h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin: 0;
+}
+.notification-meta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 10px;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+}
+.notification-meta i {
+    margin-right: 5px;
+}
+.notification-body {
+    padding: 20px 0;
+    min-height: 100px;
+}
+.notification-body p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    line-height: 1.8;
+}
+.notification-link {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.notification-link .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+.notification-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.notification-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+.notification-object {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.notification-object h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.notification-object p {
+    font-family: 'Times New Roman', serif;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.mark-read-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.dataset.id;
+            fetch(`/notifications/${id}/mark-read/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

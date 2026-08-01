@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="analytics-dashboard">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-chart-bar"></i> Analytics Dashboard</h1>
+                <p class="text-muted">Track your website performance</p>
+            </div>
+            <div>
+                <select class="form-select" id="dateRange">
+                    <option value="24h" {% if date_range == '24h' %}selected{% endif %}>Last 24 Hours</option>
+                    <option value="7d" {% if date_range == '7d' %}selected{% endif %}>Last 7 Days</option>
+                    <option value="30d" {% if date_range == '30d' %}selected{% endif %}>Last 30 Days</option>
+                    <option value="90d" {% if date_range == '90d' %}selected{% endif %}>Last 90 Days</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-eye"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_page_views|default:0|intcomma }}</div>
+                        <div class="stat-label">Page Views</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ unique_visitors|default:0|intcomma }}</div>
+                        <div class="stat-label">Unique Visitors</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-arrow-right"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ total_visits|default:0|intcomma }}</div>
+                        <div class="stat-label">Total Visits</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-percent"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ bounce_rate|floatformat:1 }}%</div>
+                        <div class="stat-label">Bounce Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Real-time Visitors -->
+            <div class="col-md-12">
+                <div class="widget-card">
+                    <h5><i class="fas fa-circle text-success pulse"></i> Real-time Visitors</h5>
+                    <div class="realtime-display">
+                        <span class="realtime-count">{{ realtime_visitors|default:0 }}</span>
+                        <span class="realtime-label">visitors online</span>
+                    </div>
+                    <div class="realtime-pages">
+                        <strong>Current pages:</strong>
+                        <div id="realtimePages">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Daily Views Chart -->
+            <div class="col-md-8">
+                <div class="widget-card">
+                    <h5><i class="fas fa-chart-line"></i> Daily Page Views</h5>
+                    <canvas id="dailyViewsChart" height="250"></canvas>
+                </div>
+            </div>
+
+            <!-- Traffic Sources -->
+            <div class="col-md-4">
+                <div class="widget-card">
+                    <h5><i class="fas fa-share-alt"></i> Traffic Sources</h5>
+                    <canvas id="trafficSourcesChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Popular Articles -->
+            <div class="col-md-8">
+                <div class="widget-card">
+                    <h5><i class="fas fa-newspaper"></i> Popular Articles</h5>
+                    <div class="popular-articles">
+                        {% for article in popular_articles %}
+                        <div class="article-row">
+                            <span class="rank">{{ forloop.counter }}</span>
+                            <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                            <span class="views">{{ article.views }} views</span>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No data available</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="col-md-4">
+                <div class="widget-card">
+                    <h5><i class="fas fa-chart-pie"></i> Quick Stats</h5>
+                    <div class="quick-stats">
+                        <div class="stat-row">
+                            <span>Avg. Time on Site</span>
+                            <span class="stat-value">{{ avg_time_on_site|default:0|floatformat:0 }}s</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Total Articles</span>
+                            <span class="stat-value">{{ total_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Total Comments</span>
+                            <span class="stat-value">{{ total_comments|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Subscribers</span>
+                            <span class="stat-value">{{ total_subscribers|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.analytics-dashboard {
+    padding: 20px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.stat-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.stat-card .stat-icon {
+    font-size: 32px;
+    color: #1a3c5e;
+    opacity: 0.5;
+}
+.stat-card .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: #1a3c5e;
+}
+.stat-card .stat-label {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 13px;
+}
+.widget-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.widget-card h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.realtime-display {
+    text-align: center;
+    padding: 20px;
+}
+.realtime-count {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 48px;
+    color: #28a745;
+}
+.realtime-label {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 16px;
+}
+.pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+.popular-articles .article-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: 'Times New Roman', serif;
+}
+.popular-articles .article-row:last-child {
+    border-bottom: none;
+}
+.popular-articles .rank {
+    display: inline-block;
+    background: #1a3c5e;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+}
+.popular-articles .article-row a {
+    flex: 1;
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.popular-articles .article-row a:hover {
+    text-decoration: underline;
+}
+.popular-articles .views {
+    color: #6c757d;
+    font-size: 13px;
+}
+.quick-stats .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: 'Times New Roman', serif;
+}
+.quick-stats .stat-row:last-child {
+    border-bottom: none;
+}
+.quick-stats .stat-value {
+    font-weight: 700;
+    color: #1a3c5e;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Daily Views Chart
+    const ctx = document.getElementById('dailyViewsChart').getContext('2d');
+    const dailyData = {{ daily_views|safe }};
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dailyData.map(d => d.day),
+            datasets: [{
+                label: 'Page Views',
+                data: dailyData.map(d => d.count),
+                borderColor: '#1a3c5e',
+                backgroundColor: 'rgba(26,60,94,0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Traffic Sources Chart
+    const pieCtx = document.getElementById('trafficSourcesChart').getContext('2d');
+    const trafficData = {{ traffic_sources|safe }};
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: trafficData.map(d => d.source_type),
+            datasets: [{
+                data: trafficData.map(d => d.total_visits),
+                backgroundColor: ['#1a3c5e', '#2c5a7a', '#c9a84c', '#28a745', '#dc3545', '#6c757d']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Date range change
+    document.getElementById('dateRange').addEventListener('change', function() {
+        window.location.href = '?range=' + this.value;
+    });
+
+    // Real-time updates
+    function updateRealtime() {
+        fetch('/analytics/realtime/')
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.realtime-count').textContent = data.total_visitors || 0;
+                const pagesDiv = document.getElementById('realtimePages');
+                if (data.current_pages && data.current_pages.length > 0) {
+                    pagesDiv.innerHTML = data.current_pages.map(p => 
+                        `<span class="badge bg-secondary me-1">${p.current_path} (${p.count})</span>`
+                    ).join('');
+                } else {
+                    pagesDiv.innerHTML = '<span class="text-muted">No active visitors</span>';
+                }
+            });
+    }
+    updateRealtime();
+    setInterval(updateRealtime, 30000);
+});
+</script>
+{% endblock %}

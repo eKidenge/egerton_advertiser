@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="category-detail-page">
+        <div class="category-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-{{ category.icon|default:'folder' }}" style="color: #c9a84c;"></i> {{ category.name }}</h1>
+                    {% if category.description %}
+                    <p>{{ category.description }}</p>
+                    {% endif %}
+                    <div class="category-meta">
+                        <span><i class="fas fa-newspaper"></i> {{ article_count }} articles</span>
+                        {% if category.parent %}
+                        <span><i class="fas fa-folder"></i> Parent: <a href="{{ category.parent.get_absolute_url }}">{{ category.parent.name }}</a></span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    {% if request.user.can_manage_users %}
+                    <a href="{% url 'categories:edit' category.id %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit"></i> Edit Category
+                    </a>
+                    <a href="{% url 'categories:delete' category.id %}" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategories -->
+        {% if subcategories %}
+        <div class="subcategories-section">
+            <h4>Subcategories</h4>
+            <div class="d-flex flex-wrap gap-2">
+                {% for sub in subcategories %}
+                <a href="{{ sub.get_absolute_url }}" class="btn btn-outline-primary">
+                    <i class="fas fa-{{ sub.icon|default:'folder' }}"></i> {{ sub.name }}
+                    <span class="badge bg-primary">{{ sub.article_count }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Articles -->
+        <div class="category-articles">
+            <h4>Articles in {{ category.name }}</h4>
+            {% for article in articles %}
+            <div class="article-list-item">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h5><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h5>
+                        <p>{{ article.excerpt|truncatewords:20 }}</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}</span>
+                            <span><i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}</span>
+                            <span><i class="fas fa-eye"></i> {{ article.views_count }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        {% if article.featured_image %}
+                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid article-thumb">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No articles in this category yet.
+            </div>
+            {% endfor %}
+
+            <!-- Pagination -->
+            {% include 'pagination.html' %}
+        </div>
+    </div>
+</div>
+
+<style>
+.category-detail-page {
+    padding: 30px 0;
+}
+.category-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+.category-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.category-header p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 16px;
+}
+.category-meta {
+    display: flex;
+    gap: 20px;
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 14px;
+}
+.subcategories-section {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+.subcategories-section h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 10px;
+}
+.category-articles h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.article-list-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+.article-list-item:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+.article-list-item h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+.article-list-item h5 a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.article-list-item h5 a:hover {
+    text-decoration: underline;
+}
+.article-list-item p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    margin: 8px 0;
+}
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.article-meta i {
+    margin-right: 5px;
+}
+.article-thumb {
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    width: 100%;
+}
+@media (max-width: 768px) {
+    .category-header .col-md-4 {
+        text-align: left !important;
+        margin-top: 10px;
+    }
+    .article-thumb {
+        height: 150px;
+        margin-top: 10px;
+    }
+}
+</style>
+{% endblock %}

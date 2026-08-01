@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block title %}Media Library - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="media-library">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-images"></i> Media Library</h1>
+                <p class="text-muted">Manage all your media files</p>
+            </div>
+            <div>
+                <a href="{% url 'media_library:upload' %}" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload Files
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row row mb-4">
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number">{{ media_files.paginator.count }}</div>
+                    <div class="stat-label">Total Files</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number">{{ image_count|default:0 }}</div>
+                    <div class="stat-label">Images</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number">{{ video_count|default:0 }}</div>
+                    <div class="stat-label">Videos</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number">{{ document_count|default:0 }}</div>
+                    <div class="stat-label">Documents</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="get" class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" placeholder="Search files..." 
+                           value="{{ request.GET.search|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="file_type" class="form-select">
+                        <option value="">All Types</option>
+                        <option value="image" {% if request.GET.file_type == 'image' %}selected{% endif %}>Images</option>
+                        <option value="video" {% if request.GET.file_type == 'video' %}selected{% endif %}>Videos</option>
+                        <option value="audio" {% if request.GET.file_type == 'audio' %}selected{% endif %}>Audio</option>
+                        <option value="document" {% if request.GET.file_type == 'document' %}selected{% endif %}>Documents</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Media Grid -->
+        <div class="media-grid">
+            <div class="row">
+                {% for media in media_files %}
+                <div class="col-md-3 col-sm-4 col-6">
+                    <div class="media-item">
+                        <div class="media-thumbnail">
+                            {% if media.file_type == 'image' %}
+                                <img src="{{ media.get_thumbnail_url|default:media.file.url }}" alt="{{ media.title }}">
+                            {% elif media.file_type == 'video' %}
+                                <div class="video-thumb">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span class="file-type-badge">VIDEO</span>
+                                </div>
+                            {% elif media.file_type == 'audio' %}
+                                <div class="audio-thumb">
+                                    <i class="fas fa-music"></i>
+                                    <span class="file-type-badge">AUDIO</span>
+                                </div>
+                            {% else %}
+                                <div class="document-thumb">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span class="file-type-badge">{{ media.file_type|upper }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="media-info">
+                            <h6 class="media-title">{{ media.title|truncatechars:20 }}</h6>
+                            <div class="media-meta">
+                                <span class="file-size">{{ media.file_size|filesizeformat }}</span>
+                                <span class="file-date">{{ media.created_at|date:"M d" }}</span>
+                            </div>
+                            <div class="media-actions">
+                                <a href="{{ media.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'media_library:detail' media.id %}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-info"></i>
+                                </a>
+                                <a href="{% url 'media_library:delete' media.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this file?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="empty-state text-center py-5">
+                        <i class="fas fa-images fa-4x text-muted"></i>
+                        <h4 class="mt-3">No Media Files Found</h4>
+                        <p class="text-muted">Upload your first media file</p>
+                        <a href="{% url 'media_library:upload' %}" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload Files
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.media-library {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.stat-box {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+.stat-box .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: #1a3c5e;
+}
+.stat-box .stat-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.filters-bar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+.filters-bar .form-control,
+.filters-bar .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+}
+.media-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+.media-item:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.media-thumbnail {
+    height: 150px;
+    overflow: hidden;
+    background: #f8f9fa;
+    position: relative;
+}
+.media-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.video-thumb,
+.audio-thumb,
+.document-thumb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #6c757d;
+}
+.video-thumb i,
+.audio-thumb i,
+.document-thumb i {
+    font-size: 48px;
+}
+.file-type-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: 'Times New Roman', serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+.media-info {
+    padding: 10px 12px;
+}
+.media-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #1a3c5e;
+    margin: 0 0 3px 0;
+}
+.media-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.media-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+.media-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    padding: 2px 8px;
+}
+.empty-state i {
+    color: #dee2e6;
+}
+.empty-state h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+</style>
+{% endblock %}

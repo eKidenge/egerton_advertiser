@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit User - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="user-form-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2><i class="fas fa-user-edit"></i> Edit User: {{ edit_user.get_full_name|default:edit_user.username }}</h2>
+                        <p class="text-muted">Update user information</p>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_first_name"><i class="fas fa-user"></i> First Name</label>
+                                    <input type="text" name="first_name" id="id_first_name" class="form-control" 
+                                           value="{{ form.first_name.value|default:edit_user.first_name }}">
+                                    {% if form.first_name.errors %}
+                                    <small class="text-danger">{{ form.first_name.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_last_name"><i class="fas fa-user"></i> Last Name</label>
+                                    <input type="text" name="last_name" id="id_last_name" class="form-control" 
+                                           value="{{ form.last_name.value|default:edit_user.last_name }}">
+                                    {% if form.last_name.errors %}
+                                    <small class="text-danger">{{ form.last_name.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_username"><i class="fas fa-id-card"></i> Username</label>
+                            <input type="text" name="username" id="id_username" class="form-control" 
+                                   value="{{ form.username.value|default:edit_user.username }}" required>
+                            <small class="help-text">3-150 characters. Letters, digits, and @/./+/-/_ only.</small>
+                            {% if form.username.errors %}
+                            <small class="text-danger">{{ form.username.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_email"><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" name="email" id="id_email" class="form-control" 
+                                   value="{{ form.email.value|default:edit_user.email }}" required>
+                            {% if form.email.errors %}
+                            <small class="text-danger">{{ form.email.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_role"><i class="fas fa-user-tag"></i> Role</label>
+                                    <select name="role" id="id_role" class="form-select">
+                                        <option value="subscriber" {% if edit_user.role == 'subscriber' %}selected{% endif %}>Subscriber</option>
+                                        <option value="journalist" {% if edit_user.role == 'journalist' %}selected{% endif %}>Journalist</option>
+                                        <option value="editor" {% if edit_user.role == 'editor' %}selected{% endif %}>Editor</option>
+                                        <option value="admin" {% if edit_user.role == 'admin' %}selected{% endif %}>Administrator</option>
+                                        <option value="advertiser" {% if edit_user.role == 'advertiser' %}selected{% endif %}>Advertiser</option>
+                                    </select>
+                                    {% if form.role.errors %}
+                                    <small class="text-danger">{{ form.role.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_department"><i class="fas fa-building"></i> Department</label>
+                                    <select name="department" id="id_department" class="form-select">
+                                        <option value="">Select Department</option>
+                                        <option value="news" {% if edit_user.department == 'news' %}selected{% endif %}>News Department</option>
+                                        <option value="politics" {% if edit_user.department == 'politics' %}selected{% endif %}>Political Desk</option>
+                                        <option value="business" {% if edit_user.department == 'business' %}selected{% endif %}>Business Desk</option>
+                                        <option value="sports" {% if edit_user.department == 'sports' %}selected{% endif %}>Sports Desk</option>
+                                        <option value="entertainment" {% if edit_user.department == 'entertainment' %}selected{% endif %}>Entertainment Desk</option>
+                                        <option value="editorial" {% if edit_user.department == 'editorial' %}selected{% endif %}>Editorial Board</option>
+                                        <option value="advertising" {% if edit_user.department == 'advertising' %}selected{% endif %}>Advertising Department</option>
+                                        <option value="administration" {% if edit_user.department == 'administration' %}selected{% endif %}>Administration</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_phone"><i class="fas fa-phone"></i> Phone Number</label>
+                                    <input type="text" name="phone" id="id_phone" class="form-control" 
+                                           value="{{ form.phone.value|default:edit_user.phone_number }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_profile_picture"><i class="fas fa-image"></i> Profile Picture</label>
+                                    <input type="file" name="profile_picture" id="id_profile_picture" 
+                                           class="form-control" accept="image/*">
+                                    {% if edit_user.profile_picture %}
+                                    <small class="help-text">Current: {{ edit_user.profile_picture.name }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="is_active" id="id_is_active" 
+                                               class="form-check-input" {% if edit_user.is_active %}checked{% endif %}>
+                                        <label for="id_is_active" class="form-check-label">Active</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="is_verified" id="id_is_verified" 
+                                               class="form-check-input" {% if edit_user.is_verified %}checked{% endif %}>
+                                        <label for="id_is_verified" class="form-check-label">Verified</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="is_staff" id="id_is_staff" 
+                                               class="form-check-input" {% if edit_user.is_staff %}checked{% endif %}>
+                                        <label for="id_is_staff" class="form-check-label">Staff Access</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update User
+                            </button>
+                            <a href="{% url 'accounts:user_detail' edit_user.id %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <a href="{% url 'accounts:user_delete' edit_user.id %}" class="btn btn-outline-danger" onclick="return confirm('Delete this user?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.user-form-page {
+    padding: 30px 0;
+}
+.form-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.form-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.form-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-control, .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.form-check-label {
+    font-family: 'Times New Roman', serif;
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 4px;
+}
+</style>
+{% endblock %}

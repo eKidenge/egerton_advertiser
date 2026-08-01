@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+
+{% block title %}Notification Preferences - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="preferences-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="preferences-card">
+                    <div class="preferences-header">
+                        <h2><i class="fas fa-bell"></i> Notification Preferences</h2>
+                        <p class="text-muted">Choose how you want to receive notifications</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="preferences-section">
+                            <h5><i class="fas fa-envelope"></i> Email Notifications</h5>
+                            <div class="preference-group">
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="email_comments" id="email_comments" 
+                                               class="form-check-input" {% if preferences.email_comments %}checked{% endif %}>
+                                        <label for="email_comments" class="form-check-label">Comments on your articles</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="email_likes" id="email_likes" 
+                                               class="form-check-input" {% if preferences.email_likes %}checked{% endif %}>
+                                        <label for="email_likes" class="form-check-label">Likes on your articles</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="email_mentions" id="email_mentions" 
+                                               class="form-check-input" {% if preferences.email_mentions %}checked{% endif %}>
+                                        <label for="email_mentions" class="form-check-label">Mentions</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="email_article_published" id="email_article_published" 
+                                               class="form-check-input" {% if preferences.email_article_published %}checked{% endif %}>
+                                        <label for="email_article_published" class="form-check-label">Article published</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="email_subscriptions" id="email_subscriptions" 
+                                               class="form-check-input" {% if preferences.email_subscriptions %}checked{% endif %}>
+                                        <label for="email_subscriptions" class="form-check-label">Subscription updates</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="email_digest" id="email_digest" 
+                                               class="form-check-input" {% if preferences.email_digest %}checked{% endif %}>
+                                        <label for="email_digest" class="form-check-label">Daily digest</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preferences-section">
+                            <h5><i class="fas fa-mobile-alt"></i> Push Notifications</h5>
+                            <div class="preference-group">
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="push_comments" id="push_comments" 
+                                               class="form-check-input" {% if preferences.push_comments %}checked{% endif %}>
+                                        <label for="push_comments" class="form-check-label">Comments</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="push_likes" id="push_likes" 
+                                               class="form-check-input" {% if preferences.push_likes %}checked{% endif %}>
+                                        <label for="push_likes" class="form-check-label">Likes</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="push_mentions" id="push_mentions" 
+                                               class="form-check-input" {% if preferences.push_mentions %}checked{% endif %}>
+                                        <label for="push_mentions" class="form-check-label">Mentions</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="push_article_published" id="push_article_published" 
+                                               class="form-check-input" {% if preferences.push_article_published %}checked{% endif %}>
+                                        <label for="push_article_published" class="form-check-label">Article published</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="push_ads" id="push_ads" 
+                                               class="form-check-input" {% if preferences.push_ads %}checked{% endif %}>
+                                        <label for="push_ads" class="form-check-label">Ad updates</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preferences-section">
+                            <h5><i class="fas fa-bell"></i> In-App Notifications</h5>
+                            <div class="preference-group">
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="in_app_comments" id="in_app_comments" 
+                                               class="form-check-input" {% if preferences.in_app_comments %}checked{% endif %}>
+                                        <label for="in_app_comments" class="form-check-label">Comments</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="in_app_likes" id="in_app_likes" 
+                                               class="form-check-input" {% if preferences.in_app_likes %}checked{% endif %}>
+                                        <label for="in_app_likes" class="form-check-label">Likes</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="in_app_mentions" id="in_app_mentions" 
+                                               class="form-check-input" {% if preferences.in_app_mentions %}checked{% endif %}>
+                                        <label for="in_app_mentions" class="form-check-label">Mentions</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="in_app_article_published" id="in_app_article_published" 
+                                               class="form-check-input" {% if preferences.in_app_article_published %}checked{% endif %}>
+                                        <label for="in_app_article_published" class="form-check-label">Article published</label>
+                                    </div>
+                                </div>
+                                <div class="preference-item">
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" name="in_app_ads" id="in_app_ads" 
+                                               class="form-check-input" {% if preferences.in_app_ads %}checked{% endif %}>
+                                        <label for="in_app_ads" class="form-check-label">Ad updates</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preferences-section">
+                            <h5><i class="fas fa-clock"></i> Digest Settings</h5>
+                            <div class="preference-group">
+                                <div class="preference-item">
+                                    <label for="digest_frequency">Digest Frequency</label>
+                                    <select name="digest_frequency" id="digest_frequency" class="form-select">
+                                        <option value="daily" {% if preferences.digest_frequency == 'daily' %}selected{% endif %}>Daily</option>
+                                        <option value="weekly" {% if preferences.digest_frequency == 'weekly' %}selected{% endif %}>Weekly</option>
+                                        <option value="never" {% if preferences.digest_frequency == 'never' %}selected{% endif %}>Never</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preferences-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Preferences
+                            </button>
+                            <a href="{% url 'dashboard:home' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.preferences-page {
+    padding: 30px 0;
+}
+.preferences-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.preferences-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.preferences-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.preferences-section {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.preferences-section:last-child {
+    border-bottom: none;
+}
+.preferences-section h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 15px;
+}
+.preference-group {
+    padding-left: 10px;
+}
+.preference-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.preference-item:last-child {
+    border-bottom: none;
+}
+.preference-item .form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.preference-item .form-check-input {
+    width: 40px;
+    height: 20px;
+    cursor: pointer;
+}
+.preference-item .form-check-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    cursor: pointer;
+}
+.preference-item label[for] {
+    font-family: 'Times New Roman', serif;
+    font-weight: 600;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.preference-item .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+}
+.form-check-input:checked {
+    background-color: #1a3c5e;
+    border-color: #1a3c5e;
+}
+.preferences-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+}
+.preferences-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+{% endblock %}

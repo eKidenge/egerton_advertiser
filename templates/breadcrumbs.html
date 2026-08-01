@@ -1,0 +1,39 @@
+{% if breadcrumbs %}
+<nav aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+        {% for crumb in breadcrumbs %}
+            {% if forloop.last %}
+            <li class="breadcrumb-item active">{{ crumb.name }}</li>
+            {% else %}
+            <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</nav>
+
+<style>
+.breadcrumb {
+    background: transparent;
+    padding: 10px 0;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+.breadcrumb-item a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: #6c757d;
+}
+</style>
+{% endif %}

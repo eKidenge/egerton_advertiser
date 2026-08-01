@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ media_file.title }} - Media Detail - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="media-detail-page">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="media-card">
+                    <div class="media-header">
+                        <h2>{{ media_file.title }}</h2>
+                        <span class="badge bg-{% if media_file.status == 'available' %}success{% elif media_file.status == 'processing' %}warning{% else %}secondary{% endif %}">
+                            {{ media_file.get_status_display }}
+                        </span>
+                    </div>
+
+                    <div class="media-preview">
+                        {% if media_file.file_type == 'image' %}
+                            <img src="{{ media_file.file.url }}" alt="{{ media_file.title }}" class="img-fluid">
+                        {% elif media_file.file_type == 'video' %}
+                            <video controls class="w-100">
+                                <source src="{{ media_file.file.url }}" type="{{ media_file.mime_type }}">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% elif media_file.file_type == 'audio' %}
+                            <audio controls class="w-100">
+                                <source src="{{ media_file.file.url }}" type="{{ media_file.mime_type }}">
+                                Your browser does not support the audio tag.
+                            </audio>
+                        {% else %}
+                            <div class="document-preview">
+                                <i class="fas fa-file-alt"></i>
+                                <p>{{ media_file.file.name }}</p>
+                                <a href="{{ media_file.file.url }}" download class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="media-info">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">File Type</span>
+                                <span class="value">{{ media_file.get_file_type_display }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">File Size</span>
+                                <span class="value">{{ media_file.file_size|filesizeformat }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Dimensions</span>
+                                <span class="value">{% if media_file.width and media_file.height %}{{ media_file.width }}x{{ media_file.height }}{% else %}N/A{% endif %}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">MIME Type</span>
+                                <span class="value">{{ media_file.mime_type|default:"N/A" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Uploaded</span>
+                                <span class="value">{{ media_file.created_at|date:"F d, Y H:i" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Usage Count</span>
+                                <span class="value">{{ media_file.usage_count }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if media_file.description %}
+                    <div class="media-description">
+                        <h5>Description</h5>
+                        <p>{{ media_file.description }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="media-actions">
+                        <a href="{{ media_file.file.url }}" download class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                        <a href="{% url 'media_library:library' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                        <a href="{% url 'media_library:delete' media_file.id %}" class="btn btn-outline-danger" onclick="return confirm('Delete this file?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Tags -->
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-tags"></i> Tags
+                    </div>
+                    {% if tags %}
+                    <div class="tag-list">
+                        {% for tag in tags %}
+                        <span class="tag-item">{{ tag.tag.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No tags</p>
+                    {% endif %}
+                </div>
+
+                <!-- Categories -->
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-folder"></i> Categories
+                    </div>
+                    {% if categories %}
+                    <div class="category-list">
+                        {% for cat in categories %}
+                        <span class="category-item">{{ cat.category.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No categories</p>
+                    {% endif %}
+                </div>
+
+                <!-- Usage -->
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-link"></i> Usage
+                    </div>
+                    {% if usages %}
+                    <div class="usage-list">
+                        {% for usage in usages %}
+                        <div class="usage-item">
+                            <span class="model">{{ usage.model_name }}</span>
+                            <span class="object">ID: {{ usage.object_id }}</span>
+                            <small class="text-muted">{{ usage.used_at|timesince }} ago</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Not in use</p>
+                    {% endif %}
+                </div>
+
+                <!-- Metadata -->
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-code"></i> Metadata
+                    </div>
+                    {% if media_file.metadata %}
+                    <pre class="metadata-json">{{ media_file.metadata|pprint }}</pre>
+                    {% else %}
+                    <p class="text-muted">No metadata</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.media-detail-page {
+    padding: 30px 0;
+}
+.media-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.media-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+.media-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.media-preview {
+    margin-bottom: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.media-preview img {
+    max-height: 500px;
+    object-fit: contain;
+}
+.media-preview video,
+.media-preview audio {
+    max-height: 500px;
+}
+.document-preview {
+    text-align: center;
+    padding: 40px;
+}
+.document-preview i {
+    font-size: 64px;
+    color: #6c757d;
+}
+.document-preview p {
+    font-family: 'Times New Roman', serif;
+    margin: 10px 0;
+}
+.media-info {
+    margin: 20px 0;
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+.info-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+}
+.info-item .label {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.info-item .value {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-weight: 600;
+    color: #1a3c5e;
+    font-size: 14px;
+}
+.media-description {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.media-description h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.media-description p {
+    font-family: 'Times New Roman', serif;
+}
+.media-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.media-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+.sidebar-widget {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.widget-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 18px;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.tag-item {
+    background: #f8f9fa;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #1a3c5e;
+}
+.category-item {
+    display: inline-block;
+    background: #e8f0f8;
+    padding: 3px 12px;
+    border-radius: 4px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #1a3c5e;
+    margin: 3px;
+}
+.usage-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: 'Times New Roman', serif;
+}
+.usage-item:last-child {
+    border-bottom: none;
+}
+.usage-item .model {
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.usage-item .object {
+    color: #6c757d;
+    font-size: 13px;
+}
+.metadata-json {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    max-height: 200px;
+    overflow: auto;
+}
+</style>
+{% endblock %}

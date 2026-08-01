@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Profile - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-edit-container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="edit-card">
+                    <div class="edit-header">
+                        <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+                        <p>Update your personal information</p>
+                    </div>
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_first_name"><i class="fas fa-user"></i> First Name</label>
+                                    <input type="text" name="first_name" id="id_first_name" 
+                                           class="form-control" value="{{ form.first_name.value|default:'' }}">
+                                    {% if form.first_name.errors %}
+                                    <small class="text-danger">{{ form.first_name.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_last_name"><i class="fas fa-user"></i> Last Name</label>
+                                    <input type="text" name="last_name" id="id_last_name" 
+                                           class="form-control" value="{{ form.last_name.value|default:'' }}">
+                                    {% if form.last_name.errors %}
+                                    <small class="text-danger">{{ form.last_name.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_email"><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" name="email" id="id_email" 
+                                   class="form-control" value="{{ form.email.value|default:'' }}">
+                            {% if form.email.errors %}
+                            <small class="text-danger">{{ form.email.errors }}</small>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_phone_number"><i class="fas fa-phone"></i> Phone Number</label>
+                            <input type="text" name="phone_number" id="id_phone_number" 
+                                   class="form-control" value="{{ form.phone_number.value|default:'' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_bio"><i class="fas fa-align-left"></i> Bio</label>
+                            <textarea name="bio" id="id_bio" class="form-control" rows="4">{{ form.bio.value|default:'' }}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_profile_picture"><i class="fas fa-image"></i> Profile Picture</label>
+                            <input type="file" name="profile_picture" id="id_profile_picture" class="form-control">
+                            {% if form.instance.profile_picture %}
+                            <small class="text-muted">Current: {{ form.instance.profile_picture.name }}</small>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_website"><i class="fas fa-globe"></i> Website</label>
+                            <input type="url" name="website" id="id_website" 
+                                   class="form-control" value="{{ form.website.value|default:'' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-share-alt"></i> Social Links</label>
+                            <div class="social-links">
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                                    <input type="url" name="social_links_twitter" class="form-control" 
+                                           placeholder="Twitter URL" value="{{ form.social_links.value.twitter|default:'' }}">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fab fa-facebook"></i></span>
+                                    <input type="url" name="social_links_facebook" class="form-control" 
+                                           placeholder="Facebook URL" value="{{ form.social_links.value.facebook|default:'' }}">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                                    <input type="url" name="social_links_instagram" class="form-control" 
+                                           placeholder="Instagram URL" value="{{ form.social_links.value.instagram|default:'' }}">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+                                    <input type="url" name="social_links_linkedin" class="form-control" 
+                                           placeholder="LinkedIn URL" value="{{ form.social_links.value.linkedin|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="edit-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-edit-container {
+    padding: 30px 0;
+}
+.edit-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+}
+.edit-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.edit-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 24px;
+}
+.edit-header p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    margin: 0;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.edit-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.edit-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 4px;
+}
+.social-links .input-group-text {
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #1a3c5e;
+}
+</style>
+{% endblock %}

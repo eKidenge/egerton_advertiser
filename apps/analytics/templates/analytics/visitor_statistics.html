@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}Visitor Statistics - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="analytics-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-users"></i> Visitor Statistics</h1>
+                <p class="text-muted">Detailed visitor analytics</p>
+            </div>
+            <div>
+                <select class="form-select" id="dateRange">
+                    <option value="7d" {% if date_range == '7d' %}selected{% endif %}>Last 7 Days</option>
+                    <option value="30d" {% if date_range == '30d' %}selected{% endif %}>Last 30 Days</option>
+                    <option value="90d" {% if date_range == '90d' %}selected{% endif %}>Last 90 Days</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="chart-card">
+                    <h5><i class="fas fa-chart-area"></i> Daily Visitor Trends</h5>
+                    <canvas id="visitorChart" height="250"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h5><i class="fas fa-chart-pie"></i> Device Statistics</h5>
+                    <canvas id="deviceChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <h5><i class="fas fa-globe"></i> Browser Statistics</h5>
+                    <div class="browser-list">
+                        {% for browser in browser_stats %}
+                        <div class="browser-item">
+                            <span class="browser-name">{{ browser.browser|default:"Unknown" }}</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: {{ browser.count|divisibleby:total_browsers|floatformat:0 }}%"></div>
+                            </div>
+                            <span class="browser-count">{{ browser.count }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <h5><i class="fas fa-flag"></i> Top Countries</h5>
+                    <div class="country-list">
+                        {% for country in country_stats %}
+                        <div class="country-item">
+                            <span class="country-name">{{ country.country|default:"Unknown" }}</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: {{ country.count|divisibleby:total_countries|floatformat:0 }}%"></div>
+                            </div>
+                            <span class="country-count">{{ country.count }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.analytics-page {
+    padding: 20px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.chart-card, .stats-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.chart-card h5, .stats-card h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.browser-item, .country-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-family: 'Times New Roman', serif;
+}
+.browser-item .browser-name,
+.country-item .country-name {
+    width: 100px;
+    font-weight: 600;
+    color: #1a3c5e;
+}
+.browser-item .progress,
+.country-item .progress {
+    flex: 1;
+    height: 8px;
+}
+.browser-item .progress-bar,
+.country-item .progress-bar {
+    background: #1a3c5e;
+}
+.browser-item .browser-count,
+.country-item .country-count {
+    width: 50px;
+    text-align: right;
+    color: #6c757d;
+    font-size: 14px;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Visitor Chart
+    const visitorCtx = document.getElementById('visitorChart').getContext('2d');
+    const visitorData = {{ daily_visitors|safe }};
+    new Chart(visitorCtx, {
+        type: 'bar',
+        data: {
+            labels: visitorData.map(d => d.day),
+            datasets: [
+                {
+                    label: 'Unique Visitors',
+                    data: visitorData.map(d => d.unique_visitors),
+                    backgroundColor: '#1a3c5e',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Total Views',
+                    data: visitorData.map(d => d.total_views),
+                    backgroundColor: '#c9a84c',
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Device Chart
+    const deviceCtx = document.getElementById('deviceChart').getContext('2d');
+    const deviceData = {{ device_stats|safe }};
+    new Chart(deviceCtx, {
+        type: 'doughnut',
+        data: {
+            labels: deviceData.map(d => d.device_type || 'Unknown'),
+            datasets: [{
+                data: deviceData.map(d => d.count),
+                backgroundColor: ['#1a3c5e', '#2c5a7a', '#c9a84c', '#28a745', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Date range change
+    document.getElementById('dateRange').addEventListener('change', function() {
+        window.location.href = '?range=' + this.value;
+    });
+});
+</script>
+{% endblock %}

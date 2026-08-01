@@ -1,0 +1,930 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Admin Dashboard - The Egerton Advertiser{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ============================================
+   ADMIN DASHBOARD - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --admin-primary: #0a1a2a;
+    --admin-secondary: #1a3c5e;
+    --admin-gold: #c9a84c;
+    --admin-red: #8b1a1a;
+    --admin-green: #1a5a3a;
+    --admin-blue: #1a3c5e;
+    --admin-cream: #f5f0e8;
+}
+
+.admin-dashboard {
+    padding: 20px 0;
+    background: var(--admin-cream);
+    min-height: calc(100vh - 200px);
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   TOP HEADER - OFFICIAL SEAL STYLE
+   ============================================ */
+.admin-header {
+    background: linear-gradient(135deg, #0a1a2a 0%, #1a3c5e 50%, #2c5a7a 100%);
+    color: #fff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px solid var(--admin-gold);
+}
+.admin-header::before {
+    content: 'OFFICIAL';
+    position: absolute;
+    right: -20px;
+    top: -30px;
+    font-size: 140px;
+    font-weight: 900;
+    color: rgba(201,168,76,0.04);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 15px;
+}
+.admin-header .seal {
+    display: inline-block;
+    border: 2px solid var(--admin-gold);
+    border-radius: 50%;
+    padding: 10px;
+    margin-right: 15px;
+}
+.admin-header .seal i {
+    font-size: 28px;
+    color: var(--admin-gold);
+}
+.admin-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 30px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.admin-header .subtitle {
+    font-family: 'Times New Roman', serif;
+    color: rgba(255,255,255,0.7);
+    font-size: 15px;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+.admin-header .header-stats {
+    display: flex;
+    gap: 35px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+.admin-header .header-stats .stat {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: var(--admin-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.admin-header .header-stats .stat strong {
+    color: #fff;
+    font-size: 22px;
+    margin-right: 5px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+}
+.admin-header .header-right {
+    text-align: right;
+}
+.admin-header .header-right .date {
+    font-family: 'Times New Roman', serif;
+    color: var(--admin-gold);
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+.admin-header .header-right .badge {
+    font-size: 11px;
+    padding: 5px 20px;
+    background: var(--admin-gold);
+    color: #0a1a2a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 20px;
+}
+.admin-header .header-right .badge i {
+    margin-right: 5px;
+}
+
+/* ============================================
+   STATS CARDS - OFFICIAL STYLE
+   ============================================ */
+.stats-grid {
+    margin-bottom: 25px;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 20px 25px;
+    border: 1px solid #d4cdc0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+.stat-card .stat-icon {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 34px;
+    opacity: 0.08;
+}
+.stat-card .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: #1a1a1a;
+}
+.stat-card .stat-label {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.stat-card .stat-change {
+    font-size: 12px;
+    margin-top: 5px;
+    font-family: 'Times New Roman', serif;
+}
+.stat-card .stat-change .up { color: #1a5a3a; }
+.stat-card .stat-change .down { color: var(--admin-red); }
+.stat-card.blue { border-top: 4px solid var(--admin-blue); }
+.stat-card.green { border-top: 4px solid var(--admin-green); }
+.stat-card.gold { border-top: 4px solid var(--admin-gold); }
+.stat-card.red { border-top: 4px solid var(--admin-red); }
+.stat-card.purple { border-top: 4px solid #6f42c1; }
+.stat-card.orange { border-top: 4px solid #fd7e14; }
+
+/* ============================================
+   QUICK ACTIONS - OFFICIAL BUTTONS
+   ============================================ */
+.quick-actions-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 20px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.quick-actions-card h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+    border-bottom: 2px solid var(--admin-gold);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+.quick-actions-card h5 i {
+    color: var(--admin-gold);
+    margin-right: 8px;
+}
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+.quick-action {
+    background: #f8f5f0;
+    border: 1px solid #d4cdc0;
+    border-radius: 4px;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: #1a1a1a;
+    transition: all 0.3s;
+    font-family: 'Times New Roman', serif;
+}
+.quick-action:hover {
+    background: var(--admin-secondary);
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-3px);
+    border-color: var(--admin-gold);
+}
+.quick-action i {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--admin-gold);
+}
+.quick-action:hover i {
+    color: #fff;
+}
+.quick-action span {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   RECENT ITEMS - OFFICIAL LIST
+   ============================================ */
+.recent-items-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 20px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.recent-items-card h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+    border-bottom: 2px solid var(--admin-gold);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+.recent-items-card h5 i {
+    color: var(--admin-gold);
+    margin-right: 8px;
+}
+.recent-items-card .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-secondary);
+    font-size: 14px;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e5e0d8;
+}
+.item-list {
+    margin: 0;
+    padding: 0;
+}
+.item-list .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0ebe3;
+}
+.item-list .item:last-child {
+    border-bottom: none;
+}
+.item-list .item .title {
+    font-family: 'Times New Roman', serif;
+    font-weight: 600;
+    color: var(--admin-primary);
+}
+.item-list .item .title a {
+    color: var(--admin-primary);
+    text-decoration: none;
+}
+.item-list .item .title a:hover {
+    text-decoration: underline;
+    color: var(--admin-gold);
+}
+.item-list .item .meta {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.item-list .item .status-badge {
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Times New Roman', serif;
+}
+.status-badge.published { background: #1a5a3a; color: #fff; }
+.status-badge.draft { background: #6c757d; color: #fff; }
+.status-badge.pending { background: #b8860b; color: #fff; }
+.status-badge.scheduled { background: #0b6b7a; color: #fff; }
+.status-badge.archived { background: var(--admin-red); color: #fff; }
+.status-badge.active { background: #1a5a3a; color: #fff; }
+.status-badge.inactive { background: #6c757d; color: #fff; }
+.status-badge.verified { background: #1a5a3a; color: #fff; }
+.status-badge.unverified { background: #b8860b; color: #fff; }
+
+/* ============================================
+   ACTIVITY FEED - OFFICIAL
+   ============================================ */
+.activity-feed-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 20px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.activity-feed-card h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+    border-bottom: 2px solid var(--admin-gold);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+.activity-feed-card h5 i {
+    color: var(--admin-gold);
+    margin-right: 8px;
+}
+.activity-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0ebe3;
+}
+.activity-item:last-child {
+    border-bottom: none;
+}
+.activity-icon {
+    width: 32px;
+    text-align: center;
+    font-size: 16px;
+}
+.activity-content p {
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    font-size: 14px;
+    color: #1a1a1a;
+}
+.activity-content small {
+    font-size: 12px;
+    color: #6c757d;
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   SIDEBAR - OFFICIAL
+   ============================================ */
+.sidebar-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 20px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.sidebar-card h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+    border-bottom: 2px solid var(--admin-gold);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+.sidebar-card h5 i {
+    color: var(--admin-gold);
+    margin-right: 8px;
+}
+.quick-stats .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ebe3;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+}
+.quick-stats .stat-row:last-child {
+    border-bottom: none;
+}
+.quick-stats .stat-row .stat-value {
+    font-weight: 700;
+    color: var(--admin-primary);
+}
+.quick-links a {
+    display: block;
+    padding: 6px 0;
+    color: var(--admin-primary);
+    text-decoration: none;
+    font-family: 'Times New Roman', serif;
+    border-bottom: 1px solid #f0ebe3;
+}
+.quick-links a:last-child {
+    border-bottom: none;
+}
+.quick-links a:hover {
+    color: var(--admin-gold);
+    padding-left: 5px;
+}
+.quick-links a i {
+    width: 20px;
+    color: var(--admin-gold);
+}
+
+/* ============================================
+   PENDING ITEMS ALERT
+   ============================================ */
+.pending-alert {
+    background: #f8f0e8;
+    border-left: 4px solid var(--admin-gold);
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.pending-alert h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+}
+.pending-alert .pending-items {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+.pending-alert .pending-item {
+    font-family: 'Times New Roman', serif;
+}
+.pending-alert .pending-item .count {
+    font-weight: 900;
+    font-size: 24px;
+    font-family: 'Playfair Display', serif;
+    color: var(--admin-red);
+}
+.pending-alert .pending-item .label {
+    color: #6c757d;
+    font-size: 13px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .admin-header {
+        padding: 20px;
+    }
+    .admin-header h1 {
+        font-size: 22px;
+    }
+    .admin-header .header-stats {
+        gap: 15px;
+    }
+    .admin-header .header-right {
+        text-align: left;
+        margin-top: 10px;
+    }
+    .stat-card .stat-number {
+        font-size: 24px;
+    }
+    .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .admin-header::before {
+        font-size: 60px;
+        right: -10px;
+        top: -10px;
+    }
+}
+
+@media print {
+    .quick-actions-card,
+    .sidebar-card,
+    .activity-feed-card {
+        break-inside: avoid;
+    }
+    .admin-header {
+        background: #fff !important;
+        color: #000 !important;
+        border-bottom: 2px solid #000 !important;
+    }
+    .admin-header .header-stats .stat strong {
+        color: #000 !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="container-fluid">
+        <!-- ========================================
+        ADMIN HEADER - OFFICIAL
+        ======================================== -->
+        <div class="admin-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div class="seal">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <div>
+                            <h1><i class="fas fa-shield-alt" style="color: #c9a84c; font-size: 24px;"></i> ADMIN DASHBOARD</h1>
+                            <p class="subtitle">Official Gazette of Egerton, Kenya — System Administration</p>
+                            <div class="header-stats">
+                                <span class="stat"><strong>{{ total_users|default:0 }}</strong> Users</span>
+                                <span class="stat"><strong>{{ total_articles|default:0 }}</strong> Articles</span>
+                                <span class="stat"><strong>{{ total_views|default:0|intcomma }}</strong> Views</span>
+                                <span class="stat"><strong>{{ total_comments|default:0 }}</strong> Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 header-right">
+                    <div class="date">
+                        <i class="fas fa-calendar-alt"></i> 
+                        <span id="adminDate"></span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge"><i class="fas fa-user-shield"></i> {{ user.get_full_name|default:user.username }}</span>
+                        <span class="badge ms-1"><i class="fas fa-flag"></i> {{ user.get_role_display }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+        PENDING ITEMS ALERT
+        ======================================== -->
+        {% if pending_items.articles > 0 or pending_items.comments > 0 or pending_items.ads > 0 or pending_items.contacts > 0 %}
+        <div class="pending-alert">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-exclamation-triangle" style="color: #c9a84c;"></i> Items Requiring Attention</h5>
+                </div>
+                <div class="col-md-8">
+                    <div class="pending-items">
+                        {% if pending_items.articles > 0 %}
+                        <div class="pending-item">
+                            <span class="count">{{ pending_items.articles }}</span>
+                            <span class="label">Pending Articles</span>
+                        </div>
+                        {% endif %}
+                        {% if pending_items.comments > 0 %}
+                        <div class="pending-item">
+                            <span class="count">{{ pending_items.comments }}</span>
+                            <span class="label">Pending Comments</span>
+                        </div>
+                        {% endif %}
+                        {% if pending_items.ads > 0 %}
+                        <div class="pending-item">
+                            <span class="count">{{ pending_items.ads }}</span>
+                            <span class="label">Pending Ads</span>
+                        </div>
+                        {% endif %}
+                        {% if pending_items.contacts > 0 %}
+                        <div class="pending-item">
+                            <span class="count">{{ pending_items.contacts }}</span>
+                            <span class="label">Unread Messages</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ========================================
+        STATS CARDS - FULL SYSTEM OVERVIEW
+        ======================================== -->
+        <div class="stats-grid">
+            <div class="row">
+                <!-- Articles -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card blue">
+                        <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                        <div class="stat-number">{{ total_articles|default:0 }}</div>
+                        <div class="stat-label">Total Articles</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Published: {{ published_articles|default:0 }} | Drafts: {{ draft_articles|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Categories & Tags -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card green">
+                        <div class="stat-icon"><i class="fas fa-tags"></i></div>
+                        <div class="stat-number">{{ total_categories|default:0 }}</div>
+                        <div class="stat-label">Categories</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Tags: {{ total_tags|default:0 }} | Active: {{ active_categories|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Users -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card gold">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-number">{{ total_users|default:0 }}</div>
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Active: {{ active_users|default:0 }} | New Today: {{ new_users_today|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Comments -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card red">
+                        <div class="stat-icon"><i class="fas fa-comments"></i></div>
+                        <div class="stat-number">{{ total_comments|default:0 }}</div>
+                        <div class="stat-label">Total Comments</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Pending: {{ pending_comments|default:0 }} | Spam: {{ spam_comments|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row Stats -->
+        <div class="stats-grid">
+            <div class="row">
+                <!-- Ads -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card orange">
+                        <div class="stat-icon"><i class="fas fa-ad"></i></div>
+                        <div class="stat-number">{{ total_ads|default:0 }}</div>
+                        <div class="stat-label">Advertisements</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Active: {{ active_ads|default:0 }} | Pending: {{ pending_ads|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Media -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card purple">
+                        <div class="stat-icon"><i class="fas fa-images"></i></div>
+                        <div class="stat-number">{{ total_media|default:0 }}</div>
+                        <div class="stat-label">Media Files</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Images: {{ media_images|default:0 }} | Videos: {{ media_videos|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Subscribers -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card green">
+                        <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="stat-number">{{ total_subscribers|default:0 }}</div>
+                        <div class="stat-label">Subscribers</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Newsletters: {{ sent_newsletters|default:0 }} sent</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Contacts -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card red">
+                        <div class="stat-icon"><i class="fas fa-envelope-open-text"></i></div>
+                        <div class="stat-number">{{ total_contacts|default:0 }}</div>
+                        <div class="stat-label">Contact Messages</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Unread: {{ new_contacts|default:0 }} | Total: {{ total_contacts|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role Breakdown -->
+        <div class="stats-grid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="stat-card" style="border-top: 4px solid var(--admin-gold);">
+                        <div class="stat-icon"><i class="fas fa-user-tag"></i></div>
+                        <div class="stat-number" style="font-size: 18px;">
+                            <span class="badge bg-primary me-2">Admin: {{ admins|default:0 }}</span>
+                            <span class="badge bg-info me-2">Editors: {{ editors|default:0 }}</span>
+                            <span class="badge bg-success me-2">Journalists: {{ journalists|default:0 }}</span>
+                            <span class="badge bg-secondary me-2">Subscribers: {{ subscribers|default:0 }}</span>
+                            <span class="badge bg-warning">Advertisers: {{ advertisers|default:0 }}</span>
+                        </div>
+                        <div class="stat-label">User Role Breakdown</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+        MAIN CONTENT ROW
+        ======================================== -->
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Quick Actions -->
+                <div class="quick-actions-card">
+                    <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+                    <div class="quick-actions-grid">
+                        <a href="{% url 'dashboard:admin_article_create' %}" class="quick-action">
+                            <i class="fas fa-pen-fancy"></i>
+                            <span>Write Article</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_articles' %}" class="quick-action">
+                            <i class="fas fa-newspaper"></i>
+                            <span>Manage Articles</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_categories' %}" class="quick-action">
+                            <i class="fas fa-folder"></i>
+                            <span>Categories</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_tags' %}" class="quick-action">
+                            <i class="fas fa-tags"></i>
+                            <span>Tags</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_users' %}" class="quick-action">
+                            <i class="fas fa-users-cog"></i>
+                            <span>Manage Users</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_comments' %}" class="quick-action">
+                            <i class="fas fa-comments"></i>
+                            <span>Comments</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_ads' %}" class="quick-action">
+                            <i class="fas fa-ad"></i>
+                            <span>Advertisements</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_media' %}" class="quick-action">
+                            <i class="fas fa-images"></i>
+                            <span>Media Library</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_subscribers' %}" class="quick-action">
+                            <i class="fas fa-envelope"></i>
+                            <span>Subscribers</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_newsletters' %}" class="quick-action">
+                            <i class="fas fa-envelope-open-text"></i>
+                            <span>Newsletters</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_contacts' %}" class="quick-action">
+                            <i class="fas fa-headset"></i>
+                            <span>Contact Messages</span>
+                        </a>
+                        <a href="{% url 'dashboard:admin_settings' %}" class="quick-action">
+                            <i class="fas fa-cog"></i>
+                            <span>Site Settings</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Recent Articles -->
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-clock"></i> Recent Articles</h5>
+                    <div class="item-list">
+                        {% for article in recent_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:admin_article_edit' article.id %}">
+                                    {{ article.title|truncatewords:10 }}
+                                </a>
+                            </span>
+                            <div>
+                                <span class="status-badge {{ article.status }}">{{ article.get_status_display }}</span>
+                                <span class="meta ms-2">{{ article.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No articles yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Recent Users -->
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-users"></i> Recent Users</h5>
+                    <div class="item-list">
+                        {% for user in recent_users %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:admin_user_edit' user.id %}">
+                                    {{ user.get_full_name|default:user.username }}
+                                </a>
+                            </span>
+                            <div>
+                                <span class="badge bg-secondary">{{ user.get_role_display }}</span>
+                                <span class="meta ms-2">{{ user.date_joined|timesince }} ago</span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No users yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Activity Feed -->
+                <div class="activity-feed-card">
+                    <h5><i class="fas fa-history"></i> Recent Activity</h5>
+                    <div class="activity-list">
+                        {% for activity in recent_activity %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-{% if activity.action == 'create' %}plus-circle text-success{% elif activity.action == 'update' %}edit text-primary{% elif activity.action == 'delete' %}trash text-danger{% elif activity.action == 'login' %}sign-in-alt text-info{% else %}circle text-muted{% endif %}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>{{ activity.description }}</p>
+                                <small>{{ activity.timestamp|timesince }} ago</small>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No recent activity.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================
+            SIDEBAR
+            ======================================== -->
+            <div class="col-lg-4">
+                <!-- Quick Stats -->
+                <div class="sidebar-card">
+                    <h5><i class="fas fa-chart-pie"></i> Quick Stats</h5>
+                    <div class="quick-stats">
+                        <div class="stat-row">
+                            <span>Total Articles</span>
+                            <span class="stat-value">{{ total_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Published</span>
+                            <span class="stat-value">{{ published_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Pending Review</span>
+                            <span class="stat-value">{{ pending_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Total Users</span>
+                            <span class="stat-value">{{ total_users|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Active Users</span>
+                            <span class="stat-value">{{ active_users|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Pending Comments</span>
+                            <span class="stat-value">{{ pending_comments|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Subscribers</span>
+                            <span class="stat-value">{{ total_subscribers|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Active Ads</span>
+                            <span class="stat-value">{{ active_ads|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="sidebar-card">
+                    <h5><i class="fas fa-link"></i> Admin Links</h5>
+                    <div class="quick-links">
+                        <a href="{% url 'admin:index' %}"><i class="fas fa-database"></i> Django Admin</a>
+                        <a href="{% url 'home' %}"><i class="fas fa-globe"></i> View Site</a>
+                        <a href="{% url 'dashboard:admin_settings' %}"><i class="fas fa-cog"></i> Site Settings</a>
+                        <a href="{% url 'accounts:profile' %}"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="{% url 'contacts:contact' %}"><i class="fas fa-headset"></i> Support</a>
+                    </div>
+                </div>
+
+                <!-- System Info -->
+                <div class="sidebar-card">
+                    <h5><i class="fas fa-server"></i> System Info</h5>
+                    <div class="quick-stats">
+                        <div class="stat-row">
+                            <span>Django Version</span>
+                            <span class="stat-value">4.2.7</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Database</span>
+                            <span class="stat-value">SQLite/PostgreSQL</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Cache</span>
+                            <span class="stat-value">Redis</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Environment</span>
+                            <span class="stat-value">{% if DEBUG %}Development{% else %}Production{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const now = new Date();
+    const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    document.getElementById('adminDate').textContent = now.toLocaleDateString('en-US', options);
+});
+</script>
+{% endblock %}

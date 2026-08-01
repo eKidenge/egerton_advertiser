@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile - {{ profile_user.get_full_name }} - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-card">
+                    <div class="profile-avatar text-center">
+                        {% if profile_user.profile_picture %}
+                        <img src="{{ profile_user.profile_picture.url }}" alt="{{ profile_user.get_full_name }}" class="avatar-img">
+                        {% else %}
+                        <div class="avatar-placeholder">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        {% endif %}
+                        <h4>{{ profile_user.get_full_name|default:profile_user.username }}</h4>
+                        <p class="text-muted">{{ profile_user.get_role_display }}</p>
+                        {% if profile_user.department %}
+                        <p class="text-muted"><i class="fas fa-building"></i> {{ profile_user.get_department_display }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>{{ profile_user.email }}</span>
+                        </div>
+                        {% if profile_user.phone_number %}
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <span>{{ profile_user.phone_number }}</span>
+                        </div>
+                        {% endif %}
+                        {% if profile_user.website %}
+                        <div class="info-item">
+                            <i class="fas fa-globe"></i>
+                            <a href="{{ profile_user.website }}" target="_blank">{{ profile_user.website }}</a>
+                        </div>
+                        {% endif %}
+                        <div class="info-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Joined: {{ profile_user.date_joined|date:"F d, Y" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-user-tag"></i>
+                            <span>Role: {{ profile_user.get_role_display }}</span>
+                        </div>
+                        {% if profile_user.is_verified %}
+                        <div class="info-item verified">
+                            <i class="fas fa-check-circle"></i>
+                            <span class="text-success">Verified Account</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="profile-actions">
+                        {% if request.user == profile_user %}
+                        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                        <a href="{% url 'accounts:change_password' %}" class="btn btn-outline-secondary w-100 mt-2">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                        {% endif %}
+                        {% if request.user.can_manage_users and request.user != profile_user %}
+                        <a href="{% url 'accounts:user_edit' profile_user.id %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-user-cog"></i> Manage User
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="profile-stats">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ published_count }}</div>
+                                <div class="stat-label">Published</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ draft_count }}</div>
+                                <div class="stat-label">Drafts</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ total_views }}</div>
+                                <div class="stat-label">Total Views</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ comment_count }}</div>
+                                <div class="stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Articles -->
+                <div class="profile-section">
+                    <h5><i class="fas fa-newspaper"></i> Recent Articles</h5>
+                    {% if recent_articles %}
+                    <div class="list-group">
+                        {% for article in recent_articles %}
+                        <a href="{{ article.get_absolute_url }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ article.title }}</h6>
+                                <small class="text-muted">{{ article.published_at|date:"M d, Y" }}</small>
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-eye"></i> {{ article.views_count }} views
+                                <span class="mx-2">|</span>
+                                <span class="badge bg-{{ article.status }}">{{ article.get_status_display }}</span>
+                            </small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No articles published yet.</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Recent Comments -->
+                <div class="profile-section mt-4">
+                    <h5><i class="fas fa-comments"></i> Recent Comments</h5>
+                    {% if recent_comments %}
+                    <div class="list-group">
+                        {% for comment in recent_comments %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <p class="mb-1">{{ comment.content|truncatewords:15 }}</p>
+                                <small class="text-muted">{{ comment.created_at|date:"M d, Y" }}</small>
+                            </div>
+                            <small class="text-muted">
+                                On: <a href="{{ comment.article.get_absolute_url }}">{{ comment.article.title }}</a>
+                            </small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No comments yet.</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="profile-section mt-4">
+                    <h5><i class="fas fa-history"></i> Recent Activity</h5>
+                    {% if recent_activities %}
+                    <div class="list-group">
+                        {% for activity in recent_activities %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <span>
+                                    <i class="fas fa-{% if activity.action == 'create' %}plus-circle text-success{% elif activity.action == 'update' %}edit text-primary{% elif activity.action == 'delete' %}trash text-danger{% elif activity.action == 'login' %}sign-in-alt text-info{% else %}circle{% endif %}"></i>
+                                    {{ activity.description }}
+                                </span>
+                                <small class="text-muted">{{ activity.timestamp|timesince }} ago</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No recent activity.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-container {
+    padding: 30px 0;
+}
+.profile-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+}
+.profile-avatar {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+.avatar-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1a3c5e;
+    padding: 3px;
+}
+.avatar-placeholder {
+    font-size: 80px;
+    color: #6c757d;
+}
+.profile-avatar h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-top: 10px;
+}
+.profile-info {
+    margin: 20px 0;
+}
+.info-item {
+    padding: 8px 0;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.info-item i {
+    width: 25px;
+    color: #1a3c5e;
+}
+.info-item.verified i {
+    color: #28a745;
+}
+.stat-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+.stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: #1a3c5e;
+}
+.stat-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.profile-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+}
+.profile-section h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.profile-section .list-group-item {
+    border-left: none;
+    border-right: none;
+    font-family: 'Times New Roman', serif;
+}
+.profile-section .list-group-item:first-child {
+    border-top: none;
+}
+.profile-section .list-group-item:last-child {
+    border-bottom: none;
+}
+.badge-draft { background: #6c757d; color: #fff; }
+.badge-pending { background: #ffc107; color: #000; }
+.badge-published { background: #28a745; color: #fff; }
+.badge-archived { background: #dc3545; color: #fff; }
+</style>
+{% endblock %}

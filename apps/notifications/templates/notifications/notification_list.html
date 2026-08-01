@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="notifications-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-bell"></i> Notifications</h1>
+                <p class="text-muted">Stay updated with your latest notifications</p>
+            </div>
+            <div>
+                {% if unread_count > 0 %}
+                <button class="btn btn-primary" id="markAllRead">
+                    <i class="fas fa-check-double"></i> Mark All Read
+                </button>
+                {% endif %}
+                <button class="btn btn-outline-danger ms-2" id="deleteAll">
+                    <i class="fas fa-trash"></i> Delete All
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <select class="form-select" id="statusFilter">
+                        <option value="">All Notifications</option>
+                        <option value="unread" {% if read_filter == 'unread' %}selected{% endif %}>Unread</option>
+                        <option value="read" {% if read_filter == 'read' %}selected{% endif %}>Read</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="typeFilter">
+                        <option value="">All Types</option>
+                        {% for code, name in notification_types %}
+                        <option value="{{ code }}" {% if type_filter == code %}selected{% endif %}>
+                            {{ name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary w-100" id="applyFilters">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'notifications:list' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo"></i> Clear Filters
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification List -->
+        <div class="notifications-list">
+            {% for notification in notifications %}
+            <div class="notification-item {% if not notification.is_read %}unread{% endif %}" 
+                 data-id="{{ notification.id }}">
+                <div class="notification-icon">
+                    <i class="fas fa-{% if notification.notification_type == 'info' %}info-circle text-primary{% elif notification.notification_type == 'success' %}check-circle text-success{% elif notification.notification_type == 'warning' %}warning text-warning{% elif notification.notification_type == 'error' %}exclamation-circle text-danger{% elif notification.notification_type == 'comment' %}comment text-info{% elif notification.notification_type == 'like' %}heart text-danger{% elif notification.notification_type == 'share' %}share-alt text-success{% elif notification.notification_type == 'follow' %}user-plus text-primary{% else %}bell text-secondary{% endif %}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">{{ notification.title }}</div>
+                    <div class="notification-message">{{ notification.message }}</div>
+                    <div class="notification-meta">
+                        <span class="notification-time">
+                            <i class="fas fa-clock"></i> {{ notification.created_at|timesince }} ago
+                        </span>
+                        {% if notification.link %}
+                        <a href="{{ notification.link }}" class="notification-link">
+                            <i class="fas fa-arrow-right"></i> View
+                        </a>
+                        {% endif %}
+                        <span class="notification-type badge bg-{% if notification.notification_type == 'info' %}primary{% elif notification.notification_type == 'success' %}success{% elif notification.notification_type == 'warning' %}warning{% elif notification.notification_type == 'error' %}danger{% else %}secondary{% endif %}">
+                            {{ notification.get_notification_type_display }}
+                        </span>
+                    </div>
+                </div>
+                <div class="notification-actions">
+                    {% if not notification.is_read %}
+                    <button class="btn btn-sm btn-outline-primary mark-read" data-id="{{ notification.id }}">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    {% endif %}
+                    <button class="btn btn-sm btn-outline-danger delete-notification" data-id="{{ notification.id }}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-bell-slash fa-4x text-muted"></i>
+                <h4 class="mt-3">No Notifications</h4>
+                <p class="text-muted">You're all caught up! No new notifications.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.notifications-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.filters-bar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+.filters-bar .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+}
+.notifications-list {
+    margin-top: 20px;
+}
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+.notification-item:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.notification-item.unread {
+    border-left: 4px solid #1a3c5e;
+    background: #f8f9fa;
+}
+.notification-icon {
+    font-size: 24px;
+    width: 40px;
+    text-align: center;
+    padding-top: 3px;
+}
+.notification-content {
+    flex: 1;
+}
+.notification-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 16px;
+}
+.notification-message {
+    font-family: 'Times New Roman', serif;
+    color: #495057;
+    margin: 3px 0;
+}
+.notification-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 5px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    align-items: center;
+}
+.notification-link {
+    color: #1a3c5e;
+    text-decoration: none;
+    font-weight: 600;
+}
+.notification-link:hover {
+    text-decoration: underline;
+}
+.notification-type {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.notification-actions {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+}
+.notification-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    padding: 2px 8px;
+}
+.empty-state h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+@media (max-width: 768px) {
+    .notification-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .notification-actions {
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mark as read
+    document.querySelectorAll('.mark-read').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const item = this.closest('.notification-item');
+            
+            fetch(`/notifications/${id}/mark-read/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    item.classList.remove('unread');
+                    this.remove();
+                    // Update badge count
+                    const badge = document.getElementById('notificationBadge');
+                    if (badge) {
+                        const count = parseInt(badge.textContent) - 1;
+                        badge.textContent = count > 0 ? count : 0;
+                        if (count <= 0) badge.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+
+    // Delete notification
+    document.querySelectorAll('.delete-notification').forEach(button => {
+        button.addEventListener('click', function() {
+            if (!confirm('Delete this notification?')) return;
+            const id = this.dataset.id;
+            const item = this.closest('.notification-item');
+            
+            fetch(`/notifications/${id}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Mark all read
+    document.getElementById('markAllRead')?.addEventListener('click', function() {
+        fetch('/notifications/mark-all-read/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                document.querySelectorAll('.mark-read').forEach(btn => btn.remove());
+                const badge = document.getElementById('notificationBadge');
+                if (badge) {
+                    badge.textContent = 0;
+                    badge.style.display = 'none';
+                }
+                // Refresh page to update counts
+                setTimeout(() => window.location.reload(), 500);
+            }
+        });
+    });
+
+    // Delete all
+    document.getElementById('deleteAll')?.addEventListener('click', function() {
+        if (!confirm('Delete all notifications? This action cannot be undone.')) return;
+        
+        fetch('/notifications/delete-all/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            }
+        });
+    });
+
+    // Apply filters
+    document.getElementById('applyFilters')?.addEventListener('click', function() {
+        const status = document.getElementById('statusFilter').value;
+        const type = document.getElementById('typeFilter').value;
+        let url = '/notifications/?';
+        if (status) url += `read=${status}&`;
+        if (type) url += `type=${type}&`;
+        window.location.href = url;
+    });
+});
+</script>
+{% endblock %}

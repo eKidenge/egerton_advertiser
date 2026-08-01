@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Unsubscribe - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="unsubscribe-page">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="unsubscribe-card">
+                    <div class="unsubscribe-icon">
+                        <i class="fas fa-envelope-open"></i>
+                    </div>
+                    <h2>Unsubscribe from Newsletter</h2>
+                    <p class="text-muted">We're sorry to see you go. Enter your email to unsubscribe.</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" name="email" id="email" class="form-control" 
+                                   placeholder="Enter your email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="confirm" id="confirm" class="form-check-input" required>
+                                <label for="confirm" class="form-check-label">
+                                    I confirm that I want to unsubscribe
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="fas fa-times"></i> Unsubscribe
+                        </button>
+                    </form>
+
+                    <div class="unsubscribe-footer">
+                        <p class="text-muted">
+                            <i class="fas fa-arrow-left"></i> 
+                            Changed your mind? <a href="{% url 'newsletter:subscribe' %}">Subscribe again</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.unsubscribe-page {
+    padding: 60px 0;
+}
+.unsubscribe-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+}
+.unsubscribe-icon {
+    font-size: 64px;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+.unsubscribe-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.unsubscribe-card p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+}
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.form-check-label {
+    font-family: 'Times New Roman', serif;
+}
+.btn-danger {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 12px;
+}
+.unsubscribe-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+.unsubscribe-footer a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.unsubscribe-footer a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

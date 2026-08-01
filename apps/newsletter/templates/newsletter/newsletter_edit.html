@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Newsletter - The Egerton Advertiser{% endblock %}
+
+{% block extra_css %}
+{{ form.media }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="newsletter-form-container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2><i class="fas fa-envelope-open-text"></i> Edit Newsletter</h2>
+                        <p class="text-muted">Update your newsletter content and settings</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_subject">Subject Line</label>
+                            <input type="text" name="subject" id="id_subject" class="form-control" 
+                                   value="{{ form.subject.value|default:newsletter.subject }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_preview_text">Preview Text</label>
+                            <input type="text" name="preview_text" id="id_preview_text" class="form-control" 
+                                   value="{{ form.preview_text.value|default:newsletter.preview_text }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_content">Content</label>
+                            {{ form.content }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_template">Template</label>
+                                    <select name="template" id="id_template" class="form-select">
+                                        <option value="default" {% if newsletter.template == 'default' %}selected{% endif %}>Default</option>
+                                        <option value="minimal" {% if newsletter.template == 'minimal' %}selected{% endif %}>Minimal</option>
+                                        <option value="featured" {% if newsletter.template == 'featured' %}selected{% endif %}>Featured</option>
+                                        <option value="digest" {% if newsletter.template == 'digest' %}selected{% endif %}>Digest</option>
+                                        <option value="custom" {% if newsletter.template == 'custom' %}selected{% endif %}>Custom</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_status">Status</label>
+                                    <select name="status" id="id_status" class="form-select">
+                                        <option value="draft" {% if newsletter.status == 'draft' %}selected{% endif %}>Draft</option>
+                                        <option value="scheduled" {% if newsletter.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_scheduled_for">Schedule Date</label>
+                                    <input type="datetime-local" name="scheduled_for" id="id_scheduled_for" 
+                                           class="form-control" value="{{ newsletter.scheduled_for|date:'Y-m-d\TH:i'|default:'' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_frequency">Frequency</label>
+                                    <select name="frequency" id="id_frequency" class="form-select">
+                                        <option value="daily" {% if newsletter.frequency == 'daily' %}selected{% endif %}>Daily</option>
+                                        <option value="weekly" {% if newsletter.frequency == 'weekly' %}selected{% endif %}>Weekly</option>
+                                        <option value="monthly" {% if newsletter.frequency == 'monthly' %}selected{% endif %}>Monthly</option>
+                                        <option value="instant" {% if newsletter.frequency == 'instant' %}selected{% endif %}>Instant</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Newsletter
+                            </button>
+                            <button type="submit" name="preview" value="1" class="btn btn-outline-info">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            {% if newsletter.status == 'draft' or newsletter.status == 'scheduled' %}
+                            <a href="{% url 'newsletter:send' newsletter.id %}" class="btn btn-success">
+                                <i class="fas fa-paper-plane"></i> Send Now
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'newsletter:list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

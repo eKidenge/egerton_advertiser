@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block title %}Advertisements - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="ads-management">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-ad"></i> Advertisements</h1>
+                <p class="text-muted">Manage your advertising campaigns</p>
+            </div>
+            <div>
+                <a href="{% url 'advertisements:create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Ad
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row row mb-4">
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number">{{ total_ads|default:0 }}</div>
+                    <div class="stat-label">Total Ads</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-success text-white">
+                    <div class="stat-number">{{ active_ads|default:0 }}</div>
+                    <div class="stat-label">Active</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-warning">
+                    <div class="stat-number">{{ pending_ads|default:0 }}</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box bg-danger text-white">
+                    <div class="stat-number">{{ expired_ads|default:0 }}</div>
+                    <div class="stat-label">Expired</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="get" class="row g-2">
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        {% for code, name in form.status.field.choices %}
+                        <option value="{{ code }}" {% if request.GET.status == code %}selected{% endif %}>
+                            {{ name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="position" class="form-select">
+                        <option value="">All Positions</option>
+                        {% for code, name in form.position.field.choices %}
+                        <option value="{{ code }}" {% if request.GET.position == code %}selected{% endif %}>
+                            {{ name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Ads Grid -->
+        <div class="ads-grid">
+            <div class="row">
+                {% for ad in ads %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="ad-card">
+                        <div class="ad-image">
+                            {% if ad.image %}
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                            {% else %}
+                            <div class="no-image">
+                                <i class="fas fa-image"></i>
+                                <span>No Image</span>
+                            </div>
+                            {% endif %}
+                            <div class="ad-status">
+                                <span class="badge bg-{% if ad.status == 'active' %}success{% elif ad.status == 'pending' %}warning{% elif ad.status == 'expired' %}danger{% else %}secondary{% endif %}">
+                                    {{ ad.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ad-content">
+                            <h5>{{ ad.title }}</h5>
+                            <p class="ad-position"><i class="fas fa-location-dot"></i> {{ ad.get_position_display }}</p>
+                            <p class="ad-company"><i class="fas fa-building"></i> {{ ad.company_name }}</p>
+                            <div class="ad-stats">
+                                <span><i class="fas fa-eye"></i> {{ ad.views_count }}</span>
+                                <span><i class="fas fa-mouse-pointer"></i> {{ ad.clicks_count }}</span>
+                                <span><i class="fas fa-calendar-alt"></i> {{ ad.start_date|date:"M d" }}</span>
+                            </div>
+                            <div class="ad-actions">
+                                <a href="{% url 'advertisements:detail' ad.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <a href="{% url 'advertisements:edit' ad.id %}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                {% if ad.status == 'active' %}
+                                <a href="#" class="btn btn-sm btn-outline-warning" onclick="return confirm('Pause this ad?')">
+                                    <i class="fas fa-pause"></i> Pause
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'advertisements:delete' ad.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this ad?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center py-5">
+                        <i class="fas fa-ad fa-3x d-block mb-3"></i>
+                        <h4>No Advertisements Found</h4>
+                        <p class="text-muted">Create your first advertisement campaign</p>
+                        <a href="{% url 'advertisements:create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Ad
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.ads-management {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.stat-box {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+.stat-box .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+}
+.stat-box .stat-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.filters-bar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+.ad-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+.ad-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.ad-image {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+.ad-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.no-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #adb5bd;
+}
+.no-image i {
+    font-size: 48px;
+}
+.ad-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.ad-content {
+    padding: 15px;
+}
+.ad-content h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 5px;
+}
+.ad-content .ad-position,
+.ad-content .ad-company {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    margin: 3px 0;
+}
+.ad-content .ad-position i,
+.ad-content .ad-company i {
+    width: 18px;
+}
+.ad-stats {
+    display: flex;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    padding: 8px 0;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    margin: 8px 0;
+}
+.ad-stats i {
+    margin-right: 3px;
+}
+.ad-actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+.ad-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+}
+</style>
+{% endblock %}

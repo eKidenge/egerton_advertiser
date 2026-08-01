@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ action }} Article - Admin{% endblock %}
+
+{% block extra_css %}
+{{ form.media }}
+<style>
+.admin-page {
+    padding: 20px 0;
+    background: #f5f0e8;
+}
+.form-card {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    padding: 30px;
+}
+.form-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.form-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.form-header h1 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    color: #c9a84c;
+    margin-right: 8px;
+}
+.form-control, .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #d4cdc0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+.tag-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    min-height: 50px;
+    background: #fff;
+}
+.tag-badge {
+    background: #1a3c5e;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.tag-badge .remove-tag {
+    cursor: pointer;
+    color: #c9a84c;
+}
+.tag-badge .remove-tag:hover {
+    color: #dc3545;
+}
+.tag-input {
+    border: none;
+    outline: none;
+    font-family: 'Times New Roman', serif;
+    padding: 4px 8px;
+    flex: 1;
+    min-width: 100px;
+}
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+    background: #f8f5f0;
+    border-radius: 4px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h1><i class="fas fa-{% if action == 'Create' %}plus-circle{% else %}edit{% endif %}"></i> {{ action }} Article</h1>
+                        <p class="text-muted">{% if action == 'Create' %}Write a new article for publication{% else %}Update article content and settings{% endif %}</p>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="id_title"><i class="fas fa-heading"></i> Article Title</label>
+                                    <input type="text" name="title" id="id_title" class="form-control" 
+                                           value="{{ form.title.value|default:'' }}" placeholder="Enter compelling title" required>
+                                    {% if form.title.errors %}
+                                    <small class="text-danger">{{ form.title.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_slug"><i class="fas fa-link"></i> URL Slug</label>
+                                    <input type="text" name="slug" id="id_slug" class="form-control" 
+                                           value="{{ form.slug.value|default:'' }}" readonly>
+                                    <small class="help-text">Auto-generated from title</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_excerpt"><i class="fas fa-align-left"></i> Excerpt</label>
+                            <textarea name="excerpt" id="id_excerpt" class="form-control" rows="3" 
+                                      placeholder="Brief summary of the article">{{ form.excerpt.value|default:'' }}</textarea>
+                            <small class="help-text">Displayed in article listings (max 300 characters)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_content"><i class="fas fa-file-alt"></i> Content</label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                            <small class="text-danger">{{ form.content.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_category"><i class="fas fa-folder"></i> Category</label>
+                                    <select name="category" id="id_category" class="form-select">
+                                        <option value="">Select Category</option>
+                                        {% for cat in form.category.field.queryset %}
+                                        <option value="{{ cat.id }}" {% if form.category.value == cat.id %}selected{% endif %}>
+                                            {{ cat.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-tags"></i> Tags</label>
+                                    <div class="tag-input-container" id="tagContainer">
+                                        {% for tag in form.tags.value %}
+                                        <span class="tag-badge">
+                                            {{ tag }}
+                                            <span class="remove-tag" data-tag-name="{{ tag }}">&times;</span>
+                                        </span>
+                                        {% endfor %}
+                                        <input type="text" class="tag-input" id="tagInput" placeholder="Type tag and press Enter">
+                                    </div>
+                                    <input type="hidden" name="tags" id="id_tags" value="{{ form.tags.value|join:',' }}">
+                                    <small class="help-text">Press Enter to add tags</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_featured_image"><i class="fas fa-image"></i> Featured Image</label>
+                                    <input type="file" name="featured_image" id="id_featured_image" class="form-control" accept="image/*">
+                                    {% if article.featured_image %}
+                                    <small class="help-text">Current: {{ article.featured_image.name }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_featured_image_alt"><i class="fas fa-font"></i> Image Alt Text</label>
+                                    <input type="text" name="featured_image_alt" id="id_featured_image_alt" 
+                                           class="form-control" value="{{ form.featured_image_alt.value|default:'' }}">
+                                    <small class="help-text">Description for accessibility and SEO</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-star"></i> Featured Settings</label>
+                                    <div class="featured-grid">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="is_featured" id="id_is_featured" 
+                                                   class="form-check-input" {% if form.is_featured.value %}checked{% endif %}>
+                                            <label for="id_is_featured" class="form-check-label">Featured</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="is_breaking" id="id_is_breaking" 
+                                                   class="form-check-input" {% if form.is_breaking.value %}checked{% endif %}>
+                                            <label for="id_is_breaking" class="form-check-label">Breaking News</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="is_exclusive" id="id_is_exclusive" 
+                                                   class="form-check-input" {% if form.is_exclusive.value %}checked{% endif %}>
+                                            <label for="id_is_exclusive" class="form-check-label">Exclusive</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="is_editor_pick" id="id_is_editor_pick" 
+                                                   class="form-check-input" {% if form.is_editor_pick.value %}checked{% endif %}>
+                                            <label for="id_is_editor_pick" class="form-check-label">Editor's Pick</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_status"><i class="fas fa-flag"></i> Status</label>
+                                    <select name="status" id="id_status" class="form-select">
+                                        <option value="draft" {% if form.status.value == 'draft' %}selected{% endif %}>Draft</option>
+                                        <option value="pending" {% if form.status.value == 'pending' %}selected{% endif %}>Pending Review</option>
+                                        <option value="published" {% if form.status.value == 'published' %}selected{% endif %}>Published</option>
+                                        <option value="scheduled" {% if form.status.value == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="id_scheduled_for"><i class="fas fa-calendar-plus"></i> Schedule Date</label>
+                                    <input type="datetime-local" name="scheduled_for" id="id_scheduled_for" 
+                                           class="form-control" value="{{ form.scheduled_for.value|default:''|date:'Y-m-d\TH:i' }}">
+                                    <small class="help-text">Leave blank to publish immediately</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {% if action == 'Create' %}Create{% else %}Update{% endif %} Article
+                            </button>
+                            <a href="{% url 'dashboard:admin_articles' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            {% if article %}
+                            <a href="{{ article.get_absolute_url }}" target="_blank" class="btn btn-outline-success">
+                                <i class="fas fa-eye"></i> Preview
+                            </a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-generate slug
+    const titleInput = document.getElementById('id_title');
+    const slugInput = document.getElementById('id_slug');
+    titleInput.addEventListener('keyup', function() {
+        if (!slugInput.value || slugInput.value === slugInput.defaultValue) {
+            const slug = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            slugInput.value = slug;
+        }
+    });
+
+    // Tag input
+    const tagInput = document.getElementById('tagInput');
+    const tagContainer = document.getElementById('tagContainer');
+    const tagsHidden = document.getElementById('id_tags');
+    let tags = tagsHidden.value ? tagsHidden.value.split(',') : [];
+
+    function updateTags() {
+        tagContainer.querySelectorAll('.tag-badge').forEach(el => el.remove());
+        tags.forEach(tag => {
+            const badge = document.createElement('span');
+            badge.className = 'tag-badge';
+            badge.innerHTML = `${tag} <span class="remove-tag" data-tag-name="${tag}">&times;</span>`;
+            badge.querySelector('.remove-tag').addEventListener('click', function() {
+                tags = tags.filter(t => t !== this.dataset.tagName);
+                updateTags();
+            });
+            tagContainer.insertBefore(badge, tagInput);
+        });
+        tagsHidden.value = tags.join(',');
+    }
+
+    tagInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const tag = this.value.trim();
+            if (tag && !tags.includes(tag)) {
+                tags.push(tag);
+                updateTags();
+                this.value = '';
+            }
+        }
+    });
+
+    updateTags();
+});
+</script>
+{% endblock %}

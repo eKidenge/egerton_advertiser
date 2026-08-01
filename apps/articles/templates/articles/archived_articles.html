@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Archived Articles - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="articles-status-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-archive"></i> Archived Articles</h1>
+                <p class="text-muted">Articles that have been archived</p>
+            </div>
+            <div>
+                <span class="badge bg-secondary">{{ articles.paginator.count }} Archived</span>
+            </div>
+        </div>
+
+        <div class="articles-list">
+            {% for article in articles %}
+            <div class="article-status-item">
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <h5><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h5>
+                        <div class="article-meta">
+                            <span><i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}</span>
+                            <span><i class="fas fa-folder"></i> {{ article.category.name|default:"Uncategorized" }}</span>
+                            <span><i class="fas fa-calendar-alt"></i> Archived: {{ article.archived_at|date:"M d, Y" }}</span>
+                            <span><i class="fas fa-eye"></i> {{ article.views_count }} views</span>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-end">
+                        <div class="btn-group">
+                            <a href="{% url 'articles:article_edit' article.id %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-undo"></i> Restore
+                            </a>
+                            <a href="{% url 'articles:article_delete' article.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Delete permanently?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-archive fa-4x text-muted"></i>
+                <h4 class="mt-3">No Archived Articles</h4>
+                <p class="text-muted">No articles have been archived</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+{% endblock %}

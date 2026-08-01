@@ -1,0 +1,629 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}The Egerton Advertiser - Official Gazette of Egerton, Kenya{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #1a3c5e 0%, #2c5a7a 100%);
+        padding: 30px 0;
+        margin-bottom: 30px;
+        border-bottom: 4px solid #c9a84c;
+    }
+    .hero-section h1 {
+        font-family: 'Times New Roman', serif;
+        font-weight: 900;
+        font-size: 36px;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 5px;
+    }
+    .hero-section .subtitle {
+        font-family: 'Times New Roman', serif;
+        font-size: 16px;
+        color: rgba(255,255,255,0.8);
+        font-style: italic;
+    }
+    .hero-date {
+        font-family: 'Times New Roman', serif;
+        color: #c9a84c;
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+    .featured-article {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+    }
+    .featured-article img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+    .featured-article .featured-content {
+        padding: 25px;
+        background: #fff;
+    }
+    .featured-article .category-tag {
+        display: inline-block;
+        background: #1a3c5e;
+        color: #fff;
+        padding: 4px 12px;
+        font-family: 'Times New Roman', serif;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        border-radius: 3px;
+    }
+    .featured-article h2 {
+        font-family: 'Times New Roman', serif;
+        font-weight: 700;
+        font-size: 28px;
+        color: #1a3c5e;
+        margin-bottom: 10px;
+    }
+    .featured-article h2 a {
+        color: #1a3c5e;
+        text-decoration: none;
+    }
+    .featured-article h2 a:hover {
+        text-decoration: underline;
+    }
+    .featured-article .excerpt {
+        font-family: 'Times New Roman', serif;
+        font-size: 16px;
+        color: #444;
+        line-height: 1.8;
+    }
+    .featured-article .meta {
+        font-family: 'Times New Roman', serif;
+        font-size: 13px;
+        color: #6c757d;
+        margin-top: 15px;
+    }
+    .featured-article .meta i {
+        margin-right: 5px;
+    }
+    .category-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 20px;
+    }
+    .category-section .section-header {
+        border-bottom: 2px solid #1a3c5e;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .category-section .section-header h3 {
+        font-family: 'Times New Roman', serif;
+        font-weight: 700;
+        color: #1a3c5e;
+        font-size: 20px;
+        margin: 0;
+    }
+    .category-section .section-header .view-all {
+        font-family: 'Times New Roman', serif;
+        font-size: 13px;
+        color: #1a3c5e;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .category-section .section-header .view-all:hover {
+        text-decoration: underline;
+    }
+    .article-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .article-item:last-child {
+        border-bottom: none;
+    }
+    .article-item .article-title {
+        font-family: 'Times New Roman', serif;
+        font-weight: 600;
+        font-size: 16px;
+        color: #1a3c5e;
+        text-decoration: none;
+    }
+    .article-item .article-title:hover {
+        text-decoration: underline;
+    }
+    .article-item .article-meta {
+        font-family: 'Times New Roman', serif;
+        font-size: 12px;
+        color: #6c757d;
+    }
+    .sidebar-widget {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 20px;
+    }
+    .sidebar-widget .widget-title {
+        font-family: 'Times New Roman', serif;
+        font-weight: 700;
+        color: #1a3c5e;
+        font-size: 18px;
+        border-bottom: 2px solid #1a3c5e;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+    .sidebar-widget .widget-title i {
+        margin-right: 8px;
+        color: #c9a84c;
+    }
+    .popular-article {
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .popular-article:last-child {
+        border-bottom: none;
+    }
+    .popular-article .rank {
+        display: inline-block;
+        background: #1a3c5e;
+        color: #fff;
+        width: 24px;
+        height: 24px;
+        text-align: center;
+        line-height: 24px;
+        border-radius: 50%;
+        font-family: 'Times New Roman', serif;
+        font-size: 12px;
+        font-weight: 700;
+        margin-right: 10px;
+    }
+    .popular-article a {
+        font-family: 'Times New Roman', serif;
+        font-size: 14px;
+        color: #1a3c5e;
+        text-decoration: none;
+    }
+    .popular-article a:hover {
+        text-decoration: underline;
+    }
+    .popular-article .views {
+        font-family: 'Times New Roman', serif;
+        font-size: 12px;
+        color: #6c757d;
+        display: block;
+        margin-top: 3px;
+        margin-left: 34px;
+    }
+    .ad-space {
+        background: #f8f9fa;
+        border: 1px dashed #ced4da;
+        padding: 20px;
+        text-align: center;
+        font-family: 'Times New Roman', serif;
+        color: #6c757d;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .ad-space .ad-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #adb5bd;
+    }
+    .breaking-news-item {
+        background: #fff3cd;
+        border-left: 4px solid #c9a84c;
+        padding: 12px 15px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+    }
+    .breaking-news-item .label {
+        font-family: 'Times New Roman', serif;
+        font-weight: 700;
+        color: #856404;
+        font-size: 13px;
+    }
+    .breaking-news-item a {
+        font-family: 'Times New Roman', serif;
+        color: #1a3c5e;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .breaking-news-item a:hover {
+        text-decoration: underline;
+    }
+    .editor-pick {
+        background: #e8f0f8;
+        border: 1px solid #1a3c5e;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .editor-pick .pick-label {
+        font-family: 'Times New Roman', serif;
+        font-weight: 700;
+        color: #1a3c5e;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+    }
+    .editor-pick .pick-label i {
+        color: #c9a84c;
+    }
+    .editor-pick h4 {
+        font-family: 'Times New Roman', serif;
+        font-weight: 700;
+        font-size: 22px;
+        color: #1a3c5e;
+    }
+    .editor-pick h4 a {
+        color: #1a3c5e;
+        text-decoration: none;
+    }
+    .editor-pick h4 a:hover {
+        text-decoration: underline;
+    }
+    .editor-pick p {
+        font-family: 'Times New Roman', serif;
+        font-size: 16px;
+        color: #444;
+        line-height: 1.8;
+    }
+    .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .quick-actions .btn {
+        font-family: 'Times New Roman', serif;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+    @media (max-width: 768px) {
+        .featured-article img {
+            height: 200px;
+        }
+        .featured-article h2 {
+            font-size: 22px;
+        }
+        .hero-section h1 {
+            font-size: 24px;
+        }
+    }
+    .pulse {
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1>THE EGERTON ADVERTISER</h1>
+                <p class="subtitle">Official Gazette of Egerton, Kenya</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <span class="hero-date">
+                    <i class="far fa-calendar-alt"></i> 
+                    <span id="currentDate"></span>
+                </span>
+                <div class="mt-1">
+                    <span class="hero-date">
+                        <i class="fas fa-flag"></i> Volume I, Issue No. 1
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Featured Articles Slider -->
+            {% if featured_articles %}
+            <div id="featuredCarousel" class="carousel slide featured-article" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for article in featured_articles %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        {% if article.featured_image %}
+                        <img src="{{ article.featured_image.url }}" class="d-block w-100" alt="{{ article.title }}">
+                        {% else %}
+                        <img src="{% static 'images/default-featured.jpg' %}" class="d-block w-100" alt="Featured article">
+                        {% endif %}
+                        <div class="featured-content">
+                            <span class="category-tag">{{ article.category.name|upper }}</span>
+                            <h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
+                            <p class="excerpt">{{ article.excerpt|truncatewords:35 }}</p>
+                            <div class="meta">
+                                <i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}
+                                <span class="mx-2">|</span>
+                                <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"F d, Y" }}
+                                <span class="mx-2">|</span>
+                                <i class="fas fa-clock"></i> {{ article.time_to_read }} min read
+                                <span class="mx-2">|</span>
+                                <i class="fas fa-eye"></i> {{ article.views_count }} views
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if featured_articles|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Editor's Pick -->
+            {% if editor_pick %}
+            <div class="editor-pick">
+                <div class="pick-label">
+                    <i class="fas fa-star"></i> EDITOR'S PICK
+                </div>
+                <h4><a href="{{ editor_pick.get_absolute_url }}">{{ editor_pick.title }}</a></h4>
+                <p>{{ editor_pick.excerpt|truncatewords:30 }}</p>
+                <div class="meta">
+                    <i class="fas fa-user"></i> {{ editor_pick.author.get_full_name|default:editor_pick.author.username }}
+                    <span class="mx-2">|</span>
+                    <i class="fas fa-calendar-alt"></i> {{ editor_pick.published_at|date:"F d, Y" }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Breaking News -->
+            {% if breaking_news %}
+            <div class="category-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-bolt" style="color: #c9a84c;"></i> Breaking News</h3>
+                </div>
+                {% for article in breaking_news %}
+                <div class="breaking-news-item">
+                    <span class="label"><i class="fas fa-circle pulse" style="color: #dc3545; font-size: 8px;"></i> BREAKING:</span>
+                    <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                    <small class="text-muted ms-2">{{ article.published_at|date:"H:i" }}</small>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Politics Section -->
+            {% if politics_articles %}
+            <div class="category-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-gavel"></i> Politics</h3>
+                    <a href="{% url 'categories:detail' slug='politics' %}" class="view-all">View All →</a>
+                </div>
+                {% for article in politics_articles|slice:":5" %}
+                <div class="article-item">
+                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
+                    <div class="article-meta">
+                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Business Section -->
+            {% if business_articles %}
+            <div class="category-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-chart-line"></i> Business</h3>
+                    <a href="{% url 'categories:detail' slug='business' %}" class="view-all">View All →</a>
+                </div>
+                {% for article in business_articles|slice:":5" %}
+                <div class="article-item">
+                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
+                    <div class="article-meta">
+                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Sports Section -->
+            {% if sports_articles %}
+            <div class="category-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-futbol"></i> Sports</h3>
+                    <a href="{% url 'categories:detail' slug='sports' %}" class="view-all">View All →</a>
+                </div>
+                {% for article in sports_articles|slice:":5" %}
+                <div class="article-item">
+                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
+                    <div class="article-meta">
+                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Entertainment Section -->
+            {% if entertainment_articles %}
+            <div class="category-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-film"></i> Entertainment</h3>
+                    <a href="{% url 'categories:detail' slug='entertainment' %}" class="view-all">View All →</a>
+                </div>
+                {% for article in entertainment_articles|slice:":5" %}
+                <div class="article-item">
+                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
+                    <div class="article-meta">
+                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Latest Articles -->
+            <div class="category-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-newspaper"></i> Latest News</h3>
+                    <a href="{% url 'articles:latest' %}" class="view-all">View All →</a>
+                </div>
+                {% for article in latest_articles %}
+                <div class="article-item">
+                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
+                    <div class="article-meta">
+                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
+                        <span class="mx-2">|</span>
+                        <i class="fas fa-eye"></i> {{ article.views_count }}
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted" style="font-family: 'Times New Roman', serif;">No articles published yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Quick Actions -->
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <i class="fas fa-bolt"></i> Quick Actions
+                </div>
+                <div class="quick-actions">
+                    <a href="{% url 'search:search' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-search"></i> Search
+                    </a>
+                    <a href="{% url 'newsletter:subscribe' %}" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-envelope"></i> Subscribe
+                    </a>
+                    <a href="{% url 'advertisements:list' %}" class="btn btn-outline-warning btn-sm">
+                        <i class="fas fa-ad"></i> Advertise
+                    </a>
+                    <a href="{% url 'contacts:contact' %}" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-headset"></i> Contact
+                    </a>
+                </div>
+            </div>
+
+            <!-- Popular Articles -->
+            {% if popular_articles %}
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <i class="fas fa-fire"></i> Most Popular
+                </div>
+                {% for article in popular_articles %}
+                <div class="popular-article">
+                    <span class="rank">{{ forloop.counter }}</span>
+                    <a href="{{ article.get_absolute_url }}">{{ article.title|truncatewords:10 }}</a>
+                    <span class="views">
+                        <i class="fas fa-eye"></i> {{ article.views_count }} views
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Advertisement Space -->
+            <div class="ad-space">
+                <div class="ad-label">Advertisement</div>
+                <div style="padding: 20px; background: #fff; min-height: 200px;">
+                    <p style="font-family: 'Times New Roman', serif; color: #6c757d;">
+                        <i class="fas fa-ad" style="font-size: 24px;"></i><br>
+                        Your Ad Here<br>
+                        <small>Contact us for advertising</small>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Newsletter Signup -->
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <i class="fas fa-envelope-open-text"></i> Newsletter
+                </div>
+                <p style="font-family: 'Times New Roman', serif; color: #6c757d; font-size: 14px;">
+                    Subscribe to receive the latest news directly in your inbox.
+                </p>
+                <form action="{% url 'newsletter:subscribe' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <input type="email" name="email" class="form-control" 
+                               placeholder="Enter your email" required
+                               style="font-family: 'Times New Roman', serif;">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" 
+                            style="font-family: 'Times New Roman', serif; font-weight: 700;">
+                        <i class="fas fa-paper-plane"></i> Subscribe
+                    </button>
+                </form>
+            </div>
+
+            <!-- Categories -->
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <i class="fas fa-tags"></i> Categories
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                    <a href="{% url 'categories:detail' slug='politics' %}" class="btn btn-outline-primary btn-sm">Politics</a>
+                    <a href="{% url 'categories:detail' slug='business' %}" class="btn btn-outline-success btn-sm">Business</a>
+                    <a href="{% url 'categories:detail' slug='sports' %}" class="btn btn-outline-danger btn-sm">Sports</a>
+                    <a href="{% url 'categories:detail' slug='entertainment' %}" class="btn btn-outline-warning btn-sm">Entertainment</a>
+                    <a href="{% url 'categories:detail' slug='education' %}" class="btn btn-outline-info btn-sm">Education</a>
+                    <a href="{% url 'categories:detail' slug='health' %}" class="btn btn-outline-secondary btn-sm">Health</a>
+                    <a href="{% url 'categories:detail' slug='technology' %}" class="btn btn-outline-dark btn-sm">Technology</a>
+                    <a href="{% url 'categories:list' %}" class="btn btn-link btn-sm">View All →</a>
+                </div>
+            </div>
+
+            <!-- Advertisement Space -->
+            <div class="ad-space">
+                <div class="ad-label">Sponsored</div>
+                <div style="padding: 20px; background: #fff; min-height: 150px;">
+                    <p style="font-family: 'Times New Roman', serif; color: #6c757d; font-size: 14px;">
+                        <i class="fas fa-bullhorn"></i><br>
+                        Sponsor this space
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Display current date
+    const now = new Date();
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+});
+</script>
+{% endblock %}

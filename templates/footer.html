@@ -1,0 +1,182 @@
+<footer class="main-footer">
+    <div class="container">
+        <div class="row py-5">
+            <div class="col-md-4">
+                <div class="footer-brand">
+                    <h5 class="footer-title">The Egerton Advertiser</h5>
+                    <p class="footer-motto">"Truth, Justice & Service to the Nation"</p>
+                    <p class="footer-description">
+                        Official Gazette of Egerton, Kenya. Providing accurate, timely, 
+                        and trustworthy news to the citizens of Egerton and beyond.
+                    </p>
+                </div>
+                <div class="footer-social mt-3">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <h6 class="footer-heading">Categories</h6>
+                <ul class="footer-links">
+                    <li><a href="{% url 'categories:detail' slug='politics' %}">Politics</a></li>
+                    <li><a href="{% url 'categories:detail' slug='business' %}">Business</a></li>
+                    <li><a href="{% url 'categories:detail' slug='sports' %}">Sports</a></li>
+                    <li><a href="{% url 'categories:detail' slug='entertainment' %}">Entertainment</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <h6 class="footer-heading">Quick Links</h6>
+                <ul class="footer-links">
+                    <li><a href="{% url 'articles:latest' %}">Latest News</a></li>
+                    <li><a href="{% url 'advertisements:list' %}">Advertise</a></li>
+                    <li><a href="{% url 'newsletter:subscribe' %}">Newsletter</a></li>
+                    <li><a href="{% url 'contacts:contact' %}">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h6 class="footer-heading">Subscribe to Our Newsletter</h6>
+                <form action="{% url 'newsletter:subscribe' %}" method="post" class="footer-newsletter">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+                <div class="footer-contact mt-3">
+                    <p><i class="fas fa-map-marker-alt"></i> Egerton, Kenya</p>
+                    <p><i class="fas fa-phone"></i> +254 700 000 000</p>
+                    <p><i class="fas fa-envelope"></i> info@theegertonadvertiser.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="copyright">&copy; {% now "Y" %} The Egerton Advertiser. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <ul class="footer-bottom-links">
+                        <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                        <li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
+                        <li><a href="{% url 'cookie_policy' %}">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.main-footer {
+    background: #0a1a2a;
+    color: #e0d5c8;
+    border-top: 4px solid #c9a84c;
+    margin-top: 50px;
+}
+.footer-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #fff;
+}
+.footer-motto {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #c9a84c;
+    font-size: 14px;
+}
+.footer-description {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #b0a89a;
+    line-height: 1.8;
+}
+.footer-heading {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-weight: 700;
+    border-bottom: 2px solid #c9a84c;
+    padding-bottom: 10px;
+}
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+.footer-links a {
+    color: #b0a89a;
+    text-decoration: none;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+}
+.footer-links a:hover {
+    color: #c9a84c;
+}
+.footer-social .social-link {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+    color: #b0a89a;
+    border-radius: 50%;
+    margin-right: 8px;
+    transition: all 0.3s;
+}
+.footer-social .social-link:hover {
+    background: #c9a84c;
+    color: #0a1a2a;
+}
+.footer-newsletter .form-control {
+    border-radius: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+}
+.footer-newsletter .btn {
+    border-radius: 0;
+    background: #c9a84c;
+    border: none;
+    color: #0a1a2a;
+}
+.footer-contact p {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #b0a89a;
+}
+.footer-contact i {
+    color: #c9a84c;
+    width: 20px;
+}
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 15px 0;
+}
+.copyright {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.footer-bottom-links {
+    list-style: none;
+    padding: 0;
+}
+.footer-bottom-links li {
+    display: inline-block;
+    margin-left: 20px;
+}
+.footer-bottom-links a {
+    color: #6c757d;
+    text-decoration: none;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+}
+.footer-bottom-links a:hover {
+    color: #c9a84c;
+}
+</style>

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Sitemap - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="sitemap-page">
+        <div class="page-header text-center">
+            <h1><i class="fas fa-sitemap"></i> Sitemap</h1>
+            <p class="text-muted">Navigate our website</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="sitemap-card">
+                    <div class="sitemap-section">
+                        <h2><i class="fas fa-home"></i> Main Pages</h2>
+                        <ul>
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li><a href="{% url 'articles:latest' %}">Latest News</a></li>
+                            <li><a href="{% url 'articles:breaking_news' %}">Breaking News</a></li>
+                            <li><a href="{% url 'about' %}">About Us</a></li>
+                            <li><a href="{% url 'contacts:contact' %}">Contact Us</a></li>
+                            <li><a href="{% url 'advertisements:list' %}">Advertise With Us</a></li>
+                            <li><a href="{% url 'newsletter:subscribe' %}">Subscribe to Newsletter</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="sitemap-section">
+                        <h2><i class="fas fa-folder"></i> Categories</h2>
+                        <ul>
+                            {% for category in categories %}
+                            <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="sitemap-section">
+                        <h2><i class="fas fa-tags"></i> Tags</h2>
+                        <ul>
+                            {% for tag in tags %}
+                            <li><a href="{% url 'tags:detail' tag.slug %}">#{{ tag.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="sitemap-section">
+                        <h2><i class="fas fa-user"></i> Account</h2>
+                        <ul>
+                            {% if user.is_authenticated %}
+                            <li><a href="{% url 'dashboard:home' %}">Dashboard</a></li>
+                            <li><a href="{% url 'accounts:profile' %}">My Profile</a></li>
+                            <li><a href="{% url 'accounts:change_password' %}">Change Password</a></li>
+                            <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+                            {% else %}
+                            <li><a href="{% url 'accounts:login' %}">Login</a></li>
+                            <li><a href="{% url 'accounts:register' %}">Register</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div class="sitemap-section">
+                        <h2><i class="fas fa-gavel"></i> Legal</h2>
+                        <ul>
+                            <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                            <li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
+                            <li><a href="{% url 'cookie_policy' %}">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.sitemap-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.sitemap-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.sitemap-section {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.sitemap-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+.sitemap-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 10px;
+}
+.sitemap-section h2 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.sitemap-section ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+}
+.sitemap-section ul li {
+    padding: 5px 10px;
+}
+.sitemap-section ul li a {
+    font-family: 'Times New Roman', serif;
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.sitemap-section ul li a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 768px) {
+    .sitemap-section ul {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Activity Log - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="activity-log-page">
+        <div class="page-header">
+            <h1><i class="fas fa-history"></i> Activity Log</h1>
+            <p class="text-muted">Track all user activities on the platform</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="get" class="row g-2">
+                <div class="col-md-3">
+                    <select name="action" class="form-select">
+                        <option value="">All Actions</option>
+                        <option value="login" {% if action_filter == 'login' %}selected{% endif %}>Login</option>
+                        <option value="logout" {% if action_filter == 'logout' %}selected{% endif %}>Logout</option>
+                        <option value="create" {% if action_filter == 'create' %}selected{% endif %}>Create</option>
+                        <option value="update" {% if action_filter == 'update' %}selected{% endif %}>Update</option>
+                        <option value="delete" {% if action_filter == 'delete' %}selected{% endif %}>Delete</option>
+                        <option value="publish" {% if action_filter == 'publish' %}selected{% endif %}>Publish</option>
+                        <option value="view" {% if action_filter == 'view' %}selected{% endif %}>View</option>
+                        <option value="comment" {% if action_filter == 'comment' %}selected{% endif %}>Comment</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Activities -->
+        <div class="activities-list">
+            {% for activity in activities %}
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-{% if activity.action == 'login' %}sign-in-alt text-success{% elif activity.action == 'logout' %}sign-out-alt text-secondary{% elif activity.action == 'create' %}plus-circle text-primary{% elif activity.action == 'update' %}edit text-warning{% elif activity.action == 'delete' %}trash text-danger{% elif activity.action == 'publish' %}check-circle text-success{% elif activity.action == 'view' %}eye text-info{% elif activity.action == 'comment' %}comment text-primary{% else %}circle text-muted{% endif %}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-header">
+                        <span class="activity-user">
+                            <strong>{{ activity.user.get_full_name|default:activity.user.username }}</strong>
+                        </span>
+                        <span class="activity-action">{{ activity.description }}</span>
+                    </div>
+                    <div class="activity-meta">
+                        <span><i class="fas fa-clock"></i> {{ activity.timestamp|date:"F d, Y H:i" }}</span>
+                        <span><i class="fas fa-clock"></i> {{ activity.timestamp|timesince }} ago</span>
+                        {% if activity.ip_address %}
+                        <span><i class="fas fa-network-wired"></i> IP: {{ activity.ip_address }}</span>
+                        {% endif %}
+                        {% if activity.model_name %}
+                        <span><i class="fas fa-{% if activity.model_name == 'Article' %}newspaper{% elif activity.model_name == 'User' %}user{% elif activity.model_name == 'Comment' %}comment{% else %}file{% endif %}"></i> {{ activity.model_name }}</span>
+                        {% endif %}
+                        {% if activity.object_id %}
+                        <span><i class="fas fa-hashtag"></i> ID: {{ activity.object_id }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-history fa-4x text-muted"></i>
+                <h4 class="mt-3">No Activities Found</h4>
+                <p class="text-muted">No user activities recorded yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.activity-log-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.filters-bar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+.filters-bar .form-control,
+.filters-bar .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+}
+.activity-item {
+    display: flex;
+    gap: 15px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+.activity-item:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.activity-icon {
+    font-size: 24px;
+    width: 40px;
+    text-align: center;
+    padding-top: 3px;
+}
+.activity-content {
+    flex: 1;
+}
+.activity-header {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+}
+.activity-user {
+    color: #1a3c5e;
+}
+.activity-action {
+    color: #495057;
+}
+.activity-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 5px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.activity-meta i {
+    margin-right: 3px;
+}
+.empty-state h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+</style>
+{% endblock %}

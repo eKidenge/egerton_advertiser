@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Message - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-page {
+    padding: 20px 0;
+    background: #f5f0e8;
+}
+.message-card {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    padding: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.message-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.message-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.message-header h1 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.message-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+    font-family: 'Times New Roman', serif;
+}
+.message-meta .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.message-meta .item i {
+    color: #c9a84c;
+    width: 18px;
+}
+.message-body {
+    background: #f8f5f0;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+.message-body h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.message-body p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    line-height: 1.8;
+}
+.reply-section {
+    background: #f0f5f0;
+    border-radius: 6px;
+    padding: 20px;
+    border-left: 4px solid #1a5a3a;
+}
+.reply-section h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a5a3a;
+}
+.reply-section .response-content {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    line-height: 1.8;
+    padding: 15px;
+    background: #fff;
+    border-radius: 4px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    color: #c9a84c;
+    margin-right: 8px;
+}
+.form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="container">
+        <div class="message-card">
+            <div class="message-header">
+                <h1><i class="fas fa-envelope"></i> Contact Message</h1>
+                <p class="text-muted">View and reply to message</p>
+            </div>
+
+            <!-- Message Info -->
+            <div class="message-meta">
+                <span class="item"><i class="fas fa-user"></i> <strong>{{ contact.name }}</strong></span>
+                <span class="item"><i class="fas fa-envelope"></i> {{ contact.email }}</span>
+                <span class="item"><i class="fas fa-phone"></i> {{ contact.phone|default:"Not provided" }}</span>
+                <span class="item"><i class="fas fa-calendar-alt"></i> {{ contact.created_at|date:"F d, Y H:i" }}</span>
+                <span class="item"><i class="fas fa-flag"></i> 
+                    <span class="badge badge-{{ contact.status }}">{{ contact.get_status_display }}</span>
+                </span>
+            </div>
+
+            <!-- Subject -->
+            <h5><i class="fas fa-tag"></i> Subject: {{ contact.subject }}</h5>
+
+            <!-- Message Body -->
+            <div class="message-body">
+                <h5><i class="fas fa-comment-dots"></i> Message</h5>
+                <p>{{ contact.message|linebreaks }}</p>
+            </div>
+
+            <!-- Reply Section -->
+            {% if contact.response %}
+            <div class="reply-section">
+                <h5><i class="fas fa-reply"></i> Reply</h5>
+                <div class="response-content">
+                    {{ contact.response|linebreaks }}
+                </div>
+                <small class="text-muted mt-2 d-block">
+                    <i class="fas fa-user"></i> {{ contact.responded_by.get_full_name|default:contact.responded_by.username }}
+                    • {{ contact.responded_at|date:"F d, Y H:i" }}
+                </small>
+            </div>
+            {% endif %}
+
+            <!-- Reply Form -->
+            {% if contact.status != 'replied' %}
+            <div class="mt-4">
+                <h5><i class="fas fa-reply"></i> {% if contact.response %}Edit Reply{% else %}Send Reply{% endif %}</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="response"><i class="fas fa-comment-dots"></i> Your Response</label>
+                        <textarea name="response" id="response" class="form-control" rows="6" 
+                                  placeholder="Type your response here...">{{ form.response.value|default:'' }}</textarea>
+                        {% if form.response.errors %}
+                        <small class="text-danger">{{ form.response.errors }}</small>
+                        {% endif %}
+                        <small class="help-text">This response will be sent via email to the sender</small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane"></i> Send Reply
+                        </button>
+                        <a href="{% url 'dashboard:admin_contacts' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+
+            <!-- Actions -->
+            <div class="form-actions mt-4">
+                <a href="{% url 'dashboard:admin_contacts' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Messages
+                </a>
+                <a href="{% url 'dashboard:admin_contact_delete' contact.id %}" class="btn btn-outline-danger" onclick="return confirm('Delete this message?')">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

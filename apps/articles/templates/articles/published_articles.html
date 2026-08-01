@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Published Articles - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="articles-status-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-check-circle"></i> Published Articles</h1>
+                <p class="text-muted">All published articles</p>
+            </div>
+            <div>
+                <span class="badge bg-success">{{ articles.paginator.count }} Published</span>
+            </div>
+        </div>
+
+        <div class="articles-list">
+            {% for article in articles %}
+            <div class="article-status-item">
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <h5><a href="{{ article.get_absolute_url }}" target="_blank">{{ article.title }}</a></h5>
+                        <div class="article-meta">
+                            <span><i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}</span>
+                            <span><i class="fas fa-folder"></i> {{ article.category.name|default:"Uncategorized" }}</span>
+                            <span><i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}</span>
+                            <span><i class="fas fa-eye"></i> {{ article.views_count }} views</span>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-end">
+                        <div class="btn-group">
+                            <a href="{{ article.get_absolute_url }}" class="btn btn-success btn-sm" target="_blank">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{% url 'articles:article_edit' article.id %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'articles:unpublish' article.id %}" class="btn btn-warning btn-sm" onclick="return confirm('Unpublish this article?')">
+                                <i class="fas fa-undo"></i> Unpublish
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-check-circle fa-4x text-muted"></i>
+                <h4 class="mt-3">No Published Articles</h4>
+                <p class="text-muted">Publish your first article</p>
+                <a href="{% url 'articles:article_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Article
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+{% endblock %}

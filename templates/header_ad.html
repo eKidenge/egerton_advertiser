@@ -1,0 +1,85 @@
+{% load advertisements_tags %}
+
+<div class="header-ad-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="header-ad">
+                    <span class="ad-label">ADVERTISEMENT</span>
+                    <div class="ad-content">
+                        {% get_ad_by_position 'header' as ad %}
+                        {% if ad %}
+                        <a href="{{ ad.link_url }}" target="{{ ad.link_target }}">
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="img-fluid">
+                        </a>
+                        {% else %}
+                        <div class="ad-placeholder">
+                            <i class="fas fa-ad"></i>
+                            <span>Advertise Here</span>
+                            <small>Contact us for advertising opportunities</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.header-ad-wrapper {
+    background: #f8f9fa;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.header-ad {
+    text-align: center;
+    position: relative;
+}
+.ad-label {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f8f9fa;
+    padding: 0 10px;
+    font-family: 'Times New Roman', serif;
+    font-size: 10px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.ad-content {
+    padding: 10px;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ad-content img {
+    max-height: 90px;
+    width: auto;
+}
+.ad-placeholder {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    padding: 20px;
+    border: 2px dashed #dee2e6;
+    border-radius: 4px;
+    width: 100%;
+}
+.ad-placeholder i {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 5px;
+}
+.ad-placeholder span {
+    font-size: 16px;
+    font-weight: 700;
+    display: block;
+}
+.ad-placeholder small {
+    font-size: 12px;
+    color: #adb5bd;
+}
+</style>

@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ ad.title }} - Ad Detail - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="ad-detail-page">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="ad-card">
+                    <div class="ad-header">
+                        <h2>{{ ad.title }}</h2>
+                        <span class="badge bg-{% if ad.status == 'active' %}success{% elif ad.status == 'pending' %}warning{% elif ad.status == 'expired' %}danger{% else %}secondary{% endif %}">
+                            {{ ad.get_status_display }}
+                        </span>
+                    </div>
+
+                    <div class="ad-image-large">
+                        {% if ad.image %}
+                        <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="img-fluid">
+                        {% endif %}
+                    </div>
+
+                    <div class="ad-info">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Company</span>
+                                <span class="value">{{ ad.company_name }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Position</span>
+                                <span class="value">{{ ad.get_position_display }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Size</span>
+                                <span class="value">{{ ad.get_size_display }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Budget</span>
+                                <span class="value">${{ ad.budget }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Start Date</span>
+                                <span class="value">{{ ad.start_date|date:"F d, Y" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">End Date</span>
+                                <span class="value">{{ ad.end_date|date:"F d, Y" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Views</span>
+                                <span class="value">{{ ad.views_count }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Clicks</span>
+                                <span class="value">{{ ad.clicks_count }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">CTR</span>
+                                <span class="value">
+                                    {% if ad.views_count > 0 %}
+                                    {{ ad.clicks_count|divisibleby:ad.views_count|floatformat:2 }}%
+                                    {% else %}
+                                    0%
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ad-description">
+                        <h5>Description</h5>
+                        <p>{{ ad.description|default:"No description provided." }}</p>
+                    </div>
+
+                    <div class="ad-actions">
+                        <a href="{{ ad.link_url }}" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt"></i> Visit Ad
+                        </a>
+                        <a href="{% url 'advertisements:edit' ad.id %}" class="btn btn-outline-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'advertisements:delete' ad.id %}" class="btn btn-outline-danger" onclick="return confirm('Delete this ad?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-chart-line"></i> Performance
+                    </div>
+                    <div class="performance-stats">
+                        <div class="perf-item">
+                            <span class="label">Total Views</span>
+                            <span class="value">{{ ad.views_count }}</span>
+                        </div>
+                        <div class="perf-item">
+                            <span class="label">Unique Views</span>
+                            <span class="value">{{ ad.unique_views }}</span>
+                        </div>
+                        <div class="perf-item">
+                            <span class="label">Total Clicks</span>
+                            <span class="value">{{ ad.clicks_count }}</span>
+                        </div>
+                        <div class="perf-item">
+                            <span class="label">Unique Clicks</span>
+                            <span class="value">{{ ad.unique_clicks }}</span>
+                        </div>
+                        <div class="perf-item">
+                            <span class="label">Conversion Rate</span>
+                            <span class="value">{{ ad.conversion_count }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-bullseye"></i> Targeting
+                    </div>
+                    <div class="targeting-info">
+                        <p><strong>Categories:</strong></p>
+                        {% if ad.targeted_categories.all %}
+                        <div class="target-tags">
+                            {% for category in ad.targeted_categories.all %}
+                            <span class="target-tag">{{ category.name }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">All categories</p>
+                        {% endif %}
+                        
+                        <p><strong>Countries:</strong></p>
+                        {% if ad.target_countries %}
+                        <div class="target-tags">
+                            {% for country in ad.target_countries %}
+                            <span class="target-tag">{{ country }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">All countries</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.ad-detail-page {
+    padding: 30px 0;
+}
+.ad-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.ad-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+.ad-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.ad-image-large {
+    margin-bottom: 20px;
+}
+.ad-image-large img {
+    border-radius: 8px;
+    max-height: 400px;
+    width: 100%;
+    object-fit: contain;
+    background: #f8f9fa;
+}
+.ad-info {
+    margin: 20px 0;
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.info-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+}
+.info-item .label {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.info-item .value {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 16px;
+}
+.ad-description {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.ad-description h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.ad-description p {
+    font-family: 'Times New Roman', serif;
+}
+.ad-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.ad-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+.sidebar-widget {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.widget-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 18px;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.performance-stats .perf-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: 'Times New Roman', serif;
+}
+.performance-stats .perf-item:last-child {
+    border-bottom: none;
+}
+.performance-stats .perf-item .label {
+    color: #6c757d;
+}
+.performance-stats .perf-item .value {
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.target-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 5px 0 15px 0;
+}
+.target-tag {
+    background: #f8f9fa;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #1a3c5e;
+}
+</style>
+{% endblock %}

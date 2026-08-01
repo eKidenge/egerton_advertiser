@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Articles by {{ author.get_full_name|default:author.username }} - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="author-articles-page">
+        <div class="author-header">
+            <div class="row align-items-center">
+                <div class="col-md-2">
+                    {% if author.profile_picture %}
+                    <img src="{{ author.profile_picture.url }}" alt="{{ author.get_full_name }}" class="author-avatar-large">
+                    {% else %}
+                    <div class="author-avatar-placeholder-large">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-10">
+                    <h1>{{ author.get_full_name|default:author.username }}</h1>
+                    <p class="author-role">{{ author.get_role_display }}</p>
+                    {% if author.department %}
+                    <p><i class="fas fa-building"></i> {{ author.get_department_display }}</p>
+                    {% endif %}
+                    <p class="author-bio">{{ author.bio|default:"Journalist at The Egerton Advertiser" }}</p>
+                    <div class="author-stats">
+                        <span><i class="fas fa-newspaper"></i> {{ article_count }} Articles</span>
+                        <span><i class="fas fa-eye"></i> {{ total_views }} Total Views</span>
+                    </div>
+                    <div class="author-social">
+                        {% if author.website %}
+                        <a href="{{ author.website }}" target="_blank"><i class="fas fa-globe"></i></a>
+                        {% endif %}
+                        {% if author.social_links.twitter %}
+                        <a href="{{ author.social_links.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                        {% endif %}
+                        {% if author.social_links.facebook %}
+                        <a href="{{ author.social_links.facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
+                        {% endif %}
+                        {% if author.social_links.linkedin %}
+                        <a href="{{ author.social_links.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="articles-list">
+            <h4><i class="fas fa-newspaper"></i> Articles by {{ author.get_full_name|default:author.username }}</h4>
+            
+            {% for article in articles %}
+            <div class="article-item">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h5><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h5>
+                        <p>{{ article.excerpt|truncatewords:20 }}</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}</span>
+                            <span><i class="fas fa-folder"></i> {{ article.category.name }}</span>
+                            <span><i class="fas fa-eye"></i> {{ article.views_count }}</span>
+                            <span><i class="fas fa-comments"></i> {{ article.comments.count }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        {% if article.featured_image %}
+                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid article-thumb">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-newspaper fa-4x text-muted"></i>
+                <h4 class="mt-3">No Articles Found</h4>
+                <p class="text-muted">This author hasn't published any articles yet</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.author-articles-page {
+    padding: 30px 0;
+}
+.author-header {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+.author-avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1a3c5e;
+}
+.author-avatar-placeholder-large {
+    font-size: 100px;
+    color: #6c757d;
+}
+.author-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.author-role {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 16px;
+}
+.author-bio {
+    font-family: 'Times New Roman', serif;
+    color: #495057;
+    margin: 8px 0;
+}
+.author-stats {
+    display: flex;
+    gap: 20px;
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 14px;
+}
+.author-stats i {
+    margin-right: 5px;
+}
+.author-social a {
+    color: #1a3c5e;
+    margin-right: 10px;
+    font-size: 18px;
+}
+.author-social a:hover {
+    color: #c9a84c;
+}
+.articles-list h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.article-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.article-item h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+.article-item h5 a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.article-item h5 a:hover {
+    text-decoration: underline;
+}
+.article-item p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    margin: 5px 0;
+}
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.article-meta i {
+    margin-right: 3px;
+}
+.article-thumb {
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    width: 100%;
+}
+</style>
+{% endblock %}

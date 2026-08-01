@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Users - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-page {
+    padding: 20px 0;
+    background: #f5f0e8;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.page-header h1 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.filters-bar {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.table-container {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    padding: 20px;
+    overflow-x: auto;
+}
+.table {
+    font-family: 'Times New Roman', serif;
+    margin-bottom: 0;
+}
+.table thead th {
+    background: #1a3c5e;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    padding: 12px 15px;
+}
+.table tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 20px;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.user-info .name {
+    font-weight: 600;
+    color: #1a3c5e;
+}
+.user-info .email {
+    font-size: 12px;
+    color: #6c757d;
+}
+.badge-role {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 4px 12px;
+}
+.badge-super_admin { background: #8b1a1a; color: #fff; }
+.badge-admin { background: #1a3c5e; color: #fff; }
+.badge-editor { background: #0b6b7a; color: #fff; }
+.badge-journalist { background: #1a5a3a; color: #fff; }
+.badge-subscriber { background: #6c757d; color: #fff; }
+.badge-advertiser { background: #b8860b; color: #fff; }
+.action-buttons {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="container-fluid">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-users-cog"></i> Manage Users</h1>
+                <p class="text-muted">Create, edit, and manage all users</p>
+            </div>
+            <div>
+                <a href="{% url 'dashboard:admin_user_create' %}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Add User
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#1a3c5e;">{{ users.paginator.count|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Total Users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #1a5a3a;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#1a5a3a;">{{ active_count|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Active</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #b8860b;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#b8860b;">{{ verified_count|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Verified</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #0b6b7a;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#0b6b7a;">{{ new_users_today|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">New Today</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="get" class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" placeholder="Search users..." 
+                           value="{{ search|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="role" class="form-select">
+                        <option value="">All Roles</option>
+                        {% for code, name in role_choices %}
+                        <option value="{{ code }}" {% if role_filter == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                        <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'dashboard:admin_users' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo"></i> Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Verified</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="user-avatar">
+                                {% else %}
+                                <div class="avatar-placeholder"><i class="fas fa-user"></i></div>
+                                {% endif %}
+                                <div>
+                                    <div class="name">{{ user.get_full_name|default:user.username }}</div>
+                                    <div class="email">{{ user.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ user.role }}">{{ user.get_role_display }}</span>
+                        </td>
+                        <td>
+                            <span class="badge {% if user.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if user.is_verified %}bg-success{% else %}bg-warning{% endif %}">
+                                {% if user.is_verified %}<i class="fas fa-check"></i> Yes{% else %}No{% endif %}
+                            </span>
+                        </td>
+                        <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'dashboard:admin_user_edit' user.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'dashboard:admin_user_toggle' user.id %}" class="btn btn-sm btn-outline-warning" title="Toggle Active" onclick="return confirm('Toggle user status?')">
+                                    <i class="fas {% if user.is_active %}fa-pause{% else %}fa-play{% endif %}"></i>
+                                </a>
+                                {% if user != request.user %}
+                                <a href="{% url 'dashboard:admin_user_delete' user.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Delete this user?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-muted"></i>
+                            <p class="text-muted mt-2">No users found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+{% endblock %}

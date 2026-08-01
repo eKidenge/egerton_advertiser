@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Messages - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-page {
+    padding: 20px 0;
+    background: #f5f0e8;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.page-header h1 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.filters-bar {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.table-container {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    padding: 20px;
+    overflow-x: auto;
+}
+.table {
+    font-family: 'Times New Roman', serif;
+    margin-bottom: 0;
+}
+.table thead th {
+    background: #1a3c5e;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    padding: 12px 15px;
+}
+.table tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+.badge-new { background: #dc3545; color: #fff; }
+.badge-read { background: #6c757d; color: #fff; }
+.badge-replied { background: #1a5a3a; color: #fff; }
+.badge-archived { background: #0b6b7a; color: #fff; }
+.badge-spam { background: #b8860b; color: #fff; }
+.action-buttons {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="container-fluid">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-envelope-open-text"></i> Contact Messages</h1>
+                <p class="text-muted">View and reply to contact messages</p>
+            </div>
+            <div>
+                <span class="badge bg-danger">New: {{ new_contacts|default:0 }}</span>
+                <span class="badge bg-secondary ms-1">Total: {{ total_contacts|default:0 }}</span>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #dc3545;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#dc3545;">{{ new_contacts|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">New</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #6c757d;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#6c757d;">{{ read_contacts|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Read</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #1a5a3a;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#1a5a3a;">{{ replied_contacts|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Replied</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background:#fff;border:1px solid #d4cdc0;border-radius:6px;padding:15px;text-align:center;border-top:3px solid #b8860b;">
+                    <div class="stat-number" style="font-family:'Playfair Display',serif;font-weight:900;font-size:28px;color:#b8860b;">{{ spam_contacts|default:0 }}</div>
+                    <div class="stat-label" style="font-family:'Times New Roman',serif;color:#6c757d;font-size:13px;text-transform:uppercase;">Spam</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="get" class="row g-2">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" placeholder="Search messages..." 
+                           value="{{ search|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="new" {% if status_filter == 'new' %}selected{% endif %}>New</option>
+                        <option value="read" {% if status_filter == 'read' %}selected{% endif %}>Read</option>
+                        <option value="replied" {% if status_filter == 'replied' %}selected{% endif %}>Replied</option>
+                        <option value="archived" {% if status_filter == 'archived' %}selected{% endif %}>Archived</option>
+                        <option value="spam" {% if status_filter == 'spam' %}selected{% endif %}>Spam</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'dashboard:admin_contacts' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo"></i> Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Received</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in contacts %}
+                    <tr>
+                        <td>
+                            <strong>{{ contact.name }}</strong>
+                            <br>
+                            <small class="text-muted">{{ contact.email }}</small>
+                        </td>
+                        <td>{{ contact.subject|truncatewords:8 }}</td>
+                        <td>
+                            <span class="badge badge-{{ contact.status }}">{{ contact.get_status_display }}</span>
+                        </td>
+                        <td>{{ contact.created_at|date:"M d, Y H:i" }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'dashboard:admin_contact_detail' contact.id %}" class="btn btn-sm btn-outline-primary" title="View & Reply">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if contact.status == 'new' or contact.status == 'read' %}
+                                <a href="{% url 'dashboard:admin_contact_detail' contact.id %}" class="btn btn-sm btn-outline-success" title="Reply">
+                                    <i class="fas fa-reply"></i>
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'dashboard:admin_contact_delete' contact.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Delete this message?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted"></i>
+                            <p class="text-muted mt-2">No messages found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Role Management - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="role-management">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-user-tag"></i> Role Management</h1>
+                <p class="text-muted">Manage user roles and permissions</p>
+            </div>
+            <div>
+                <a href="{% url 'accounts:role_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Role
+                </a>
+            </div>
+        </div>
+
+        <div class="roles-grid">
+            <div class="row">
+                {% for role_code, role_data in role_stats.items %}
+                <div class="col-md-4">
+                    <div class="role-card">
+                        <div class="role-icon">
+                            <i class="fas fa-{% if role_code == 'super_admin' %}crown{% elif role_code == 'admin' %}user-shield{% elif role_code == 'editor' %}pen-fancy{% elif role_code == 'journalist' %}newspaper{% elif role_code == 'subscriber' %}user{% elif role_code == 'advertiser' %}ad{% else %}user-tag{% endif %}"></i>
+                        </div>
+                        <div class="role-content">
+                            <h5>{{ role_data.name }}</h5>
+                            <p class="role-count"><i class="fas fa-users"></i> {{ role_data.count }} users</p>
+                            <div class="role-actions">
+                                <a href="{% url 'accounts:user_list' %}?role={{ role_code }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-users"></i> View Users
+                                </a>
+                                <a href="{% url 'accounts:role_edit' forloop.counter %}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="empty-state text-center py-5">
+                        <i class="fas fa-user-tag fa-4x text-muted"></i>
+                        <h4 class="mt-3">No Roles Found</h4>
+                        <p class="text-muted">Create your first role to get started</p>
+                        <a href="{% url 'accounts:role_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Role
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.role-management {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.page-header p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+}
+.role-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 25px 20px;
+    text-align: center;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+}
+.role-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transform: translateY(-3px);
+}
+.role-icon {
+    font-size: 48px;
+    color: #1a3c5e;
+    margin-bottom: 10px;
+}
+.role-content h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 5px;
+}
+.role-count {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 14px;
+}
+.role-count i {
+    margin-right: 5px;
+}
+.role-actions {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 10px;
+}
+.role-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+}
+.empty-state h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+</style>
+{% endblock %}

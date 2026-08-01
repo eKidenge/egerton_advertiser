@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+
+{% block title %}User Details - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="user-detail-page">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="user-profile-card">
+                    <div class="profile-header text-center">
+                        {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="profile-avatar">
+                        {% else %}
+                        <div class="profile-avatar-placeholder">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        {% endif %}
+                        <h4>{{ user.get_full_name|default:user.username }}</h4>
+                        <p class="text-muted">{{ user.get_role_display }}</p>
+                        {% if user.department %}
+                        <p><i class="fas fa-building"></i> {{ user.get_department_display }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <span class="label"><i class="fas fa-envelope"></i> Email</span>
+                            <span class="value">{{ user.email }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label"><i class="fas fa-phone"></i> Phone</span>
+                            <span class="value">{{ user.phone_number|default:"-" }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label"><i class="fas fa-calendar-alt"></i> Joined</span>
+                            <span class="value">{{ user.date_joined|date:"F d, Y" }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label"><i class="fas fa-clock"></i> Last Login</span>
+                            <span class="value">{{ user.last_login|date:"F d, Y H:i"|default:"Never" }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label"><i class="fas fa-check-circle"></i> Verified</span>
+                            <span class="value">
+                                <span class="badge bg-{% if user.is_verified %}success{% else %}warning{% endif %}">
+                                    {% if user.is_verified %}Yes{% else %}No{% endif %}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label"><i class="fas fa-circle"></i> Status</span>
+                            <span class="value">
+                                <span class="badge bg-{% if user.is_active %}success{% else %}danger{% endif %}">
+                                    {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    {% if user != request.user %}
+                    <div class="profile-actions">
+                        <a href="{% url 'accounts:user_edit' user.id %}" class="btn btn-primary w-100">
+                            <i class="fas fa-edit"></i> Edit User
+                        </a>
+                        <a href="{% url 'accounts:user_delete' user.id %}" class="btn btn-danger w-100 mt-2" onclick="return confirm('Delete this user?')">
+                            <i class="fas fa-trash"></i> Delete User
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <!-- Statistics -->
+                <div class="stats-grid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ total_articles }}</div>
+                                <div class="stat-label">Total Articles</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ total_views }}</div>
+                                <div class="stat-label">Total Views</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ total_comments }}</div>
+                                <div class="stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Statistics -->
+                <div class="detail-section">
+                    <h5><i class="fas fa-newspaper"></i> Article Statistics</h5>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="label">Published</span>
+                            <span class="value">{{ published_articles }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Drafts</span>
+                            <span class="value">{{ draft_articles }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">Pending</span>
+                            <span class="value">{{ pending_articles }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="detail-section">
+                    <h5><i class="fas fa-history"></i> Recent Activity</h5>
+                    <div class="activity-list">
+                        {% for activity in recent_activities %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-{% if activity.action == 'create' %}plus-circle text-success{% elif activity.action == 'update' %}edit text-primary{% elif activity.action == 'delete' %}trash text-danger{% elif activity.action == 'login' %}sign-in-alt text-info{% else %}circle text-muted{% endif %}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>{{ activity.description }}</p>
+                                <small class="text-muted">{{ activity.timestamp|timesince }} ago</small>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No recent activity.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.user-detail-page {
+    padding: 30px 0;
+}
+.user-profile-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.profile-header {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1a3c5e;
+    padding: 3px;
+}
+.profile-avatar-placeholder {
+    font-size: 100px;
+    color: #6c757d;
+}
+.profile-header h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-top: 10px;
+}
+.profile-details {
+    margin: 20px 0;
+}
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: 'Times New Roman', serif;
+}
+.detail-row:last-child {
+    border-bottom: none;
+}
+.detail-row .label {
+    color: #6c757d;
+}
+.detail-row .value {
+    font-weight: 600;
+}
+.stats-grid {
+    margin-bottom: 20px;
+}
+.stat-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+.stat-card .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 24px;
+    color: #1a3c5e;
+}
+.stat-card .stat-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.detail-section {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.detail-section h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+.stat-item {
+    text-align: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+.stat-item .label {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+}
+.stat-item .value {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: #1a3c5e;
+}
+.activity-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.activity-item:last-child {
+    border-bottom: none;
+}
+.activity-icon {
+    width: 30px;
+    text-align: center;
+}
+.activity-content p {
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    font-size: 14px;
+}
+.activity-content small {
+    font-size: 12px;
+}
+@media (max-width: 768px) {
+    .stat-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+{% endblock %}

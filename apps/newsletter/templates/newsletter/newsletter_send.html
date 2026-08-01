@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Send Newsletter - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="send-newsletter-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="send-card">
+                    <div class="send-header">
+                        <h2><i class="fas fa-paper-plane"></i> Send Newsletter</h2>
+                        <p class="text-muted">Review and send your newsletter to subscribers</p>
+                    </div>
+
+                    <div class="newsletter-summary">
+                        <div class="summary-item">
+                            <span class="label">Subject:</span>
+                            <span class="value">{{ newsletter.subject }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Status:</span>
+                            <span class="value">
+                                <span class="badge bg-{% if newsletter.status == 'draft' %}secondary{% elif newsletter.status == 'scheduled' %}info{% else %}success{% endif %}">
+                                    {{ newsletter.get_status_display }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Recipients:</span>
+                            <span class="value">{{ subscriber_count }} subscribers</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Created:</span>
+                            <span class="value">{{ newsletter.created_at|date:"F d, Y H:i" }}</span>
+                        </div>
+                        {% if newsletter.scheduled_for %}
+                        <div class="summary-item">
+                            <span class="label">Scheduled:</span>
+                            <span class="value">{{ newsletter.scheduled_for|date:"F d, Y H:i" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="preview-box">
+                        <h5><i class="fas fa-eye"></i> Preview</h5>
+                        <div class="preview-content">
+                            {{ newsletter.content|safe|truncatewords_html:50 }}
+                        </div>
+                        <a href="#" class="btn btn-outline-primary btn-sm mt-2">
+                            <i class="fas fa-expand"></i> View Full Preview
+                        </a>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Note:</strong> This newsletter will be sent to <strong>{{ subscriber_count }}</strong> active subscribers.
+                        Please review the content before sending.
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="send-actions">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-paper-plane"></i> Send Now
+                            </button>
+                            <a href="{% url 'newsletter:edit' newsletter.id %}" class="btn btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit Content
+                            </a>
+                            <a href="{% url 'newsletter:list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.send-newsletter-page {
+    padding: 30px 0;
+}
+.send-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.send-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.send-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.newsletter-summary {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+}
+.summary-item {
+    display: flex;
+    padding: 5px 0;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: 'Times New Roman', serif;
+}
+.summary-item:last-child {
+    border-bottom: none;
+}
+.summary-item .label {
+    color: #6c757d;
+    width: 120px;
+    font-weight: 600;
+}
+.summary-item .value {
+    color: #1a3c5e;
+    font-weight: 600;
+}
+.preview-box {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+.preview-box h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.preview-content {
+    font-family: 'Times New Roman', serif;
+    padding: 15px;
+    background: #fff;
+    border-radius: 4px;
+    min-height: 100px;
+}
+.send-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+}
+.send-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+{% endblock %}

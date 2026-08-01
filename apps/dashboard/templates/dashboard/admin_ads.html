@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Ads - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-page {
+    padding: 20px 0;
+    background: #f5f0e8;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.page-header h1 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.filters-bar {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.table-container {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    padding: 20px;
+    overflow-x: auto;
+}
+.table {
+    font-family: 'Times New Roman', serif;
+    margin-bottom: 0;
+}
+.table thead th {
+    background: #1a3c5e;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    padding: 12px 15px;
+}
+.table tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+.ad-image {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+.badge-active { background: #1a5a3a; color: #fff; }
+.badge-pending { background: #b8860b; color: #fff; }
+.badge-expired { background: #8b1a1a; color: #fff; }
+.badge-rejected { background: #6c757d; color: #fff; }
+.action-buttons {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="container-fluid">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-ad"></i> Manage Advertisements</h1>
+                <p class="text-muted">Create, approve, and manage all ads</p>
+            </div>
+            <div>
+                <a href="{% url 'dashboard:admin_ad_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Ad
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+            <form method="get" class="row g-2">
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="expired" {% if status_filter == 'expired' %}selected{% endif %}>Expired</option>
+                        <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="position" class="form-select">
+                        <option value="">All Positions</option>
+                        {% for code, name in position_choices %}
+                        <option value="{{ code }}" {% if position_filter == code %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'dashboard:admin_ads' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-undo"></i> Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Position</th>
+                        <th>Status</th>
+                        <th>Views</th>
+                        <th>Clicks</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ad in ads %}
+                    <tr>
+                        <td>
+                            {% if ad.image %}
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="ad-image">
+                            {% else %}
+                            <span class="text-muted">No image</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:admin_ad_edit' ad.id %}">
+                                {{ ad.title|truncatewords:5 }}
+                            </a>
+                        </td>
+                        <td>{{ ad.get_position_display }}</td>
+                        <td>
+                            <span class="badge badge-{{ ad.status }}">{{ ad.get_status_display }}</span>
+                        </td>
+                        <td>{{ ad.views_count }}</td>
+                        <td>{{ ad.clicks_count }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'dashboard:admin_ad_edit' ad.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if ad.status == 'pending' %}
+                                <a href="{% url 'dashboard:admin_ad_approve' ad.id %}?action=approve" class="btn btn-sm btn-outline-success" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                <a href="{% url 'dashboard:admin_ad_approve' ad.id %}?action=reject" class="btn btn-sm btn-outline-danger" title="Reject">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'dashboard:admin_ad_delete' ad.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Delete this ad?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-ad fa-3x text-muted"></i>
+                            <p class="text-muted mt-2">No advertisements found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+{% endblock %}

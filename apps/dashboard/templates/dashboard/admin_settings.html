@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Site Settings - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-page {
+    padding: 20px 0;
+    background: #f5f0e8;
+}
+.settings-card {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #d4cdc0;
+    padding: 30px;
+}
+.settings-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.settings-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.settings-header h1 i {
+    color: #c9a84c;
+    margin-right: 10px;
+}
+.settings-nav {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+.settings-nav .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 600;
+    padding: 8px 20px;
+}
+.settings-nav .btn.active {
+    background: #1a3c5e;
+    color: #fff;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    color: #c9a84c;
+    margin-right: 8px;
+}
+.form-control, .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #d4cdc0;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+.character-count {
+    text-align: right;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 3px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h1><i class="fas fa-cog"></i> Site Settings</h1>
+                        <p class="text-muted">Configure your website settings</p>
+                    </div>
+
+                    <!-- Navigation Tabs -->
+                    <div class="settings-nav">
+                        <a href="?category=general" class="btn {% if category == 'general' %}active btn-primary{% else %}btn-outline-secondary{% endif %}">
+                            <i class="fas fa-globe"></i> General
+                        </a>
+                        <a href="?category=email" class="btn {% if category == 'email' %}active btn-primary{% else %}btn-outline-secondary{% endif %}">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                        <a href="?category=seo" class="btn {% if category == 'seo' %}active btn-primary{% else %}btn-outline-secondary{% endif %}">
+                            <i class="fas fa-search"></i> SEO
+                        </a>
+                        <a href="?category=social_media" class="btn {% if category == 'social_media' %}active btn-primary{% else %}btn-outline-secondary{% endif %}">
+                            <i class="fas fa-share-alt"></i> Social Media
+                        </a>
+                        <a href="?category=advertisement" class="btn {% if category == 'advertisement' %}active btn-primary{% else %}btn-outline-secondary{% endif %}">
+                            <i class="fas fa-ad"></i> Advertisements
+                        </a>
+                    </div>
+
+                    <!-- General Settings -->
+                    {% if category == 'general' %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="site_name"><i class="fas fa-heading"></i> Site Name</label>
+                            <input type="text" name="site_name" id="site_name" class="form-control" 
+                                   value="{{ settings.site_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="site_tagline"><i class="fas fa-tag"></i> Tagline</label>
+                            <input type="text" name="site_tagline" id="site_tagline" class="form-control" 
+                                   value="{{ settings.site_tagline }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="site_description"><i class="fas fa-align-left"></i> Site Description</label>
+                            <textarea name="site_description" id="site_description" class="form-control" rows="3">{{ settings.site_description }}</textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="site_logo"><i class="fas fa-image"></i> Site Logo</label>
+                                    <input type="file" name="site_logo" id="site_logo" class="form-control" accept="image/*">
+                                    <small class="help-text">Recommended: 300x100px</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="site_favicon"><i class="fas fa-icon"></i> Favicon</label>
+                                    <input type="file" name="site_favicon" id="site_favicon" class="form-control" accept="image/*">
+                                    <small class="help-text">Recommended: 32x32px</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="site_timezone"><i class="fas fa-clock"></i> Timezone</label>
+                                    <select name="site_timezone" id="site_timezone" class="form-select">
+                                        <option value="UTC" {% if settings.site_timezone == 'UTC' %}selected{% endif %}>UTC</option>
+                                        <option value="Africa/Nairobi" {% if settings.site_timezone == 'Africa/Nairobi' %}selected{% endif %}>Africa/Nairobi</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="site_language"><i class="fas fa-language"></i> Language</label>
+                                    <select name="site_language" id="site_language" class="form-select">
+                                        <option value="en" {% if settings.site_language == 'en' %}selected{% endif %}>English</option>
+                                        <option value="sw" {% if settings.site_language == 'sw' %}selected{% endif %}>Swahili</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                        </div>
+                    </form>
+                    {% endif %}
+
+                    <!-- Email Settings -->
+                    {% if category == 'email' %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="smtp_host"><i class="fas fa-server"></i> SMTP Host</label>
+                            <input type="text" name="smtp_host" id="smtp_host" class="form-control" 
+                                   value="{{ settings.smtp_host }}">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="smtp_port"><i class="fas fa-plug"></i> SMTP Port</label>
+                                    <input type="number" name="smtp_port" id="smtp_port" class="form-control" 
+                                           value="{{ settings.smtp_port }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="use_tls"><i class="fas fa-shield-alt"></i> Use TLS</label>
+                                    <div class="form-check mt-2">
+                                        <input type="checkbox" name="use_tls" id="use_tls" class="form-check-input" 
+                                               {% if settings.use_tls %}checked{% endif %}>
+                                        <label for="use_tls" class="form-check-label">Enable TLS encryption</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="smtp_username"><i class="fas fa-user"></i> SMTP Username</label>
+                            <input type="text" name="smtp_username" id="smtp_username" class="form-control" 
+                                   value="{{ settings.smtp_username }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="smtp_password"><i class="fas fa-key"></i> SMTP Password</label>
+                            <input type="password" name="smtp_password" id="smtp_password" class="form-control" 
+                                   placeholder="Enter new password to change">
+                            <small class="help-text">Leave blank to keep current password</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="from_email"><i class="fas fa-envelope"></i> From Email</label>
+                                    <input type="email" name="from_email" id="from_email" class="form-control" 
+                                           value="{{ settings.from_email }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="from_name"><i class="fas fa-user"></i> From Name</label>
+                                    <input type="text" name="from_name" id="from_name" class="form-control" 
+                                           value="{{ settings.from_name }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                            <button type="button" class="btn btn-success" id="testEmailBtn">
+                                <i class="fas fa-paper-plane"></i> Send Test Email
+                            </button>
+                        </div>
+                    </form>
+                    {% endif %}
+
+                    <!-- SEO Settings -->
+                    {% if category == 'seo' %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="meta_title"><i class="fas fa-heading"></i> Meta Title</label>
+                            <input type="text" name="meta_title" id="meta_title" class="form-control" 
+                                   value="{{ settings.meta_title }}" maxlength="70">
+                            <div class="character-count" id="metaTitleCount">0/70</div>
+                            <small class="help-text">Recommended: 50-60 characters</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="meta_description"><i class="fas fa-align-left"></i> Meta Description</label>
+                            <textarea name="meta_description" id="meta_description" class="form-control" rows="3" maxlength="160">{{ settings.meta_description }}</textarea>
+                            <div class="character-count" id="metaDescCount">0/160</div>
+                            <small class="help-text">Recommended: 150-160 characters</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="meta_keywords"><i class="fas fa-tags"></i> Meta Keywords</label>
+                            <input type="text" name="meta_keywords" id="meta_keywords" class="form-control" 
+                                   value="{{ settings.meta_keywords }}">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="google_analytics_id"><i class="fab fa-google"></i> Google Analytics ID</label>
+                                    <input type="text" name="google_analytics_id" id="google_analytics_id" class="form-control" 
+                                           value="{{ settings.google_analytics_id }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="google_verification"><i class="fab fa-google"></i> Google Verification</label>
+                                    <input type="text" name="google_verification" id="google_verification" class="form-control" 
+                                           value="{{ settings.google_verification }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="robots_txt"><i class="fas fa-file-code"></i> Robots.txt</label>
+                            <textarea name="robots_txt" id="robots_txt" class="form-control" rows="6">{{ settings.robots_txt }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="enable_sitemap" id="enable_sitemap" class="form-check-input" 
+                                       {% if settings.enable_sitemap %}checked{% endif %}>
+                                <label for="enable_sitemap" class="form-check-label">
+                                    <i class="fas fa-sitemap"></i> Enable Sitemap Generation
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                            <a href="/sitemap.xml" target="_blank" class="btn btn-outline-info">
+                                <i class="fas fa-sitemap"></i> View Sitemap
+                            </a>
+                        </div>
+                    </form>
+                    {% endif %}
+
+                    <!-- Social Media Settings -->
+                    {% if category == 'social_media' %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="facebook_url"><i class="fab fa-facebook"></i> Facebook</label>
+                            <input type="url" name="facebook_url" id="facebook_url" class="form-control" 
+                                   value="{{ settings.facebook_url|default:'' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="twitter_url"><i class="fab fa-twitter"></i> Twitter</label>
+                            <input type="url" name="twitter_url" id="twitter_url" class="form-control" 
+                                   value="{{ settings.twitter_url|default:'' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="instagram_url"><i class="fab fa-instagram"></i> Instagram</label>
+                            <input type="url" name="instagram_url" id="instagram_url" class="form-control" 
+                                   value="{{ settings.instagram_url|default:'' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="linkedin_url"><i class="fab fa-linkedin"></i> LinkedIn</label>
+                            <input type="url" name="linkedin_url" id="linkedin_url" class="form-control" 
+                                   value="{{ settings.linkedin_url|default:'' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="youtube_url"><i class="fab fa-youtube"></i> YouTube</label>
+                            <input type="url" name="youtube_url" id="youtube_url" class="form-control" 
+                                   value="{{ settings.youtube_url|default:'' }}">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                        </div>
+                    </form>
+                    {% endif %}
+
+                    <!-- Advertisement Settings -->
+                    {% if category == 'advertisement' %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="enable_ads" id="enable_ads" class="form-check-input" 
+                                       {% if settings.enable_ads %}checked{% endif %}>
+                                <label for="enable_ads" class="form-check-label">
+                                    <i class="fas fa-toggle-on"></i> Enable Advertisements
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ad_unit_id"><i class="fas fa-code"></i> Ad Unit ID</label>
+                            <input type="text" name="ad_unit_id" id="ad_unit_id" class="form-control" 
+                                   value="{{ settings.ad_unit_id|default:'' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="ad_blocker_message"><i class="fas fa-shield-alt"></i> Ad Blocker Message</label>
+                            <textarea name="ad_blocker_message" id="ad_blocker_message" class="form-control" rows="3">{{ settings.ad_blocker_message|default:'Please disable your ad blocker to support our journalism.' }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="auto_ads" id="auto_ads" class="form-check-input" 
+                                       {% if settings.auto_ads %}checked{% endif %}>
+                                <label for="auto_ads" class="form-check-label">
+                                    <i class="fas fa-robot"></i> Auto Ads
+                                </label>
+                            </div>
+                            <small class="help-text">Let Google automatically place ads on your site</small>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                            <a href="{% url 'dashboard:admin_ads' %}" class="btn btn-outline-info">
+                                <i class="fas fa-ad"></i> Manage Ads
+                            </a>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counters
+    const metaTitle = document.getElementById('meta_title');
+    const metaDesc = document.getElementById('meta_description');
+    const titleCount = document.getElementById('metaTitleCount');
+    const descCount = document.getElementById('metaDescCount');
+
+    if (metaTitle) {
+        metaTitle.addEventListener('input', function() {
+            const len = this.value.length;
+            titleCount.textContent = len + '/70';
+        });
+        titleCount.textContent = metaTitle.value.length + '/70';
+    }
+
+    if (metaDesc) {
+        metaDesc.addEventListener('input', function() {
+            const len = this.value.length;
+            descCount.textContent = len + '/160';
+        });
+        descCount.textContent = metaDesc.value.length + '/160';
+    }
+
+    // Test Email Button
+    const testBtn = document.getElementById('testEmailBtn');
+    if (testBtn) {
+        testBtn.addEventListener('click', function() {
+            const btn = this;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            btn.disabled = true;
+
+            const form = this.closest('form');
+            const formData = new FormData(form);
+
+            fetch('{% url "dashboard:admin_test_email" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Test email sent successfully! Please check your inbox.');
+                } else {
+                    alert('Failed to send test email: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(() => {
+                alert('An error occurred while sending test email.');
+            })
+            .finally(() => {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

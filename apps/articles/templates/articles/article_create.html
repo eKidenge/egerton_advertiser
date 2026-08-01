@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Article - The Egerton Advertiser{% endblock %}
+
+{% block extra_css %}
+{{ form.media }}
+<style>
+.article-form-container {
+    padding: 30px 0;
+}
+.form-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+}
+.form-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.form-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 4px;
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.tag-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    min-height: 50px;
+}
+.tag-badge {
+    background: #1a3c5e;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.tag-badge .remove-tag {
+    cursor: pointer;
+    color: #c9a84c;
+}
+.tag-badge .remove-tag:hover {
+    color: #dc3545;
+}
+.tag-input {
+    border: none;
+    outline: none;
+    font-family: 'Times New Roman', serif;
+    padding: 4px 8px;
+    flex: 1;
+    min-width: 100px;
+}
+.featured-toggle {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+.featured-toggle .form-check {
+    margin: 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="article-form-container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2><i class="fas fa-pen-fancy"></i> Create New Article</h2>
+                        <p class="text-muted">Write and publish your article for The Egerton Advertiser</p>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data" id="articleForm">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="id_title"><i class="fas fa-heading"></i> Article Title</label>
+                                    <input type="text" name="title" id="id_title" class="form-control" 
+                                           placeholder="Enter a compelling title" required
+                                           value="{{ form.title.value|default:'' }}">
+                                    {% if form.title.errors %}
+                                    <small class="text-danger">{{ form.title.errors }}</small>
+                                    {% endif %}
+                                    <small class="help-text">A strong, descriptive title helps readers find your article</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_slug"><i class="fas fa-link"></i> URL Slug</label>
+                                    <input type="text" name="slug" id="id_slug" class="form-control" 
+                                           placeholder="auto-generated" readonly
+                                           value="{{ form.slug.value|default:'' }}">
+                                    {% if form.slug.errors %}
+                                    <small class="text-danger">{{ form.slug.errors }}</small>
+                                    {% endif %}
+                                    <small class="help-text">Auto-generated from title</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_excerpt"><i class="fas fa-align-left"></i> Excerpt</label>
+                            <textarea name="excerpt" id="id_excerpt" class="form-control" rows="3" 
+                                      placeholder="A short summary of your article">{{ form.excerpt.value|default:'' }}</textarea>
+                            {% if form.excerpt.errors %}
+                            <small class="text-danger">{{ form.excerpt.errors }}</small>
+                            {% endif %}
+                            <small class="help-text">Displayed in article listings and search results (max 300 characters)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_content"><i class="fas fa-file-alt"></i> Content</label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                            <small class="text-danger">{{ form.content.errors }}</small>
+                            {% endif %}
+                            <small class="help-text">Write your article content. Use the toolbar for formatting.</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_category"><i class="fas fa-folder"></i> Category</label>
+                                    <select name="category" id="id_category" class="form-select">
+                                        <option value="">Select a category</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category.id }}" {% if form.category.value|add:"0" == category.id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    {% if form.category.errors %}
+                                    <small class="text-danger">{{ form.category.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label><i class="fas fa-tags"></i> Tags</label>
+                                    <div class="tag-input-container" id="tagContainer">
+                                        {% for tag in form.tags.value %}
+                                        <span class="tag-badge">
+                                            {{ tag.name }}
+                                            <span class="remove-tag" data-tag-id="{{ tag.id }}">&times;</span>
+                                        </span>
+                                        {% endfor %}
+                                        <input type="text" class="tag-input" id="tagInput" 
+                                               placeholder="Type tag and press Enter">
+                                    </div>
+                                    <small class="help-text">Press Enter to add tags. Tags help readers find related content.</small>
+                                    <input type="hidden" name="tags" id="id_tags" value="{{ form.tags.value|join:',' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_featured_image"><i class="fas fa-image"></i> Featured Image</label>
+                                    <input type="file" name="featured_image" id="id_featured_image" 
+                                           class="form-control" accept="image/*">
+                                    {% if form.featured_image.errors %}
+                                    <small class="text-danger">{{ form.featured_image.errors }}</small>
+                                    {% endif %}
+                                    <small class="help-text">Recommended size: 1200x630 pixels</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_featured_image_alt"><i class="fas fa-font"></i> Image Alt Text</label>
+                                    <input type="text" name="featured_image_alt" id="id_featured_image_alt" 
+                                           class="form-control" placeholder="Describe the image for accessibility"
+                                           value="{{ form.featured_image_alt.value|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label><i class="fas fa-star"></i> Featured Settings</label>
+                                    <div class="featured-toggle">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="is_featured" id="id_is_featured" 
+                                                   class="form-check-input" {% if form.is_featured.value %}checked{% endif %}>
+                                            <label for="id_is_featured" class="form-check-label">Featured</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="is_breaking" id="id_is_breaking" 
+                                                   class="form-check-input" {% if form.is_breaking.value %}checked{% endif %}>
+                                            <label for="id_is_breaking" class="form-check-label">Breaking News</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="is_exclusive" id="id_is_exclusive" 
+                                                   class="form-check-input" {% if form.is_exclusive.value %}checked{% endif %}>
+                                            <label for="id_is_exclusive" class="form-check-label">Exclusive</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_status"><i class="fas fa-flag"></i> Status</label>
+                                    <select name="status" id="id_status" class="form-select">
+                                        <option value="draft" {% if form.status.value == 'draft' %}selected{% endif %}>Draft</option>
+                                        <option value="pending" {% if form.status.value == 'pending' %}selected{% endif %}>Pending Review</option>
+                                        <option value="published" {% if form.status.value == 'published' %}selected{% endif %}>Publish Now</option>
+                                    </select>
+                                    {% if form.status.errors %}
+                                    <small class="text-danger">{{ form.status.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_scheduled_for"><i class="fas fa-calendar-plus"></i> Schedule</label>
+                                    <input type="datetime-local" name="scheduled_for" id="id_scheduled_for" 
+                                           class="form-control" value="{{ form.scheduled_for.value|default:''|date:'Y-m-d\TH:i' }}">
+                                    <small class="help-text">Leave blank to publish immediately</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Article
+                            </button>
+                            {% if form.instance.id %}
+                            <a href="{% url 'articles:detail' form.instance.slug %}" class="btn btn-outline-success" target="_blank">
+                                <i class="fas fa-eye"></i> Preview
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'articles:article_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-generate slug from title
+    const titleInput = document.getElementById('id_title');
+    const slugInput = document.getElementById('id_slug');
+    
+    if (titleInput && slugInput) {
+        titleInput.addEventListener('keyup', function() {
+            if (!slugInput.value || slugInput.value === slugInput.defaultValue) {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                slugInput.value = slug;
+            }
+        });
+    }
+
+    // Tag input handling
+    const tagInput = document.getElementById('tagInput');
+    const tagContainer = document.getElementById('tagContainer');
+    const tagsHidden = document.getElementById('id_tags');
+    let tags = [];
+
+    function updateTags() {
+        tagContainer.querySelectorAll('.tag-badge').forEach(el => el.remove());
+        tags.forEach(tag => {
+            const badge = document.createElement('span');
+            badge.className = 'tag-badge';
+            badge.innerHTML = `${tag} <span class="remove-tag" data-tag-name="${tag}">&times;</span>`;
+            badge.querySelector('.remove-tag').addEventListener('click', function() {
+                const name = this.dataset.tagName;
+                tags = tags.filter(t => t !== name);
+                updateTags();
+                updateHidden();
+            });
+            tagContainer.insertBefore(badge, tagInput);
+        });
+        updateHidden();
+    }
+
+    function updateHidden() {
+        tagsHidden.value = tags.join(',');
+    }
+
+    tagInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const tag = this.value.trim();
+            if (tag && !tags.includes(tag)) {
+                tags.push(tag);
+                updateTags();
+                this.value = '';
+            }
+        }
+    });
+
+    // Existing tags from form
+    const existingTags = tagsHidden.value ? tagsHidden.value.split(',') : [];
+    tags = existingTags.filter(t => t);
+    updateTags();
+});
+</script>
+{% endblock %}

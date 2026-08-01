@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Message Sent - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="success-page">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="success-card">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Message Sent Successfully!</h2>
+                    <p class="text-muted">Thank you for contacting us. We'll get back to you as soon as possible.</p>
+                    <div class="success-details">
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Response time: Usually within 24-48 hours</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>A confirmation email has been sent to your inbox</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-phone"></i>
+                            <span>For urgent matters, call us at +254 700 000 000</span>
+                        </div>
+                    </div>
+                    <div class="success-actions">
+                        <a href="{% url 'home' %}" class="btn btn-primary">
+                            <i class="fas fa-home"></i> Go Home
+                        </a>
+                        <a href="{% url 'contacts:contact' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Send Another Message
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-page {
+    padding: 60px 0;
+}
+.success-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.success-icon {
+    font-size: 80px;
+    color: #28a745;
+    margin-bottom: 20px;
+}
+.success-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.success-card p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+}
+.success-details {
+    text-align: left;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: 'Times New Roman', serif;
+}
+.detail-item:last-child {
+    border-bottom: none;
+}
+.detail-item i {
+    width: 25px;
+    color: #1a3c5e;
+}
+.success-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+.success-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+{% endblock %}

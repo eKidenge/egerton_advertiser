@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block title %}Advanced Search - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="advanced-search-page">
+        <div class="page-header">
+            <h1><i class="fas fa-search-plus"></i> Advanced Search</h1>
+            <p class="text-muted">Refine your search with advanced filters</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="search-card">
+                    <form method="post" action="{% url 'search:advanced' %}">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="q"><i class="fas fa-search"></i> Search Query</label>
+                            <input type="text" name="q" id="q" class="form-control" 
+                                   placeholder="Enter keywords to search..." 
+                                   value="{{ query|default:'' }}">
+                            <small class="help-text">Enter keywords, phrases, or topics</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="category"><i class="fas fa-folder"></i> Category</label>
+                                    <select name="category" id="category" class="form-select">
+                                        <option value="">All Categories</option>
+                                        {% for cat in categories %}
+                                        <option value="{{ cat.slug }}" {% if category == cat.slug %}selected{% endif %}>
+                                            {{ cat.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="author"><i class="fas fa-user"></i> Author</label>
+                                    <select name="author" id="author" class="form-select">
+                                        <option value="">All Authors</option>
+                                        {% for author in authors %}
+                                        <option value="{{ author.username }}" {% if author == author.username %}selected{% endif %}>
+                                            {{ author.get_full_name|default:author.username }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="date_from"><i class="fas fa-calendar-alt"></i> Date From</label>
+                                    <input type="date" name="date_from" id="date_from" class="form-control" 
+                                           value="{{ date_from|default:'' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="date_to"><i class="fas fa-calendar-alt"></i> Date To</label>
+                                    <input type="date" name="date_to" id="date_to" class="form-control" 
+                                           value="{{ date_to|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tags"><i class="fas fa-tags"></i> Tags</label>
+                            <input type="text" name="tags" id="tags" class="form-control" 
+                                   placeholder="Enter tags separated by commas"
+                                   value="{{ tags|default:'' }}">
+                            <small class="help-text">e.g., politics, economy, sports</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sort_by"><i class="fas fa-sort"></i> Sort By</label>
+                            <select name="sort_by" id="sort_by" class="form-select">
+                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest First</option>
+                                <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest First</option>
+                                <option value="popular" {% if sort_by == 'popular' %}selected{% endif %}>Most Popular</option>
+                                <option value="relevance" {% if sort_by == 'relevance' %}selected{% endif %}>Relevance</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Tips -->
+        <div class="search-tips">
+            <h5><i class="fas fa-lightbulb"></i> Search Tips</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="tip-card">
+                        <i class="fas fa-quote-right"></i>
+                        <h6>Use Quotes</h6>
+                        <p>Use quotes for exact phrase matching: <strong>"climate change"</strong></p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="tip-card">
+                        <i class="fas fa-plus"></i>
+                        <h6>Use + and -</h6>
+                        <p>Include or exclude words: <strong>+politics -elections</strong></p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="tip-card">
+                        <i class="fas fa-filter"></i>
+                        <h6>Use Filters</h6>
+                        <p>Use the filters above to narrow down your results</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.advanced-search-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.search-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-control, .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.btn-primary {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 4px;
+}
+.search-tips {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.search-tips h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-bottom: 15px;
+}
+.tip-card {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+.tip-card i {
+    font-size: 24px;
+    color: #c9a84c;
+}
+.tip-card h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin: 10px 0;
+}
+.tip-card p {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+}
+</style>
+{% endblock %}

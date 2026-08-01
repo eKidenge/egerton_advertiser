@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Comment Detail - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="comment-detail-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="comment-card">
+                    <div class="comment-header">
+                        <div class="comment-user">
+                            <img src="{% if comment.user.profile_picture %}{{ comment.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                 alt="{{ comment.user.get_full_name }}" class="comment-avatar-large">
+                            <div>
+                                <h5>{{ comment.user.get_full_name|default:comment.user.username }}</h5>
+                                <p class="text-muted">{{ comment.user.get_role_display }}</p>
+                            </div>
+                        </div>
+                        <div class="comment-status">
+                            <span class="badge bg-{% if comment.status == 'approved' %}success{% elif comment.status == 'pending' %}warning{% elif comment.status == 'spam' %}danger{% else %}secondary{% endif %}">
+                                {{ comment.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="comment-body">
+                        <p>{{ comment.content }}</p>
+                    </div>
+
+                    <div class="comment-meta">
+                        <span><i class="fas fa-calendar-alt"></i> {{ comment.created_at|date:"F d, Y H:i" }}</span>
+                        <span><i class="fas fa-article"></i> On: <a href="{{ comment.article.get_absolute_url }}">{{ comment.article.title }}</a></span>
+                        <span><i class="fas fa-thumbs-up"></i> {{ comment.likes }}</span>
+                        <span><i class="fas fa-thumbs-down"></i> {{ comment.dislikes }}</span>
+                        <span><i class="fas fa-reply"></i> Replies: {{ comment.replies.count }}</span>
+                    </div>
+
+                    <div class="comment-actions">
+                        {% if comment.status == 'pending' and request.user.can_moderate_comments %}
+                        <a href="{% url 'comments:moderate' comment.id %}" class="btn btn-success">
+                            <i class="fas fa-check"></i> Moderate
+                        </a>
+                        {% endif %}
+                        {% if request.user == comment.user or request.user.can_moderate_comments %}
+                        <a href="{% url 'comments:delete' comment.id %}" class="btn btn-danger" onclick="return confirm('Delete this comment?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                        {% endif %}
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Replies -->
+                {% if replies %}
+                <div class="replies-section">
+                    <h4><i class="fas fa-reply-all"></i> Replies ({{ replies.count }})</h4>
+                    {% for reply in replies %}
+                    <div class="reply-card">
+                        <div class="reply-header">
+                            <img src="{% if reply.user.profile_picture %}{{ reply.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                 alt="{{ reply.user.get_full_name }}" class="reply-avatar">
+                            <div>
+                                <strong>{{ reply.user.get_full_name|default:reply.user.username }}</strong>
+                                <span class="text-muted">{{ reply.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+                        <div class="reply-body">{{ reply.content }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.comment-detail-page {
+    padding: 30px 0;
+}
+.comment-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+.comment-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.comment-avatar-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.comment-user h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin: 0;
+}
+.comment-body {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    line-height: 1.8;
+    padding: 15px 0;
+    min-height: 100px;
+}
+.comment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+}
+.comment-meta i {
+    margin-right: 5px;
+}
+.comment-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+.comment-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+.replies-section {
+    margin-top: 30px;
+}
+.replies-section h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.reply-card {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
+.reply-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+.reply-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.reply-body {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    margin-left: 40px;
+}
+</style>
+{% endblock %}

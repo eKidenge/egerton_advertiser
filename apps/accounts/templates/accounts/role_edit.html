@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Role - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="role-form-page">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2><i class="fas fa-user-edit"></i> Edit Role: {{ group.name }}</h2>
+                        <p class="text-muted">Update role permissions</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="role_name"><i class="fas fa-heading"></i> Role Name</label>
+                            <input type="text" name="role_name" id="role_name" class="form-control" 
+                                   value="{{ group.name }}" required>
+                            {% if form.role_name.errors %}
+                            <small class="text-danger">{{ form.role_name.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Permissions</label>
+                            <div class="permissions-grid">
+                                {% for permission in all_permissions %}
+                                <div class="permission-item">
+                                    <input type="checkbox" name="permissions" value="{{ permission.codename }}" 
+                                           id="perm_{{ permission.codename }}"
+                                           {% if permission.codename in current_permissions %}checked{% endif %}>
+                                    <label for="perm_{{ permission.codename }}">
+                                        {{ permission.name }}
+                                        <small class="text-muted">({{ permission.content_type.app_label }})</small>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Role
+                            </button>
+                            <a href="{% url 'accounts:role_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.role-form-page {
+    padding: 30px 0;
+}
+.form-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.form-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.form-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group label i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.form-control {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+}
+.form-control:focus {
+    border-color: #1a3c5e;
+    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+}
+.permissions-grid {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px;
+    background: #f8f9fa;
+}
+.permission-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.permission-item:last-child {
+    border-bottom: none;
+}
+.permission-item input[type="checkbox"] {
+    margin-right: 10px;
+}
+.permission-item label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 400;
+    color: #495057;
+    cursor: pointer;
+}
+.permission-item label small {
+    font-size: 12px;
+}
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+}
+</style>
+{% endblock %}

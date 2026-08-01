@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Breaking News - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="breaking-news-page">
+        <div class="page-header">
+            <h1><i class="fas fa-bolt" style="color: #dc3545;"></i> Breaking News</h1>
+            <p class="text-muted">Latest updates as they happen</p>
+        </div>
+
+        <div class="breaking-news-list">
+            {% for article in articles %}
+            <div class="breaking-news-item-large">
+                <div class="row">
+                    <div class="col-md-3">
+                        {% if article.featured_image %}
+                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid breaking-thumb">
+                        {% else %}
+                        <div class="breaking-thumb-placeholder">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-9">
+                        <div class="breaking-content">
+                            <span class="breaking-badge">
+                                <i class="fas fa-circle pulse"></i> BREAKING
+                            </span>
+                            <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+                            <p>{{ article.excerpt|truncatewords:25 }}</p>
+                            <div class="breaking-meta">
+                                <span><i class="fas fa-clock"></i> {{ article.published_at|date:"F d, Y H:i" }}</span>
+                                <span><i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}</span>
+                                <span><i class="fas fa-folder"></i> {{ article.category.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-bolt fa-4x text-muted"></i>
+                <h4 class="mt-3">No Breaking News</h4>
+                <p class="text-muted">There are no breaking news items at the moment</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.breaking-news-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #dc3545;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.breaking-news-item-large {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #dc3545;
+    transition: all 0.3s;
+}
+.breaking-news-item-large:hover {
+    box-shadow: 0 4px 15px rgba(220,53,69,0.1);
+}
+.breaking-thumb {
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    width: 100%;
+}
+.breaking-thumb-placeholder {
+    height: 150px;
+    background: #fff3cd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: #dc3545;
+    font-size: 48px;
+}
+.breaking-badge {
+    display: inline-block;
+    background: #dc3545;
+    color: #fff;
+    padding: 2px 12px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+}
+.breaking-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+.breaking-content h3 a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.breaking-content h3 a:hover {
+    text-decoration: underline;
+}
+.breaking-content p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    margin: 8px 0;
+}
+.breaking-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.breaking-meta i {
+    margin-right: 3px;
+}
+.pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+</style>
+{% endblock %}

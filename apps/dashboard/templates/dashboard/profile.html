@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Profile - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-profile">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-card">
+                    <div class="profile-avatar text-center">
+                        {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.get_full_name }}" class="avatar-img">
+                        {% else %}
+                        <div class="avatar-placeholder">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        {% endif %}
+                        <h4>{{ user.get_full_name|default:user.username }}</h4>
+                        <p class="text-muted">{{ user.get_role_display }}</p>
+                        {% if user.department %}
+                        <p class="text-muted"><i class="fas fa-building"></i> {{ user.get_department_display }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="profile-info">
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>{{ user.email }}</span>
+                        </div>
+                        {% if user.phone_number %}
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <span>{{ user.phone_number }}</span>
+                        </div>
+                        {% endif %}
+                        {% if user.website %}
+                        <div class="info-item">
+                            <i class="fas fa-globe"></i>
+                            <a href="{{ user.website }}" target="_blank">{{ user.website }}</a>
+                        </div>
+                        {% endif %}
+                        <div class="info-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Joined: {{ user.date_joined|date:"F d, Y" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-user-tag"></i>
+                            <span>Role: {{ user.get_role_display }}</span>
+                        </div>
+                        {% if user.is_verified %}
+                        <div class="info-item verified">
+                            <i class="fas fa-check-circle"></i>
+                            <span class="text-success">Verified Account</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="profile-actions">
+                        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                        <a href="{% url 'accounts:change_password' %}" class="btn btn-outline-secondary w-100 mt-2">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="profile-stats">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ total_articles }}</div>
+                                <div class="stat-label">Articles</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ published_articles }}</div>
+                                <div class="stat-label">Published</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ total_views }}</div>
+                                <div class="stat-label">Total Views</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ total_comments }}</div>
+                                <div class="stat-label">Comments</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                {% if user.social_links %}
+                <div class="profile-section">
+                    <h5><i class="fas fa-share-alt"></i> Social Links</h5>
+                    <div class="social-links">
+                        {% if user.social_links.twitter %}
+                        <a href="{{ user.social_links.twitter }}" target="_blank" class="social-link">
+                            <i class="fab fa-twitter"></i> Twitter
+                        </a>
+                        {% endif %}
+                        {% if user.social_links.facebook %}
+                        <a href="{{ user.social_links.facebook }}" target="_blank" class="social-link">
+                            <i class="fab fa-facebook"></i> Facebook
+                        </a>
+                        {% endif %}
+                        {% if user.social_links.instagram %}
+                        <a href="{{ user.social_links.instagram }}" target="_blank" class="social-link">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                        {% endif %}
+                        {% if user.social_links.linkedin %}
+                        <a href="{{ user.social_links.linkedin }}" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        {% endif %}
+                        {% if user.social_links.youtube %}
+                        <a href="{{ user.social_links.youtube }}" target="_blank" class="social-link">
+                            <i class="fab fa-youtube"></i> YouTube
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Bio -->
+                {% if user.bio %}
+                <div class="profile-section">
+                    <h5><i class="fas fa-align-left"></i> Bio</h5>
+                    <p>{{ user.bio|linebreaks }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-profile {
+    padding: 30px 0;
+}
+.profile-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+}
+.profile-avatar {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+.avatar-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1a3c5e;
+    padding: 3px;
+}
+.avatar-placeholder {
+    font-size: 80px;
+    color: #6c757d;
+}
+.profile-avatar h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-top: 10px;
+}
+.profile-info {
+    margin: 20px 0;
+}
+.info-item {
+    padding: 8px 0;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.info-item i {
+    width: 25px;
+    color: #1a3c5e;
+}
+.info-item.verified i {
+    color: #28a745;
+}
+.profile-stats {
+    margin-bottom: 20px;
+}
+.stat-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+.stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: #1a3c5e;
+}
+.stat-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.profile-section {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.profile-section h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.social-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    color: #1a3c5e;
+    font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.social-link:hover {
+    background: #1a3c5e;
+    color: #fff;
+    text-decoration: none;
+}
+.social-link i {
+    margin-right: 5px;
+}
+</style>
+{% endblock %}

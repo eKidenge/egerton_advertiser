@@ -1,0 +1,659 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }} - The Egerton Advertiser{% endblock %}
+
+{% block meta_description %}{{ article.excerpt|truncatewords:20 }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="article-detail">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Article Header -->
+                <div class="article-header">
+                    <div class="article-category">
+                        <a href="{{ article.category.get_absolute_url }}" class="category-badge">
+                            {{ article.category.name }}
+                        </a>
+                        {% if article.is_breaking %}
+                        <span class="breaking-badge">
+                            <i class="fas fa-circle pulse"></i> BREAKING
+                        </span>
+                        {% endif %}
+                        {% if article.is_exclusive %}
+                        <span class="exclusive-badge">
+                            <i class="fas fa-star"></i> EXCLUSIVE
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <h1 class="article-title">{{ article.title }}</h1>
+                    
+                    {% if article.excerpt %}
+                    <p class="article-excerpt">{{ article.excerpt }}</p>
+                    {% endif %}
+                    
+                    <div class="article-meta">
+                        <div class="author-info">
+                            <img src="{% if article.author.profile_picture %}{{ article.author.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                 alt="{{ article.author.get_full_name }}" class="author-avatar">
+                            <div>
+                                <span class="author-name">
+                                    <a href="{% url 'articles:author_articles' article.author.id %}">
+                                        {{ article.author.get_full_name|default:article.author.username }}
+                                    </a>
+                                </span>
+                                <span class="author-role">{{ article.author.get_role_display }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="article-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ article.published_at|date:"F d, Y" }}
+                            <span class="mx-2">|</span>
+                            <i class="fas fa-clock"></i>
+                            {{ article.time_to_read }} min read
+                        </div>
+                        
+                        <div class="article-stats">
+                            <span><i class="fas fa-eye"></i> {{ article.views_count }}</span>
+                            <span><i class="fas fa-comments"></i> {{ article.comments.count }}</span>
+                            <span><i class="fas fa-share-alt"></i> {{ article.shares_count }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Featured Image -->
+                {% if article.featured_image %}
+                <div class="article-featured-image">
+                    <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid">
+                    {% if article.featured_image_caption %}
+                    <p class="image-caption">{{ article.featured_image_caption }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+                <!-- Article Content -->
+                <div class="article-content">
+                    {{ article.content|safe }}
+                </div>
+                
+                <!-- Tags -->
+                {% if article.tags.all %}
+                <div class="article-tags">
+                    <span class="tags-label"><i class="fas fa-tags"></i> Tags:</span>
+                    {% for tag in article.tags.all %}
+                    <a href="{% url 'tags:detail' tag.slug %}" class="tag-link">#{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Share Buttons -->
+                <div class="article-share">
+                    <span class="share-label">Share this article:</span>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                       target="_blank" class="share-btn facebook" title="Share on Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ article.title }}" 
+                       target="_blank" class="share-btn twitter" title="Share on Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+                       target="_blank" class="share-btn linkedin" title="Share on LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://wa.me/?text={{ article.title }}%20{{ request.build_absolute_uri }}" 
+                       target="_blank" class="share-btn whatsapp" title="Share on WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="mailto:?subject={{ article.title }}&body={{ request.build_absolute_uri }}" 
+                       class="share-btn email" title="Share via Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+                
+                <!-- Author Bio -->
+                <div class="author-bio">
+                    <img src="{% if article.author.profile_picture %}{{ article.author.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                         alt="{{ article.author.get_full_name }}" class="author-bio-avatar">
+                    <div>
+                        <h5>{{ article.author.get_full_name|default:article.author.username }}</h5>
+                        <p class="author-bio-text">{{ article.author.bio|default:"Journalist at The Egerton Advertiser" }}</p>
+                        <div class="author-social">
+                            {% if article.author.website %}
+                            <a href="{{ article.author.website }}" target="_blank"><i class="fas fa-globe"></i></a>
+                            {% endif %}
+                            {% if article.author.social_links.twitter %}
+                            <a href="{{ article.author.social_links.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                            {% endif %}
+                            {% if article.author.social_links.facebook %}
+                            <a href="{{ article.author.social_links.facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
+                            {% endif %}
+                            {% if article.author.social_links.linkedin %}
+                            <a href="{{ article.author.social_links.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Related Articles -->
+                {% if related_articles %}
+                <div class="related-articles">
+                    <h4><i class="fas fa-newspaper"></i> Related Articles</h4>
+                    <div class="row">
+                        {% for related in related_articles %}
+                        <div class="col-md-4">
+                            <div class="related-item">
+                                {% if related.featured_image %}
+                                <img src="{{ related.featured_image.url }}" alt="{{ related.title }}" class="img-fluid">
+                                {% endif %}
+                                <h6><a href="{{ related.get_absolute_url }}">{{ related.title|truncatewords:8 }}</a></h6>
+                                <small class="text-muted">{{ related.published_at|date:"M d, Y" }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Comments -->
+                <div class="comments-section">
+                    <h4><i class="fas fa-comments"></i> Comments ({{ comments.count }})</h4>
+                    
+                    <!-- Comment Form -->
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'comments:add' article.id %}" class="comment-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea name="content" class="form-control" rows="4" 
+                                      placeholder="Join the discussion..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Post Comment
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="comment-login-prompt">
+                        <p><a href="{% url 'accounts:login' %}?next={{ request.path }}">Login</a> to leave a comment</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Comments List -->
+                    {% if comments %}
+                    <div class="comments-list">
+                        {% for comment in comments %}
+                        <div class="comment-item" id="comment-{{ comment.id }}">
+                            <div class="comment-header">
+                                <img src="{% if comment.user.profile_picture %}{{ comment.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                     alt="{{ comment.user.get_full_name }}" class="comment-avatar">
+                                <div>
+                                    <strong>{{ comment.user.get_full_name|default:comment.user.username }}</strong>
+                                    <span class="comment-date">{{ comment.created_at|timesince }} ago</span>
+                                </div>
+                            </div>
+                            <div class="comment-body">{{ comment.content }}</div>
+                            <div class="comment-actions">
+                                <button class="btn btn-sm btn-outline-primary reply-btn" data-comment-id="{{ comment.id }}">
+                                    <i class="fas fa-reply"></i> Reply
+                                </button>
+                                {% if user == comment.user or user.can_moderate_comments %}
+                                <a href="{% url 'comments:delete' comment.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Replies -->
+                            {% if comment.replies.all %}
+                            <div class="replies">
+                                {% for reply in comment.replies.all %}
+                                <div class="reply-item">
+                                    <div class="comment-header">
+                                        <img src="{% if reply.user.profile_picture %}{{ reply.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                             alt="{{ reply.user.get_full_name }}" class="comment-avatar">
+                                        <div>
+                                            <strong>{{ reply.user.get_full_name|default:reply.user.username }}</strong>
+                                            <span class="comment-date">{{ reply.created_at|timesince }} ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="comment-body">{{ reply.content }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No comments yet. Be the first to comment!</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Author's Other Articles -->
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-pen"></i> More from {{ article.author.get_full_name|default:article.author.username }}
+                    </div>
+                    {% for article in author_articles %}
+                    <div class="author-article-item">
+                        <a href="{{ article.get_absolute_url }}" class="article-link">{{ article.title|truncatewords:8 }}</a>
+                        <small class="text-muted d-block">{{ article.published_at|date:"M d, Y" }}</small>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No more articles from this author.</p>
+                    {% endfor %}
+                </div>
+                
+                <!-- Advertisement -->
+                {% include 'sidebar_ads.html' %}
+                
+                <!-- Popular Articles -->
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-fire"></i> Popular This Week
+                    </div>
+                    <div class="popular-articles">
+                        <!-- Will be populated by view -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.article-detail {
+    padding: 30px 0;
+}
+.article-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+.article-category {
+    margin-bottom: 10px;
+}
+.category-badge {
+    background: #1a3c5e;
+    color: #fff;
+    padding: 4px 12px;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 3px;
+    text-decoration: none;
+}
+.category-badge:hover {
+    background: #0e2a44;
+    color: #fff;
+    text-decoration: none;
+}
+.breaking-badge {
+    background: #dc3545;
+    color: #fff;
+    padding: 4px 12px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-radius: 3px;
+    margin-left: 5px;
+}
+.exclusive-badge {
+    background: #c9a84c;
+    color: #0a1a2a;
+    padding: 4px 12px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-radius: 3px;
+    margin-left: 5px;
+}
+.article-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 36px;
+    color: #1a3c5e;
+    line-height: 1.2;
+}
+.article-excerpt {
+    font-family: 'Times New Roman', serif;
+    font-size: 18px;
+    color: #6c757d;
+    font-style: italic;
+    margin: 10px 0;
+}
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.author-name a {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.author-name a:hover {
+    text-decoration: underline;
+}
+.author-role {
+    display: block;
+    font-size: 12px;
+    color: #6c757d;
+}
+.article-date {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 14px;
+}
+.article-stats {
+    display: flex;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 14px;
+}
+.article-stats i {
+    margin-right: 5px;
+}
+.article-featured-image {
+    margin: 20px 0;
+}
+.article-featured-image img {
+    border-radius: 8px;
+}
+.image-caption {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    text-align: center;
+    margin-top: 5px;
+    font-style: italic;
+}
+.article-content {
+    font-family: 'Times New Roman', serif;
+    font-size: 18px;
+    line-height: 1.9;
+    color: #1a1a1a;
+}
+.article-content h2, .article-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+.article-content blockquote {
+    border-left: 4px solid #c9a84c;
+    padding: 15px 25px;
+    margin: 20px 0;
+    background: #f5f0e8;
+    font-style: italic;
+}
+.article-tags {
+    margin: 25px 0;
+    padding: 15px 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.tags-label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-right: 10px;
+}
+.tag-link {
+    display: inline-block;
+    background: #f5f0e8;
+    padding: 3px 12px;
+    margin: 3px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #1a3c5e;
+    text-decoration: none;
+    border-radius: 3px;
+}
+.tag-link:hover {
+    background: #1a3c5e;
+    color: #fff;
+    text-decoration: none;
+}
+.article-share {
+    margin: 20px 0;
+    padding: 15px 0;
+}
+.share-label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    margin-right: 15px;
+}
+.share-btn {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 50%;
+    margin: 0 5px;
+    color: #fff;
+    transition: all 0.3s;
+}
+.share-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.share-btn.facebook { background: #3b5998; }
+.share-btn.twitter { background: #1da1f2; }
+.share-btn.linkedin { background: #0077b5; }
+.share-btn.whatsapp { background: #25d366; }
+.share-btn.email { background: #6c757d; }
+.author-bio {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: #f5f0e8;
+    border-radius: 8px;
+    margin: 25px 0;
+    border-left: 4px solid #c9a84c;
+}
+.author-bio-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+}
+.author-bio h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.author-bio-text {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+}
+.author-social a {
+    color: #1a3c5e;
+    margin-right: 10px;
+    font-size: 16px;
+}
+.author-social a:hover {
+    color: #c9a84c;
+}
+.related-articles {
+    margin: 30px 0;
+}
+.related-articles h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.related-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+.related-item img {
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+.related-item h6 {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+}
+.related-item h6 a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.related-item h6 a:hover {
+    text-decoration: underline;
+}
+.comments-section {
+    margin: 30px 0;
+}
+.comments-section h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.comment-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+.comment-form textarea {
+    font-family: 'Times New Roman', serif;
+}
+.comment-login-prompt {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    font-family: 'Times New Roman', serif;
+}
+.comment-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px 0;
+}
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+.comment-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.comment-date {
+    font-size: 12px;
+    color: #6c757d;
+}
+.comment-body {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    margin: 5px 0 10px 45px;
+}
+.comment-actions {
+    margin-left: 45px;
+}
+.replies {
+    margin-left: 45px;
+    padding-left: 20px;
+    border-left: 2px solid #e0e0e0;
+}
+.reply-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.reply-item:last-child {
+    border-bottom: none;
+}
+.sidebar-widget {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+.widget-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 18px;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.widget-title i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.author-article-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.author-article-item:last-child {
+    border-bottom: none;
+}
+.author-article-item .article-link {
+    font-family: 'Times New Roman', serif;
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.author-article-item .article-link:hover {
+    text-decoration: underline;
+}
+@media (max-width: 768px) {
+    .article-title {
+        font-size: 26px;
+    }
+    .article-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .author-bio {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}

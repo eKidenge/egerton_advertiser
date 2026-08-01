@@ -1,0 +1,143 @@
+<!-- Sidebar Template -->
+<div class="sidebar-wrapper">
+    <!-- Search Widget -->
+    <div class="sidebar-widget">
+        <div class="widget-title">
+            <i class="fas fa-search"></i> Search
+        </div>
+        <form action="{% url 'search:search' %}" method="get">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search news...">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Categories Widget -->
+    <div class="sidebar-widget">
+        <div class="widget-title">
+            <i class="fas fa-folder"></i> Categories
+        </div>
+        <ul class="category-list">
+            {% for category in categories %}
+            <li>
+                <a href="{{ category.get_absolute_url }}">
+                    <i class="fas fa-{{ category.icon|default:'folder' }}"></i>
+                    {{ category.name }}
+                    <span class="badge bg-secondary">{{ category.article_count }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Tags Widget -->
+    <div class="sidebar-widget">
+        <div class="widget-title">
+            <i class="fas fa-tags"></i> Popular Tags
+        </div>
+        <div class="tag-cloud">
+            {% for tag in tags|slice:":10" %}
+            <a href="{% url 'tags:detail' tag.slug %}" class="tag-item">
+                #{{ tag.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Newsletter Widget -->
+    <div class="sidebar-widget">
+        <div class="widget-title">
+            <i class="fas fa-envelope"></i> Newsletter
+        </div>
+        <p class="widget-desc">Subscribe for the latest news</p>
+        <form action="{% url 'newsletter:subscribe' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-2">
+                <input type="email" name="email" class="form-control" placeholder="Your email" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+        </form>
+    </div>
+</div>
+
+<style>
+.sidebar-wrapper {
+    padding: 10px 0;
+}
+.sidebar-widget {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.widget-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 18px;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.widget-title i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.category-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.category-list li:last-child {
+    border-bottom: none;
+}
+.category-list a {
+    display: flex;
+    align-items: center;
+    font-family: 'Times New Roman', serif;
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.category-list a:hover {
+    color: #c9a84c;
+}
+.category-list a i {
+    width: 25px;
+}
+.category-list .badge {
+    margin-left: auto;
+}
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.tag-item {
+    background: #f8f9fa;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #1a3c5e;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.tag-item:hover {
+    background: #1a3c5e;
+    color: #fff;
+    text-decoration: none;
+}
+.widget-desc {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 14px;
+}
+</style>

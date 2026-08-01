@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Draft Articles - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="articles-status-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-pencil-alt"></i> Draft Articles</h1>
+                <p class="text-muted">Your work in progress</p>
+            </div>
+            <div>
+                <a href="{% url 'articles:article_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Article
+                </a>
+            </div>
+        </div>
+
+        <div class="articles-list">
+            {% for article in articles %}
+            <div class="article-status-item">
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <h5><a href="{% url 'articles:article_edit' article.id %}">{{ article.title }}</a></h5>
+                        <div class="article-meta">
+                            <span><i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}</span>
+                            <span><i class="fas fa-folder"></i> {{ article.category.name|default:"Uncategorized" }}</span>
+                            <span><i class="fas fa-clock"></i> Created: {{ article.created_at|date:"M d, Y" }}</span>
+                            <span><i class="fas fa-edit"></i> Updated: {{ article.updated_at|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-end">
+                        <div class="btn-group">
+                            <a href="{% url 'articles:article_edit' article.id %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'articles:article_delete' article.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this draft?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-pencil-alt fa-4x text-muted"></i>
+                <h4 class="mt-3">No Draft Articles</h4>
+                <p class="text-muted">Start writing your first article</p>
+                <a href="{% url 'articles:article_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Article
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.articles-status-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.article-status-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+.article-status-item:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.article-status-item h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+.article-status-item h5 a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.article-status-item h5 a:hover {
+    text-decoration: underline;
+}
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.article-meta i {
+    margin-right: 3px;
+}
+.empty-state h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+</style>
+{% endblock %}

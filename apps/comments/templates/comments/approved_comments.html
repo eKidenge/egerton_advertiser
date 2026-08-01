@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Approved Comments - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="comments-status-page">
+        <div class="page-header">
+            <h1><i class="fas fa-check-circle"></i> Approved Comments</h1>
+            <p class="text-muted">All approved comments</p>
+        </div>
+
+        <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment-status-item approved">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="comment-content">
+                            <strong>{{ comment.user.get_full_name|default:comment.user.username }}</strong>
+                            <p>{{ comment.content|truncatewords:20 }}</p>
+                            <div class="comment-meta">
+                                <span><i class="fas fa-article"></i> <a href="{{ comment.article.get_absolute_url }}">{{ comment.article.title }}</a></span>
+                                <span><i class="fas fa-calendar-alt"></i> {{ comment.created_at|timesince }} ago</span>
+                                <span><i class="fas fa-thumbs-up"></i> {{ comment.likes }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="btn-group">
+                            <a href="{% url 'comments:detail' comment.id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{% url 'comments:delete' comment.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this comment?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-check-circle fa-4x text-muted"></i>
+                <h4 class="mt-3">No Approved Comments</h4>
+                <p class="text-muted">No comments have been approved yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+</div>
+
+<style>
+.comments-status-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.comment-status-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #28a745;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+}
+.comment-status-item.approved {
+    border-left-color: #28a745;
+}
+.comment-status-item.rejected {
+    border-left-color: #dc3545;
+}
+.comment-status-item.spam {
+    border-left-color: #ffc107;
+}
+.comment-content strong {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.comment-content p {
+    font-family: 'Times New Roman', serif;
+    margin: 5px 0;
+}
+.comment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.comment-meta i {
+    margin-right: 3px;
+}
+</style>
+{% endblock %}

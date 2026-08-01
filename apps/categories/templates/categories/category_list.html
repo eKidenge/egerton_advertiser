@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}Categories - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="categories-page">
+        <div class="page-header">
+            <h1><i class="fas fa-tags"></i> News Categories</h1>
+            <p>Browse news by category</p>
+        </div>
+
+        <div class="categories-grid">
+            <div class="row">
+                {% for category in categories %}
+                <div class="col-md-4 col-lg-3">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-{{ category.icon|default:'folder' }}"></i>
+                        </div>
+                        <div class="category-content">
+                            <h4><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></h4>
+                            <p>{{ category.description|truncatewords:10 }}</p>
+                            <div class="category-stats">
+                                <span><i class="fas fa-newspaper"></i> {{ category.article_count }} articles</span>
+                            </div>
+                            {% if category.children.exists %}
+                            <div class="subcategories">
+                                <small>Subcategories:</small>
+                                {% for child in category.children.all %}
+                                <a href="{{ child.get_absolute_url }}" class="subcategory-link">{{ child.name }}</a>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No categories available.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if request.user.can_manage_users %}
+        <div class="admin-actions mt-4">
+            <a href="{% url 'categories:create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Category
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.categories-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.page-header p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+}
+.category-card {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+}
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.category-icon {
+    font-size: 48px;
+    color: #1a3c5e;
+    margin-bottom: 10px;
+}
+.category-content h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+.category-content h4 a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.category-content h4 a:hover {
+    text-decoration: underline;
+}
+.category-content p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 14px;
+    margin: 8px 0;
+}
+.category-stats {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.subcategories {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+.subcategory-link {
+    display: inline-block;
+    background: #f8f9fa;
+    padding: 2px 10px;
+    margin: 2px;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #1a3c5e;
+    text-decoration: none;
+    border-radius: 3px;
+}
+.subcategory-link:hover {
+    background: #1a3c5e;
+    color: #fff;
+    text-decoration: none;
+}
+.admin-actions {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+}
+</style>
+{% endblock %}

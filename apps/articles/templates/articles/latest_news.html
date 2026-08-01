@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block title %}Latest News - The Egerton Advertiser{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="latest-news-page">
+        <div class="page-header">
+            <h1><i class="fas fa-newspaper"></i> Latest News</h1>
+            <p>Stay updated with the most recent news from Egerton and around the world</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <form method="get" class="row g-2">
+                        <div class="col-md-4">
+                            <select name="category" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for category in categories %}
+                                <option value="{{ category.slug }}" {% if current_category == category.slug %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="tag" class="form-select">
+                                <option value="">All Tags</option>
+                                {% for tag in tags %}
+                                <option value="{{ tag.slug }}" {% if current_tag == tag.slug %}selected{% endif %}>
+                                    {{ tag.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-filter"></i> Apply Filters
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Articles List -->
+                <div class="articles-list">
+                    {% for article in articles %}
+                    <div class="article-list-item">
+                        <div class="row">
+                            {% if article.featured_image %}
+                            <div class="col-md-3">
+                                <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid article-thumb">
+                            </div>
+                            <div class="col-md-9">
+                            {% else %}
+                            <div class="col-md-12">
+                            {% endif %}
+                                <div class="article-item-content">
+                                    <span class="article-category">{{ article.category.name }}</span>
+                                    <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+                                    <p class="article-excerpt">{{ article.excerpt|truncatewords:25 }}</p>
+                                    <div class="article-meta">
+                                        <span><i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}</span>
+                                        <span><i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}</span>
+                                        <span><i class="fas fa-clock"></i> {{ article.time_to_read }} min</span>
+                                        <span><i class="fas fa-eye"></i> {{ article.views_count }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No articles found matching your criteria.
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                {% include 'pagination.html' %}
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Sidebar -->
+                {% include 'sidebar_ads.html' %}
+                
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-calendar-alt"></i> Archives
+                    </div>
+                    <div class="archive-list">
+                        <!-- Will be populated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.latest-news-page {
+    padding: 30px 0;
+}
+.page-header {
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: #1a3c5e;
+}
+.page-header p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+}
+.filters-bar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+.filters-bar .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+}
+.articles-list {
+    margin-bottom: 30px;
+}
+.article-list-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+.article-list-item:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.article-thumb {
+    border-radius: 4px;
+    height: 120px;
+    object-fit: cover;
+    width: 100%;
+}
+.article-item-content .article-category {
+    background: #1a3c5e;
+    color: #fff;
+    padding: 2px 10px;
+    font-family: 'Times New Roman', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+.article-item-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 22px;
+}
+.article-item-content h3 a {
+    color: #1a3c5e;
+    text-decoration: none;
+}
+.article-item-content h3 a:hover {
+    text-decoration: underline;
+}
+.article-item-content .article-excerpt {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    margin: 8px 0;
+}
+.article-item-content .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+.article-item-content .article-meta i {
+    margin-right: 5px;
+}
+.sidebar-widget {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+.widget-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a3c5e;
+    font-size: 18px;
+    border-bottom: 2px solid #1a3c5e;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.widget-title i {
+    margin-right: 8px;
+    color: #c9a84c;
+}
+@media (max-width: 768px) {
+    .article-list-item .row {
+        flex-direction: column;
+    }
+    .article-thumb {
+        height: 200px;
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}

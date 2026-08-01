@@ -1,0 +1,44 @@
+{% if messages %}
+<div class="container mt-3" id="alert-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% elif message.tags == 'warning' %}warning{% else %}info-circle{% endif %}"></i>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<style>
+.alert {
+    font-family: 'Times New Roman', serif;
+    border-radius: 4px;
+    border-left: 4px solid;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+}
+.alert-success {
+    border-left-color: #28a745;
+    background: #d4edda;
+    color: #155724;
+}
+.alert-error {
+    border-left-color: #dc3545;
+    background: #f8d7da;
+    color: #721c24;
+}
+.alert-warning {
+    border-left-color: #ffc107;
+    background: #fff3cd;
+    color: #856404;
+}
+.alert-info {
+    border-left-color: #17a2b8;
+    background: #d1ecf1;
+    color: #0c5460;
+}
+.alert i {
+    margin-right: 10px;
+}
+</style>
