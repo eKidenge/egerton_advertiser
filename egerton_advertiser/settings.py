@@ -34,7 +34,15 @@ SECRET_KEY = env('SECRET_KEY', default='django-insecure-^@*8h8i&y3s@3b0=z$5xq9@v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', default=False)
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.theegertonadvertiser.com'])
+# ALLOWED_HOSTS - Added Render.com URL
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=[
+    'localhost', 
+    '127.0.0.1', 
+    '.theegertonadvertiser.com',
+    'egerton-advertiser.onrender.com',  # ADDED Render.com URL
+    'egerton-advertiser.onrender.com',
+    '.onrender.com',  # Allows all Render.com subdomains
+])
 
 # Application definition
 INSTALLED_APPS = [
@@ -243,8 +251,13 @@ if not DEBUG:
     SESSION_COOKIE_AGE = 1209600  # 2 weeks
     SESSION_SAVE_EVERY_REQUEST = True
 
-# CORS settings
-CORS_ALLOWED_ORIGINS = env('CORS_ALLOWED_ORIGINS', default=['http://localhost:3000', 'http://localhost:8000'])
+# CORS settings - Added Render.com URL
+CORS_ALLOWED_ORIGINS = env('CORS_ALLOWED_ORIGINS', default=[
+    'http://localhost:3000', 
+    'http://localhost:8000',
+    'https://egerton-advertiser.onrender.com',  # ADDED
+    'http://egerton-advertiser.onrender.com',
+])
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -547,12 +560,14 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_CACHE_ALIAS = 'default'
 SESSION_COOKIE_DOMAIN = '.theegertonadvertiser.com' if not DEBUG else None
 
-# CSRF settings
+# CSRF settings - Added Render.com URL
 CSRF_COOKIE_NAME = 'egerton_csrftoken'
 CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
 CSRF_TRUSTED_ORIGINS = [
     'https://*.theegertonadvertiser.com',
     'https://*.egertonadvertiser.com',
+    'https://egerton-advertiser.onrender.com',  # ADDED
+    'http://egerton-advertiser.onrender.com',
 ]
 
 # Logging configuration - REMOVED 'db' handler
@@ -568,10 +583,6 @@ LOGGING = {
             'format': '{levelname} {message}',
             'style': '{',
         },
-        # 'db': {  # REMOVED
-        #     'format': '{levelname} {asctime} {module} {message}',
-        #     'style': '{',
-        # },
     },
     'filters': {
         'require_debug_false': {
@@ -592,16 +603,11 @@ LOGGING = {
             'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': BASE_DIR / 'logs/django.log',
-            'maxBytes': 10485760,  # 10MB
+            'maxBytes': 10485760,
             'backupCount': 10,
             'formatter': 'verbose',
             'filters': ['require_debug_false'],
         },
-        # 'db': {  # REMOVED - was causing errors
-        #     'level': 'ERROR',
-        #     'class': 'django_db_logger.db_log_handler.DatabaseLogHandler',
-        #     'formatter': 'db',
-        # },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -762,8 +768,11 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     
-    # Trusted origins
-    CSRF_TRUSTED_ORIGINS = ['https://*.theegertonadvertiser.com']
+    # Trusted origins - Added Render.com
+    CSRF_TRUSTED_ORIGINS = [
+        'https://*.theegertonadvertiser.com',
+        'https://egerton-advertiser.onrender.com'
+    ]
     
     # Security middleware
     SECURE_CONTENT_TYPE_NOSNIFF = True
