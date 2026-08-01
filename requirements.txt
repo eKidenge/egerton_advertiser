@@ -1,8 +1,9 @@
 # ============================================
-# CORE DJANGO
+# CORE DJANGO - DOWNGRADED TO 4.2 LTS
 # ============================================
-Django>=5.2,<5.3
+Django>=4.2,<5.0
 django-environ==0.11.2
+dj-database-url==2.1.0
 
 # ============================================
 # DATABASE
@@ -28,13 +29,12 @@ Pillow==10.1.0  # Required for image processing
 django-htmx==1.16.0
 
 # ============================================
-# CELERY (Background tasks) - FIXED VERSIONS
+# CELERY (Background tasks) - KEPT
 # ============================================
-#celery==5.4.0
-#redis==5.0.1
-#django-celery-beat==2.7.0
-#django-celery-results==2.5.1
-dj-database-url==2.1.0  # ← ADD THIS - Required for database URL parsing
+celery==5.4.0
+redis==5.0.1
+django-celery-beat==2.7.0
+django-celery-results==2.5.1
 
 # ============================================
 # CACHING
