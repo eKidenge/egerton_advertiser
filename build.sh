@@ -8,7 +8,16 @@ echo "=================================================="
 # Install dependencies
 echo ""
 echo "📦 Installing dependencies..."
+pip install --upgrade pip
 pip install -r requirements.txt
+
+# ============================================
+# FIX: Reset migration history to fix InconsistentMigrationHistory
+# ============================================
+echo ""
+echo "🗄️  Resetting migration history to fix dependencies..."
+python manage.py migrate --fake analytics zero || true
+python manage.py migrate --fake articles zero || true
 
 # 1. Apply database migrations
 echo ""
