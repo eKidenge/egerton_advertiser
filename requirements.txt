@@ -34,6 +34,7 @@ django-htmx==1.16.0
 #redis==5.0.1
 #django-celery-beat==2.7.0
 #django-celery-results==2.5.1
+dj-database-url==2.1.0  # ← ADD THIS - Required for database URL parsing
 
 # ============================================
 # CACHING
