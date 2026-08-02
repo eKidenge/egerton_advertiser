@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}The Egerton Advertiser - Official Gazette{% endblock %}</title>
     
+    <!-- Pass API keys to JavaScript -->
+    <script>
+        // Weather API configuration
+        window.OPENWEATHER_API_KEY = "{{ OPENWEATHER_API_KEY|default:'' }}";
+        window.OPENWEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/";
+        // City for weather (default: Egerton, Kenya)
+        window.WEATHER_CITY = "Egerton,KE";
+        window.WEATHER_LAT = "-0.5";
+        window.WEATHER_LON = "35.8";
+    </script>
+    
     <!-- Government-style fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Times+New+Roman&display=swap" rel="stylesheet">
     
@@ -62,6 +73,7 @@
                     <span class="weather-info ms-3">
                         <i class="fas fa-cloud-sun"></i> 
                         <span id="weather-temp">--°C</span>
+                        <span class="weather-condition d-none d-sm-inline" id="weather-condition">Loading...</span>
                     </span>
                 </div>
             </div>

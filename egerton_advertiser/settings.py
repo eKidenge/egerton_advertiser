@@ -780,6 +780,12 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
     SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
+# ============================================
+# WEATHER API SETTINGS
+# ============================================
+OPENWEATHER_API_KEY = env('OPENWEATHER_API_KEY', default='43d50a5567a266018562b68f961eaecc')
+OPENWEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5/'
+
 # Print settings for debugging
 if DEBUG:
     print(f"\n{'='*50}")

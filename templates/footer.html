@@ -1,8 +1,11 @@
+{% load static %}
 <footer class="main-footer">
     <div class="container">
         <div class="row py-5">
-            <div class="col-md-4">
+            <!-- Brand & Social -->
+            <div class="col-lg-4 col-md-6">
                 <div class="footer-brand">
+                    <img src="{% static 'images/logo1.png' %}" alt="The Egerton Advertiser" class="footer-logo" height="50">
                     <h5 class="footer-title">The Egerton Advertiser</h5>
                     <p class="footer-motto">"Truth, Justice & Service to the Nation"</p>
                     <p class="footer-description">
@@ -11,33 +14,43 @@
                     </p>
                 </div>
                 <div class="footer-social mt-3">
-                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
-            <div class="col-md-2">
+            
+            <!-- Categories -->
+            <div class="col-lg-2 col-md-6">
                 <h6 class="footer-heading">Categories</h6>
                 <ul class="footer-links">
                     <li><a href="{% url 'categories:detail' slug='politics' %}">Politics</a></li>
                     <li><a href="{% url 'categories:detail' slug='business' %}">Business</a></li>
                     <li><a href="{% url 'categories:detail' slug='sports' %}">Sports</a></li>
                     <li><a href="{% url 'categories:detail' slug='entertainment' %}">Entertainment</a></li>
+                    <li><a href="{% url 'categories:detail' slug='education' %}">Education</a></li>
+                    <li><a href="{% url 'categories:detail' slug='health' %}">Health</a></li>
                 </ul>
             </div>
-            <div class="col-md-2">
+            
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-6">
                 <h6 class="footer-heading">Quick Links</h6>
                 <ul class="footer-links">
                     <li><a href="{% url 'articles:latest' %}">Latest News</a></li>
+                    <li><a href="{% url 'articles:breaking_news' %}">Breaking News</a></li>
                     <li><a href="{% url 'advertisements:list' %}">Advertise</a></li>
                     <li><a href="{% url 'newsletter:subscribe' %}">Newsletter</a></li>
                     <li><a href="{% url 'contacts:contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
                 </ul>
             </div>
-            <div class="col-md-4">
+            
+            <!-- Newsletter & Contact -->
+            <div class="col-lg-4 col-md-6">
                 <h6 class="footer-heading">Subscribe to Our Newsletter</h6>
                 <form action="{% url 'newsletter:subscribe' %}" method="post" class="footer-newsletter">
                     {% csrf_token %}
@@ -48,13 +61,33 @@
                         </button>
                     </div>
                 </form>
+                
                 <div class="footer-contact mt-3">
                     <p><i class="fas fa-map-marker-alt"></i> Egerton, Kenya</p>
                     <p><i class="fas fa-phone"></i> +254 700 000 000</p>
                     <p><i class="fas fa-envelope"></i> info@theegertonadvertiser.com</p>
                 </div>
+                
+                <!-- Weather & Time Widget -->
+                <div class="footer-weather mt-3">
+                    <div class="weather-widget">
+                        <div class="weather-icon">
+                            <i class="fas fa-cloud-sun"></i>
+                        </div>
+                        <div class="weather-info">
+                            <span class="temp" id="footerWeatherTemp">--°C</span>
+                            <span class="condition" id="footerWeatherCondition">Loading...</span>
+                        </div>
+                        <div class="weather-time">
+                            <span id="footerTime">00:00</span>
+                            <span id="footerDate">00/00/0000</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <!-- Footer Bottom -->
         <div class="footer-bottom">
             <div class="row">
                 <div class="col-md-6">
@@ -65,24 +98,38 @@
                         <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                         <li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
                         <li><a href="{% url 'cookie_policy' %}">Cookie Policy</a></li>
+                        <li><a href="{% url 'sitemap' %}">Sitemap</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</footer>
 
 <style>
+/* ============================================
+   FOOTER - COMPLETE STYLES
+   ============================================ */
 .main-footer {
     background: #0a1a2a;
     color: #e0d5c8;
     border-top: 4px solid #c9a84c;
     margin-top: 50px;
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   BRAND
+   ============================================ */
+.footer-logo {
+    margin-bottom: 10px;
 }
 .footer-title {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     color: #fff;
+    font-size: 20px;
+    letter-spacing: 1px;
 }
 .footer-motto {
     font-family: 'Playfair Display', serif;
@@ -96,75 +143,183 @@
     color: #b0a89a;
     line-height: 1.8;
 }
+
+/* ============================================
+   HEADINGS & LINKS
+   ============================================ */
 .footer-heading {
     font-family: 'Playfair Display', serif;
     color: #fff;
     font-weight: 700;
     border-bottom: 2px solid #c9a84c;
     padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    letter-spacing: 1px;
 }
 .footer-links {
     list-style: none;
     padding: 0;
+    margin: 0;
+}
+.footer-links li {
+    margin-bottom: 6px;
 }
 .footer-links a {
     color: #b0a89a;
     text-decoration: none;
     font-family: 'Times New Roman', serif;
     font-size: 14px;
+    transition: all 0.3s ease;
 }
 .footer-links a:hover {
     color: #c9a84c;
+    padding-left: 5px;
 }
+
+/* ============================================
+   SOCIAL ICONS
+   ============================================ */
 .footer-social .social-link {
     display: inline-block;
     width: 36px;
     height: 36px;
     line-height: 36px;
     text-align: center;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     color: #b0a89a;
     border-radius: 50%;
-    margin-right: 8px;
-    transition: all 0.3s;
+    margin-right: 6px;
+    transition: all 0.3s ease;
+    font-size: 14px;
 }
 .footer-social .social-link:hover {
     background: #c9a84c;
     color: #0a1a2a;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   NEWSLETTER
+   ============================================ */
+.footer-newsletter .input-group {
+    border-radius: 4px;
+    overflow: hidden;
 }
 .footer-newsletter .form-control {
-    border-radius: 0;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: #fff;
+    padding: 10px 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+}
+.footer-newsletter .form-control::placeholder {
+    color: #6c757d;
+}
+.footer-newsletter .form-control:focus {
+    border-color: #c9a84c;
+    box-shadow: 0 0 0 0.2rem rgba(201, 168, 76, 0.15);
+    background: rgba(255, 255, 255, 0.08);
 }
 .footer-newsletter .btn {
     border-radius: 0;
     background: #c9a84c;
     border: none;
     color: #0a1a2a;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-family: 'Times New Roman', serif;
 }
+.footer-newsletter .btn:hover {
+    background: #b89a3a;
+}
+
+/* ============================================
+   CONTACT INFO
+   ============================================ */
 .footer-contact p {
     font-family: 'Times New Roman', serif;
     font-size: 14px;
     color: #b0a89a;
+    margin-bottom: 4px;
 }
 .footer-contact i {
     color: #c9a84c;
-    width: 20px;
+    width: 22px;
+    text-align: center;
+    margin-right: 8px;
 }
+
+/* ============================================
+   WEATHER WIDGET
+   ============================================ */
+.footer-weather {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 15px;
+}
+.weather-widget {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.weather-widget .weather-icon {
+    font-size: 28px;
+    color: #c9a84c;
+}
+.weather-widget .weather-info {
+    flex: 1;
+}
+.weather-widget .temp {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #fff;
+}
+.weather-widget .condition {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #b0a89a;
+    text-transform: capitalize;
+}
+.weather-widget .weather-time {
+    text-align: right;
+}
+.weather-widget .weather-time span {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #b0a89a;
+}
+.weather-widget .weather-time span:first-child {
+    font-weight: 700;
+    color: #c9a84c;
+    font-size: 15px;
+}
+
+/* ============================================
+   FOOTER BOTTOM
+   ============================================ */
 .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding: 15px 0;
+    margin-top: 30px;
 }
 .copyright {
     font-family: 'Times New Roman', serif;
     font-size: 13px;
     color: #6c757d;
+    margin: 0;
 }
 .footer-bottom-links {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 .footer-bottom-links li {
     display: inline-block;
@@ -175,8 +330,71 @@
     text-decoration: none;
     font-family: 'Times New Roman', serif;
     font-size: 13px;
+    transition: all 0.3s ease;
 }
 .footer-bottom-links a:hover {
     color: #c9a84c;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 991.98px) {
+    .footer-bottom .text-end {
+        text-align: center !important;
+        margin-top: 10px;
+    }
+    .footer-bottom-links li {
+        margin: 0 10px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .main-footer .row > div {
+        margin-bottom: 30px;
+    }
+    .main-footer .row > div:last-child {
+        margin-bottom: 0;
+    }
+    .weather-widget {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .weather-widget .weather-time {
+        text-align: left;
+        width: 100%;
+    }
+    .footer-bottom-links {
+        margin-top: 10px;
+    }
+    .footer-bottom-links li {
+        display: inline-block;
+        margin: 0 8px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .footer-logo {
+        height: 35px;
+    }
+    .footer-title {
+        font-size: 18px;
+    }
+    .footer-description {
+        font-size: 13px;
+    }
+    .footer-heading {
+        font-size: 15px;
+    }
+    .footer-newsletter .form-control {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+    .weather-widget .temp {
+        font-size: 16px;
+    }
+    .weather-widget .weather-icon {
+        font-size: 22px;
+    }
 }
 </style>
