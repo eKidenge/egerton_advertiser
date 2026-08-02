@@ -8,6 +8,7 @@
     <style>
         /* ============================================
            GOVERNMENT-STYLE WELCOME EMAIL
+           OFFICIAL & AUTHORITATIVE DESIGN
            ============================================ */
         
         * {
@@ -443,9 +444,9 @@
                 Click the button below to access your dashboard and start exploring:
             </p>
             
-            <!-- Dashboard Button -->
+            <!-- Dashboard Button - FIXED URL -->
             <div style="text-align: center; margin: 20px 0 10px;">
-                <a href="{{ site_url }}{% url 'dashboard:dashboard' %}" class="btn">
+                <a href="{{ site_url }}{% url 'dashboard:home' %}" class="btn">
                     🔐 Go to Dashboard
                 </a>
             </div>
@@ -476,9 +477,9 @@
             <div class="footer-tagline">Official Government News Portal</div>
             
             <p style="margin-top: 8px;">
-                <a href="{{ site_url }}{% url 'privacy_policy' %}">Privacy Policy</a>
+                <a href="{{ site_url }}/privacy-policy/">Privacy Policy</a>
                 <span class="footer-divider">|</span>
-                <a href="{{ site_url }}{% url 'terms_of_service' %}">Terms of Service</a>
+                <a href="{{ site_url }}/terms-of-service/">Terms of Service</a>
                 <span class="footer-divider">|</span>
                 <a href="mailto:support@egertonadvertiser.com">Contact Us</a>
             </p>

@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
 from .models import User, UserActivityLog, UserProfile
 import re
 
@@ -114,7 +115,7 @@ class UserRegistrationForm(UserCreationForm):
         return terms
 
 
-class UserLoginForm(AuthenticationForm):
+class UserLoginForm(forms.Form):
     """Form for user login"""
     username = forms.CharField(
         max_length=150,
@@ -135,6 +136,46 @@ class UserLoginForm(AuthenticationForm):
         initial=False,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+        
+        # Debug output
+        print(f"Form clean: username={username}, password={password}")
+        
+        if username and password:
+            user = None
+            
+            # Try to find user by username
+            try:
+                user = User.objects.get(username=username)
+                print(f"User found by username: {user.username}")
+            except User.DoesNotExist:
+                # Try to find by email
+                try:
+                    user = User.objects.get(email=username)
+                    print(f"User found by email: {user.username}")
+                except User.DoesNotExist:
+                    print("No user found")
+                    raise ValidationError('Invalid username or password.')
+            
+            # Check if user is active
+            if user and not user.is_active:
+                raise ValidationError('This account is inactive. Please contact support.')
+            
+            # Authenticate the user
+            if user:
+                auth_user = authenticate(username=user.username, password=password)
+                if auth_user is None:
+                    print("Authentication failed - wrong password")
+                    raise ValidationError('Invalid username or password.')
+                else:
+                    print("Authentication successful!")
+                    cleaned_data['user'] = auth_user
+        
+        return cleaned_data
 
 
 class UserProfileForm(forms.ModelForm):

@@ -8,3 +8,10 @@ ERROR 2026-08-02 11:17:45,556 views 10228 1188 Field 'password2': The password i
 ERROR 2026-08-02 11:19:07,459 views 10228 1188 Failed to send welcome email: accounts/emails/welcome.html
 WARNING 2026-08-02 11:27:30,837 views 7916 11172 Welcome email not sent: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
 WARNING 2026-08-02 11:27:35,354 views 7916 11172 Auto-login issue: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+WARNING 2026-08-02 11:57:34,092 views 4680 10020 Welcome email not sent: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+WARNING 2026-08-02 11:57:38,903 views 4680 10020 Auto-login issue: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+WARNING 2026-08-02 12:05:00,474 views 4680 8360 Auto-login issue: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+WARNING 2026-08-02 12:21:26,604 views 4680 8360 Auto-login issue: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+ERROR 2026-08-02 12:38:47,264 views 1188 6836 Form errors: 
+ERROR 2026-08-02 12:39:00,975 views 1188 6836 Form errors: 
+WARNING 2026-08-02 13:06:34,295 log 9280 8544 Forbidden (CSRF token from POST incorrect.): /accounts/login/

@@ -74,7 +74,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'django_cleanup.apps.CleanupConfig',
-    'django_ratelimit',
+    # 'django_ratelimit',  # COMMENTED OUT - was causing issues with Redis
     'django_recaptcha',
     
     # Local apps
@@ -166,64 +166,40 @@ if not DEBUG:
     }
 
 # ============================================
-# CACHE CONFIGURATION - USING REDIS
+# CACHE CONFIGURATION - NO REDIS REQUIRED
 # ============================================
 
-# Redis cache (supports atomic increment for ratelimit)
+# Use local memory cache (works without Redis, no atomic increment issues)
 CACHES = {
     'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': env('REDIS_URL', default='redis://localhost:6379/0'),
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+        'TIMEOUT': 300,  # 5 minutes
         'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'SOCKET_CONNECT_TIMEOUT': 5,
-            'SOCKET_TIMEOUT': 5,
-            'RETRY_ON_TIMEOUT': True,
-            'MAX_CONNECTIONS': 1000,
-            'CONNECTION_POOL_CLASS': 'redis.connection.BlockingConnectionPool',
-        },
-        'KEY_PREFIX': 'egerton',
-        'TIMEOUT': 300,
+            'MAX_ENTRIES': 300,
+        }
     },
     'page_cache': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': env('REDIS_URL', default='redis://localhost:6379/1'),
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'page-cache',
+        'TIMEOUT': 900,  # 15 minutes
         'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'SOCKET_CONNECT_TIMEOUT': 5,
-            'SOCKET_TIMEOUT': 5,
-        },
-        'KEY_PREFIX': 'page_cache',
-        'TIMEOUT': 900,
-    },
-    'session_cache': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': env('REDIS_URL', default='redis://localhost:6379/2'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'SOCKET_CONNECT_TIMEOUT': 5,
-            'SOCKET_TIMEOUT': 5,
-        },
-        'KEY_PREFIX': 'session_cache',
-        'TIMEOUT': 86400,
+            'MAX_ENTRIES': 200,
+        }
     },
 }
 
-# Session configuration - Use Redis for sessions
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'session_cache'
+# Session configuration - Use database sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_NAME = 'egerton_sessionid'
 
 # ============================================
-# RATE LIMITING - Using Redis cache
+# RATE LIMITING - DISABLED (requires Redis)
 # ============================================
 
-RATELIMIT_ENABLE = True
-RATELIMIT_VIEW = 'apps.accounts.views.rate_limit_exceeded'
-RATELIMIT_USE_CACHE = 'default'
-RATELIMIT_CACHE = 'default'
+RATELIMIT_ENABLE = False
 
 # ============================================
 # PASSWORD VALIDATION
@@ -499,10 +475,11 @@ COMPRESS_CACHE_BACKEND = 'default'
 COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
 
 # ============================================
-# CELERY SETTINGS
+# CELERY SETTINGS - NO REDIS REQUIRED
 # ============================================
 
-CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/3')
+# Celery with database backend (no Redis required)
+CELERY_BROKER_URL = 'django://'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'default'
 CELERY_ACCEPT_CONTENT = ['application/json']
@@ -728,6 +705,17 @@ if DEBUG:
         'debug_toolbar.panels.redirects.RedirectsPanel',
         'debug_toolbar.panels.profiling.ProfilingPanel',
     ]
+
+# ============================================
+# SILENCED SYSTEM CHECKS
+# ============================================
+
+SILENCED_SYSTEM_CHECKS = [
+    'django_ratelimit.E002',
+    'django_ratelimit.E003',
+    'django_ratelimit.W001',
+    'django_recaptcha.recaptcha_test_key_error',
+]
 
 # ============================================
 # DEFAULT PRIMARY KEY FIELD

@@ -43,17 +43,19 @@ def get_role_dashboard_url(user):
     Get the appropriate dashboard URL name based on user role
     """
     # Map roles to dashboard URL names
+    # dashboard:home is the main dashboard view
+    # dashboard:admin_dashboard is the admin view
     role_dashboard_map = {
         'super_admin': 'dashboard:admin_dashboard',
         'admin': 'dashboard:admin_dashboard',
-        'editor': 'dashboard:dashboard',
-        'journalist': 'dashboard:dashboard',
-        'subscriber': 'dashboard:dashboard',
-        'advertiser': 'dashboard:dashboard',
+        'editor': 'dashboard:home',
+        'journalist': 'dashboard:home',
+        'subscriber': 'dashboard:home',
+        'advertiser': 'dashboard:home',
     }
     
     # Return the dashboard URL name for this role, default to regular dashboard
-    return role_dashboard_map.get(user.role, 'dashboard:dashboard')
+    return role_dashboard_map.get(user.role, 'dashboard:home')
 
 
 def redirect_to_role_dashboard(user):
@@ -75,22 +77,52 @@ def user_login(request):
     
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
+        
+        # Debug: Check form data
+        print("=" * 60)
+        print("LOGIN FORM DATA:")
+        print(f"POST data: {request.POST}")
+        
         if form.is_valid():
-            username = form.cleaned_data['username']
+            username_or_email = form.cleaned_data['username']
             password = form.cleaned_data['password']
             remember_me = form.cleaned_data.get('remember_me', False)
             
-            user = authenticate(request, username=username, password=password)
+            print(f"Username/Email: '{username_or_email}'")
+            print(f"Password length: {len(password)}")
+            
+            # Check if user exists
+            user_obj = None
+            try:
+                user_obj = User.objects.get(username=username_or_email)
+                print(f"✅ User found by username: {user_obj.username}")
+            except User.DoesNotExist:
+                print(f"❌ No user found with username: {username_or_email}")
+                try:
+                    user_obj = User.objects.get(email=username_or_email)
+                    print(f"✅ User found by email: {user_obj.username}")
+                except User.DoesNotExist:
+                    print(f"❌ No user found with email: {username_or_email}")
+            
+            # Try authentication
+            user = authenticate(request, username=username_or_email, password=password)
+            
+            if user is None and user_obj is not None:
+                print(f"Trying to authenticate with username: {user_obj.username}")
+                user = authenticate(request, username=user_obj.username, password=password)
             
             if user is not None:
+                print(f"✅ AUTHENTICATION SUCCESSFUL: {user.username}")
+                
                 if user.is_account_locked():
                     messages.error(request, 'Your account is temporarily locked. Please try again later.')
                     return render(request, 'accounts/login.html', {'form': form})
                 
                 try:
                     login(request, user)
+                    print(f"✅ LOGIN SUCCESSFUL for {user.username}")
                 except Exception as e:
-                    logger.error(f"Login error: {str(e)}")
+                    print(f"Login error: {str(e)}")
                     messages.error(request, 'Login failed. Please try again.')
                     return render(request, 'accounts/login.html', {'form': form})
                 
@@ -106,33 +138,55 @@ def user_login(request):
                     referer=request.META.get('HTTP_REFERER', '')
                 )
                 
-                # Reset failed attempts
                 user.failed_login_attempts = 0
                 user.save(update_fields=['failed_login_attempts'])
                 
                 if not remember_me:
                     request.session.set_expiry(0)
                 else:
-                    request.session.set_expiry(1209600)  # 2 weeks
+                    request.session.set_expiry(1209600)
                 
                 messages.success(request, f'Welcome back, {user.get_full_name() or user.username}!')
                 
-                # Check for next URL parameter first
                 next_url = request.GET.get('next')
                 if next_url:
                     return redirect(next_url)
                 
-                # Redirect to role-specific dashboard
                 return redirect_to_role_dashboard(user)
             else:
+                # Check password manually
+                if user_obj is not None:
+                    from django.contrib.auth.hashers import check_password
+                    is_correct = check_password(password, user_obj.password)
+                    print(f"Password check result: {is_correct}")
+                    
+                    if is_correct:
+                        print("✅ Password is correct but authentication failed!")
+                    else:
+                        print("❌ Password is incorrect")
+                
                 try:
-                    user = User.objects.get(username=username)
+                    if '@' in username_or_email:
+                        user = User.objects.get(email=username_or_email)
+                    else:
+                        user = User.objects.get(username=username_or_email)
                     user.increment_failed_attempts()
                 except User.DoesNotExist:
                     pass
-                messages.error(request, 'Invalid username or password.')
+                messages.error(request, 'Invalid username/email or password.')
         else:
-            messages.error(request, 'Please correct the errors below.')
+            # Print form errors in detail
+            print("❌ FORM IS INVALID")
+            print(f"Form errors: {form.errors}")
+            print(f"Form non-field errors: {form.non_field_errors()}")
+            
+            # Add form errors to messages
+            for field, errors in form.errors.items():
+                for error in errors:
+                    if field == '__all__':
+                        messages.error(request, error)
+                    else:
+                        messages.error(request, f'{field}: {error}')
     else:
         form = UserLoginForm()
     
@@ -818,4 +872,4 @@ def handler500(request):
 
 def rate_limit_exceeded(request, exception=None):
     """Rate limit exceeded handler"""
-    return render(request, '429.html', status=429)
+    return render(request, '429.html', status=429)   #give full as you say, hope you know that i have role based
