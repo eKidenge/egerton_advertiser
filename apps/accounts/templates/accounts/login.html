@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Login - The Egerton Advertiser{% endblock %}
+{% block title %}Login - ENVIRONMENT & SOCIETY{% endblock %}
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Merriweather:wght@300;400;700;900&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
@@ -9,13 +9,13 @@
 
 <style>
     /* ============================================
-       GOVERNMENT-STYLE LOGIN PAGE
+       GOVERNMENT-STYLE LOGIN PAGE - GREEN THEME
        OVERRIDE BASE TEMPLATE STYLES
        ============================================ */
     
     /* Override body styles from base template */
     body {
-        background: #f5f0eb !important;
+        background: #e8f5e9 !important;
         font-family: 'Merriweather', 'Times New Roman', serif !important;
         overflow: hidden !important;
         height: 100vh !important;
@@ -41,7 +41,7 @@
         max-width: 100% !important;
         height: 100vh !important;
         overflow: hidden !important;
-        background: #f5f0eb !important;
+        background: #e8f5e9 !important;
     }
     
     /* --- Main Container - Full Screen --- */
@@ -51,7 +51,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #f5f0eb 0%, #e8e0d8 100%);
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
         padding: 20px;
         overflow: hidden;
         position: fixed;
@@ -65,9 +65,9 @@
         max-width: 460px;
         background: #ffffff;
         border-radius: 12px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 4px 20px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 20px 60px rgba(26, 92, 58, 0.15), 0 4px 20px rgba(0, 0, 0, 0.05);
         padding: 35px 40px 30px;
-        border: 1px solid rgba(26, 60, 94, 0.08);
+        border: 1px solid rgba(26, 92, 58, 0.08);
         position: relative;
         overflow: hidden;
         max-height: 95vh;
@@ -80,15 +80,15 @@
     }
     
     .login-container::-webkit-scrollbar-track {
-        background: #f5f0eb;
+        background: #e8f5e9;
     }
     
     .login-container::-webkit-scrollbar-thumb {
-        background: #c9a84c;
+        background: #a5d6a7;
         border-radius: 2px;
     }
     
-    /* --- Decorative Top Border --- */
+    /* --- Decorative Top Border - Green Theme --- */
     .login-container::before {
         content: '';
         position: absolute;
@@ -96,7 +96,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #1a3c5e, #c9a84c, #1a3c5e);
+        background: linear-gradient(90deg, #1a5c3a, #a5d6a7, #1a5c3a);
         background-size: 200% 100%;
         animation: shimmer 3s ease-in-out infinite;
     }
@@ -106,7 +106,7 @@
         50% { background-position: 100% 50%; }
     }
     
-    /* --- Government Seal / Emblem --- */
+    /* --- Government Seal / Emblem - Green Theme --- */
     .gov-seal {
         text-align: center;
         margin-bottom: 15px;
@@ -116,13 +116,13 @@
     .gov-seal .seal-icon {
         width: 65px;
         height: 65px;
-        background: #1a3c5e;
+        background: #1a5c3a;
         border-radius: 50%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 3px solid #c9a84c;
-        box-shadow: 0 0 0 5px rgba(26, 60, 94, 0.1);
+        border: 3px solid #a5d6a7;
+        box-shadow: 0 0 0 5px rgba(26, 92, 58, 0.1);
         transition: all 0.3s ease;
     }
     
@@ -133,54 +133,54 @@
     
     .gov-seal .seal-icon:hover {
         transform: scale(1.05);
-        box-shadow: 0 0 0 8px rgba(26, 60, 94, 0.15);
+        box-shadow: 0 0 0 8px rgba(26, 92, 58, 0.15);
     }
     
     .gov-seal .seal-text {
         margin-top: 5px;
-        font-family: 'Cormorant Garamond', serif;
+        font-family: 'Cormorant Garamond', 'Playfair Display', serif;
         font-size: 11px;
-        color: #6c757d;
+        color: #2e7d32;
         letter-spacing: 3px;
         text-transform: uppercase;
-        font-weight: 600;
+        font-weight: 700;
     }
     
     /* --- Header --- */
     .login-header {
         text-align: center;
-        border-bottom: 2px solid #1a3c5e;
+        border-bottom: 3px solid #1a5c3a;
         padding-bottom: 15px;
         margin-bottom: 20px;
     }
     
     .login-header h2 {
-        font-family: 'Playfair Display', serif;
+        font-family: 'Playfair Display', 'Times New Roman', serif;
         font-weight: 900;
-        color: #1a3c5e;
+        color: #1a5c3a;
         font-size: 24px;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
         margin-bottom: 3px;
         text-transform: uppercase;
     }
     
     .login-header .subtitle {
-        font-family: 'Cormorant Garamond', serif;
-        color: #6c757d;
+        font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+        color: #2e7d32;
         font-size: 14px;
-        font-weight: 400;
+        font-weight: 600;
         letter-spacing: 2px;
     }
     
     .login-header .subtitle i {
-        color: #c9a84c;
+        color: #a5d6a7;
         margin: 0 5px;
         font-size: 10px;
     }
     
     /* --- Alert Messages --- */
     .alert {
-        font-family: 'Merriweather', serif;
+        font-family: 'Merriweather', 'Times New Roman', serif;
         border-radius: 6px;
         padding: 10px 15px;
         margin-bottom: 15px;
@@ -204,13 +204,13 @@
     }
     
     .alert-success {
-        background: #edf7f0;
-        border-color: #28a745;
-        color: #155724;
+        background: #e8f5e9;
+        border-color: #2e7d32;
+        color: #1a5c3a;
     }
     
     .alert-success i {
-        color: #28a745;
+        color: #2e7d32;
         margin-right: 8px;
         font-size: 14px;
     }
@@ -221,9 +221,9 @@
     }
     
     .form-group label {
-        font-family: 'Merriweather', serif;
+        font-family: 'Merriweather', 'Times New Roman', serif;
         font-weight: 700;
-        color: #1a3c5e;
+        color: #1a5c3a;
         font-size: 13px;
         display: block;
         margin-bottom: 4px;
@@ -231,33 +231,33 @@
     }
     
     .form-group label i {
-        color: #c9a84c;
+        color: #a5d6a7;
         margin-right: 6px;
         width: 16px;
         font-size: 13px;
     }
     
     .form-control {
-        font-family: 'Merriweather', serif;
+        font-family: 'Merriweather', 'Times New Roman', serif;
         border-radius: 6px;
-        border: 2px solid #d4cdc5;
+        border: 2px solid #c8e6c9;
         padding: 10px 14px;
         font-size: 14px;
         transition: all 0.3s ease;
-        background: #fcfbf9;
+        background: #f5faf5;
         width: 100%;
-        color: #1a3c5e;
+        color: #1a5c3a;
     }
     
     .form-control:focus {
-        border-color: #1a3c5e;
-        box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.15);
+        border-color: #1a5c3a;
+        box-shadow: 0 0 0 3px rgba(26, 92, 58, 0.15);
         background: #ffffff;
         outline: none;
     }
     
     .form-control::placeholder {
-        color: #a8a09a;
+        color: #8a9a8a;
         font-weight: 300;
         font-size: 13px;
     }
@@ -268,14 +268,14 @@
     }
     
     .form-control.is-valid {
-        border-color: #28a745;
-        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+        border-color: #2e7d32;
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
     }
     
     .text-danger {
         color: #dc3545;
         font-size: 12px;
-        font-family: 'Merriweather', serif;
+        font-family: 'Merriweather', 'Times New Roman', serif;
         margin-top: 3px;
         display: block;
     }
@@ -289,7 +289,7 @@
     .form-check-input {
         width: 16px;
         height: 16px;
-        border: 2px solid #d4cdc5;
+        border: 2px solid #c8e6c9;
         border-radius: 4px;
         margin-right: 8px;
         cursor: pointer;
@@ -298,20 +298,25 @@
     }
     
     .form-check-input:checked {
-        background-color: #1a3c5e;
-        border-color: #1a3c5e;
+        background-color: #1a5c3a;
+        border-color: #1a5c3a;
     }
     
     .form-check-input:focus {
-        box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.15);
+        box-shadow: 0 0 0 3px rgba(26, 92, 58, 0.15);
         outline: none;
     }
     
     .form-check-label {
-        font-family: 'Merriweather', serif;
-        color: #4a4a4a;
+        font-family: 'Merriweather', 'Times New Roman', serif;
+        color: #2e4a2e;
         font-size: 13px;
         cursor: pointer;
+        font-weight: 600;
+    }
+    
+    .form-check-label i {
+        color: #a5d6a7;
     }
     
     .form-options {
@@ -324,32 +329,32 @@
     }
     
     .forgot-link {
-        font-family: 'Merriweather', serif;
-        color: #1a3c5e;
+        font-family: 'Merriweather', 'Times New Roman', serif;
+        color: #1a5c3a;
         text-decoration: none;
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 700;
         transition: all 0.3s ease;
     }
     
     .forgot-link i {
-        color: #c9a84c;
+        color: #a5d6a7;
         margin-right: 4px;
         font-size: 12px;
     }
     
     .forgot-link:hover {
-        color: #0e2a44;
+        color: #2e7d32;
         text-decoration: underline;
     }
     
-    /* --- Login Button --- */
+    /* --- Login Button - Green Theme --- */
     .btn-login {
-        background: #1a3c5e;
+        background: #1a5c3a;
         color: #ffffff;
         border: none;
         padding: 12px 25px;
-        font-family: 'Merriweather', serif;
+        font-family: 'Merriweather', 'Times New Roman', serif;
         font-weight: 700;
         font-size: 15px;
         border-radius: 6px;
@@ -378,9 +383,9 @@
     }
     
     .btn-login:hover {
-        background: #0e2a44;
+        background: #0d3d26;
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(26, 60, 94, 0.35);
+        box-shadow: 0 8px 25px rgba(26, 92, 58, 0.35);
     }
     
     .btn-login:active {
@@ -402,17 +407,17 @@
     .divider::after {
         content: '';
         flex: 1;
-        border-bottom: 1px solid #e0d8d0;
+        border-bottom: 1px solid #c8e6c9;
     }
     
     .divider span {
         padding: 0 18px;
-        color: #6c757d;
-        font-family: 'Cormorant Garamond', serif;
+        color: #2e7d32;
+        font-family: 'Cormorant Garamond', 'Playfair Display', serif;
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 3px;
-        font-weight: 600;
+        font-weight: 700;
     }
     
     /* --- Footer / Register Link --- */
@@ -422,18 +427,19 @@
     }
     
     .login-footer p {
-        font-family: 'Merriweather', serif;
-        color: #6c757d;
+        font-family: 'Merriweather', 'Times New Roman', serif;
+        color: #2e7d32;
         font-size: 13px;
         margin-bottom: 8px;
+        font-weight: 600;
     }
     
     .btn-register {
         background: transparent;
-        color: #1a3c5e;
-        border: 2px solid #1a3c5e;
+        color: #1a5c3a;
+        border: 2px solid #1a5c3a;
         padding: 8px 25px;
-        font-family: 'Merriweather', serif;
+        font-family: 'Merriweather', 'Times New Roman', serif;
         font-weight: 700;
         font-size: 13px;
         border-radius: 6px;
@@ -448,10 +454,10 @@
     }
     
     .btn-register:hover {
-        background: #1a3c5e;
+        background: #1a5c3a;
         color: #ffffff;
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(26, 60, 94, 0.25);
+        box-shadow: 0 8px 25px rgba(26, 92, 58, 0.25);
         text-decoration: none;
     }
     
@@ -460,18 +466,19 @@
         text-align: center;
         margin-top: 18px;
         padding-top: 15px;
-        border-top: 1px solid #f0ebe5;
+        border-top: 1px solid #e8f5e9;
     }
     
     .security-footer small {
-        font-family: 'Cormorant Garamond', serif;
-        color: #8a8580;
+        font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+        color: #2e7d32;
         font-size: 11px;
         letter-spacing: 1px;
+        font-weight: 600;
     }
     
     .security-footer small i {
-        color: #28a745;
+        color: #2e7d32;
         margin-right: 4px;
     }
     
@@ -511,7 +518,7 @@
     }
     
     .password-toggle:hover {
-        color: #1a3c5e;
+        color: #1a5c3a;
         transform: translateY(-50%) scale(1.1);
     }
     
@@ -597,20 +604,20 @@
 <div class="login-wrapper">
     <div class="login-container">
         
-        <!-- Government Seal -->
+        <!-- Government Seal - Green Theme -->
         <div class="gov-seal">
             <div class="seal-icon">
-                <i class="fas fa-gavel"></i>
+                <i class="fas fa-leaf"></i>
             </div>
             <div class="seal-text">Official Portal</div>
         </div>
         
-        <!-- Header -->
+        <!-- Header - ENVIRONMENT & SOCIETY -->
         <div class="login-header">
-            <h2>The Egerton Advertiser</h2>
+            <h2>ENVIRONMENT &amp; SOCIETY</h2>
             <div class="subtitle">
                 <i class="fas fa-asterisk"></i> 
-                Official Government News Portal
+                Official Publication on Environment and Society
                 <i class="fas fa-asterisk"></i>
             </div>
         </div>
@@ -684,7 +691,7 @@
                            id="remember_me" 
                            class="form-check-input">
                     <label for="remember_me" class="form-check-label">
-                        <i class="fas fa-check-circle" style="color: #c9a84c;"></i> Remember me
+                        <i class="fas fa-check-circle"></i> Remember me
                     </label>
                 </div>
                 <a href="{% url 'accounts:forgot_password' %}" class="forgot-link">
@@ -793,9 +800,9 @@
             rememberMe.addEventListener('change', function() {
                 const label = this.nextElementSibling;
                 if (this.checked) {
-                    label.style.color = '#1a3c5e';
+                    label.style.color = '#1a5c3a';
                 } else {
-                    label.style.color = '#4a4a4a';
+                    label.style.color = '#2e4a2e';
                 }
             });
         }
@@ -813,7 +820,7 @@
         });
         
         console.log('🔐 Login page loaded successfully');
-        console.log('📰 The Egerton Advertiser - Official Portal');
+        console.log('🌿 ENVIRONMENT & SOCIETY - Official Portal');
         
     })();
 </script>
