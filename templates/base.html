@@ -112,8 +112,8 @@
                 <div class="col-6 col-md-3">
                     <div class="logo-container">
                         <a href="{% url 'home' %}" class="logo-link" style="color: white; text-decoration: none;">
-                            <!-- FIXED: Removed filter to make logo visible -->
-                            <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" class="site-logo">
+                            <!-- FIXED: Added inline styles to override CSS and show original logo -->
+                            <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" class="site-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important;">
                             <span class="logo-text" style="color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                                 ENVIRONMENT<br><small style="color: #a5d6a7;">&amp; SOCIETY</small>
                             </span>
