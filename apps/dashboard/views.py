@@ -34,7 +34,7 @@ from apps.settings_manager.forms import GeneralSettingsForm, EmailSettingsForm, 
 
 
 # ============================================
-# USER DASHBOARD - MAIN (ADD THIS)
+# USER DASHBOARD - MAIN
 # ============================================
 
 @login_required
@@ -594,7 +594,7 @@ def get_admin_chart_data():
 
 
 # ============================================
-# ARTICLE MANAGEMENT - FULL CRUD
+# ADMIN - ARTICLES
 # ============================================
 
 @login_required
@@ -633,7 +633,7 @@ def admin_articles(request):
         'status_filter': status,
         'search': search,
     }
-    return render(request, 'dashboard/admin_articles.html', context)
+    return render(request, 'articles/article_list.html', context)
 
 
 @login_required
@@ -649,11 +649,11 @@ def admin_article_create(request):
             form.save_m2m()
             
             messages.success(request, f'Article "{article.title}" created successfully!')
-            return redirect('dashboard:admin_articles')
+            return redirect('dashboard:article_list')
     else:
         form = ArticleForm()
     
-    return render(request, 'dashboard/admin_article_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'articles/article_form.html', {'form': form, 'action': 'Create'})
 
 
 @login_required
@@ -667,11 +667,11 @@ def admin_article_edit(request, article_id):
         if form.is_valid():
             article = form.save()
             messages.success(request, f'Article "{article.title}" updated successfully!')
-            return redirect('dashboard:admin_articles')
+            return redirect('dashboard:article_list')
     else:
         form = ArticleForm(instance=article)
     
-    return render(request, 'dashboard/admin_article_form.html', {'form': form, 'action': 'Edit', 'article': article})
+    return render(request, 'articles/article_form.html', {'form': form, 'action': 'Edit', 'article': article})
 
 
 @login_required
@@ -684,12 +684,12 @@ def admin_article_delete(request, article_id):
         title = article.title
         article.delete()
         messages.success(request, f'Article "{title}" deleted successfully!')
-        return redirect('dashboard:admin_articles')
+        return redirect('dashboard:article_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'articles/confirm_delete.html', {
         'object': article,
         'type': 'Article',
-        'back_url': 'dashboard:admin_articles'
+        'back_url': 'dashboard:article_list'
     })
 
 
@@ -709,7 +709,7 @@ def admin_article_publish(request, article_id):
         messages.success(request, f'Article "{article.title}" published!')
     
     article.save()
-    return redirect('dashboard:admin_articles')
+    return redirect('dashboard:article_list')
 
 
 @login_required
@@ -722,7 +722,7 @@ def admin_article_feature(request, article_id):
     
     status = 'featured' if article.is_featured else 'unfeatured'
     messages.success(request, f'Article "{article.title}" {status}!')
-    return redirect('dashboard:admin_articles')
+    return redirect('dashboard:article_list')
 
 
 @login_required
@@ -735,11 +735,11 @@ def admin_article_breaking(request, article_id):
     
     status = 'marked as breaking' if article.is_breaking else 'removed from breaking'
     messages.success(request, f'Article "{article.title}" {status}!')
-    return redirect('dashboard:admin_articles')
+    return redirect('dashboard:article_list')
 
 
 # ============================================
-# CATEGORY MANAGEMENT - FULL CRUD
+# ADMIN - CATEGORIES
 # ============================================
 
 @login_required
@@ -749,7 +749,7 @@ def admin_categories(request):
     categories = Category.objects.all().order_by('order', 'name')
     
     context = {'categories': categories}
-    return render(request, 'dashboard/admin_categories.html', context)
+    return render(request, 'categories/category_list.html', context)
 
 
 @login_required
@@ -761,11 +761,11 @@ def admin_category_create(request):
         if form.is_valid():
             category = form.save()
             messages.success(request, f'Category "{category.name}" created!')
-            return redirect('dashboard:admin_categories')
+            return redirect('dashboard:category_list')
     else:
         form = CategoryForm()
     
-    return render(request, 'dashboard/admin_category_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'categories/category_form.html', {'form': form, 'action': 'Create'})
 
 
 @login_required
@@ -779,11 +779,11 @@ def admin_category_edit(request, category_id):
         if form.is_valid():
             form.save()
             messages.success(request, f'Category "{category.name}" updated!')
-            return redirect('dashboard:admin_categories')
+            return redirect('dashboard:category_list')
     else:
         form = CategoryForm(instance=category)
     
-    return render(request, 'dashboard/admin_category_form.html', {'form': form, 'action': 'Edit', 'category': category})
+    return render(request, 'categories/category_form.html', {'form': form, 'action': 'Edit', 'category': category})
 
 
 @login_required
@@ -796,17 +796,17 @@ def admin_category_delete(request, category_id):
         name = category.name
         category.delete()
         messages.success(request, f'Category "{name}" deleted!')
-        return redirect('dashboard:admin_categories')
+        return redirect('dashboard:category_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'categories/confirm_delete.html', {
         'object': category,
         'type': 'Category',
-        'back_url': 'dashboard:admin_categories'
+        'back_url': 'dashboard:category_list'
     })
 
 
 # ============================================
-# TAG MANAGEMENT - FULL CRUD
+# ADMIN - TAGS
 # ============================================
 
 @login_required
@@ -816,7 +816,7 @@ def admin_tags(request):
     tags = Tag.objects.all().order_by('name')
     
     context = {'tags': tags}
-    return render(request, 'dashboard/admin_tags.html', context)
+    return render(request, 'tags/tag_list.html', context)
 
 
 @login_required
@@ -828,11 +828,11 @@ def admin_tag_create(request):
         if form.is_valid():
             tag = form.save()
             messages.success(request, f'Tag "{tag.name}" created!')
-            return redirect('dashboard:admin_tags')
+            return redirect('dashboard:tag_list')
     else:
         form = TagForm()
     
-    return render(request, 'dashboard/admin_tag_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'tags/tag_form.html', {'form': form, 'action': 'Create'})
 
 
 @login_required
@@ -846,11 +846,11 @@ def admin_tag_edit(request, tag_id):
         if form.is_valid():
             form.save()
             messages.success(request, f'Tag "{tag.name}" updated!')
-            return redirect('dashboard:admin_tags')
+            return redirect('dashboard:tag_list')
     else:
         form = TagForm(instance=tag)
     
-    return render(request, 'dashboard/admin_tag_form.html', {'form': form, 'action': 'Edit', 'tag': tag})
+    return render(request, 'tags/tag_form.html', {'form': form, 'action': 'Edit', 'tag': tag})
 
 
 @login_required
@@ -863,17 +863,17 @@ def admin_tag_delete(request, tag_id):
         name = tag.name
         tag.delete()
         messages.success(request, f'Tag "{name}" deleted!')
-        return redirect('dashboard:admin_tags')
+        return redirect('dashboard:tag_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'tags/confirm_delete.html', {
         'object': tag,
         'type': 'Tag',
-        'back_url': 'dashboard:admin_tags'
+        'back_url': 'dashboard:tag_list'
     })
 
 
 # ============================================
-# USER MANAGEMENT - FULL CRUD
+# ADMIN - USERS
 # ============================================
 
 @login_required
@@ -913,7 +913,7 @@ def admin_users(request):
         'search': search,
         'role_choices': User.ROLE_CHOICES,
     }
-    return render(request, 'dashboard/admin_users.html', context)
+    return render(request, 'accounts/user_list.html', context)
 
 
 @login_required
@@ -927,11 +927,11 @@ def admin_user_create(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             messages.success(request, f'User "{user.username}" created!')
-            return redirect('dashboard:admin_users')
+            return redirect('dashboard:user_list')
     else:
         form = UserCreateForm()
     
-    return render(request, 'dashboard/admin_user_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'accounts/user_form.html', {'form': form, 'action': 'Create'})
 
 
 @login_required
@@ -945,11 +945,11 @@ def admin_user_edit(request, user_id):
         if form.is_valid():
             form.save()
             messages.success(request, f'User "{user.username}" updated!')
-            return redirect('dashboard:admin_users')
+            return redirect('dashboard:user_list')
     else:
         form = UserEditForm(instance=user)
     
-    return render(request, 'dashboard/admin_user_form.html', {'form': form, 'action': 'Edit', 'edit_user': user})
+    return render(request, 'accounts/user_form.html', {'form': form, 'action': 'Edit', 'edit_user': user})
 
 
 @login_required
@@ -960,18 +960,18 @@ def admin_user_delete(request, user_id):
     
     if request.user == user:
         messages.error(request, 'You cannot delete your own account!')
-        return redirect('dashboard:admin_users')
+        return redirect('dashboard:user_list')
     
     if request.method == 'POST':
         username = user.username
         user.delete()
         messages.success(request, f'User "{username}" deleted!')
-        return redirect('dashboard:admin_users')
+        return redirect('dashboard:user_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'accounts/confirm_delete.html', {
         'object': user,
         'type': 'User',
-        'back_url': 'dashboard:admin_users'
+        'back_url': 'dashboard:user_list'
     })
 
 
@@ -983,18 +983,18 @@ def admin_user_toggle_active(request, user_id):
     
     if request.user == user:
         messages.error(request, 'You cannot deactivate your own account!')
-        return redirect('dashboard:admin_users')
+        return redirect('dashboard:user_list')
     
     user.is_active = not user.is_active
     user.save()
     
     status = 'activated' if user.is_active else 'deactivated'
     messages.success(request, f'User "{user.username}" {status}!')
-    return redirect('dashboard:admin_users')
+    return redirect('dashboard:user_list')
 
 
 # ============================================
-# COMMENT MANAGEMENT - FULL CRUD
+# ADMIN - COMMENTS
 # ============================================
 
 @login_required
@@ -1026,7 +1026,7 @@ def admin_comments(request):
         'search': search,
         'status_choices': Comment.STATUS_CHOICES,
     }
-    return render(request, 'dashboard/admin_comments.html', context)
+    return render(request, 'comments/comment_list.html', context)
 
 
 @login_required
@@ -1055,9 +1055,9 @@ def admin_comment_moderate(request, comment_id):
             messages.warning(request, 'Comment marked as spam!')
         
         comment.save()
-        return redirect('dashboard:admin_comments')
+        return redirect('dashboard:comment_list')
     
-    return render(request, 'dashboard/admin_comment_moderate.html', {'comment': comment})
+    return render(request, 'comments/comment_moderate.html', {'comment': comment})
 
 
 @login_required
@@ -1069,17 +1069,17 @@ def admin_comment_delete(request, comment_id):
     if request.method == 'POST':
         comment.delete()
         messages.success(request, 'Comment deleted!')
-        return redirect('dashboard:admin_comments')
+        return redirect('dashboard:comment_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'comments/confirm_delete.html', {
         'object': comment,
         'type': 'Comment',
-        'back_url': 'dashboard:admin_comments'
+        'back_url': 'dashboard:comment_list'
     })
 
 
 # ============================================
-# ADVERTISEMENT MANAGEMENT - FULL CRUD
+# ADMIN - ADVERTISEMENTS
 # ============================================
 
 @login_required
@@ -1111,7 +1111,7 @@ def admin_ads(request):
         'position_filter': position,
         'position_choices': Advertisement.POSITION_CHOICES,
     }
-    return render(request, 'dashboard/admin_ads.html', context)
+    return render(request, 'advertisements/ad_list.html', context)
 
 
 @login_required
@@ -1126,11 +1126,11 @@ def admin_ad_create(request):
             ad.save()
             form.save_m2m()
             messages.success(request, f'Ad "{ad.title}" created!')
-            return redirect('dashboard:admin_ads')
+            return redirect('dashboard:ad_list')
     else:
         form = AdvertisementForm()
     
-    return render(request, 'dashboard/admin_ad_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'advertisements/ad_form.html', {'form': form, 'action': 'Create'})
 
 
 @login_required
@@ -1144,11 +1144,11 @@ def admin_ad_edit(request, ad_id):
         if form.is_valid():
             form.save()
             messages.success(request, f'Ad "{ad.title}" updated!')
-            return redirect('dashboard:admin_ads')
+            return redirect('dashboard:ad_list')
     else:
         form = AdvertisementForm(instance=ad)
     
-    return render(request, 'dashboard/admin_ad_form.html', {'form': form, 'action': 'Edit', 'ad': ad})
+    return render(request, 'advertisements/ad_form.html', {'form': form, 'action': 'Edit', 'ad': ad})
 
 
 @login_required
@@ -1161,12 +1161,12 @@ def admin_ad_delete(request, ad_id):
         title = ad.title
         ad.delete()
         messages.success(request, f'Ad "{title}" deleted!')
-        return redirect('dashboard:admin_ads')
+        return redirect('dashboard:ad_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'advertisements/confirm_delete.html', {
         'object': ad,
         'type': 'Advertisement',
-        'back_url': 'dashboard:admin_ads'
+        'back_url': 'dashboard:ad_list'
     })
 
 
@@ -1187,11 +1187,11 @@ def admin_ad_approve(request, ad_id):
         ad.save()
         messages.warning(request, f'Ad "{ad.title}" rejected!')
     
-    return redirect('dashboard:admin_ads')
+    return redirect('dashboard:ad_list')
 
 
 # ============================================
-# CONTACT MESSAGE MANAGEMENT - FULL CRUD
+# ADMIN - CONTACTS
 # ============================================
 
 @login_required
@@ -1222,7 +1222,7 @@ def admin_contacts(request):
         'status_filter': status,
         'search': search,
     }
-    return render(request, 'dashboard/admin_contacts.html', context)
+    return render(request, 'contacts/contact_list.html', context)
 
 
 @login_required
@@ -1260,11 +1260,11 @@ def admin_contact_detail(request, contact_id):
                 pass
             
             messages.success(request, 'Reply sent successfully!')
-            return redirect('dashboard:admin_contacts')
+            return redirect('dashboard:contact_list')
     else:
         form = ContactReplyForm()
     
-    return render(request, 'dashboard/admin_contact_detail.html', {'contact': contact, 'form': form})
+    return render(request, 'contacts/contact_detail.html', {'contact': contact, 'form': form})
 
 
 @login_required
@@ -1276,17 +1276,17 @@ def admin_contact_delete(request, contact_id):
     if request.method == 'POST':
         contact.delete()
         messages.success(request, 'Message deleted!')
-        return redirect('dashboard:admin_contacts')
+        return redirect('dashboard:contact_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'contacts/confirm_delete.html', {
         'object': contact,
         'type': 'Contact Message',
-        'back_url': 'dashboard:admin_contacts'
+        'back_url': 'dashboard:contact_list'
     })
 
 
 # ============================================
-# MEDIA LIBRARY MANAGEMENT
+# ADMIN - MEDIA
 # ============================================
 
 @login_required
@@ -1312,7 +1312,7 @@ def admin_media(request):
         'media': media,
         'file_type_filter': file_type,
     }
-    return render(request, 'dashboard/admin_media.html', context)
+    return render(request, 'media_library/media_list.html', context)
 
 
 @login_required
@@ -1325,17 +1325,17 @@ def admin_media_delete(request, media_id):
         title = media.title
         media.delete()
         messages.success(request, f'Media "{title}" deleted!')
-        return redirect('dashboard:admin_media')
+        return redirect('dashboard:media_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'media_library/confirm_delete.html', {
         'object': media,
         'type': 'Media File',
-        'back_url': 'dashboard:admin_media'
+        'back_url': 'dashboard:media_list'
     })
 
 
 # ============================================
-# SUBSCRIBER MANAGEMENT
+# ADMIN - SUBSCRIBERS
 # ============================================
 
 @login_required
@@ -1366,7 +1366,7 @@ def admin_subscribers(request):
         'status_filter': status,
         'search': search,
     }
-    return render(request, 'dashboard/admin_subscribers.html', context)
+    return render(request, 'newsletter/subscriber_list.html', context)
 
 
 @login_required
@@ -1379,17 +1379,17 @@ def admin_subscriber_delete(request, subscriber_id):
         email = subscriber.email
         subscriber.delete()
         messages.success(request, f'Subscriber "{email}" removed!')
-        return redirect('dashboard:admin_subscribers')
+        return redirect('dashboard:subscriber_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'newsletter/confirm_delete.html', {
         'object': subscriber,
         'type': 'Subscriber',
-        'back_url': 'dashboard:admin_subscribers'
+        'back_url': 'dashboard:subscriber_list'
     })
 
 
 # ============================================
-# NEWSLETTER MANAGEMENT
+# ADMIN - NEWSLETTERS
 # ============================================
 
 @login_required
@@ -1415,7 +1415,7 @@ def admin_newsletters(request):
         'newsletters': newsletters,
         'status_filter': status,
     }
-    return render(request, 'dashboard/admin_newsletters.html', context)
+    return render(request, 'newsletter/newsletter_list.html', context)
 
 
 @login_required
@@ -1430,11 +1430,11 @@ def admin_newsletter_create(request):
             newsletter.save()
             form.save_m2m()
             messages.success(request, f'Newsletter "{newsletter.subject}" created!')
-            return redirect('dashboard:admin_newsletters')
+            return redirect('dashboard:newsletter_list')
     else:
         form = NewsletterForm()
     
-    return render(request, 'dashboard/admin_newsletter_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'newsletter/newsletter_form.html', {'form': form, 'action': 'Create'})
 
 
 @login_required
@@ -1448,11 +1448,11 @@ def admin_newsletter_edit(request, newsletter_id):
         if form.is_valid():
             form.save()
             messages.success(request, f'Newsletter "{newsletter.subject}" updated!')
-            return redirect('dashboard:admin_newsletters')
+            return redirect('dashboard:newsletter_list')
     else:
         form = NewsletterForm(instance=newsletter)
     
-    return render(request, 'dashboard/admin_newsletter_form.html', {'form': form, 'action': 'Edit', 'newsletter': newsletter})
+    return render(request, 'newsletter/newsletter_form.html', {'form': form, 'action': 'Edit', 'newsletter': newsletter})
 
 
 @login_required
@@ -1464,9 +1464,9 @@ def admin_newsletter_send(request, newsletter_id):
     if request.method == 'POST':
         newsletter.send()
         messages.success(request, f'Newsletter "{newsletter.subject}" sent!')
-        return redirect('dashboard:admin_newsletters')
+        return redirect('dashboard:newsletter_list')
     
-    return render(request, 'dashboard/admin_newsletter_send.html', {'newsletter': newsletter})
+    return render(request, 'newsletter/newsletter_send.html', {'newsletter': newsletter})
 
 
 @login_required
@@ -1479,17 +1479,17 @@ def admin_newsletter_delete(request, newsletter_id):
         subject = newsletter.subject
         newsletter.delete()
         messages.success(request, f'Newsletter "{subject}" deleted!')
-        return redirect('dashboard:admin_newsletters')
+        return redirect('dashboard:newsletter_list')
     
-    return render(request, 'dashboard/admin_confirm_delete.html', {
+    return render(request, 'newsletter/confirm_delete.html', {
         'object': newsletter,
         'type': 'Newsletter',
-        'back_url': 'dashboard:admin_newsletters'
+        'back_url': 'dashboard:newsletter_list'
     })
 
 
 # ============================================
-# SETTINGS MANAGEMENT
+# ADMIN - SETTINGS
 # ============================================
 
 @login_required
@@ -1512,7 +1512,7 @@ def admin_settings(request):
                 update_setting('general', 'site_timezone', form.cleaned_data['site_timezone'])
                 update_setting('general', 'site_language', form.cleaned_data['site_language'])
                 messages.success(request, 'General settings updated!')
-                return redirect('dashboard:admin_settings?category=general')
+                return redirect('dashboard:settings')
         
         elif category == 'email':
             form = EmailSettingsForm(request.POST)
@@ -1526,7 +1526,7 @@ def admin_settings(request):
                 update_setting('email', 'from_email', form.cleaned_data['from_email'])
                 update_setting('email', 'from_name', form.cleaned_data['from_name'])
                 messages.success(request, 'Email settings updated!')
-                return redirect('dashboard:admin_settings?category=email')
+                return redirect('dashboard:settings')
         
         elif category == 'seo':
             form = SEOSettingsForm(request.POST)
@@ -1540,10 +1540,10 @@ def admin_settings(request):
                 update_setting('seo', 'robots_txt', form.cleaned_data['robots_txt'])
                 update_setting('seo', 'enable_sitemap', str(form.cleaned_data['enable_sitemap']))
                 messages.success(request, 'SEO settings updated!')
-                return redirect('dashboard:admin_settings?category=seo')
+                return redirect('dashboard:settings')
     
     # Get current settings
-    settings = {
+    settings_data = {
         'site_name': get_setting_value('general', 'site_name', 'The Egerton Advertiser'),
         'site_tagline': get_setting_value('general', 'site_tagline', 'Your Local News Source'),
         'site_description': get_setting_value('general', 'site_description', ''),
@@ -1567,10 +1567,10 @@ def admin_settings(request):
     
     context = {
         'category': category,
-        'settings': settings,
+        'settings': settings_data,
         'categories': SiteSetting.SETTING_TYPES,
     }
-    return render(request, 'dashboard/admin_settings.html', context)
+    return render(request, 'settings_manager/settings.html', context)
 
 
 def update_setting(category, key, value):

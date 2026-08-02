@@ -715,51 +715,51 @@
                 <div class="quick-actions-card">
                     <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
                     <div class="quick-actions-grid">
-                        <a href="{% url 'dashboard:admin_article_create' %}" class="quick-action">
+                        <a href="{% url 'dashboard:article_create' %}" class="quick-action">
                             <i class="fas fa-pen-fancy"></i>
                             <span>Write Article</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_articles' %}" class="quick-action">
+                        <a href="{% url 'dashboard:article_list' %}" class="quick-action">
                             <i class="fas fa-newspaper"></i>
                             <span>Manage Articles</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_categories' %}" class="quick-action">
+                        <a href="{% url 'dashboard:category_list' %}" class="quick-action">
                             <i class="fas fa-folder"></i>
                             <span>Categories</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_tags' %}" class="quick-action">
+                        <a href="{% url 'dashboard:tag_list' %}" class="quick-action">
                             <i class="fas fa-tags"></i>
                             <span>Tags</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_users' %}" class="quick-action">
+                        <a href="{% url 'dashboard:user_list' %}" class="quick-action">
                             <i class="fas fa-users-cog"></i>
                             <span>Manage Users</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_comments' %}" class="quick-action">
+                        <a href="{% url 'dashboard:comment_list' %}" class="quick-action">
                             <i class="fas fa-comments"></i>
                             <span>Comments</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_ads' %}" class="quick-action">
+                        <a href="{% url 'dashboard:ad_list' %}" class="quick-action">
                             <i class="fas fa-ad"></i>
                             <span>Advertisements</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_media' %}" class="quick-action">
+                        <a href="{% url 'dashboard:media_list' %}" class="quick-action">
                             <i class="fas fa-images"></i>
                             <span>Media Library</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_subscribers' %}" class="quick-action">
+                        <a href="{% url 'dashboard:subscriber_list' %}" class="quick-action">
                             <i class="fas fa-envelope"></i>
                             <span>Subscribers</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_newsletters' %}" class="quick-action">
+                        <a href="{% url 'dashboard:newsletter_list' %}" class="quick-action">
                             <i class="fas fa-envelope-open-text"></i>
                             <span>Newsletters</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_contacts' %}" class="quick-action">
+                        <a href="{% url 'dashboard:contact_list' %}" class="quick-action">
                             <i class="fas fa-headset"></i>
                             <span>Contact Messages</span>
                         </a>
-                        <a href="{% url 'dashboard:admin_settings' %}" class="quick-action">
+                        <a href="{% url 'dashboard:settings' %}" class="quick-action">
                             <i class="fas fa-cog"></i>
                             <span>Site Settings</span>
                         </a>
@@ -773,7 +773,7 @@
                         {% for article in recent_articles %}
                         <div class="item">
                             <span class="title">
-                                <a href="{% url 'dashboard:admin_article_edit' article.id %}">
+                                <a href="{% url 'dashboard:article_edit' article.id %}">
                                     {{ article.title|truncatewords:10 }}
                                 </a>
                             </span>
@@ -795,7 +795,7 @@
                         {% for user in recent_users %}
                         <div class="item">
                             <span class="title">
-                                <a href="{% url 'dashboard:admin_user_edit' user.id %}">
+                                <a href="{% url 'dashboard:user_edit' user.id %}">
                                     {{ user.get_full_name|default:user.username }}
                                 </a>
                             </span>
@@ -880,7 +880,7 @@
                     <div class="quick-links">
                         <a href="{% url 'admin:index' %}"><i class="fas fa-database"></i> Django Admin</a>
                         <a href="{% url 'home' %}"><i class="fas fa-globe"></i> View Site</a>
-                        <a href="{% url 'dashboard:admin_settings' %}"><i class="fas fa-cog"></i> Site Settings</a>
+                        <a href="{% url 'dashboard:settings' %}"><i class="fas fa-cog"></i> Site Settings</a>
                         <a href="{% url 'accounts:profile' %}"><i class="fas fa-user"></i> My Profile</a>
                         <a href="{% url 'contacts:contact' %}"><i class="fas fa-headset"></i> Support</a>
                     </div>
