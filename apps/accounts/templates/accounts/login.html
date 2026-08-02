@@ -4,199 +4,770 @@
 {% block title %}Login - The Egerton Advertiser{% endblock %}
 
 {% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Merriweather:wght@300;400;700;900&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-.login-container {
-    max-width: 480px;
-    margin: 60px auto;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    padding: 40px;
-    border: 1px solid #e0e0e0;
-}
-.login-header {
-    text-align: center;
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
-}
-.login-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    font-size: 28px;
-    letter-spacing: 1px;
-}
-.login-header p {
-    font-family: 'Times New Roman', serif;
-    color: #6c757d;
-    font-size: 16px;
-}
-.form-group {
-    margin-bottom: 20px;
-}
-.form-group label {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    font-size: 15px;
-}
-.form-control {
-    font-family: 'Times New Roman', serif;
-    border-radius: 4px;
-    border: 1px solid #ced4da;
-    padding: 10px 15px;
-}
-.form-control:focus {
-    border-color: #1a3c5e;
-    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.25);
-}
-.btn-login {
-    background: #1a3c5e;
-    color: #fff;
-    border: none;
-    padding: 12px 30px;
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    font-size: 16px;
-    border-radius: 4px;
-    width: 100%;
-    transition: all 0.3s;
-}
-.btn-login:hover {
-    background: #0e2a44;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(26,60,94,0.3);
-}
-.login-footer {
-    text-align: center;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-}
-.login-footer a {
-    color: #1a3c5e;
-    font-family: 'Times New Roman', serif;
-    text-decoration: none;
-    font-weight: 600;
-}
-.login-footer a:hover {
-    text-decoration: underline;
-}
-.gov-seal {
-    text-align: center;
-    margin-bottom: 20px;
-}
-.gov-seal i {
-    font-size: 48px;
-    color: #1a3c5e;
-    opacity: 0.3;
-}
-.divider {
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-}
-.divider::before,
-.divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #e0e0e0;
-}
-.divider span {
-    padding: 0 15px;
-    color: #6c757d;
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-    text-transform: uppercase;
-}
-.alert {
-    font-family: 'Times New Roman', serif;
-    border-radius: 4px;
-}
-.alert-danger {
-    background: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-}
+    /* ============================================
+       GOVERNMENT-STYLE LOGIN PAGE
+       ============================================ */
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background: #f5f0eb;
+        font-family: 'Merriweather', 'Times New Roman', serif;
+    }
+    
+    /* --- Main Container --- */
+    .login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f0eb 0%, #e8e0d8 100%);
+        padding: 20px;
+    }
+    
+    .login-container {
+        width: 100%;
+        max-width: 520px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 4px 20px rgba(0, 0, 0, 0.05);
+        padding: 50px 45px;
+        border: 1px solid rgba(26, 60, 94, 0.08);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* --- Government Seal / Emblem --- */
+    .gov-seal {
+        text-align: center;
+        margin-bottom: 25px;
+        position: relative;
+    }
+    
+    .gov-seal .seal-icon {
+        width: 80px;
+        height: 80px;
+        background: #1a3c5e;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #c9a84c;
+        box-shadow: 0 0 0 5px rgba(26, 60, 94, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .gov-seal .seal-icon i {
+        font-size: 40px;
+        color: #ffffff;
+    }
+    
+    .gov-seal .seal-icon:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 8px rgba(26, 60, 94, 0.15);
+    }
+    
+    .gov-seal .seal-text {
+        margin-top: 8px;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 13px;
+        color: #6c757d;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    
+    /* --- Header --- */
+    .login-header {
+        text-align: center;
+        border-bottom: 2px solid #1a3c5e;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .login-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 900;
+        color: #1a3c5e;
+        font-size: 30px;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+    
+    .login-header .subtitle {
+        font-family: 'Cormorant Garamond', serif;
+        color: #6c757d;
+        font-size: 17px;
+        font-weight: 400;
+        letter-spacing: 2px;
+    }
+    
+    .login-header .subtitle i {
+        color: #c9a84c;
+        margin: 0 5px;
+    }
+    
+    /* --- Alert Messages --- */
+    .alert {
+        font-family: 'Merriweather', serif;
+        border-radius: 6px;
+        padding: 14px 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .alert-danger {
+        background: #fdf0ed;
+        border-color: #dc3545;
+        color: #721c24;
+    }
+    
+    .alert-danger i {
+        color: #dc3545;
+        margin-right: 10px;
+        font-size: 16px;
+    }
+    
+    .alert-success {
+        background: #edf7f0;
+        border-color: #28a745;
+        color: #155724;
+    }
+    
+    .alert-success i {
+        color: #28a745;
+        margin-right: 10px;
+        font-size: 16px;
+    }
+    
+    /* --- Form Styles --- */
+    .form-group {
+        margin-bottom: 22px;
+    }
+    
+    .form-group label {
+        font-family: 'Merriweather', serif;
+        font-weight: 700;
+        color: #1a3c5e;
+        font-size: 14px;
+        display: block;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-group label i {
+        color: #c9a84c;
+        margin-right: 8px;
+        width: 18px;
+    }
+    
+    .form-control {
+        font-family: 'Merriweather', serif;
+        border-radius: 6px;
+        border: 2px solid #d4cdc5;
+        padding: 12px 16px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: #fcfbf9;
+        width: 100%;
+        color: #1a3c5e;
+    }
+    
+    .form-control:focus {
+        border-color: #1a3c5e;
+        box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.15);
+        background: #ffffff;
+        outline: none;
+    }
+    
+    .form-control::placeholder {
+        color: #a8a09a;
+        font-weight: 300;
+        font-size: 14px;
+    }
+    
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+    }
+    
+    .form-control.is-valid {
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+    }
+    
+    .text-danger {
+        color: #dc3545;
+        font-size: 13px;
+        font-family: 'Merriweather', serif;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    /* --- Checkbox & Remember Me --- */
+    .form-check {
+        display: flex;
+        align-items: center;
+    }
+    
+    .form-check-input {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #d4cdc5;
+        border-radius: 4px;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+    
+    .form-check-input:checked {
+        background-color: #1a3c5e;
+        border-color: #1a3c5e;
+    }
+    
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.15);
+        outline: none;
+    }
+    
+    .form-check-label {
+        font-family: 'Merriweather', serif;
+        color: #4a4a4a;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .forgot-link {
+        font-family: 'Merriweather', serif;
+        color: #1a3c5e;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .forgot-link i {
+        color: #c9a84c;
+        margin-right: 5px;
+    }
+    
+    .forgot-link:hover {
+        color: #0e2a44;
+        text-decoration: underline;
+    }
+    
+    /* --- Login Button --- */
+    .btn-login {
+        background: #1a3c5e;
+        color: #ffffff;
+        border: none;
+        padding: 14px 30px;
+        font-family: 'Merriweather', serif;
+        font-weight: 700;
+        font-size: 16px;
+        border-radius: 6px;
+        width: 100%;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-login::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .btn-login:hover::before {
+        left: 100%;
+    }
+    
+    .btn-login:hover {
+        background: #0e2a44;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(26, 60, 94, 0.35);
+    }
+    
+    .btn-login:active {
+        transform: translateY(0px);
+    }
+    
+    .btn-login i {
+        margin-right: 10px;
+    }
+    
+    /* --- Divider --- */
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 28px 0;
+    }
+    
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e0d8d0;
+    }
+    
+    .divider span {
+        padding: 0 20px;
+        color: #6c757d;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 600;
+    }
+    
+    /* --- Footer / Register Link --- */
+    .login-footer {
+        text-align: center;
+        margin-top: 10px;
+    }
+    
+    .login-footer p {
+        font-family: 'Merriweather', serif;
+        color: #6c757d;
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+    
+    .btn-register {
+        background: transparent;
+        color: #1a3c5e;
+        border: 2px solid #1a3c5e;
+        padding: 10px 30px;
+        font-family: 'Merriweather', serif;
+        font-weight: 700;
+        font-size: 15px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-register i {
+        margin-right: 8px;
+    }
+    
+    .btn-register:hover {
+        background: #1a3c5e;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(26, 60, 94, 0.25);
+        text-decoration: none;
+    }
+    
+    /* --- Security Footer --- */
+    .security-footer {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #f0ebe5;
+    }
+    
+    .security-footer small {
+        font-family: 'Cormorant Garamond', serif;
+        color: #8a8580;
+        font-size: 13px;
+        letter-spacing: 1px;
+    }
+    
+    .security-footer small i {
+        color: #28a745;
+        margin-right: 5px;
+    }
+    
+    /* --- Loading Spinner --- */
+    .btn-login .spinner {
+        display: none;
+    }
+    
+    .btn-login.loading .spinner {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+    
+    .btn-login.loading .btn-text {
+        display: none;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* --- Responsive --- */
+    @media (max-width: 576px) {
+        .login-container {
+            padding: 30px 20px;
+            border-radius: 8px;
+        }
+        
+        .login-header h2 {
+            font-size: 24px;
+        }
+        
+        .login-header .subtitle {
+            font-size: 14px;
+        }
+        
+        .form-options {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .gov-seal .seal-icon {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .gov-seal .seal-icon i {
+            font-size: 30px;
+        }
+        
+        .btn-login {
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+        
+        .btn-register {
+            font-size: 14px;
+            padding: 8px 20px;
+        }
+    }
+    
+    @media (max-width: 400px) {
+        .login-container {
+            padding: 20px 15px;
+        }
+        
+        .login-header h2 {
+            font-size: 20px;
+        }
+        
+        .form-control {
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="login-wrapper">
     <div class="login-container">
+        
+        <!-- Government Seal -->
         <div class="gov-seal">
-            <i class="fas fa-gavel"></i>
+            <div class="seal-icon">
+                <i class="fas fa-gavel"></i>
+            </div>
+            <div class="seal-text">Official Portal</div>
         </div>
         
+        <!-- Header -->
         <div class="login-header">
-            <h2>OFFICIAL LOGIN</h2>
-            <p>Access your account to read and manage news</p>
+            <h2>The Egerton Advertiser</h2>
+            <div class="subtitle">
+                <i class="fas fa-asterisk"></i> 
+                Official Government News Portal
+                <i class="fas fa-asterisk"></i>
+            </div>
         </div>
         
-        <form method="post" action="{% url 'accounts:login' %}">
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}">
+                    <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'success' %}fa-check-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i>
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Login Form -->
+        <form method="post" action="{% url 'accounts:login' %}" id="loginForm">
             {% csrf_token %}
             
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {% for error in form.non_field_errors %}
-                        <i class="fas fa-exclamation-circle"></i> {{ error }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-            
+            <!-- Username Field -->
             <div class="form-group">
-                <label for="username"><i class="fas fa-user"></i> Username or Email</label>
-                <input type="text" name="username" id="username" class="form-control" 
-                       placeholder="Enter your username or email" required 
-                       value="{{ form.username.value|default:'' }}">
+                <label for="username">
+                    <i class="fas fa-user"></i> Username or Email Address
+                </label>
+                <input type="text" 
+                       name="username" 
+                       id="username" 
+                       class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
+                       placeholder="Enter your registered username or email" 
+                       required 
+                       value="{{ form.username.value|default:'' }}"
+                       autofocus>
                 {% if form.username.errors %}
-                    <small class="text-danger">{{ form.username.errors }}</small>
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.username.errors.0 }}
+                    </span>
                 {% endif %}
             </div>
             
+            <!-- Password Field -->
             <div class="form-group">
-                <label for="password"><i class="fas fa-lock"></i> Password</label>
-                <input type="password" name="password" id="password" class="form-control" 
-                       placeholder="Enter your password" required>
+                <label for="password">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <input type="password" 
+                       name="password" 
+                       id="password" 
+                       class="form-control {% if form.password.errors %}is-invalid{% endif %}" 
+                       placeholder="Enter your password" 
+                       required>
                 {% if form.password.errors %}
-                    <small class="text-danger">{{ form.password.errors }}</small>
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.password.errors.0 }}
+                    </span>
                 {% endif %}
             </div>
             
-            <div class="form-group d-flex justify-content-between align-items-center">
+            <!-- Options: Remember Me & Forgot Password -->
+            <div class="form-options">
                 <div class="form-check">
-                    <input type="checkbox" name="remember_me" id="remember_me" class="form-check-input">
-                    <label for="remember_me" class="form-check-label" style="font-family: 'Times New Roman', serif;">Remember me</label>
+                    <input type="checkbox" 
+                           name="remember_me" 
+                           id="remember_me" 
+                           class="form-check-input">
+                    <label for="remember_me" class="form-check-label">
+                        <i class="fas fa-check-circle" style="color: #c9a84c;"></i> Remember me
+                    </label>
                 </div>
-                <a href="{% url 'accounts:forgot_password' %}" class="text-decoration-none" style="font-family: 'Times New Roman', serif;">
+                <a href="{% url 'accounts:forgot_password' %}" class="forgot-link">
                     <i class="fas fa-key"></i> Forgot Password?
                 </a>
             </div>
             
-            <button type="submit" class="btn-login">
-                <i class="fas fa-sign-in-alt"></i> Sign In
+            <!-- Submit Button -->
+            <button type="submit" class="btn-login" id="loginBtn">
+                <span class="btn-text">
+                    <i class="fas fa-sign-in-alt"></i> Sign In to Dashboard
+                </span>
+                <span class="spinner">
+                    <i class="fas fa-spinner"></i>
+                </span>
             </button>
             
+            <!-- Next URL -->
             <input type="hidden" name="next" value="{{ request.GET.next|default:'' }}">
         </form>
         
+        <!-- Divider -->
         <div class="divider">
-            <span>or</span>
+            <span>New User?</span>
         </div>
         
+        <!-- Register Link -->
         <div class="login-footer">
-            <p class="mb-2" style="font-family: 'Times New Roman', serif;">Don't have an account?</p>
-            <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary" style="font-family: 'Times New Roman', serif; font-weight: 700;">
-                <i class="fas fa-user-plus"></i> Create New Account
+            <p>Don't have an official account?</p>
+            <a href="{% url 'accounts:register' %}" class="btn-register">
+                <i class="fas fa-user-plus"></i> Register New Account
             </a>
         </div>
         
-        <div class="text-center mt-3">
-            <small class="text-muted" style="font-family: 'Times New Roman', serif;">
-                <i class="fas fa-shield-alt"></i> Your information is secure and confidential
+        <!-- Security Footer -->
+        <div class="security-footer">
+            <small>
+                <i class="fas fa-shield-alt"></i> 
+                Secured &amp; Confidential · Authorized Access Only
             </small>
         </div>
+        
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function() {
+        'use strict';
+        
+        // ============================================
+        // FORM SUBMISSION WITH LOADING STATE
+        // ============================================
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                // Add loading state to button
+                loginBtn.classList.add('loading');
+                loginBtn.disabled = true;
+                
+                // Show loading spinner
+                const btnText = loginBtn.querySelector('.btn-text');
+                const spinner = loginBtn.querySelector('.spinner');
+                
+                if (btnText) btnText.style.display = 'none';
+                if (spinner) spinner.style.display = 'inline-block';
+            });
+        }
+        
+        // ============================================
+        // PASSWORD VISIBILITY TOGGLE
+        // ============================================
+        const passwordInput = document.getElementById('password');
+        if (passwordInput) {
+            // Create toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'password-toggle';
+            toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+            toggleBtn.style.cssText = `
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                color: #6c757d;
+                cursor: pointer;
+                padding: 5px;
+                font-size: 16px;
+            `;
+            
+            // Wrap password field in relative container
+            const parent = passwordInput.parentNode;
+            parent.style.position = 'relative';
+            parent.appendChild(toggleBtn);
+            
+            toggleBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+        
+        // ============================================
+        // AUTO-FOCUS USERNAME FIELD
+        // ============================================
+        const usernameField = document.getElementById('username');
+        if (usernameField && !usernameField.value) {
+            usernameField.focus();
+        }
+        
+        // ============================================
+        // REMEMBER ME CHECKBOX STYLING
+        // ============================================
+        const rememberMe = document.getElementById('remember_me');
+        if (rememberMe) {
+            rememberMe.addEventListener('change', function() {
+                const label = this.nextElementSibling;
+                if (this.checked) {
+                    label.style.color = '#1a3c5e';
+                } else {
+                    label.style.color = '#4a4a4a';
+                }
+            });
+        }
+        
+        // ============================================
+        // KEYBOARD SHORTCUT: ENTER TO SUBMIT
+        // ============================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const activeElement = document.activeElement;
+                if (activeElement && (activeElement.id === 'username' || activeElement.id === 'password')) {
+                    loginForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+        
+        // ============================================
+        // SESSION TIMEOUT WARNING (Optional)
+        // ============================================
+        // Uncomment if you want to show a session timeout warning
+        /*
+        let warningShown = false;
+        function checkSessionTimeout() {
+            // Implementation for session timeout warning
+        }
+        setInterval(checkSessionTimeout, 60000);
+        */
+        
+        console.log('🔐 Login page loaded successfully');
+        console.log('📰 The Egerton Advertiser - Official Portal');
+        
+    })();
+</script>
+
+<style>
+    /* Password Toggle Button Styling */
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 5px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    
+    .password-toggle:hover {
+        color: #1a3c5e;
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .password-toggle:focus {
+        outline: none;
+    }
+    
+    /* Form Group with password toggle needs relative positioning */
+    .form-group:has(#password) {
+        position: relative;
+    }
+</style>
 {% endblock %}

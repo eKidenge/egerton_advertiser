@@ -11,8 +11,10 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.conf import settings
 import random
 import string
+import logging
 
 from .models import User, UserActivityLog, UserProfile
 from .forms import (
@@ -22,14 +24,54 @@ from .forms import (
 )
 from apps.articles.models import Article
 from apps.comments.models import Comment
-from django.conf import settings
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+
+# ============================================
+# HELPER FUNCTIONS
+# ============================================
 
 def generate_verification_code():
+    """Generate a 6-digit verification code"""
     return ''.join(random.choices(string.digits, k=6))
 
+
+def get_role_dashboard_url(user):
+    """
+    Get the appropriate dashboard URL name based on user role
+    """
+    # Map roles to dashboard URL names
+    role_dashboard_map = {
+        'super_admin': 'dashboard:admin_dashboard',
+        'admin': 'dashboard:admin_dashboard',
+        'editor': 'dashboard:dashboard',
+        'journalist': 'dashboard:dashboard',
+        'subscriber': 'dashboard:dashboard',
+        'advertiser': 'dashboard:dashboard',
+    }
+    
+    # Return the dashboard URL name for this role, default to regular dashboard
+    return role_dashboard_map.get(user.role, 'dashboard:dashboard')
+
+
+def redirect_to_role_dashboard(user):
+    """
+    Redirect user to their role-specific dashboard
+    """
+    dashboard_url = get_role_dashboard_url(user)
+    return redirect(dashboard_url)
+
+
+# ============================================
+# AUTHENTICATION VIEWS
+# ============================================
+
 def user_login(request):
+    """User login view with role-based redirection"""
     if request.user.is_authenticated:
-        return redirect('dashboard:dashboard')
+        return redirect_to_role_dashboard(request.user)
     
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
@@ -45,7 +87,12 @@ def user_login(request):
                     messages.error(request, 'Your account is temporarily locked. Please try again later.')
                     return render(request, 'accounts/login.html', {'form': form})
                 
-                login(request, user)
+                try:
+                    login(request, user)
+                except Exception as e:
+                    logger.error(f"Login error: {str(e)}")
+                    messages.error(request, 'Login failed. Please try again.')
+                    return render(request, 'accounts/login.html', {'form': form})
                 
                 # Log activity
                 UserActivityLog.objects.create(
@@ -70,10 +117,13 @@ def user_login(request):
                 
                 messages.success(request, f'Welcome back, {user.get_full_name() or user.username}!')
                 
+                # Check for next URL parameter first
                 next_url = request.GET.get('next')
                 if next_url:
                     return redirect(next_url)
-                return redirect('dashboard:dashboard')
+                
+                # Redirect to role-specific dashboard
+                return redirect_to_role_dashboard(user)
             else:
                 try:
                     user = User.objects.get(username=username)
@@ -88,7 +138,9 @@ def user_login(request):
     
     return render(request, 'accounts/login.html', {'form': form})
 
+
 def user_logout(request):
+    """User logout view"""
     if request.user.is_authenticated:
         UserActivityLog.objects.create(
             user=request.user,
@@ -103,62 +155,118 @@ def user_logout(request):
         messages.info(request, 'You have been logged out successfully.')
     return redirect('home')
 
+
 def user_register(request):
+    """User registration view with auto-login and role-based redirection"""
     if request.user.is_authenticated:
-        return redirect('dashboard:dashboard')
+        return redirect_to_role_dashboard(request.user)
     
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
+        
+        # DEBUG: Log form data
+        logger.info("=" * 60)
+        logger.info("REGISTRATION ATTEMPT")
+        logger.info(f"POST data: {request.POST}")
+        logger.info("=" * 60)
+        
+        # Check if form is valid
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
+            logger.info("✅ FORM IS VALID - Creating user...")
             
-            # Create profile
-            UserProfile.objects.create(
-                user=user,
-                newsletter_subscription=form.cleaned_data.get('newsletter_subscription', True)
-            )
-            
-            # Log activity
-            UserActivityLog.objects.create(
-                user=user,
-                action='create',
-                model_name='User',
-                object_id=user.id,
-                description=f'New user registered: {user.username}',
-                ip_address=request.META.get('REMOTE_ADDR'),
-                user_agent=request.META.get('HTTP_USER_AGENT', '')
-            )
-            
-            # Send welcome email
             try:
-                subject = 'Welcome to The Egerton Advertiser'
-                html_message = render_to_string('accounts/emails/welcome.html', {
-                    'user': user,
-                    'site_name': 'The Egerton Advertiser'
-                })
-                plain_message = strip_tags(html_message)
-                send_mail(
-                    subject,
-                    plain_message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user.email],
-                    html_message=html_message,
-                    fail_silently=True
+                user = form.save(commit=False)
+                user.set_password(form.cleaned_data['password1'])
+                
+                # Set default role if not specified
+                if not user.role:
+                    user.role = 'subscriber'
+                
+                user.save()
+                
+                # Create profile
+                UserProfile.objects.create(
+                    user=user,
+                    newsletter_subscription=form.cleaned_data.get('newsletter_subscription', True)
                 )
+                
+                # Log activity
+                UserActivityLog.objects.create(
+                    user=user,
+                    action='create',
+                    model_name='User',
+                    object_id=user.id,
+                    description=f'New user registered: {user.username}',
+                    ip_address=request.META.get('REMOTE_ADDR'),
+                    user_agent=request.META.get('HTTP_USER_AGENT', '')
+                )
+                
+                # Send welcome email (with error handling)
+                try:
+                    subject = 'Welcome to The Egerton Advertiser'
+                    html_message = render_to_string('accounts/emails/welcome.html', {
+                        'user': user,
+                        'site_name': 'The Egerton Advertiser',
+                        'site_url': request.build_absolute_uri('/').rstrip('/')
+                    })
+                    plain_message = strip_tags(html_message)
+                    send_mail(
+                        subject,
+                        plain_message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [user.email],
+                        html_message=html_message,
+                        fail_silently=True
+                    )
+                except Exception as e:
+                    # Log but don't fail registration
+                    logger.warning(f"Welcome email not sent: {str(e)}")
+                
+                # Auto-login after registration
+                try:
+                    login(request, user)
+                except Exception as e:
+                    logger.warning(f"Auto-login issue: {str(e)}")
+                    # If auto-login fails, redirect to login page
+                    messages.success(request, f'Registration successful! Please log in.')
+                    return redirect('accounts:login')
+                
+                messages.success(request, f'Welcome to The Egerton Advertiser, {user.username}!')
+                
+                # Redirect to role-specific dashboard
+                logger.info(f"✅ Registration successful! Redirecting to: {get_role_dashboard_url(user)}")
+                return redirect_to_role_dashboard(user)
+                
             except Exception as e:
-                print(f"Failed to send welcome email: {e}")
+                logger.error(f"❌ Error during registration: {str(e)}")
+                messages.error(request, f'Registration failed. Please try again.')
+                return render(request, 'accounts/register.html', {'form': form})
+        else:
+            # DEBUG: Log form errors
+            logger.error("❌ FORM IS INVALID")
+            logger.error(f"Form errors: {form.errors}")
             
-            messages.success(request, 'Registration successful! Please log in.')
-            return redirect('accounts:login')
+            # Log each field error
+            for field, errors in form.errors.items():
+                logger.error(f"Field '{field}': {', '.join(errors)}")
+            
+            # Add error messages for user
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = UserRegistrationForm()
     
     return render(request, 'accounts/register.html', {'form': form})
 
+
+# ============================================
+# PROFILE VIEWS
+# ============================================
+
 @login_required
 def profile_view(request, user_id=None):
+    """View user profile"""
     if user_id:
         user = get_object_or_404(User, id=user_id)
         if user != request.user and not request.user.can_manage_users:
@@ -194,8 +302,10 @@ def profile_view(request, user_id=None):
     }
     return render(request, 'accounts/profile.html', context)
 
+
 @login_required
 def profile_edit(request):
+    """Edit user profile"""
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -226,8 +336,10 @@ def profile_edit(request):
     
     return render(request, 'accounts/profile_edit.html', {'form': form})
 
+
 @login_required
 def change_password(request):
+    """Change user password"""
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -250,7 +362,13 @@ def change_password(request):
     
     return render(request, 'accounts/change_password.html', {'form': form})
 
+
+# ============================================
+# PASSWORD RESET VIEWS
+# ============================================
+
 def forgot_password(request):
+    """Forgot password view"""
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
@@ -266,7 +384,8 @@ def forgot_password(request):
                 html_message = render_to_string('accounts/emails/password_reset.html', {
                     'user': user,
                     'token': token,
-                    'site_name': 'The Egerton Advertiser'
+                    'site_name': 'The Egerton Advertiser',
+                    'site_url': request.build_absolute_uri('/').rstrip('/')
                 })
                 plain_message = strip_tags(html_message)
                 send_mail(
@@ -278,7 +397,7 @@ def forgot_password(request):
                     fail_silently=True
                 )
             except Exception as e:
-                print(f"Failed to send reset email: {e}")
+                logger.error(f"Failed to send reset email: {e}")
             
             messages.success(request, 'Password reset instructions have been sent to your email.')
             return redirect('accounts:reset_password')
@@ -287,7 +406,9 @@ def forgot_password(request):
     
     return render(request, 'accounts/forgot_password.html')
 
+
 def reset_password(request):
+    """Reset password view"""
     if request.method == 'POST':
         token = request.POST.get('token')
         password = request.POST.get('password')
@@ -328,9 +449,15 @@ def reset_password(request):
     
     return render(request, 'accounts/reset_password.html')
 
+
+# ============================================
+# ADMIN USER MANAGEMENT VIEWS
+# ============================================
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def user_list(request):
+    """List all users (admin only)"""
     query = request.GET.get('q', '')
     role_filter = request.GET.get('role', '')
     status_filter = request.GET.get('status', '')
@@ -377,9 +504,11 @@ def user_list(request):
     }
     return render(request, 'accounts/user_list.html', context)
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def user_detail(request, user_id):
+    """View user details (admin only)"""
     user = get_object_or_404(User, id=user_id)
     
     # Statistics
@@ -407,9 +536,11 @@ def user_detail(request, user_id):
     }
     return render(request, 'accounts/user_detail.html', context)
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def user_create(request):
+    """Create new user (admin only)"""
     if request.method == 'POST':
         form = UserCreateForm(request.POST, request.FILES)
         if form.is_valid():
@@ -426,7 +557,8 @@ def user_create(request):
                 html_message = render_to_string('accounts/emails/account_created.html', {
                     'user': user,
                     'password': form.cleaned_data['password'],
-                    'site_name': 'The Egerton Advertiser'
+                    'site_name': 'The Egerton Advertiser',
+                    'site_url': request.build_absolute_uri('/').rstrip('/')
                 })
                 plain_message = strip_tags(html_message)
                 send_mail(
@@ -438,7 +570,7 @@ def user_create(request):
                     fail_silently=True
                 )
             except Exception as e:
-                print(f"Failed to send account creation email: {e}")
+                logger.error(f"Failed to send account creation email: {e}")
             
             UserActivityLog.objects.create(
                 user=request.user,
@@ -456,9 +588,11 @@ def user_create(request):
     
     return render(request, 'accounts/user_create.html', {'form': form})
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def user_edit(request, user_id):
+    """Edit user (admin only)"""
     user = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST':
@@ -482,10 +616,22 @@ def user_edit(request, user_id):
     
     return render(request, 'accounts/user_edit.html', {'form': form, 'edit_user': user})
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def user_delete(request, user_id):
+    """Delete user (admin only)"""
     user = get_object_or_404(User, id=user_id)
+    
+    # Prevent self-deletion
+    if request.user == user:
+        messages.error(request, 'You cannot delete your own account!')
+        return redirect('accounts:user_list')
+    
+    # Prevent deleting the last superuser
+    if user.is_superuser and User.objects.filter(is_superuser=True).count() <= 1:
+        messages.error(request, 'Cannot delete the last superuser!')
+        return redirect('accounts:user_list')
     
     if request.method == 'POST':
         username = user.username
@@ -510,9 +656,15 @@ def user_delete(request, user_id):
     
     return render(request, 'accounts/user_delete.html', {'user': user})
 
+
+# ============================================
+# ROLE MANAGEMENT VIEWS
+# ============================================
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def role_list(request):
+    """List all roles with statistics"""
     roles = User.ROLE_CHOICES
     role_stats = {}
     
@@ -526,9 +678,11 @@ def role_list(request):
     context = {'role_stats': role_stats}
     return render(request, 'accounts/role_list.html', context)
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def role_create(request):
+    """Create new role"""
     if request.method == 'POST':
         role_code = request.POST.get('role_code')
         role_name = request.POST.get('role_name')
@@ -557,9 +711,11 @@ def role_create(request):
     context = {'all_permissions': all_permissions}
     return render(request, 'accounts/role_create.html', context)
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def role_edit(request, role_id):
+    """Edit role"""
     from django.contrib.auth.models import Group, Permission
     
     group = get_object_or_404(Group, id=role_id)
@@ -591,8 +747,14 @@ def role_edit(request, role_id):
     }
     return render(request, 'accounts/role_edit.html', context)
 
+
+# ============================================
+# ACTIVITY LOG VIEWS
+# ============================================
+
 @login_required
 def activity_log(request):
+    """View activity log"""
     if request.user.can_manage_users:
         activities = UserActivityLog.objects.all()
     else:
@@ -629,20 +791,25 @@ def activity_log(request):
 
 
 # ============================================
-# ERROR HANDLERS - ADD THESE
+# ERROR HANDLERS
 # ============================================
 
 def handler403(request, exception=None):
     """403 Forbidden error handler"""
     return render(request, '403.html', status=403)
 
+
 def handler404(request, exception=None):
     """404 Not Found error handler"""
     return render(request, '404.html', status=404)
 
+
 def handler500(request):
     """500 Internal Server Error handler"""
-    return render(request, '500.html', status=500)
+    try:
+        return render(request, '500.html', status=500)
+    except Exception:
+        return HttpResponseRedirect('/')
 
 
 # ============================================

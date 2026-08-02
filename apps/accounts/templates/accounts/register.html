@@ -1,317 +1,1209 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Register - The Egerton Advertiser{% endblock %}
+{% block title %}Official Registration - The Egerton Advertiser{% endblock %}
 
 {% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Merriweather:wght@300;400;700;900&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-.register-container {
-    max-width: 600px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    padding: 40px;
-    border: 1px solid #e0e0e0;
-}
-.register-header {
-    text-align: center;
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
-}
-.register-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    font-size: 28px;
-    letter-spacing: 1px;
-}
-.register-header p {
-    font-family: 'Times New Roman', serif;
-    color: #6c757d;
-    font-size: 16px;
-}
-.form-group {
-    margin-bottom: 20px;
-}
-.form-group label {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    font-size: 15px;
-}
-.form-control, .form-select {
-    font-family: 'Times New Roman', serif;
-    border-radius: 4px;
-    border: 1px solid #ced4da;
-    padding: 10px 15px;
-}
-.form-control:focus, .form-select:focus {
-    border-color: #1a3c5e;
-    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.25);
-}
-.btn-register {
-    background: #1a3c5e;
-    color: #fff;
-    border: none;
-    padding: 12px 30px;
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    font-size: 16px;
-    border-radius: 4px;
-    width: 100%;
-    transition: all 0.3s;
-}
-.btn-register:hover {
-    background: #0e2a44;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(26,60,94,0.3);
-}
-.register-footer {
-    text-align: center;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-}
-.register-footer a {
-    color: #1a3c5e;
-    font-family: 'Times New Roman', serif;
-    text-decoration: none;
-    font-weight: 600;
-}
-.register-footer a:hover {
-    text-decoration: underline;
-}
-.password-requirements {
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-    color: #6c757d;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 4px;
-    margin-top: 5px;
-}
-.password-requirements ul {
-    margin: 5px 0 0 20px;
-    padding: 0;
-}
-.password-requirements li {
-    list-style-type: none;
-}
-.password-requirements li.valid {
-    color: #28a745;
-}
-.password-requirements li.invalid {
-    color: #dc3545;
-}
-.gov-seal {
-    text-align: center;
-    margin-bottom: 20px;
-}
-.gov-seal i {
-    font-size: 48px;
-    color: #1a3c5e;
-    opacity: 0.3;
-}
-.alert {
-    font-family: 'Times New Roman', serif;
-    border-radius: 4px;
-}
+    /* ============================================
+       GOVERNMENT-STYLE REGISTRATION PAGE
+       FULL-WIDTH LAYOUT
+       ============================================ */
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background: #f5f0eb;
+        font-family: 'Merriweather', 'Times New Roman', serif;
+    }
+    
+    /* --- Main Container - Full Width --- */
+    .register-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f0eb 0%, #e8e0d8 100%);
+        padding: 30px 20px;
+    }
+    
+    .register-container {
+        width: 100%;
+        max-width: 720px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 4px 20px rgba(0, 0, 0, 0.05);
+        padding: 50px 55px;
+        border: 1px solid rgba(26, 60, 94, 0.08);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* --- Decorative Top Border --- */
+    .register-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1a3c5e, #c9a84c, #1a3c5e);
+        background-size: 200% 100%;
+        animation: shimmer 3s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+    
+    /* --- Government Seal --- */
+    .gov-seal {
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .gov-seal .seal-icon {
+        width: 80px;
+        height: 80px;
+        background: #1a3c5e;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #c9a84c;
+        box-shadow: 0 0 0 5px rgba(26, 60, 94, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .gov-seal .seal-icon i {
+        font-size: 40px;
+        color: #ffffff;
+    }
+    
+    .gov-seal .seal-icon:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 8px rgba(26, 60, 94, 0.15);
+    }
+    
+    .gov-seal .seal-text {
+        margin-top: 8px;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 13px;
+        color: #6c757d;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    
+    /* --- Header --- */
+    .register-header {
+        text-align: center;
+        border-bottom: 2px solid #1a3c5e;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .register-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 900;
+        color: #1a3c5e;
+        font-size: 32px;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+    
+    .register-header .subtitle {
+        font-family: 'Cormorant Garamond', serif;
+        color: #6c757d;
+        font-size: 17px;
+        font-weight: 400;
+        letter-spacing: 2px;
+    }
+    
+    .register-header .subtitle i {
+        color: #c9a84c;
+        margin: 0 5px;
+    }
+    
+    /* --- Alert Messages --- */
+    .alert {
+        font-family: 'Merriweather', serif;
+        border-radius: 6px;
+        padding: 14px 20px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .alert-danger {
+        background: #fdf0ed;
+        border-color: #dc3545;
+        color: #721c24;
+    }
+    
+    .alert-danger i {
+        color: #dc3545;
+        margin-right: 10px;
+        font-size: 16px;
+    }
+    
+    .alert-success {
+        background: #edf7f0;
+        border-color: #28a745;
+        color: #155724;
+    }
+    
+    .alert-success i {
+        color: #28a745;
+        margin-right: 10px;
+        font-size: 16px;
+    }
+    
+    /* --- Form Styles --- */
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        font-family: 'Merriweather', serif;
+        font-weight: 700;
+        color: #1a3c5e;
+        font-size: 14px;
+        display: block;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-group label i {
+        color: #c9a84c;
+        margin-right: 8px;
+        width: 18px;
+    }
+    
+    .form-control, .form-select {
+        font-family: 'Merriweather', serif;
+        border-radius: 6px;
+        border: 2px solid #d4cdc5;
+        padding: 12px 16px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: #fcfbf9;
+        width: 100%;
+        color: #1a3c5e;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #1a3c5e;
+        box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.15);
+        background: #ffffff;
+        outline: none;
+    }
+    
+    .form-control::placeholder {
+        color: #a8a09a;
+        font-weight: 300;
+        font-size: 14px;
+    }
+    
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+    }
+    
+    .form-control.is-valid {
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+    }
+    
+    .form-control[readonly] {
+        background: #f8f6f4;
+        cursor: not-allowed;
+    }
+    
+    .text-danger {
+        color: #dc3545;
+        font-size: 13px;
+        font-family: 'Merriweather', serif;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    .text-muted {
+        font-family: 'Merriweather', serif;
+        font-size: 13px;
+        color: #6c757d;
+        margin-top: 5px;
+        display: block;
+    }
+    
+    .text-muted i {
+        color: #c9a84c;
+        margin-right: 5px;
+    }
+    
+    /* --- Checkbox --- */
+    .form-check {
+        display: flex;
+        align-items: flex-start;
+        margin-top: 5px;
+    }
+    
+    .form-check-input {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #d4cdc5;
+        border-radius: 4px;
+        margin-right: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    
+    .form-check-input:checked {
+        background-color: #1a3c5e;
+        border-color: #1a3c5e;
+    }
+    
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.15);
+        outline: none;
+    }
+    
+    .form-check-label {
+        font-family: 'Merriweather', serif;
+        color: #4a4a4a;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    
+    .form-check-label a {
+        color: #1a3c5e;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .form-check-label a:hover {
+        text-decoration: underline;
+    }
+    
+    /* --- Password Requirements --- */
+    .password-requirements {
+        font-family: 'Merriweather', serif;
+        font-size: 13px;
+        padding: 12px 15px;
+        background: #f8f6f4;
+        border-radius: 6px;
+        margin-top: 8px;
+        border: 1px solid #e8e0d8;
+    }
+    
+    .password-requirements .req-title {
+        font-weight: 700;
+        color: #1a3c5e;
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .password-requirements ul {
+        margin: 5px 0 0 0;
+        padding: 0;
+        list-style: none;
+    }
+    
+    .password-requirements ul li {
+        padding: 2px 0;
+        font-size: 13px;
+        transition: all 0.3s ease;
+    }
+    
+    .password-requirements ul li i {
+        margin-right: 8px;
+        width: 16px;
+    }
+    
+    .password-requirements ul li.valid {
+        color: #28a745;
+    }
+    
+    .password-requirements ul li.valid i {
+        color: #28a745;
+    }
+    
+    .password-requirements ul li.invalid {
+        color: #6c757d;
+    }
+    
+    .password-requirements ul li.invalid i {
+        color: #dc3545;
+    }
+    
+    /* --- Password Strength Bar --- */
+    .password-strength {
+        margin-top: 8px;
+        height: 4px;
+        border-radius: 2px;
+        background: #e8e0d8;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .password-strength .strength-bar {
+        height: 100%;
+        width: 0%;
+        border-radius: 2px;
+        transition: all 0.5s ease;
+    }
+    
+    .password-strength .strength-bar.weak {
+        width: 20%;
+        background: #dc3545;
+    }
+    
+    .password-strength .strength-bar.fair {
+        width: 40%;
+        background: #fd7e14;
+    }
+    
+    .password-strength .strength-bar.good {
+        width: 60%;
+        background: #ffc107;
+    }
+    
+    .password-strength .strength-bar.strong {
+        width: 80%;
+        background: #28a745;
+    }
+    
+    .password-strength .strength-bar.excellent {
+        width: 100%;
+        background: #1a3c5e;
+    }
+    
+    .password-strength-label {
+        font-family: 'Merriweather', serif;
+        font-size: 12px;
+        margin-top: 3px;
+        text-align: right;
+        color: #6c757d;
+    }
+    
+    /* --- Register Button --- */
+    .btn-register {
+        background: #1a3c5e;
+        color: #ffffff;
+        border: none;
+        padding: 14px 30px;
+        font-family: 'Merriweather', serif;
+        font-weight: 700;
+        font-size: 16px;
+        border-radius: 6px;
+        width: 100%;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        margin-top: 5px;
+    }
+    
+    .btn-register::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .btn-register:hover::before {
+        left: 100%;
+    }
+    
+    .btn-register:hover {
+        background: #0e2a44;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(26, 60, 94, 0.35);
+    }
+    
+    .btn-register:active {
+        transform: translateY(0px);
+    }
+    
+    .btn-register i {
+        margin-right: 10px;
+    }
+    
+    .btn-register .spinner {
+        display: none;
+    }
+    
+    .btn-register.loading .spinner {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+    
+    .btn-register.loading .btn-text {
+        display: none;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* --- Divider --- */
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 28px 0;
+    }
+    
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e0d8d0;
+    }
+    
+    .divider span {
+        padding: 0 20px;
+        color: #6c757d;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 600;
+    }
+    
+    /* --- Footer / Login Link --- */
+    .register-footer {
+        text-align: center;
+        margin-top: 10px;
+    }
+    
+    .register-footer p {
+        font-family: 'Merriweather', serif;
+        color: #6c757d;
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+    
+    .btn-login-link {
+        background: transparent;
+        color: #1a3c5e;
+        border: 2px solid #1a3c5e;
+        padding: 10px 30px;
+        font-family: 'Merriweather', serif;
+        font-weight: 700;
+        font-size: 15px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-login-link i {
+        margin-right: 8px;
+    }
+    
+    .btn-login-link:hover {
+        background: #1a3c5e;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(26, 60, 94, 0.25);
+        text-decoration: none;
+    }
+    
+    /* --- Security Footer --- */
+    .security-footer {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #f0ebe5;
+    }
+    
+    .security-footer small {
+        font-family: 'Cormorant Garamond', serif;
+        color: #8a8580;
+        font-size: 13px;
+        letter-spacing: 1px;
+    }
+    
+    .security-footer small i {
+        color: #28a745;
+        margin-right: 5px;
+    }
+    
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+        .register-container {
+            padding: 35px 25px;
+            border-radius: 8px;
+        }
+        
+        .register-header h2 {
+            font-size: 26px;
+        }
+        
+        .register-header .subtitle {
+            font-size: 15px;
+        }
+        
+        .gov-seal .seal-icon {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .gov-seal .seal-icon i {
+            font-size: 30px;
+        }
+        
+        .form-control, .form-select {
+            font-size: 14px;
+            padding: 10px 14px;
+        }
+        
+        .btn-register {
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+        
+        .btn-login-link {
+            font-size: 14px;
+            padding: 8px 20px;
+        }
+        
+        .row .col-md-6 {
+            margin-bottom: 0;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .register-container {
+            padding: 25px 15px;
+        }
+        
+        .register-header h2 {
+            font-size: 22px;
+        }
+        
+        .register-header .subtitle {
+            font-size: 13px;
+        }
+        
+        .form-control, .form-select {
+            font-size: 13px;
+            padding: 8px 12px;
+        }
+        
+        .password-requirements {
+            font-size: 12px;
+            padding: 10px 12px;
+        }
+        
+        .password-requirements ul li {
+            font-size: 12px;
+        }
+        
+        .form-check-label {
+            font-size: 13px;
+        }
+    }
+    
+    /* --- Two Column Layout for Name Fields --- */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+    
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 0 10px;
+    }
+    
+    @media (max-width: 576px) {
+        .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="register-wrapper">
     <div class="register-container">
+        
+        <!-- Government Seal -->
         <div class="gov-seal">
-            <i class="fas fa-gavel"></i>
+            <div class="seal-icon">
+                <i class="fas fa-gavel"></i>
+            </div>
+            <div class="seal-text">Official Registration Portal</div>
         </div>
         
+        <!-- Header -->
         <div class="register-header">
-            <h2>OFFICIAL REGISTRATION</h2>
-            <p>Create your account to access all features</p>
+            <h2>The Egerton Advertiser</h2>
+            <div class="subtitle">
+                <i class="fas fa-asterisk"></i> 
+                Register for Official Access
+                <i class="fas fa-asterisk"></i>
+            </div>
         </div>
         
-        <form method="post" action="{% url 'accounts:register' %}" enctype="multipart/form-data">
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}">
+                    <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'success' %}fa-check-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i>
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Registration Form -->
+        <form method="post" action="{% url 'accounts:register' %}" enctype="multipart/form-data" id="registerForm" novalidate>
             {% csrf_token %}
             
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {% for error in form.non_field_errors %}
-                        <i class="fas fa-exclamation-circle"></i> {{ error }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-            
+            <!-- First Name & Last Name - Two Columns -->
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="id_first_name"><i class="fas fa-user"></i> First Name</label>
-                        <input type="text" name="first_name" id="id_first_name" class="form-control" 
-                               placeholder="Enter your first name" required
+                        <label for="id_first_name">
+                            <i class="fas fa-user"></i> First Name
+                        </label>
+                        <input type="text" 
+                               name="first_name" 
+                               id="id_first_name" 
+                               class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" 
+                               placeholder="Enter your first name" 
+                               required
                                value="{{ form.first_name.value|default:'' }}">
                         {% if form.first_name.errors %}
-                            <small class="text-danger">{{ form.first_name.errors }}</small>
+                            <span class="text-danger">
+                                <i class="fas fa-exclamation-circle"></i> {{ form.first_name.errors.0 }}
+                            </span>
                         {% endif %}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="id_last_name"><i class="fas fa-user"></i> Last Name</label>
-                        <input type="text" name="last_name" id="id_last_name" class="form-control" 
-                               placeholder="Enter your last name" required
+                        <label for="id_last_name">
+                            <i class="fas fa-user"></i> Last Name
+                        </label>
+                        <input type="text" 
+                               name="last_name" 
+                               id="id_last_name" 
+                               class="form-control {% if form.last_name.errors %}is-invalid{% endif %}" 
+                               placeholder="Enter your last name" 
+                               required
                                value="{{ form.last_name.value|default:'' }}">
                         {% if form.last_name.errors %}
-                            <small class="text-danger">{{ form.last_name.errors }}</small>
+                            <span class="text-danger">
+                                <i class="fas fa-exclamation-circle"></i> {{ form.last_name.errors.0 }}
+                            </span>
                         {% endif %}
                     </div>
                 </div>
             </div>
             
+            <!-- Username -->
             <div class="form-group">
-                <label for="id_username"><i class="fas fa-id-card"></i> Username</label>
-                <input type="text" name="username" id="id_username" class="form-control" 
-                       placeholder="Choose a username" required
+                <label for="id_username">
+                    <i class="fas fa-id-card"></i> Username
+                </label>
+                <input type="text" 
+                       name="username" 
+                       id="id_username" 
+                       class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
+                       placeholder="Choose a unique username" 
+                       required
                        value="{{ form.username.value|default:'' }}">
-                <small class="text-muted" style="font-family: 'Times New Roman', serif;">3-150 characters. Letters, digits, and @/./+/-/_ only.</small>
+                <span class="text-muted">
+                    <i class="fas fa-info-circle"></i> 3-150 characters. Letters, digits, and @/./+/-/_ only.
+                </span>
                 {% if form.username.errors %}
-                    <small class="text-danger">{{ form.username.errors }}</small>
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.username.errors.0 }}
+                    </span>
                 {% endif %}
             </div>
             
+            <!-- Email -->
             <div class="form-group">
-                <label for="id_email"><i class="fas fa-envelope"></i> Email Address</label>
-                <input type="email" name="email" id="id_email" class="form-control" 
-                       placeholder="Enter your email address" required
+                <label for="id_email">
+                    <i class="fas fa-envelope"></i> Email Address
+                </label>
+                <input type="email" 
+                       name="email" 
+                       id="id_email" 
+                       class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
+                       placeholder="Enter your official email address" 
+                       required
                        value="{{ form.email.value|default:'' }}">
+                <span class="text-muted">
+                    <i class="fas fa-info-circle"></i> We'll send you a verification email.
+                </span>
                 {% if form.email.errors %}
-                    <small class="text-danger">{{ form.email.errors }}</small>
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.email.errors.0 }}
+                    </span>
                 {% endif %}
             </div>
             
+            <!-- Role / Account Type -->
             <div class="form-group">
-                <label for="id_role"><i class="fas fa-user-tag"></i> Account Type</label>
-                <select name="role" id="id_role" class="form-select">
-                    <option value="subscriber">Subscriber - Read news</option>
-                    <option value="journalist">Journalist - Write articles</option>
-                    <option value="advertiser">Advertiser - Post ads</option>
+                <label for="id_role">
+                    <i class="fas fa-user-tag"></i> Account Type
+                </label>
+                <select name="role" id="id_role" class="form-select {% if form.role.errors %}is-invalid{% endif %}">
+                    <option value="subscriber" {% if form.role.value == 'subscriber' %}selected{% endif %}>
+                        Subscriber - Read and access news
+                    </option>
+                    <option value="journalist" {% if form.role.value == 'journalist' %}selected{% endif %}>
+                        Journalist - Write and publish articles
+                    </option>
+                    <option value="advertiser" {% if form.role.value == 'advertiser' %}selected{% endif %}>
+                        Advertiser - Post advertisements
+                    </option>
                 </select>
+                <span class="text-muted">
+                    <i class="fas fa-info-circle"></i> Select the account type that best describes you.
+                </span>
                 {% if form.role.errors %}
-                    <small class="text-danger">{{ form.role.errors }}</small>
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.role.errors.0 }}
+                    </span>
                 {% endif %}
             </div>
             
+            <!-- Password -->
             <div class="form-group">
-                <label for="id_password"><i class="fas fa-lock"></i> Password</label>
-                <input type="password" name="password" id="id_password" class="form-control" 
-                       placeholder="Create a strong password" required>
+                <label for="id_password1">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <input type="password" 
+                       name="password1" 
+                       id="id_password1" 
+                       class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
+                       placeholder="Create a strong password" 
+                       required>
+                
+                <!-- Password Strength Bar -->
+                <div class="password-strength">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="password-strength-label" id="strengthLabel"></div>
+                
+                <!-- Password Requirements -->
                 <div class="password-requirements">
-                    <small>Password must contain:</small>
+                    <span class="req-title"><i class="fas fa-shield-alt"></i> Password must contain:</span>
                     <ul>
-                        <li id="length" class="invalid"><i class="fas fa-times"></i> At least 8 characters</li>
-                        <li id="digit" class="invalid"><i class="fas fa-times"></i> At least one number</li>
-                        <li id="uppercase" class="invalid"><i class="fas fa-times"></i> At least one uppercase letter</li>
-                        <li id="lowercase" class="invalid"><i class="fas fa-times"></i> At least one lowercase letter</li>
-                        <li id="special" class="invalid"><i class="fas fa-times"></i> At least one special character</li>
+                        <li id="req-length" class="invalid">
+                            <i class="fas fa-times"></i> At least 8 characters
+                        </li>
+                        <li id="req-digit" class="invalid">
+                            <i class="fas fa-times"></i> At least one number
+                        </li>
+                        <li id="req-uppercase" class="invalid">
+                            <i class="fas fa-times"></i> At least one uppercase letter
+                        </li>
+                        <li id="req-lowercase" class="invalid">
+                            <i class="fas fa-times"></i> At least one lowercase letter
+                        </li>
+                        <li id="req-special" class="invalid">
+                            <i class="fas fa-times"></i> At least one special character (!@#$%^&*(),.?":{}|&lt;&gt;)
+                        </li>
                     </ul>
                 </div>
-                {% if form.password.errors %}
-                    <small class="text-danger">{{ form.password.errors }}</small>
+                {% if form.password1.errors %}
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.password1.errors.0 }}
+                    </span>
                 {% endif %}
             </div>
             
+            <!-- Confirm Password -->
             <div class="form-group">
-                <label for="id_password2"><i class="fas fa-check-circle"></i> Confirm Password</label>
-                <input type="password" name="password2" id="id_password2" class="form-control" 
-                       placeholder="Confirm your password" required>
+                <label for="id_password2">
+                    <i class="fas fa-check-circle"></i> Confirm Password
+                </label>
+                <input type="password" 
+                       name="password2" 
+                       id="id_password2" 
+                       class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
+                       placeholder="Confirm your password" 
+                       required>
                 {% if form.password2.errors %}
-                    <small class="text-danger">{{ form.password2.errors }}</small>
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.password2.errors.0 }}
+                    </span>
                 {% endif %}
             </div>
             
+            <!-- Terms and Conditions -->
             <div class="form-group">
                 <div class="form-check">
-                    <input type="checkbox" name="terms" id="id_terms" class="form-check-input" required>
-                    <label for="id_terms" class="form-check-label" style="font-family: 'Times New Roman', serif;">
-                        I agree to the <a href="{% url 'terms_of_service' %}" class="text-decoration-none">Terms of Service</a> and 
-                        <a href="{% url 'privacy_policy' %}" class="text-decoration-none">Privacy Policy</a>
+                    <input type="checkbox" 
+                           name="terms" 
+                           id="id_terms" 
+                           class="form-check-input {% if form.terms.errors %}is-invalid{% endif %}" 
+                           required>
+                    <label for="id_terms" class="form-check-label">
+                        I agree to the 
+                        <a href="{% url 'terms_of_service' %}" target="_blank">Terms of Service</a> 
+                        and 
+                        <a href="{% url 'privacy_policy' %}" target="_blank">Privacy Policy</a>
+                        <span style="color: #dc3545;">*</span>
                     </label>
                 </div>
+                {% if form.terms.errors %}
+                    <span class="text-danger">
+                        <i class="fas fa-exclamation-circle"></i> {{ form.terms.errors.0 }}
+                    </span>
+                {% endif %}
             </div>
             
-            <button type="submit" class="btn-register">
-                <i class="fas fa-user-plus"></i> Create Account
+            <!-- Submit Button -->
+            <button type="submit" class="btn-register" id="registerBtn">
+                <span class="btn-text">
+                    <i class="fas fa-user-plus"></i> Register Official Account
+                </span>
+                <span class="spinner">
+                    <i class="fas fa-spinner"></i> Processing...
+                </span>
             </button>
         </form>
         
+        <!-- Divider -->
+        <div class="divider">
+            <span>Already Registered?</span>
+        </div>
+        
+        <!-- Login Link -->
         <div class="register-footer">
-            <p class="mb-2" style="font-family: 'Times New Roman', serif;">Already have an account?</p>
-            <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary" style="font-family: 'Times New Roman', serif; font-weight: 700;">
-                <i class="fas fa-sign-in-alt"></i> Sign In
+            <p>Already have an official account?</p>
+            <a href="{% url 'accounts:login' %}" class="btn-login-link">
+                <i class="fas fa-sign-in-alt"></i> Sign In to Your Account
             </a>
         </div>
         
-        <div class="text-center mt-3">
-            <small class="text-muted" style="font-family: 'Times New Roman', serif;">
-                <i class="fas fa-shield-alt"></i> Your information is secure and confidential
+        <!-- Security Footer -->
+        <div class="security-footer">
+            <small>
+                <i class="fas fa-shield-alt"></i> 
+                Your information is secure and confidential · Authorized Access Only
             </small>
         </div>
+        
     </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const password = document.getElementById('id_password');
-    const length = document.getElementById('length');
-    const digit = document.getElementById('digit');
-    const uppercase = document.getElementById('uppercase');
-    const lowercase = document.getElementById('lowercase');
-    const special = document.getElementById('special');
-    
-    password.addEventListener('input', function() {
-        const val = this.value;
+    (function() {
+        'use strict';
         
-        if (val.length >= 8) {
-            length.className = 'valid';
-            length.innerHTML = '<i class="fas fa-check"></i> At least 8 characters';
-        } else {
-            length.className = 'invalid';
-            length.innerHTML = '<i class="fas fa-times"></i> At least 8 characters';
+        // ============================================
+        // PASSWORD VALIDATION & STRENGTH METER
+        // ============================================
+        const password = document.getElementById('id_password1');
+        const password2 = document.getElementById('id_password2');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthLabel = document.getElementById('strengthLabel');
+        
+        // Requirement elements
+        const reqLength = document.getElementById('req-length');
+        const reqDigit = document.getElementById('req-digit');
+        const reqUppercase = document.getElementById('req-uppercase');
+        const reqLowercase = document.getElementById('req-lowercase');
+        const reqSpecial = document.getElementById('req-special');
+        
+        function checkPasswordStrength(val) {
+            let score = 0;
+            
+            // Length check
+            if (val.length >= 8) {
+                reqLength.className = 'valid';
+                reqLength.innerHTML = '<i class="fas fa-check"></i> At least 8 characters';
+                score++;
+            } else {
+                reqLength.className = 'invalid';
+                reqLength.innerHTML = '<i class="fas fa-times"></i> At least 8 characters';
+            }
+            
+            // Digit check
+            if (/\d/.test(val)) {
+                reqDigit.className = 'valid';
+                reqDigit.innerHTML = '<i class="fas fa-check"></i> At least one number';
+                score++;
+            } else {
+                reqDigit.className = 'invalid';
+                reqDigit.innerHTML = '<i class="fas fa-times"></i> At least one number';
+            }
+            
+            // Uppercase check
+            if (/[A-Z]/.test(val)) {
+                reqUppercase.className = 'valid';
+                reqUppercase.innerHTML = '<i class="fas fa-check"></i> At least one uppercase letter';
+                score++;
+            } else {
+                reqUppercase.className = 'invalid';
+                reqUppercase.innerHTML = '<i class="fas fa-times"></i> At least one uppercase letter';
+            }
+            
+            // Lowercase check
+            if (/[a-z]/.test(val)) {
+                reqLowercase.className = 'valid';
+                reqLowercase.innerHTML = '<i class="fas fa-check"></i> At least one lowercase letter';
+                score++;
+            } else {
+                reqLowercase.className = 'invalid';
+                reqLowercase.innerHTML = '<i class="fas fa-times"></i> At least one lowercase letter';
+            }
+            
+            // Special character check
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(val)) {
+                reqSpecial.className = 'valid';
+                reqSpecial.innerHTML = '<i class="fas fa-check"></i> At least one special character';
+                score++;
+            } else {
+                reqSpecial.className = 'invalid';
+                reqSpecial.innerHTML = '<i class="fas fa-times"></i> At least one special character';
+            }
+            
+            // Update strength bar
+            if (val.length === 0) {
+                strengthBar.className = 'strength-bar';
+                strengthBar.style.width = '0%';
+                strengthLabel.textContent = '';
+                return;
+            }
+            
+            let percentage = (score / 5) * 100;
+            let label = '';
+            let className = '';
+            
+            if (percentage <= 20) {
+                label = 'Weak';
+                className = 'weak';
+            } else if (percentage <= 40) {
+                label = 'Fair';
+                className = 'fair';
+            } else if (percentage <= 60) {
+                label = 'Good';
+                className = 'good';
+            } else if (percentage <= 80) {
+                label = 'Strong';
+                className = 'strong';
+            } else {
+                label = 'Excellent';
+                className = 'excellent';
+            }
+            
+            strengthBar.className = 'strength-bar ' + className;
+            strengthBar.style.width = percentage + '%';
+            strengthLabel.textContent = 'Password Strength: ' + label;
         }
         
-        if (/\d/.test(val)) {
-            digit.className = 'valid';
-            digit.innerHTML = '<i class="fas fa-check"></i> At least one number';
-        } else {
-            digit.className = 'invalid';
-            digit.innerHTML = '<i class="fas fa-times"></i> At least one number';
+        // Real-time password validation
+        if (password) {
+            password.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                
+                // Also check confirm password match
+                if (password2 && password2.value) {
+                    if (this.value === password2.value) {
+                        password2.className = 'form-control is-valid';
+                    } else {
+                        password2.className = 'form-control is-invalid';
+                    }
+                }
+            });
         }
         
-        if (/[A-Z]/.test(val)) {
-            uppercase.className = 'valid';
-            uppercase.innerHTML = '<i class="fas fa-check"></i> At least one uppercase letter';
-        } else {
-            uppercase.className = 'invalid';
-            uppercase.innerHTML = '<i class="fas fa-times"></i> At least one uppercase letter';
+        // Confirm password validation
+        if (password2) {
+            password2.addEventListener('input', function() {
+                if (password && this.value === password.value) {
+                    this.className = 'form-control is-valid';
+                } else {
+                    this.className = 'form-control is-invalid';
+                }
+            });
         }
         
-        if (/[a-z]/.test(val)) {
-            lowercase.className = 'valid';
-            lowercase.innerHTML = '<i class="fas fa-check"></i> At least one lowercase letter';
-        } else {
-            lowercase.className = 'invalid';
-            lowercase.innerHTML = '<i class="fas fa-times"></i> At least one lowercase letter';
+        // ============================================
+        // FORM SUBMISSION WITH LOADING STATE
+        // ============================================
+        const registerForm = document.getElementById('registerForm');
+        const registerBtn = document.getElementById('registerBtn');
+        
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(e) {
+                // Validate terms checkbox
+                const terms = document.getElementById('id_terms');
+                if (!terms.checked) {
+                    e.preventDefault();
+                    terms.className = 'form-check-input is-invalid';
+                    alert('Please agree to the Terms of Service and Privacy Policy.');
+                    return;
+                }
+                
+                // Validate password match
+                if (password && password2 && password.value !== password2.value) {
+                    e.preventDefault();
+                    password2.className = 'form-control is-invalid';
+                    alert('Passwords do not match. Please try again.');
+                    return;
+                }
+                
+                // Add loading state
+                registerBtn.classList.add('loading');
+                registerBtn.disabled = true;
+            });
         }
         
-        if (/[!@#$%^&*(),.?":{}|<>]/.test(val)) {
-            special.className = 'valid';
-            special.innerHTML = '<i class="fas fa-check"></i> At least one special character';
-        } else {
-            special.className = 'invalid';
-            special.innerHTML = '<i class="fas fa-times"></i> At least one special character';
+        // ============================================
+        // PASSWORD VISIBILITY TOGGLE
+        // ============================================
+        function addPasswordToggle(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            
+            const wrapper = input.parentNode;
+            wrapper.style.position = 'relative';
+            
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'password-toggle';
+            toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+            toggleBtn.style.cssText = `
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                color: #6c757d;
+                cursor: pointer;
+                padding: 5px;
+                font-size: 16px;
+                transition: all 0.3s ease;
+                z-index: 10;
+            `;
+            
+            toggleBtn.addEventListener('mouseenter', function() {
+                this.style.color = '#1a3c5e';
+            });
+            
+            toggleBtn.addEventListener('mouseleave', function() {
+                this.style.color = '#6c757d';
+            });
+            
+            toggleBtn.addEventListener('click', function() {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            wrapper.appendChild(toggleBtn);
         }
-    });
-});
+        
+        // Add toggle to both password fields
+        addPasswordToggle('id_password1');
+        addPasswordToggle('id_password2');
+        
+        // ============================================
+        // AUTO-FOCUS FIRST FIELD
+        // ============================================
+        const firstNameField = document.getElementById('id_first_name');
+        if (firstNameField && !firstNameField.value) {
+            firstNameField.focus();
+        }
+        
+        // ============================================
+        // TERMS CHECKBOX VALIDATION
+        // ============================================
+        const termsCheckbox = document.getElementById('id_terms');
+        if (termsCheckbox) {
+            termsCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.className = 'form-check-input';
+                }
+            });
+        }
+        
+        console.log('📝 Registration page loaded successfully');
+        console.log('📰 The Egerton Advertiser - Official Registration Portal');
+        
+    })();
 </script>
+
+<style>
+    /* Password Toggle Button Styling */
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 5px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    
+    .password-toggle:hover {
+        color: #1a3c5e;
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .password-toggle:focus {
+        outline: none;
+    }
+    
+    /* Form Group with password toggle needs relative positioning */
+    .form-group:has(#id_password1) {
+        position: relative;
+    }
+    
+    .form-group:has(#id_password2) {
+        position: relative;
+    }
+</style>
 {% endblock %}

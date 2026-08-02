@@ -1,0 +1,10 @@
+ERROR 2026-08-02 11:06:08,736 views 3800 10356 Form errors: <ul class="errorlist"><li>password1<ul class="errorlist" id="id_password1_error"><li>This field is required.</li></ul></li></ul>
+ERROR 2026-08-02 11:06:08,898 views 3800 10356 Field 'password1': This field is required.
+ERROR 2026-08-02 11:09:59,779 views 3800 10356 Form errors: <ul class="errorlist"><li>password1<ul class="errorlist" id="id_password1_error"><li>This field is required.</li></ul></li></ul>
+ERROR 2026-08-02 11:09:59,788 views 3800 10356 Field 'password1': This field is required.
+ERROR 2026-08-02 11:11:54,779 views 3800 10356 Failed to send welcome email: accounts/emails/welcome.html
+ERROR 2026-08-02 11:17:45,544 views 10228 1188 Form errors: <ul class="errorlist"><li>password2<ul class="errorlist" id="id_password2_error"><li>The password is too similar to the last name.</li></ul></li></ul>
+ERROR 2026-08-02 11:17:45,556 views 10228 1188 Field 'password2': The password is too similar to the last name.
+ERROR 2026-08-02 11:19:07,459 views 10228 1188 Failed to send welcome email: accounts/emails/welcome.html
+WARNING 2026-08-02 11:27:30,837 views 7916 11172 Welcome email not sent: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+WARNING 2026-08-02 11:27:35,354 views 7916 11172 Auto-login issue: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
