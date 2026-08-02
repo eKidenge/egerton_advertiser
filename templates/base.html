@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}The Egerton Advertiser - Official Gazette{% endblock %}</title>
+    <title>{% block title %}ENVIRONMENT & SOCIETY - Official Gazette{% endblock %}</title>
     
     <!-- Pass API keys to JavaScript -->
     <script>
@@ -36,10 +36,10 @@
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     
     <!-- Meta tags -->
-    <meta name="description" content="{% block meta_description %}The Egerton Advertiser - Official Newspaper of Egerton, Kenya. Latest news, politics, business, sports, and entertainment.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}Egerton, Kenya, news, politics, business, sports, entertainment, local news{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}The Egerton Advertiser{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Official Newspaper of Egerton, Kenya{% endblock %}">
+    <meta name="description" content="{% block meta_description %}ENVIRONMENT & SOCIETY - Official Publication. Latest news on environment, sustainability, climate action, and social development.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}environment, society, sustainability, climate, Kenya, news, green energy, conservation, social development{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}ENVIRONMENT & SOCIETY{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Official Publication on Environment and Society{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta name="twitter:card" content="summary_large_image">
@@ -57,14 +57,14 @@
 </head>
 <body>
     <!-- ============================================
-    TOP ANNOUNCEMENT BAR
+    TOP ANNOUNCEMENT BAR - Green Theme
     ============================================ -->
-    <div class="announcement-bar">
+    <div class="announcement-bar" style="background: #1a5c3a; color: white;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12 col-md-6 text-center text-md-start">
                     <span class="announcement-text">
-                        <i class="fas fa-bullhorn"></i> 
+                        <i class="fas fa-leaf"></i> 
                         OFFICIAL GAZETTE - Established {% now "Y" %}
                     </span>
                 </div>
@@ -81,13 +81,13 @@
     </div>
 
     <!-- ============================================
-    BREAKING NEWS TICKER
+    BREAKING NEWS TICKER - Green Theme
     ============================================ -->
-    <div class="breaking-news-ticker">
+    <div class="breaking-news-ticker" style="background: #e8f5e9; border-bottom: 2px solid #2e7d32;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <span class="breaking-label">
+                    <span class="breaking-label" style="background: #2e7d32; color: white;">
                         <i class="fas fa-circle pulse"></i> BREAKING
                     </span>
                 </div>
@@ -103,17 +103,20 @@
     </div>
 
     <!-- ============================================
-    MAIN HEADER
+    MAIN HEADER - Green Theme
     ============================================ -->
-    <header class="main-header">
+    <header class="main-header" style="background: linear-gradient(135deg, #1a5c3a 0%, #2e7d32 50%, #388e3c 100%); color: white; border-bottom: 4px solid #a5d6a7;">
         <div class="container">
             <div class="row align-items-center py-2 py-md-3">
                 <!-- Logo - Left -->
                 <div class="col-6 col-md-3">
                     <div class="logo-container">
-                        <a href="{% url 'home' %}" class="logo-link">
-                            <img src="{% static 'images/logo1.png' %}" alt="The Egerton Advertiser" class="site-logo">
-                            <span class="logo-text">THE EGERTON<br><small>ADVERTISER</small></span>
+                        <a href="{% url 'home' %}" class="logo-link" style="color: white; text-decoration: none;">
+                            <!-- FIXED: Removed filter to make logo visible -->
+                            <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" class="site-logo">
+                            <span class="logo-text" style="color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                                ENVIRONMENT<br><small style="color: #a5d6a7;">&amp; SOCIETY</small>
+                            </span>
                         </a>
                     </div>
                 </div>
@@ -121,33 +124,35 @@
                 <!-- Motto - Center (hidden on mobile) -->
                 <div class="col-md-6 text-center d-none d-md-block">
                     <div class="header-motto">
-                        <span class="motto-text">"Truth, Justice & Service to the Nation"</span>
+                        <span class="motto-text" style="color: #c8e6c9; font-style: italic;">
+                            "Preserving Nature, Building Communities"
+                        </span>
                     </div>
                 </div>
                 
                 <!-- Header Actions - Right -->
                 <div class="col-6 col-md-3 text-end">
                     <div class="header-actions">
-                        <a href="{% url 'search:search' %}" class="btn btn-outline-light btn-sm me-1 me-md-2" title="Search">
+                        <a href="{% url 'search:search' %}" class="btn btn-outline-light btn-sm me-1 me-md-2" title="Search" style="border-color: rgba(255,255,255,0.5); color: white;">
                             <i class="fas fa-search"></i>
                         </a>
                         
                         {% if user.is_authenticated %}
                             <div class="dropdown d-inline-block">
-                                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3);">
                                     <i class="fas fa-user-circle"></i> 
                                     <span class="d-none d-md-inline">{{ user.get_full_name|default:user.username|truncatechars:10 }}</span>
                                     <span class="d-inline d-md-none"><i class="fas fa-chevron-down"></i></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{% url 'dashboard:home' %}">
-                                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                                        <i class="fas fa-tachometer-alt" style="color: #2e7d32;"></i> Dashboard
                                     </a></li>
                                     <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                                        <i class="fas fa-user"></i> Profile
+                                        <i class="fas fa-user" style="color: #2e7d32;"></i> Profile
                                     </a></li>
                                     <li><a class="dropdown-item" href="{% url 'accounts:change_password' %}">
-                                        <i class="fas fa-key"></i> Change Password
+                                        <i class="fas fa-key" style="color: #2e7d32;"></i> Change Password
                                     </a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
@@ -156,17 +161,17 @@
                                 </ul>
                             </div>
                         {% else %}
-                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-none d-sm-inline-block">
+                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-none d-sm-inline-block" style="background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3);">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </a>
-                            <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm d-none d-sm-inline-block">
+                            <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm d-none d-sm-inline-block" style="background: #a5d6a7; color: #1a5c3a; border: none; font-weight: bold;">
                                 <i class="fas fa-user-plus"></i> Register
                             </a>
                             <!-- Mobile icons for login/register -->
-                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-inline-block d-sm-none" title="Login">
+                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-inline-block d-sm-none" title="Login" style="background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3);">
                                 <i class="fas fa-sign-in-alt"></i>
                             </a>
-                            <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm d-inline-block d-sm-none" title="Register">
+                            <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm d-inline-block d-sm-none" title="Register" style="background: #a5d6a7; color: #1a5c3a; border: none;">
                                 <i class="fas fa-user-plus"></i>
                             </a>
                         {% endif %}
@@ -178,7 +183,9 @@
             <div class="row d-md-none">
                 <div class="col-12 text-center pb-2">
                     <div class="mobile-motto">
-                        <span class="motto-text-small">"Truth, Justice & Service to the Nation"</span>
+                        <span class="motto-text-small" style="color: #c8e6c9; font-style: italic; font-size: 0.85rem;">
+                            "Preserving Nature, Building Communities"
+                        </span>
                     </div>
                 </div>
             </div>
@@ -186,7 +193,7 @@
     </header>
 
     <!-- ============================================
-    NAVIGATION (Responsive)
+    NAVIGATION (Responsive) - Green Theme
     ============================================ -->
     {% include 'navbar.html' %}
 
@@ -208,7 +215,7 @@
     </main>
 
     <!-- ============================================
-    FOOTER
+    FOOTER - Green Theme
     ============================================ -->
     {% include 'footer.html' %}
 

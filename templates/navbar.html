@@ -3,8 +3,9 @@
     <div class="container">
         <!-- Brand/Logo - Always Visible -->
         <a class="navbar-brand" href="{% url 'home' %}">
-            <img src="{% static 'images/logo1.png' %}" alt="The Egerton Advertiser" height="40" class="d-inline-block align-top">
-            <span class="brand-text d-none d-sm-inline-block">THE EGERTON ADVERTISER</span>
+            <!-- FIXED: Removed filter to make logo visible -->
+            <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" height="40" class="d-inline-block align-top">
+            <span class="brand-text d-none d-sm-inline-block">ENVIRONMENT &amp; SOCIETY</span>
         </a>
         
         <!-- Navbar Toggler - Always Visible on Mobile -->
@@ -28,6 +29,58 @@
                     </a>
                 </li>
                 
+                <!-- Environment Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'environment' in request.path %}active{% endif %}" 
+                       href="#" id="environmentDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-leaf"></i> Environment
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="environmentDropdown">
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='climate-change' %}">
+                            <i class="fas fa-temperature-high"></i> Climate Change
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='conservation' %}">
+                            <i class="fas fa-tree"></i> Conservation
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='renewable-energy' %}">
+                            <i class="fas fa-sun"></i> Renewable Energy
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='biodiversity' %}">
+                            <i class="fas fa-paw"></i> Biodiversity
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='sustainability' %}">
+                            <i class="fas fa-recycle"></i> Sustainability
+                        </a></li>
+                    </ul>
+                </li>
+                
+                <!-- Society Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'society' in request.path %}active{% endif %}" 
+                       href="#" id="societyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-users"></i> Society
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="societyDropdown">
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='social-issues' %}">
+                            <i class="fas fa-hand-holding-heart"></i> Social Issues
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='community' %}">
+                            <i class="fas fa-people-arrows"></i> Community
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='education' %}">
+                            <i class="fas fa-graduation-cap"></i> Education
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='health' %}">
+                            <i class="fas fa-heartbeat"></i> Health
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='human-rights' %}">
+                            <i class="fas fa-balance-scale"></i> Human Rights
+                        </a></li>
+                    </ul>
+                </li>
+                
                 <!-- Politics Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if 'politics' in request.path %}active{% endif %}" 
@@ -35,87 +88,44 @@
                         <i class="fas fa-gavel"></i> Politics
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="politicsDropdown">
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='politics' %}">
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='national-politics' %}">
                             <i class="fas fa-landmark"></i> National Politics
                         </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='county-politics' %}">
-                            <i class="fas fa-building"></i> County Politics
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='environmental-policy' %}">
+                            <i class="fas fa-leaf"></i> Environmental Policy
                         </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='elections' %}">
-                            <i class="fas fa-vote-yea"></i> Elections
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='governance' %}">
+                            <i class="fas fa-building"></i> Governance
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='parliament' %}">
-                            <i class="fas fa-university"></i> Parliament
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='climate-policy' %}">
+                            <i class="fas fa-globe-africa"></i> Climate Policy
                         </a></li>
                     </ul>
                 </li>
                 
-                <!-- Business Dropdown -->
+                <!-- Business & Economy Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if 'business' in request.path %}active{% endif %}" 
                        href="#" id="businessDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-chart-line"></i> Business
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="businessDropdown">
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='business' %}">
-                            <i class="fas fa-briefcase"></i> Economy
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='green-economy' %}">
+                            <i class="fas fa-seedling"></i> Green Economy
                         </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='markets' %}">
-                            <i class="fas fa-arrow-trend-up"></i> Markets
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='sustainable-business' %}">
+                            <i class="fas fa-recycle"></i> Sustainable Business
                         </a></li>
                         <li><a class="dropdown-item" href="{% url 'categories:detail' slug='agriculture' %}">
                             <i class="fas fa-tractor"></i> Agriculture
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='markets' %}">
+                            <i class="fas fa-arrow-trend-up"></i> Markets
+                        </a></li>
                         <li><a class="dropdown-item" href="{% url 'categories:detail' slug='real-estate' %}">
                             <i class="fas fa-home"></i> Real Estate
-                        </a></li>
-                    </ul>
-                </li>
-                
-                <!-- Sports Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if 'sports' in request.path %}active{% endif %}" 
-                       href="#" id="sportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-futbol"></i> Sports
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="sportsDropdown">
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='sports' %}">
-                            <i class="fas fa-running"></i> Local Sports
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='football' %}">
-                            <i class="fas fa-futbol"></i> Football
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='athletics' %}">
-                            <i class="fas fa-running"></i> Athletics
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='rugby' %}">
-                            <i class="fas fa-rugby-ball"></i> Rugby
-                        </a></li>
-                    </ul>
-                </li>
-                
-                <!-- Entertainment Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if 'entertainment' in request.path %}active{% endif %}" 
-                       href="#" id="entertainmentDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-film"></i> Entertainment
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="entertainmentDropdown">
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='entertainment' %}">
-                            <i class="fas fa-theater-masks"></i> Arts & Culture
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='music' %}">
-                            <i class="fas fa-music"></i> Music
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='movies' %}">
-                            <i class="fas fa-film"></i> Movies
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='lifestyle' %}">
-                            <i class="fas fa-heart"></i> Lifestyle
                         </a></li>
                     </ul>
                 </li>
@@ -185,9 +195,7 @@
                 </li>
                 {% endif %}
                 
-                <!-- ============================================
-                LOGOUT BUTTON - ONLY THIS WAS ADDED
-                ============================================ -->
+                <!-- Logout Button -->
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link text-danger" href="{% url 'accounts:logout' %}" title="Logout">
@@ -203,12 +211,12 @@
 
 <style>
 /* ============================================
-   MAIN NAVIGATION - COMPLETE
+   MAIN NAVIGATION - GREEN THEME
    ============================================ */
 .main-navigation {
-    background: #0a1a2a;
-    border-bottom: 2px solid #c9a84c;
-    font-family: 'Times New Roman', serif;
+    background: linear-gradient(135deg, #1a5c3a 0%, #2e7d32 50%, #388e3c 100%);
+    border-bottom: 3px solid #a5d6a7;
+    font-family: 'Times New Roman', 'Playfair Display', serif;
     padding: 6px 0;
     position: sticky;
     top: 0;
@@ -222,7 +230,7 @@
    ============================================ */
 .main-navigation .navbar-brand {
     color: #fff;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
     font-weight: 900;
     font-size: 18px;
     letter-spacing: 2px;
@@ -233,48 +241,61 @@
 .main-navigation .navbar-brand .brand-text {
     font-size: 14px;
     letter-spacing: 2px;
-    color: #c9a84c;
+    color: #a5d6a7;
     margin-left: 10px;
     font-weight: 700;
 }
 .main-navigation .navbar-brand:hover {
-    color: #c9a84c;
+    color: #a5d6a7;
 }
 
 /* ============================================
-   NAV LINKS
+   NAV LINKS - BOLDED HEADINGS
    ============================================ */
 .main-navigation .nav-link {
-    color: #e0d5c8;
+    color: #e8f5e9;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     padding: 10px 16px;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     position: relative;
+    font-family: 'Times New Roman', 'Playfair Display', serif;
 }
 .main-navigation .nav-link i {
     margin-right: 6px;
-    color: #c9a84c;
+    color: #a5d6a7;
     width: 18px;
     text-align: center;
 }
 .main-navigation .nav-link:hover,
 .main-navigation .nav-link.active {
-    color: #c9a84c;
-    background: rgba(201,168,76,0.05);
+    color: #fff;
+    background: rgba(165, 214, 167, 0.15);
 }
 .main-navigation .nav-link.active {
-    color: #c9a84c;
+    color: #fff;
+    font-weight: 900;
+}
+.main-navigation .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: #a5d6a7;
+    border-radius: 2px 2px 0 0;
 }
 
 /* ============================================
-   DROPDOWN
+   DROPDOWN - BOLDED ITEMS
    ============================================ */
 .main-navigation .dropdown-menu {
-    background: #0a1a2a;
-    border: 1px solid #c9a84c;
+    background: #1a5c3a;
+    border: 1px solid #a5d6a7;
     border-radius: 0;
     padding: 0;
     min-width: 220px;
@@ -282,29 +303,31 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
 .main-navigation .dropdown-item {
-    color: #e0d5c8;
-    font-family: 'Times New Roman', serif;
+    color: #e8f5e9;
+    font-family: 'Times New Roman', 'Playfair Display', serif;
     font-size: 13px;
+    font-weight: 600;
     padding: 10px 20px;
-    border-bottom: 1px solid rgba(201,168,76,0.06);
+    border-bottom: 1px solid rgba(165, 214, 167, 0.06);
     transition: all 0.3s ease;
 }
 .main-navigation .dropdown-item i {
     margin-right: 10px;
-    color: #c9a84c;
+    color: #a5d6a7;
     width: 20px;
     text-align: center;
 }
 .main-navigation .dropdown-item:hover {
-    background: rgba(201,168,76,0.12);
-    color: #c9a84c;
+    background: rgba(165, 214, 167, 0.15);
+    color: #fff;
+    font-weight: 700;
 }
 .main-navigation .dropdown-divider {
-    border-top: 1px solid rgba(201,168,76,0.12);
+    border-top: 1px solid rgba(165, 214, 167, 0.12);
 }
 .main-navigation .dropdown-toggle::after {
     margin-left: 6px;
-    border-top-color: #c9a84c;
+    border-top-color: #a5d6a7;
 }
 
 /* ============================================
@@ -317,10 +340,10 @@
     transition: all 0.3s ease;
 }
 .main-navigation .navbar-toggler:hover {
-    border-color: #c9a84c;
+    border-color: #a5d6a7;
 }
 .main-navigation .navbar-toggler:focus {
-    box-shadow: 0 0 0 2px rgba(201,168,76,0.3);
+    box-shadow: 0 0 0 2px rgba(165, 214, 167, 0.3);
 }
 .main-navigation .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
@@ -330,7 +353,7 @@
    NOTIFICATION BADGE
    ============================================ */
 .notification-badge {
-    font-family: 'Times New Roman', serif;
+    font-family: 'Times New Roman', 'Playfair Display', serif;
     font-size: 9px;
     padding: 2px 6px;
     position: absolute;
@@ -354,37 +377,40 @@
     min-width: 340px;
     max-height: 450px;
     overflow-y: auto;
-    background: #0a1a2a;
-    border: 1px solid #c9a84c;
+    background: #1a5c3a;
+    border: 1px solid #a5d6a7;
     border-radius: 0;
 }
 .notification-dropdown .dropdown-header {
-    color: #c9a84c;
+    color: #a5d6a7;
     font-weight: 700;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
     letter-spacing: 1px;
     padding: 12px 18px;
-    background: rgba(201,168,76,0.05);
+    background: rgba(165, 214, 167, 0.05);
 }
 .notification-dropdown .dropdown-item {
     white-space: normal;
     padding: 10px 18px;
-    border-bottom: 1px solid rgba(201,168,76,0.05);
+    border-bottom: 1px solid rgba(165, 214, 167, 0.05);
 }
 .notification-dropdown .dropdown-item:hover {
-    background: rgba(201,168,76,0.08);
+    background: rgba(165, 214, 167, 0.08);
 }
 .notification-dropdown .dropdown-item .notif-title {
-    font-weight: 600;
+    font-weight: 700;
     color: #fff;
+    font-family: 'Playfair Display', 'Times New Roman', serif;
 }
 .notification-dropdown .dropdown-item .notif-message {
-    color: #b0a89a;
+    color: #c8e6c9;
     font-size: 12px;
+    font-family: 'Times New Roman', serif;
 }
 .notification-dropdown .dropdown-item .notif-time {
     color: #6c757d;
     font-size: 11px;
+    font-family: 'Times New Roman', serif;
 }
 
 /* ============================================
@@ -397,19 +423,21 @@
     transition: all 0.3s ease;
 }
 .main-navigation .input-group:focus-within {
-    border-color: #c9a84c;
+    border-color: #a5d6a7;
     background: rgba(255,255,255,0.08);
 }
 .main-navigation .input-group .form-control {
     background: transparent;
     border: none;
     color: #fff;
-    font-family: 'Times New Roman', serif;
+    font-family: 'Times New Roman', 'Playfair Display', serif;
     font-size: 13px;
+    font-weight: 600;
     padding: 6px 12px;
 }
 .main-navigation .input-group .form-control::placeholder {
-    color: #6c757d;
+    color: #a5d6a7;
+    font-weight: 400;
 }
 .main-navigation .input-group .form-control:focus {
     box-shadow: none;
@@ -417,22 +445,24 @@
 .main-navigation .input-group .btn-light {
     background: transparent;
     border: none;
-    color: #c9a84c;
+    color: #a5d6a7;
+    font-weight: 700;
 }
 .main-navigation .input-group .btn-light:hover {
-    background: rgba(201,168,76,0.1);
-    color: #c9a84c;
+    background: rgba(165, 214, 167, 0.1);
+    color: #a5d6a7;
 }
 
 /* ============================================
    LOGOUT BUTTON STYLES
    ============================================ */
 .main-navigation .nav-link.text-danger {
-    color: #dc3545 !important;
+    color: #ff6b6b !important;
+    font-weight: 700 !important;
 }
 .main-navigation .nav-link.text-danger:hover {
-    color: #ff6b6b !important;
-    background: rgba(220, 53, 69, 0.1);
+    color: #ff8a8a !important;
+    background: rgba(255, 107, 107, 0.1);
 }
 
 /* ============================================
@@ -447,9 +477,9 @@
         letter-spacing: 1px;
     }
     .main-navigation .navbar-collapse {
-        background: #0d1f2e;
+        background: #1a5c3a;
         padding: 15px 20px;
-        border-top: 1px solid rgba(201,168,76,0.15);
+        border-top: 1px solid rgba(165, 214, 167, 0.15);
         max-height: calc(100vh - 180px);
         overflow-y: auto;
         margin-top: 8px;
@@ -459,14 +489,23 @@
         border-bottom: 1px solid rgba(255,255,255,0.04);
         font-size: 13px;
         text-transform: none;
+        font-weight: 700;
     }
     .main-navigation .nav-link:last-child {
         border-bottom: none;
     }
+    .main-navigation .nav-link.active::after {
+        bottom: 0;
+        left: 0;
+        transform: none;
+        width: 4px;
+        height: 100%;
+        border-radius: 0 2px 2px 0;
+    }
     .main-navigation .dropdown-menu {
         background: rgba(255,255,255,0.04);
         border: none;
-        border-left: 2px solid #c9a84c;
+        border-left: 2px solid #a5d6a7;
         margin-left: 15px;
         min-width: auto;
         box-shadow: none;
@@ -474,6 +513,7 @@
     .main-navigation .dropdown-item {
         padding: 8px 15px;
         font-size: 13px;
+        font-weight: 600;
         border-bottom: none;
     }
     .main-navigation .navbar-nav .dropdown-toggle::after {
@@ -482,7 +522,7 @@
     }
     .main-navigation .ms-auto {
         margin-left: 0 !important;
-        border-top: 1px solid rgba(201,168,76,0.1);
+        border-top: 1px solid rgba(165, 214, 167, 0.1);
         padding-top: 10px;
         margin-top: 10px;
     }
@@ -513,6 +553,7 @@
     .main-navigation .nav-link {
         font-size: 12px;
         padding: 6px 10px;
+        font-weight: 700;
     }
     .main-navigation .nav-link i {
         width: 16px;
@@ -521,6 +562,7 @@
     .main-navigation .dropdown-item {
         font-size: 12px;
         padding: 6px 12px;
+        font-weight: 600;
     }
     .notification-dropdown {
         min-width: 100%;
@@ -529,6 +571,7 @@
     .main-navigation .input-group .form-control {
         font-size: 12px;
         padding: 4px 10px;
+        font-weight: 600;
     }
     .main-navigation .input-group .btn-light {
         font-size: 12px;
@@ -543,10 +586,10 @@
     width: 4px;
 }
 .notification-dropdown::-webkit-scrollbar-track {
-    background: #0a1a2a;
+    background: #1a5c3a;
 }
 .notification-dropdown::-webkit-scrollbar-thumb {
-    background: #c9a84c;
+    background: #a5d6a7;
     border-radius: 2px;
 }
 </style>
@@ -586,7 +629,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     
                     html += '<li><hr class="dropdown-divider"></li>';
-                    html += '<li class="text-center"><a href="/notifications/" class="dropdown-item" style="color:#c9a84c;">View All Notifications</a></li>';
+                    html += '<li class="text-center"><a href="/notifications/" class="dropdown-item" style="color:#a5d6a7; font-weight:700;">View All Notifications</a></li>';
                 } else {
                     html += '<li class="text-center py-3 text-muted">No notifications</li>';
                 }

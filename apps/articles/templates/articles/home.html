@@ -1,283 +1,435 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}The Egerton Advertiser - Official Gazette of Egerton, Kenya{% endblock %}
+{% block title %}ENVIRONMENT & SOCIETY - Official Gazette of Environment and Society{% endblock %}
+
+{% block meta_description %}ENVIRONMENT & SOCIETY - Official Publication on Environment and Society. Latest news on climate action, sustainability, conservation, and social development in Kenya.{% endblock %}
 
 {% block extra_css %}
 <style>
+    /* ============================================
+       HERO SECTION - GREEN THEME
+       ============================================ */
     .hero-section {
-        background: linear-gradient(135deg, #1a3c5e 0%, #2c5a7a 100%);
-        padding: 30px 0;
-        margin-bottom: 30px;
-        border-bottom: 4px solid #c9a84c;
+        background: linear-gradient(135deg, #1a5c3a 0%, #2e7d32 50%, #388e3c 100%);
+        padding: 35px 0 30px;
+        margin-bottom: 35px;
+        border-bottom: 5px solid #a5d6a7;
+        position: relative;
+    }
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        bottom: -7px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #a5d6a7, transparent);
     }
     .hero-section h1 {
-        font-family: 'Times New Roman', serif;
+        font-family: 'Playfair Display', 'Times New Roman', serif;
         font-weight: 900;
-        font-size: 36px;
+        font-size: 38px;
         color: #fff;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
         margin-bottom: 5px;
+        letter-spacing: 3px;
     }
     .hero-section .subtitle {
-        font-family: 'Times New Roman', serif;
-        font-size: 16px;
-        color: rgba(255,255,255,0.8);
+        font-family: 'Times New Roman', 'Playfair Display', serif;
+        font-size: 17px;
+        color: #c8e6c9;
         font-style: italic;
+        letter-spacing: 1px;
     }
     .hero-date {
         font-family: 'Times New Roman', serif;
-        color: #c9a84c;
+        color: #a5d6a7;
         font-size: 14px;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
+        font-weight: 600;
     }
+    .hero-date i {
+        color: #fff;
+    }
+    .hero-volume {
+        font-family: 'Times New Roman', serif;
+        color: #c8e6c9;
+        font-size: 13px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    /* ============================================
+       FEATURED ARTICLE
+       ============================================ */
     .featured-article {
         position: relative;
         overflow: hidden;
-        border-radius: 8px;
+        border-radius: 10px;
         background: #fff;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-        border: 1px solid #e0e0e0;
+        box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+        border: 1px solid #c8e6c9;
+        transition: all 0.3s ease;
+    }
+    .featured-article:hover {
+        box-shadow: 0 8px 40px rgba(26, 92, 58, 0.12);
     }
     .featured-article img {
         width: 100%;
-        height: 400px;
+        height: 420px;
         object-fit: cover;
     }
     .featured-article .featured-content {
-        padding: 25px;
+        padding: 30px;
         background: #fff;
     }
     .featured-article .category-tag {
         display: inline-block;
-        background: #1a3c5e;
+        background: #1a5c3a;
         color: #fff;
-        padding: 4px 12px;
-        font-family: 'Times New Roman', serif;
+        padding: 5px 16px;
+        font-family: 'Times New Roman', 'Playfair Display', serif;
         font-size: 12px;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-        border-radius: 3px;
+        letter-spacing: 2px;
+        margin-bottom: 12px;
+        border-radius: 4px;
     }
     .featured-article h2 {
-        font-family: 'Times New Roman', serif;
-        font-weight: 700;
-        font-size: 28px;
-        color: #1a3c5e;
-        margin-bottom: 10px;
+        font-family: 'Playfair Display', 'Times New Roman', serif;
+        font-weight: 900;
+        font-size: 30px;
+        color: #1a5c3a;
+        margin-bottom: 12px;
+        line-height: 1.2;
     }
     .featured-article h2 a {
-        color: #1a3c5e;
+        color: #1a5c3a;
         text-decoration: none;
+        transition: color 0.3s;
     }
     .featured-article h2 a:hover {
+        color: #2e7d32;
         text-decoration: underline;
     }
     .featured-article .excerpt {
         font-family: 'Times New Roman', serif;
-        font-size: 16px;
-        color: #444;
-        line-height: 1.8;
+        font-size: 17px;
+        color: #333;
+        line-height: 1.9;
     }
     .featured-article .meta {
         font-family: 'Times New Roman', serif;
-        font-size: 13px;
+        font-size: 14px;
         color: #6c757d;
-        margin-top: 15px;
+        margin-top: 18px;
+        padding-top: 15px;
+        border-top: 1px solid #e8f5e9;
     }
     .featured-article .meta i {
-        margin-right: 5px;
+        margin-right: 6px;
+        color: #a5d6a7;
     }
+    .featured-article .meta .author-name {
+        color: #1a5c3a;
+        font-weight: 700;
+    }
+
+    /* ============================================
+       CATEGORY SECTIONS
+       ============================================ */
     .category-section {
         background: #fff;
-        border-radius: 8px;
-        padding: 20px;
-        border: 1px solid #e0e0e0;
-        margin-bottom: 20px;
+        border-radius: 10px;
+        padding: 25px;
+        border: 1px solid #c8e6c9;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.04);
     }
     .category-section .section-header {
-        border-bottom: 2px solid #1a3c5e;
-        padding-bottom: 10px;
-        margin-bottom: 15px;
+        border-bottom: 3px solid #1a5c3a;
+        padding-bottom: 12px;
+        margin-bottom: 18px;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
     .category-section .section-header h3 {
-        font-family: 'Times New Roman', serif;
+        font-family: 'Playfair Display', 'Times New Roman', serif;
         font-weight: 700;
-        color: #1a3c5e;
-        font-size: 20px;
+        color: #1a5c3a;
+        font-size: 22px;
         margin: 0;
+        letter-spacing: 1px;
+    }
+    .category-section .section-header h3 i {
+        color: #a5d6a7;
+        margin-right: 10px;
     }
     .category-section .section-header .view-all {
         font-family: 'Times New Roman', serif;
-        font-size: 13px;
-        color: #1a3c5e;
+        font-size: 14px;
+        color: #1a5c3a;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 700;
+        transition: all 0.3s;
+        padding: 4px 12px;
+        border-radius: 4px;
+        border: 1px solid transparent;
     }
     .category-section .section-header .view-all:hover {
-        text-decoration: underline;
+        background: #e8f5e9;
+        border-color: #a5d6a7;
+        text-decoration: none;
     }
+
+    /* ============================================
+       ARTICLE ITEMS
+       ============================================ */
     .article-item {
-        padding: 10px 0;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 12px 0;
+        border-bottom: 1px solid #e8f5e9;
     }
     .article-item:last-child {
         border-bottom: none;
     }
     .article-item .article-title {
-        font-family: 'Times New Roman', serif;
-        font-weight: 600;
-        font-size: 16px;
-        color: #1a3c5e;
+        font-family: 'Times New Roman', 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 17px;
+        color: #1a5c3a;
         text-decoration: none;
+        transition: color 0.3s;
+        display: block;
     }
     .article-item .article-title:hover {
+        color: #2e7d32;
         text-decoration: underline;
     }
     .article-item .article-meta {
         font-family: 'Times New Roman', serif;
-        font-size: 12px;
+        font-size: 13px;
         color: #6c757d;
+        margin-top: 4px;
     }
+    .article-item .article-meta i {
+        color: #a5d6a7;
+        margin-right: 4px;
+    }
+    .article-item .article-meta .author-link {
+        color: #1a5c3a;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .article-item .article-meta .author-link:hover {
+        text-decoration: underline;
+    }
+
+    /* ============================================
+       SIDEBAR WIDGETS
+       ============================================ */
     .sidebar-widget {
         background: #fff;
-        border-radius: 8px;
-        padding: 20px;
-        border: 1px solid #e0e0e0;
-        margin-bottom: 20px;
+        border-radius: 10px;
+        padding: 25px;
+        border: 1px solid #c8e6c9;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.04);
     }
     .sidebar-widget .widget-title {
-        font-family: 'Times New Roman', serif;
+        font-family: 'Playfair Display', 'Times New Roman', serif;
         font-weight: 700;
-        color: #1a3c5e;
-        font-size: 18px;
-        border-bottom: 2px solid #1a3c5e;
-        padding-bottom: 10px;
-        margin-bottom: 15px;
+        color: #1a5c3a;
+        font-size: 20px;
+        border-bottom: 3px solid #1a5c3a;
+        padding-bottom: 12px;
+        margin-bottom: 18px;
+        letter-spacing: 1px;
     }
     .sidebar-widget .widget-title i {
-        margin-right: 8px;
-        color: #c9a84c;
+        margin-right: 10px;
+        color: #a5d6a7;
     }
+
+    /* ============================================
+   POPULAR ARTICLES
+   ============================================ */
     .popular-article {
-        padding: 8px 0;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 10px 0;
+        border-bottom: 1px solid #e8f5e9;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
     }
     .popular-article:last-child {
         border-bottom: none;
     }
     .popular-article .rank {
         display: inline-block;
-        background: #1a3c5e;
+        background: #1a5c3a;
         color: #fff;
-        width: 24px;
-        height: 24px;
+        min-width: 28px;
+        height: 28px;
         text-align: center;
-        line-height: 24px;
+        line-height: 28px;
         border-radius: 50%;
         font-family: 'Times New Roman', serif;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 700;
-        margin-right: 10px;
+        flex-shrink: 0;
     }
-    .popular-article a {
-        font-family: 'Times New Roman', serif;
-        font-size: 14px;
-        color: #1a3c5e;
+    .popular-article .rank.gold {
+        background: #a5d6a7;
+        color: #1a5c3a;
+    }
+    .popular-article .article-info {
+        flex: 1;
+    }
+    .popular-article .article-info a {
+        font-family: 'Times New Roman', 'Playfair Display', serif;
+        font-size: 15px;
+        color: #1a5c3a;
         text-decoration: none;
+        font-weight: 600;
+        display: block;
+        line-height: 1.4;
     }
-    .popular-article a:hover {
+    .popular-article .article-info a:hover {
         text-decoration: underline;
+        color: #2e7d32;
     }
     .popular-article .views {
         font-family: 'Times New Roman', serif;
         font-size: 12px;
         color: #6c757d;
-        display: block;
         margin-top: 3px;
-        margin-left: 34px;
     }
-    .ad-space {
-        background: #f8f9fa;
-        border: 1px dashed #ced4da;
-        padding: 20px;
-        text-align: center;
-        font-family: 'Times New Roman', serif;
-        color: #6c757d;
-        border-radius: 8px;
-        margin-bottom: 20px;
+    .popular-article .views i {
+        color: #a5d6a7;
+        margin-right: 4px;
     }
-    .ad-space .ad-label {
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: #adb5bd;
-    }
+
+    /* ============================================
+       BREAKING NEWS
+       ============================================ */
     .breaking-news-item {
-        background: #fff3cd;
-        border-left: 4px solid #c9a84c;
-        padding: 12px 15px;
-        margin-bottom: 8px;
-        border-radius: 4px;
+        background: #e8f5e9;
+        border-left: 5px solid #dc3545;
+        padding: 14px 18px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    .breaking-news-item:hover {
+        background: #c8e6c9;
+        transform: translateX(5px);
     }
     .breaking-news-item .label {
         font-family: 'Times New Roman', serif;
         font-weight: 700;
-        color: #856404;
+        color: #1a5c3a;
         font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .breaking-news-item .label i {
+        color: #dc3545;
+        font-size: 10px;
+        margin-right: 6px;
     }
     .breaking-news-item a {
         font-family: 'Times New Roman', serif;
-        color: #1a3c5e;
+        color: #1a5c3a;
         text-decoration: none;
         font-weight: 600;
+        font-size: 15px;
     }
     .breaking-news-item a:hover {
         text-decoration: underline;
+        color: #2e7d32;
     }
+    .breaking-news-item .time {
+        font-family: 'Times New Roman', serif;
+        font-size: 12px;
+        color: #6c757d;
+        margin-left: 10px;
+    }
+
+    /* ============================================
+       EDITOR'S PICK
+       ============================================ */
     .editor-pick {
-        background: #e8f0f8;
-        border: 1px solid #1a3c5e;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
+        background: #e8f5e9;
+        border: 2px solid #1a5c3a;
+        border-radius: 10px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+    }
+    .editor-pick::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1a5c3a, #a5d6a7, #1a5c3a);
     }
     .editor-pick .pick-label {
         font-family: 'Times New Roman', serif;
         font-weight: 700;
-        color: #1a3c5e;
-        font-size: 14px;
+        color: #1a5c3a;
+        font-size: 15px;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 10px;
+        letter-spacing: 3px;
+        margin-bottom: 12px;
     }
     .editor-pick .pick-label i {
-        color: #c9a84c;
+        color: #a5d6a7;
+        margin-right: 8px;
     }
     .editor-pick h4 {
-        font-family: 'Times New Roman', serif;
-        font-weight: 700;
-        font-size: 22px;
-        color: #1a3c5e;
+        font-family: 'Playfair Display', 'Times New Roman', serif;
+        font-weight: 900;
+        font-size: 24px;
+        color: #1a5c3a;
+        margin-bottom: 10px;
+        line-height: 1.3;
     }
     .editor-pick h4 a {
-        color: #1a3c5e;
+        color: #1a5c3a;
         text-decoration: none;
     }
     .editor-pick h4 a:hover {
         text-decoration: underline;
+        color: #2e7d32;
     }
     .editor-pick p {
         font-family: 'Times New Roman', serif;
         font-size: 16px;
-        color: #444;
-        line-height: 1.8;
+        color: #333;
+        line-height: 1.9;
     }
+    .editor-pick .meta {
+        font-family: 'Times New Roman', serif;
+        font-size: 14px;
+        color: #6c757d;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #c8e6c9;
+    }
+    .editor-pick .meta i {
+        color: #a5d6a7;
+        margin-right: 6px;
+    }
+
+    /* ============================================
+       QUICK ACTIONS
+       ============================================ */
     .quick-actions {
         display: flex;
         flex-wrap: wrap;
@@ -285,49 +437,331 @@
     }
     .quick-actions .btn {
         font-family: 'Times New Roman', serif;
-        border-radius: 4px;
-        font-weight: 600;
+        border-radius: 6px;
+        font-weight: 700;
         font-size: 14px;
         padding: 10px 20px;
+        transition: all 0.3s ease;
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+    }
+    .quick-actions .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .quick-actions .btn-outline-primary {
+        border: 2px solid #1a5c3a;
+        color: #1a5c3a;
+    }
+    .quick-actions .btn-outline-primary:hover {
+        background: #1a5c3a;
+        color: #fff;
+    }
+    .quick-actions .btn-outline-success {
+        border: 2px solid #2e7d32;
+        color: #2e7d32;
+    }
+    .quick-actions .btn-outline-success:hover {
+        background: #2e7d32;
+        color: #fff;
+    }
+    .quick-actions .btn-outline-warning {
+        border: 2px solid #a5d6a7;
+        color: #1a5c3a;
+    }
+    .quick-actions .btn-outline-warning:hover {
+        background: #a5d6a7;
+        color: #1a5c3a;
+    }
+    .quick-actions .btn-outline-info {
+        border: 2px solid #388e3c;
+        color: #388e3c;
+    }
+    .quick-actions .btn-outline-info:hover {
+        background: #388e3c;
+        color: #fff;
+    }
+
+    /* ============================================
+       AD SPACE
+       ============================================ */
+    .ad-space {
+        background: #f5faf5;
+        border: 2px dashed #a5d6a7;
+        padding: 25px;
+        text-align: center;
+        font-family: 'Times New Roman', serif;
+        color: #6c757d;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+    .ad-space:hover {
+        border-color: #1a5c3a;
+        background: #e8f5e9;
+    }
+    .ad-space .ad-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: #a5d6a7;
+        font-weight: 700;
+    }
+    .ad-space .ad-content {
+        padding: 30px 20px;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .ad-space .ad-content i {
+        font-size: 32px;
+        color: #a5d6a7;
+        margin-bottom: 10px;
+    }
+    .ad-space .ad-content p {
+        font-family: 'Times New Roman', serif;
+        color: #6c757d;
+        margin: 0;
+    }
+    .ad-space .ad-content small {
+        color: #a5d6a7;
+        font-weight: 600;
+    }
+
+    /* ============================================
+       CAROUSEL CONTROLS
+       ============================================ */
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(26, 92, 58, 0.7);
+        border-radius: 50%;
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+        background: rgba(26, 92, 58, 0.9);
+        opacity: 1;
+    }
+    .carousel-control-prev {
+        left: 15px;
+    }
+    .carousel-control-next {
+        right: 15px;
+    }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 20px;
+        height: 20px;
+    }
+    .carousel-indicators {
+        bottom: 10px;
+    }
+    .carousel-indicators button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        background: transparent;
+        margin: 0 5px;
+    }
+    .carousel-indicators .active {
+        background: #a5d6a7;
+        border-color: #a5d6a7;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 1200px) {
+        .featured-article img {
+            height: 320px;
+        }
+        .featured-article h2 {
+            font-size: 26px;
+        }
+    }
+    @media (max-width: 992px) {
+        .hero-section h1 {
+            font-size: 32px;
+        }
+        .featured-article img {
+            height: 280px;
+        }
+        .featured-article h2 {
+            font-size: 24px;
+        }
+        .editor-pick h4 {
+            font-size: 22px;
+        }
     }
     @media (max-width: 768px) {
+        .hero-section {
+            padding: 25px 0 20px;
+        }
+        .hero-section h1 {
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+        .hero-section .subtitle {
+            font-size: 15px;
+        }
+        .hero-date {
+            font-size: 12px;
+        }
         .featured-article img {
             height: 200px;
+        }
+        .featured-article .featured-content {
+            padding: 20px;
         }
         .featured-article h2 {
             font-size: 22px;
         }
-        .hero-section h1 {
-            font-size: 24px;
+        .featured-article .excerpt {
+            font-size: 15px;
+        }
+        .category-section {
+            padding: 18px;
+        }
+        .category-section .section-header h3 {
+            font-size: 19px;
+        }
+        .sidebar-widget {
+            padding: 18px;
+        }
+        .editor-pick {
+            padding: 20px;
+        }
+        .editor-pick h4 {
+            font-size: 20px;
+        }
+        .quick-actions .btn {
+            font-size: 13px;
+            padding: 8px 16px;
+            min-width: 80px;
         }
     }
-    .pulse {
-        animation: pulse 1.5s ease-in-out infinite;
+    @media (max-width: 576px) {
+        .hero-section h1 {
+            font-size: 22px;
+        }
+        .hero-section .subtitle {
+            font-size: 13px;
+        }
+        .hero-date {
+            font-size: 11px;
+        }
+        .featured-article img {
+            height: 160px;
+        }
+        .featured-article h2 {
+            font-size: 19px;
+        }
+        .featured-article .excerpt {
+            font-size: 14px;
+        }
+        .featured-article .meta {
+            font-size: 12px;
+        }
+        .category-section .section-header h3 {
+            font-size: 17px;
+        }
+        .category-section .section-header .view-all {
+            font-size: 12px;
+        }
+        .article-item .article-title {
+            font-size: 15px;
+        }
+        .sidebar-widget .widget-title {
+            font-size: 17px;
+        }
+        .editor-pick h4 {
+            font-size: 18px;
+        }
+        .editor-pick p {
+            font-size: 14px;
+        }
+        .quick-actions .btn {
+            font-size: 12px;
+            padding: 6px 12px;
+            min-width: 70px;
+        }
+        .popular-article .article-info a {
+            font-size: 14px;
+        }
+        .breaking-news-item a {
+            font-size: 14px;
+        }
     }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
     @keyframes pulse {
         0% { opacity: 1; }
         50% { opacity: 0.3; }
         100% { opacity: 1; }
     }
+    .pulse {
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    .slide-in-left {
+        animation: slideInLeft 0.5s ease-out;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
+<!-- ============================================
+   HERO SECTION
+   ============================================ -->
+<section class="hero-section fade-in-up">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h1>THE EGERTON ADVERTISER</h1>
-                <p class="subtitle">Official Gazette of Egerton, Kenya</p>
+                <h1>ENVIRONMENT &amp; SOCIETY</h1>
+                <p class="subtitle">Official Gazette on Environment and Society</p>
             </div>
-            <div class="col-md-4 text-end">
+            <div class="col-md-4 text-md-end">
                 <span class="hero-date">
                     <i class="far fa-calendar-alt"></i> 
                     <span id="currentDate"></span>
                 </span>
                 <div class="mt-1">
-                    <span class="hero-date">
+                    <span class="hero-volume">
                         <i class="fas fa-flag"></i> Volume I, Issue No. 1
                     </span>
                 </div>
@@ -338,11 +772,16 @@
 
 <div class="container">
     <div class="row">
-        <!-- Main Content -->
+        <!-- ============================================
+        MAIN CONTENT
+        ============================================ -->
         <div class="col-lg-8">
-            <!-- Featured Articles Slider -->
+
+            <!-- ============================================
+            FEATURED ARTICLES CAROUSEL
+            ============================================ -->
             {% if featured_articles %}
-            <div id="featuredCarousel" class="carousel slide featured-article" data-bs-ride="carousel">
+            <div id="featuredCarousel" class="carousel slide featured-article fade-in-up" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     {% for article in featured_articles %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
@@ -356,7 +795,8 @@
                             <h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
                             <p class="excerpt">{{ article.excerpt|truncatewords:35 }}</p>
                             <div class="meta">
-                                <i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}
+                                <i class="fas fa-user"></i> 
+                                <span class="author-name">{{ article.author.get_full_name|default:article.author.username }}</span>
                                 <span class="mx-2">|</span>
                                 <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"F d, Y" }}
                                 <span class="mx-2">|</span>
@@ -381,41 +821,104 @@
             </div>
             {% endif %}
 
-            <!-- Editor's Pick -->
+            <!-- ============================================
+            EDITOR'S PICK
+            ============================================ -->
             {% if editor_pick %}
-            <div class="editor-pick">
+            <div class="editor-pick slide-in-left">
                 <div class="pick-label">
                     <i class="fas fa-star"></i> EDITOR'S PICK
                 </div>
                 <h4><a href="{{ editor_pick.get_absolute_url }}">{{ editor_pick.title }}</a></h4>
                 <p>{{ editor_pick.excerpt|truncatewords:30 }}</p>
                 <div class="meta">
-                    <i class="fas fa-user"></i> {{ editor_pick.author.get_full_name|default:editor_pick.author.username }}
+                    <i class="fas fa-user"></i> 
+                    <span class="author-name">{{ editor_pick.author.get_full_name|default:editor_pick.author.username }}</span>
                     <span class="mx-2">|</span>
                     <i class="fas fa-calendar-alt"></i> {{ editor_pick.published_at|date:"F d, Y" }}
+                    <span class="mx-2">|</span>
+                    <i class="fas fa-clock"></i> {{ editor_pick.time_to_read }} min read
                 </div>
             </div>
             {% endif %}
 
-            <!-- Breaking News -->
+            <!-- ============================================
+            BREAKING NEWS
+            ============================================ -->
             {% if breaking_news %}
-            <div class="category-section">
+            <div class="category-section fade-in-up">
                 <div class="section-header">
-                    <h3><i class="fas fa-bolt" style="color: #c9a84c;"></i> Breaking News</h3>
+                    <h3><i class="fas fa-bolt"></i> Breaking News</h3>
                 </div>
                 {% for article in breaking_news %}
                 <div class="breaking-news-item">
-                    <span class="label"><i class="fas fa-circle pulse" style="color: #dc3545; font-size: 8px;"></i> BREAKING:</span>
+                    <span class="label"><i class="fas fa-circle pulse"></i> BREAKING:</span>
                     <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
-                    <small class="text-muted ms-2">{{ article.published_at|date:"H:i" }}</small>
+                    <span class="time">{{ article.published_at|date:"H:i" }}</span>
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <!-- Politics Section -->
+            <!-- ============================================
+            ENVIRONMENT SECTION
+            ============================================ -->
+            {% if environment_articles %}
+            <div class="category-section fade-in-up">
+                <div class="section-header">
+                    <h3><i class="fas fa-leaf"></i> Environment</h3>
+                    <a href="{% url 'categories:detail' slug='environment' %}" class="view-all">View All →</a>
+                </div>
+                {% for article in environment_articles|slice:":5" %}
+                <div class="article-item">
+                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
+                    <div class="article-meta">
+                        <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-user"></i> 
+                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                            {{ article.author.get_full_name|default:article.author.username }}
+                        </a>
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-eye"></i> {{ article.views_count }} views
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- ============================================
+            SOCIETY SECTION
+            ============================================ -->
+            {% if society_articles %}
+            <div class="category-section fade-in-up">
+                <div class="section-header">
+                    <h3><i class="fas fa-users"></i> Society</h3>
+                    <a href="{% url 'categories:detail' slug='society' %}" class="view-all">View All →</a>
+                </div>
+                {% for article in society_articles|slice:":5" %}
+                <div class="article-item">
+                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
+                    <div class="article-meta">
+                        <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-user"></i> 
+                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                            {{ article.author.get_full_name|default:article.author.username }}
+                        </a>
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-eye"></i> {{ article.views_count }} views
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- ============================================
+            POLITICS SECTION
+            ============================================ -->
             {% if politics_articles %}
-            <div class="category-section">
+            <div class="category-section fade-in-up">
                 <div class="section-header">
                     <h3><i class="fas fa-gavel"></i> Politics</h3>
                     <a href="{% url 'categories:detail' slug='politics' %}" class="view-all">View All →</a>
@@ -424,16 +927,25 @@
                 <div class="article-item">
                     <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
                     <div class="article-meta">
-                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
+                        <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-user"></i> 
+                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                            {{ article.author.get_full_name|default:article.author.username }}
+                        </a>
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-eye"></i> {{ article.views_count }} views
                     </div>
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <!-- Business Section -->
+            <!-- ============================================
+            BUSINESS SECTION
+            ============================================ -->
             {% if business_articles %}
-            <div class="category-section">
+            <div class="category-section fade-in-up">
                 <div class="section-header">
                     <h3><i class="fas fa-chart-line"></i> Business</h3>
                     <a href="{% url 'categories:detail' slug='business' %}" class="view-all">View All →</a>
@@ -442,51 +954,24 @@
                 <div class="article-item">
                     <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
                     <div class="article-meta">
-                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
+                        <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-user"></i> 
+                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                            {{ article.author.get_full_name|default:article.author.username }}
+                        </a>
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-eye"></i> {{ article.views_count }} views
                     </div>
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <!-- Sports Section -->
-            {% if sports_articles %}
-            <div class="category-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-futbol"></i> Sports</h3>
-                    <a href="{% url 'categories:detail' slug='sports' %}" class="view-all">View All →</a>
-                </div>
-                {% for article in sports_articles|slice:":5" %}
-                <div class="article-item">
-                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
-                    <div class="article-meta">
-                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <!-- Entertainment Section -->
-            {% if entertainment_articles %}
-            <div class="category-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-film"></i> Entertainment</h3>
-                    <a href="{% url 'categories:detail' slug='entertainment' %}" class="view-all">View All →</a>
-                </div>
-                {% for article in entertainment_articles|slice:":5" %}
-                <div class="article-item">
-                    <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
-                    <div class="article-meta">
-                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <!-- Latest Articles -->
-            <div class="category-section">
+            <!-- ============================================
+            LATEST ARTICLES
+            ============================================ -->
+            <div class="category-section fade-in-up">
                 <div class="section-header">
                     <h3><i class="fas fa-newspaper"></i> Latest News</h3>
                     <a href="{% url 'articles:latest' %}" class="view-all">View All →</a>
@@ -495,21 +980,33 @@
                 <div class="article-item">
                     <a href="{{ article.get_absolute_url }}" class="article-title">{{ article.title }}</a>
                     <div class="article-meta">
-                        {{ article.published_at|date:"M d, Y" }} • {{ article.author.get_full_name|default:article.author.username }}
-                        <span class="mx-2">|</span>
-                        <i class="fas fa-eye"></i> {{ article.views_count }}
+                        <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-user"></i> 
+                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                            {{ article.author.get_full_name|default:article.author.username }}
+                        </a>
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-eye"></i> {{ article.views_count }} views
                     </div>
                 </div>
                 {% empty %}
-                <p class="text-muted" style="font-family: 'Times New Roman', serif;">No articles published yet.</p>
+                <p class="text-muted" style="font-family: 'Times New Roman', serif; font-size: 16px; padding: 20px 0;">
+                    <i class="fas fa-info-circle"></i> No articles published yet. Check back soon.
+                </p>
                 {% endfor %}
             </div>
         </div>
 
-        <!-- Sidebar -->
+        <!-- ============================================
+        SIDEBAR
+        ============================================ -->
         <div class="col-lg-4">
-            <!-- Quick Actions -->
-            <div class="sidebar-widget">
+
+            <!-- ============================================
+            QUICK ACTIONS
+            ============================================ -->
+            <div class="sidebar-widget slide-in-left">
                 <div class="widget-title">
                     <i class="fas fa-bolt"></i> Quick Actions
                 </div>
@@ -529,83 +1026,93 @@
                 </div>
             </div>
 
-            <!-- Popular Articles -->
+            <!-- ============================================
+            POPULAR ARTICLES
+            ============================================ -->
             {% if popular_articles %}
-            <div class="sidebar-widget">
+            <div class="sidebar-widget slide-in-left">
                 <div class="widget-title">
                     <i class="fas fa-fire"></i> Most Popular
                 </div>
                 {% for article in popular_articles %}
                 <div class="popular-article">
-                    <span class="rank">{{ forloop.counter }}</span>
-                    <a href="{{ article.get_absolute_url }}">{{ article.title|truncatewords:10 }}</a>
-                    <span class="views">
-                        <i class="fas fa-eye"></i> {{ article.views_count }} views
-                    </span>
+                    <span class="rank {% if forloop.counter <= 3 %}gold{% endif %}">{{ forloop.counter }}</span>
+                    <div class="article-info">
+                        <a href="{{ article.get_absolute_url }}">{{ article.title|truncatewords:10 }}</a>
+                        <span class="views">
+                            <i class="fas fa-eye"></i> {{ article.views_count }} views
+                        </span>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
             {% endif %}
 
-            <!-- Advertisement Space -->
-            <div class="ad-space">
+            <!-- ============================================
+            ADVERTISEMENT SPACE
+            ============================================ -->
+            <div class="ad-space slide-in-left">
                 <div class="ad-label">Advertisement</div>
-                <div style="padding: 20px; background: #fff; min-height: 200px;">
-                    <p style="font-family: 'Times New Roman', serif; color: #6c757d;">
-                        <i class="fas fa-ad" style="font-size: 24px;"></i><br>
-                        Your Ad Here<br>
-                        <small>Contact us for advertising</small>
-                    </p>
+                <div class="ad-content">
+                    <i class="fas fa-ad"></i>
+                    <p><strong>Your Ad Here</strong></p>
+                    <small>Contact us for advertising opportunities</small>
                 </div>
             </div>
 
-            <!-- Newsletter Signup -->
-            <div class="sidebar-widget">
+            <!-- ============================================
+            NEWSLETTER SIGNUP
+            ============================================ -->
+            <div class="sidebar-widget slide-in-left">
                 <div class="widget-title">
                     <i class="fas fa-envelope-open-text"></i> Newsletter
                 </div>
-                <p style="font-family: 'Times New Roman', serif; color: #6c757d; font-size: 14px;">
-                    Subscribe to receive the latest news directly in your inbox.
+                <p style="font-family: 'Times New Roman', serif; color: #6c757d; font-size: 15px; line-height: 1.7;">
+                    Subscribe to receive the latest environmental and social news directly in your inbox.
                 </p>
                 <form action="{% url 'newsletter:subscribe' %}" method="post">
                     {% csrf_token %}
-                    <div class="mb-2">
+                    <div class="mb-3">
                         <input type="email" name="email" class="form-control" 
-                               placeholder="Enter your email" required
-                               style="font-family: 'Times New Roman', serif;">
+                               placeholder="Enter your email address" required
+                               style="font-family: 'Times New Roman', serif; border-radius: 6px; padding: 10px 15px;">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100" 
-                            style="font-family: 'Times New Roman', serif; font-weight: 700;">
-                        <i class="fas fa-paper-plane"></i> Subscribe
+                    <button type="submit" class="btn btn-success w-100" 
+                            style="font-family: 'Times New Roman', serif; font-weight: 700; padding: 10px; border-radius: 6px;">
+                        <i class="fas fa-paper-plane"></i> Subscribe Now
                     </button>
                 </form>
             </div>
 
-            <!-- Categories -->
-            <div class="sidebar-widget">
+            <!-- ============================================
+            CATEGORIES
+            ============================================ -->
+            <div class="sidebar-widget slide-in-left">
                 <div class="widget-title">
                     <i class="fas fa-tags"></i> Categories
                 </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
-                    <a href="{% url 'categories:detail' slug='politics' %}" class="btn btn-outline-primary btn-sm">Politics</a>
-                    <a href="{% url 'categories:detail' slug='business' %}" class="btn btn-outline-success btn-sm">Business</a>
-                    <a href="{% url 'categories:detail' slug='sports' %}" class="btn btn-outline-danger btn-sm">Sports</a>
-                    <a href="{% url 'categories:detail' slug='entertainment' %}" class="btn btn-outline-warning btn-sm">Entertainment</a>
-                    <a href="{% url 'categories:detail' slug='education' %}" class="btn btn-outline-info btn-sm">Education</a>
-                    <a href="{% url 'categories:detail' slug='health' %}" class="btn btn-outline-secondary btn-sm">Health</a>
-                    <a href="{% url 'categories:detail' slug='technology' %}" class="btn btn-outline-dark btn-sm">Technology</a>
-                    <a href="{% url 'categories:list' %}" class="btn btn-link btn-sm">View All →</a>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <a href="{% url 'categories:detail' slug='climate-change' %}" class="btn btn-outline-primary btn-sm" style="font-family: 'Times New Roman', serif;">Climate Change</a>
+                    <a href="{% url 'categories:detail' slug='conservation' %}" class="btn btn-outline-success btn-sm" style="font-family: 'Times New Roman', serif;">Conservation</a>
+                    <a href="{% url 'categories:detail' slug='renewable-energy' %}" class="btn btn-outline-warning btn-sm" style="font-family: 'Times New Roman', serif;">Renewable Energy</a>
+                    <a href="{% url 'categories:detail' slug='sustainability' %}" class="btn btn-outline-info btn-sm" style="font-family: 'Times New Roman', serif;">Sustainability</a>
+                    <a href="{% url 'categories:detail' slug='social-issues' %}" class="btn btn-outline-secondary btn-sm" style="font-family: 'Times New Roman', serif;">Social Issues</a>
+                    <a href="{% url 'categories:detail' slug='community' %}" class="btn btn-outline-dark btn-sm" style="font-family: 'Times New Roman', serif;">Community</a>
+                    <a href="{% url 'categories:detail' slug='education' %}" class="btn btn-outline-primary btn-sm" style="font-family: 'Times New Roman', serif;">Education</a>
+                    <a href="{% url 'categories:detail' slug='health' %}" class="btn btn-outline-success btn-sm" style="font-family: 'Times New Roman', serif;">Health</a>
+                    <a href="{% url 'categories:list' %}" class="btn btn-link btn-sm" style="font-family: 'Times New Roman', serif; font-weight: 700;">View All →</a>
                 </div>
             </div>
 
-            <!-- Advertisement Space -->
-            <div class="ad-space">
-                <div class="ad-label">Sponsored</div>
-                <div style="padding: 20px; background: #fff; min-height: 150px;">
-                    <p style="font-family: 'Times New Roman', serif; color: #6c757d; font-size: 14px;">
-                        <i class="fas fa-bullhorn"></i><br>
-                        Sponsor this space
-                    </p>
+            <!-- ============================================
+            ADVERTISEMENT SPACE
+            ============================================ -->
+            <div class="ad-space slide-in-left">
+                <div class="ad-label">Sponsored Content</div>
+                <div class="ad-content">
+                    <i class="fas fa-bullhorn"></i>
+                    <p><strong>Sponsor This Space</strong></p>
+                    <small>Reach thousands of readers daily</small>
                 </div>
             </div>
         </div>

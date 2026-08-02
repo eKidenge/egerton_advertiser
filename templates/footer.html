@@ -5,12 +5,21 @@
             <!-- Brand & Social -->
             <div class="col-lg-4 col-md-6">
                 <div class="footer-brand">
-                    <img src="{% static 'images/logo1.png' %}" alt="The Egerton Advertiser" class="footer-logo" height="50">
-                    <h5 class="footer-title">The Egerton Advertiser</h5>
-                    <p class="footer-motto">"Truth, Justice & Service to the Nation"</p>
+                    <!-- Option A: Remove filter -->
+                    <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" class="footer-logo" height="50">
+                    
+                    <!-- OR Option B: Use better filter -->
+                    <!-- <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" class="footer-logo" height="50" style="filter: brightness(2) contrast(2) invert(1);"> -->
+                    
+                    <!-- OR Option C: Use white version -->
+                    <!-- <img src="{% static 'images/logo3-white.png' %}" alt="ENVIRONMENT & SOCIETY" class="footer-logo" height="50"> -->
+                    
+                    <h5 class="footer-title">ENVIRONMENT &amp; SOCIETY</h5>
+                    <p class="footer-motto">"Preserving Nature, Building Communities"</p>
                     <p class="footer-description">
-                        Official Gazette of Egerton, Kenya. Providing accurate, timely, 
-                        and trustworthy news to the citizens of Egerton and beyond.
+                        Official Publication on Environment and Society. 
+                        Dedicated to covering climate action, sustainability, 
+                        conservation, and social development in Kenya and beyond.
                     </p>
                 </div>
                 <div class="footer-social mt-3">
@@ -27,12 +36,12 @@
             <div class="col-lg-2 col-md-6">
                 <h6 class="footer-heading">Categories</h6>
                 <ul class="footer-links">
-                    <li><a href="{% url 'categories:detail' slug='politics' %}">Politics</a></li>
-                    <li><a href="{% url 'categories:detail' slug='business' %}">Business</a></li>
-                    <li><a href="{% url 'categories:detail' slug='sports' %}">Sports</a></li>
-                    <li><a href="{% url 'categories:detail' slug='entertainment' %}">Entertainment</a></li>
-                    <li><a href="{% url 'categories:detail' slug='education' %}">Education</a></li>
-                    <li><a href="{% url 'categories:detail' slug='health' %}">Health</a></li>
+                    <li><a href="{% url 'categories:detail' slug='climate-change' %}">Climate Change</a></li>
+                    <li><a href="{% url 'categories:detail' slug='conservation' %}">Conservation</a></li>
+                    <li><a href="{% url 'categories:detail' slug='renewable-energy' %}">Renewable Energy</a></li>
+                    <li><a href="{% url 'categories:detail' slug='sustainability' %}">Sustainability</a></li>
+                    <li><a href="{% url 'categories:detail' slug='social-issues' %}">Social Issues</a></li>
+                    <li><a href="{% url 'categories:detail' slug='community' %}">Community</a></li>
                 </ul>
             </div>
             
@@ -56,7 +65,7 @@
                     {% csrf_token %}
                     <div class="input-group">
                         <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
-                        <button class="btn btn-primary" type="submit">
+                        <button class="btn btn-success" type="submit">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
@@ -65,7 +74,7 @@
                 <div class="footer-contact mt-3">
                     <p><i class="fas fa-map-marker-alt"></i> Egerton, Kenya</p>
                     <p><i class="fas fa-phone"></i> +254 700 000 000</p>
-                    <p><i class="fas fa-envelope"></i> info@theegertonadvertiser.com</p>
+                    <p><i class="fas fa-envelope"></i> info@environmentandsociety.com</p>
                 </div>
                 
                 <!-- Weather & Time Widget -->
@@ -91,7 +100,7 @@
         <div class="footer-bottom">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="copyright">&copy; {% now "Y" %} The Egerton Advertiser. All Rights Reserved.</p>
+                    <p class="copyright">&copy; {% now "Y" %} ENVIRONMENT &amp; SOCIETY. All Rights Reserved.</p>
                 </div>
                 <div class="col-md-6 text-end">
                     <ul class="footer-bottom-links">
@@ -108,22 +117,32 @@
 
 <style>
 /* ============================================
-   FOOTER - COMPLETE STYLES
+   FOOTER - GREEN THEME
    ============================================ */
 .main-footer {
-    background: #0a1a2a;
-    color: #e0d5c8;
-    border-top: 4px solid #c9a84c;
+    background: linear-gradient(180deg, #1a5c3a 0%, #0d3d26 100%);
+    color: #e8f5e9;
+    border-top: 4px solid #a5d6a7;
     margin-top: 50px;
     font-family: 'Times New Roman', serif;
 }
 
 /* ============================================
-   BRAND
+   BRAND - FIXED LOGO
    ============================================ */
 .footer-logo {
     margin-bottom: 10px;
+    /* Remove any filters that might cause fading */
+    filter: none;
+    /* Optional: Add a slight glow for better visibility on dark background */
+    /* filter: drop-shadow(0 0 2px rgba(165, 214, 167, 0.3)); */
 }
+
+/* Alternative: If you need to use the filter, use this stronger version */
+.footer-logo-filtered {
+    filter: brightness(2) contrast(2) invert(1);
+}
+
 .footer-title {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
@@ -134,13 +153,13 @@
 .footer-motto {
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    color: #c9a84c;
+    color: #a5d6a7;
     font-size: 14px;
 }
 .footer-description {
     font-family: 'Times New Roman', serif;
     font-size: 14px;
-    color: #b0a89a;
+    color: #c8e6c9;
     line-height: 1.8;
 }
 
@@ -151,7 +170,7 @@
     font-family: 'Playfair Display', serif;
     color: #fff;
     font-weight: 700;
-    border-bottom: 2px solid #c9a84c;
+    border-bottom: 2px solid #a5d6a7;
     padding-bottom: 10px;
     margin-bottom: 15px;
     font-size: 16px;
@@ -166,14 +185,14 @@
     margin-bottom: 6px;
 }
 .footer-links a {
-    color: #b0a89a;
+    color: #c8e6c9;
     text-decoration: none;
     font-family: 'Times New Roman', serif;
     font-size: 14px;
     transition: all 0.3s ease;
 }
 .footer-links a:hover {
-    color: #c9a84c;
+    color: #fff;
     padding-left: 5px;
 }
 
@@ -187,15 +206,15 @@
     line-height: 36px;
     text-align: center;
     background: rgba(255, 255, 255, 0.05);
-    color: #b0a89a;
+    color: #c8e6c9;
     border-radius: 50%;
     margin-right: 6px;
     transition: all 0.3s ease;
     font-size: 14px;
 }
 .footer-social .social-link:hover {
-    background: #c9a84c;
-    color: #0a1a2a;
+    background: #a5d6a7;
+    color: #1a5c3a;
     transform: translateY(-2px);
 }
 
@@ -218,21 +237,21 @@
     color: #6c757d;
 }
 .footer-newsletter .form-control:focus {
-    border-color: #c9a84c;
-    box-shadow: 0 0 0 0.2rem rgba(201, 168, 76, 0.15);
+    border-color: #a5d6a7;
+    box-shadow: 0 0 0 0.2rem rgba(165, 214, 167, 0.15);
     background: rgba(255, 255, 255, 0.08);
 }
-.footer-newsletter .btn {
+.footer-newsletter .btn-success {
     border-radius: 0;
-    background: #c9a84c;
+    background: #2e7d32;
     border: none;
-    color: #0a1a2a;
+    color: #fff;
     padding: 10px 20px;
     font-weight: 700;
     font-family: 'Times New Roman', serif;
 }
-.footer-newsletter .btn:hover {
-    background: #b89a3a;
+.footer-newsletter .btn-success:hover {
+    background: #1b5e20;
 }
 
 /* ============================================
@@ -241,11 +260,11 @@
 .footer-contact p {
     font-family: 'Times New Roman', serif;
     font-size: 14px;
-    color: #b0a89a;
+    color: #c8e6c9;
     margin-bottom: 4px;
 }
 .footer-contact i {
-    color: #c9a84c;
+    color: #a5d6a7;
     width: 22px;
     text-align: center;
     margin-right: 8px;
@@ -269,7 +288,7 @@
 }
 .weather-widget .weather-icon {
     font-size: 28px;
-    color: #c9a84c;
+    color: #a5d6a7;
 }
 .weather-widget .weather-info {
     flex: 1;
@@ -284,7 +303,7 @@
     display: block;
     font-family: 'Times New Roman', serif;
     font-size: 12px;
-    color: #b0a89a;
+    color: #c8e6c9;
     text-transform: capitalize;
 }
 .weather-widget .weather-time {
@@ -294,11 +313,11 @@
     display: block;
     font-family: 'Times New Roman', serif;
     font-size: 13px;
-    color: #b0a89a;
+    color: #c8e6c9;
 }
 .weather-widget .weather-time span:first-child {
     font-weight: 700;
-    color: #c9a84c;
+    color: #a5d6a7;
     font-size: 15px;
 }
 
@@ -333,7 +352,7 @@
     transition: all 0.3s ease;
 }
 .footer-bottom-links a:hover {
-    color: #c9a84c;
+    color: #a5d6a7;
 }
 
 /* ============================================
