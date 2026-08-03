@@ -459,6 +459,93 @@
 }
 
 /* ============================================
+   SECTION CARDS - OPINION, ENVIRONMENT, SOCIETY, PHOTOS, VIDEO
+   ============================================ */
+.section-cards {
+    margin-bottom: 25px;
+}
+.section-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 20px;
+    border: 1px solid #d4cdc0;
+    text-align: center;
+    transition: all 0.3s;
+}
+.section-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+.section-card .section-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+.section-card .section-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: #1a1a1a;
+}
+.section-card .section-label {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.section-card .section-count {
+    font-size: 12px;
+    color: #6c757d;
+}
+.section-card.opinion { border-top: 4px solid #6f42c1; }
+.section-card.environment { border-top: 4px solid #28a745; }
+.section-card.society { border-top: 4px solid #17a2b8; }
+.section-card.photos { border-top: 4px solid #fd7e14; }
+.section-card.video { border-top: 4px solid #dc3545; }
+
+/* ============================================
+   ADSBOARD CARDS
+   ============================================ */
+.adsboard-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 20px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 20px;
+}
+.adsboard-card h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+    border-bottom: 2px solid var(--admin-gold);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+.adsboard-card h5 i {
+    color: var(--admin-gold);
+    margin-right: 8px;
+}
+.ad-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ebe3;
+}
+.ad-stat:last-child {
+    border-bottom: none;
+}
+.ad-stat .label {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+}
+.ad-stat .value {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
@@ -485,6 +572,9 @@
         font-size: 60px;
         right: -10px;
         top: -10px;
+    }
+    .section-cards .col-md-2 {
+        margin-bottom: 15px;
     }
 }
 
@@ -687,7 +777,7 @@
             </div>
         </div>
 
-        <!-- Role Breakdown -->
+        <!-- Third Row - Role Breakdown -->
         <div class="stats-grid">
             <div class="row">
                 <div class="col-12">
@@ -701,6 +791,68 @@
                             <span class="badge bg-warning">Advertisers: {{ advertisers|default:0 }}</span>
                         </div>
                         <div class="stat-label">User Role Breakdown</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+        SECTION CARDS - OPINION, ENVIRONMENT, SOCIETY, PHOTOS, VIDEO
+        ======================================== -->
+        <div class="section-cards">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="section-card opinion">
+                        <div class="section-icon"><i class="fas fa-pencil-alt" style="color: #6f42c1;"></i></div>
+                        <div class="section-number">{{ opinion_articles|default:0 }}</div>
+                        <div class="section-label">Opinion</div>
+                        <div class="section-count">Published: {{ opinion_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:opinion_list' %}" class="btn btn-sm btn-outline-primary mt-2">Manage</a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="section-card environment">
+                        <div class="section-icon"><i class="fas fa-leaf" style="color: #28a745;"></i></div>
+                        <div class="section-number">{{ environment_articles|default:0 }}</div>
+                        <div class="section-label">Environment</div>
+                        <div class="section-count">Published: {{ environment_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:environment_list' %}" class="btn btn-sm btn-outline-success mt-2">Manage</a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="section-card society">
+                        <div class="section-icon"><i class="fas fa-users" style="color: #17a2b8;"></i></div>
+                        <div class="section-number">{{ society_articles|default:0 }}</div>
+                        <div class="section-label">Society</div>
+                        <div class="section-count">Published: {{ society_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:society_list' %}" class="btn btn-sm btn-outline-info mt-2">Manage</a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="section-card photos">
+                        <div class="section-icon"><i class="fas fa-camera" style="color: #fd7e14;"></i></div>
+                        <div class="section-number">{{ total_photos|default:0 }}</div>
+                        <div class="section-label">Photos</div>
+                        <div class="section-count">Featured: {{ featured_photos|default:0 }}</div>
+                        <a href="{% url 'dashboard:photos_list' %}" class="btn btn-sm btn-outline-warning mt-2">Manage</a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="section-card video">
+                        <div class="section-icon"><i class="fas fa-video" style="color: #dc3545;"></i></div>
+                        <div class="section-number">{{ total_videos|default:0 }}</div>
+                        <div class="section-label">Videos</div>
+                        <div class="section-count">Featured: {{ featured_videos|default:0 }}</div>
+                        <a href="{% url 'dashboard:video_list' %}" class="btn btn-sm btn-outline-danger mt-2">Manage</a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="section-card" style="border-top: 4px solid var(--admin-gold);">
+                        <div class="section-icon"><i class="fas fa-ad" style="color: var(--admin-gold);"></i></div>
+                        <div class="section-number">{{ total_ads|default:0 }}</div>
+                        <div class="section-label">Adsboard</div>
+                        <div class="section-count">Active: {{ active_ads|default:0 }}</div>
+                        <a href="{% url 'dashboard:ad_list' %}" class="btn btn-sm btn-outline-secondary mt-2">Manage</a>
                     </div>
                 </div>
             </div>
@@ -731,6 +883,30 @@
                             <i class="fas fa-tags"></i>
                             <span>Tags</span>
                         </a>
+                        <a href="{% url 'dashboard:opinion_list' %}" class="quick-action">
+                            <i class="fas fa-pencil-alt"></i>
+                            <span>Opinion</span>
+                        </a>
+                        <a href="{% url 'dashboard:environment_list' %}" class="quick-action">
+                            <i class="fas fa-leaf"></i>
+                            <span>Environment</span>
+                        </a>
+                        <a href="{% url 'dashboard:society_list' %}" class="quick-action">
+                            <i class="fas fa-users"></i>
+                            <span>Society</span>
+                        </a>
+                        <a href="{% url 'dashboard:photos_list' %}" class="quick-action">
+                            <i class="fas fa-camera"></i>
+                            <span>Photos</span>
+                        </a>
+                        <a href="{% url 'dashboard:video_list' %}" class="quick-action">
+                            <i class="fas fa-video"></i>
+                            <span>Videos</span>
+                        </a>
+                        <a href="{% url 'dashboard:video_upload' %}" class="quick-action">
+                            <i class="fas fa-upload"></i>
+                            <span>Upload Video</span>
+                        </a>
                         <a href="{% url 'dashboard:user_list' %}" class="quick-action">
                             <i class="fas fa-users-cog"></i>
                             <span>Manage Users</span>
@@ -742,6 +918,10 @@
                         <a href="{% url 'dashboard:ad_list' %}" class="quick-action">
                             <i class="fas fa-ad"></i>
                             <span>Advertisements</span>
+                        </a>
+                        <a href="{% url 'dashboard:ad_create' %}" class="quick-action">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Create Ad</span>
                         </a>
                         <a href="{% url 'dashboard:media_list' %}" class="quick-action">
                             <i class="fas fa-images"></i>
@@ -763,6 +943,43 @@
                             <i class="fas fa-cog"></i>
                             <span>Site Settings</span>
                         </a>
+                    </div>
+                </div>
+
+                <!-- Adsboard - Ad Performance Overview -->
+                <div class="adsboard-card">
+                    <h5><i class="fas fa-chart-line"></i> Ad Performance Overview</h5>
+                    <div class="row">
+                        <div class="col-6 col-md-3">
+                            <div class="ad-stat">
+                                <span class="label">Total Ads</span>
+                                <span class="value">{{ total_ads|default:0 }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="ad-stat">
+                                <span class="label">Active</span>
+                                <span class="value">{{ active_ads|default:0 }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="ad-stat">
+                                <span class="label">Total Views</span>
+                                <span class="value">{{ total_ad_views|default:0|intcomma }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="ad-stat">
+                                <span class="label">Total Clicks</span>
+                                <span class="value">{{ total_ad_clicks|default:0|intcomma }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'dashboard:ad_performance' %}" class="btn btn-sm btn-outline-primary">View Full Performance</a>
+                        <a href="{% url 'dashboard:ad_revenue' %}" class="btn btn-sm btn-outline-success">Revenue Dashboard</a>
+                        <a href="{% url 'dashboard:ad_list' %}" class="btn btn-sm btn-outline-secondary">Manage Ads</a>
+                        <a href="{% url 'dashboard:ad_create' %}" class="btn btn-sm btn-outline-warning">Create Ad</a>
                     </div>
                 </div>
 
@@ -871,6 +1088,36 @@
                             <span>Active Ads</span>
                             <span class="stat-value">{{ active_ads|default:0 }}</span>
                         </div>
+                        <div class="stat-row">
+                            <span>Photos</span>
+                            <span class="stat-value">{{ total_photos|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Videos</span>
+                            <span class="stat-value">{{ total_videos|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ad Revenue Quick View -->
+                <div class="sidebar-card">
+                    <h5><i class="fas fa-dollar-sign"></i> Ad Revenue</h5>
+                    <div class="quick-stats">
+                        <div class="stat-row">
+                            <span>Total Revenue</span>
+                            <span class="stat-value">${{ total_ad_revenue|default:0|floatformat:2 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Pending Ads</span>
+                            <span class="stat-value">{{ pending_ads|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Expired Ads</span>
+                            <span class="stat-value">{{ expired_ads|default:0 }}</span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'dashboard:ad_revenue' %}" class="btn btn-sm btn-outline-success w-100">View Revenue Details</a>
                     </div>
                 </div>
 
@@ -885,8 +1132,6 @@
                         <a href="{% url 'contacts:contact' %}"><i class="fas fa-headset"></i> Support</a>
                     </div>
                 </div>
-
-                <!-- System Info - REMOVED for client-friendly dashboard -->
             </div>
         </div>
     </div>
