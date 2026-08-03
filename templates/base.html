@@ -52,6 +52,96 @@
         gtag('config', '{{ GOOGLE_ANALYTICS_ID }}');
     </script>
     {% endif %}
+    
+    <style>
+        /* ============================================
+           RESPONSIVE HEADER STYLES
+           ============================================ */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.8rem !important;
+                letter-spacing: 3px !important;
+                white-space: normal !important;
+                word-wrap: break-word !important;
+            }
+            
+            .main-title .avenue-text {
+                font-size: 1.6rem !important;
+                letter-spacing: 4px !important;
+                display: inline-block !important;
+            }
+            
+            .subtitle-text {
+                font-size: 0.7rem !important;
+                letter-spacing: 2px !important;
+                white-space: normal !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }
+            
+            .subtitle-text .leaf-icon,
+            .subtitle-text .users-icon {
+                font-size: 0.6rem !important;
+            }
+            
+            .subtitle-lines {
+                max-width: 20px !important;
+            }
+            
+            .header-logo {
+                height: 45px !important;
+            }
+            
+            .header-actions .btn {
+                font-size: 0.75rem !important;
+                padding: 0.2rem 0.5rem !important;
+            }
+            
+            .d-flex-header {
+                gap: 8px !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }
+            
+            .header-titles {
+                align-items: center !important;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-title {
+                font-size: 1.4rem !important;
+                letter-spacing: 2px !important;
+            }
+            
+            .main-title .avenue-text {
+                font-size: 1.2rem !important;
+                letter-spacing: 3px !important;
+            }
+            
+            .subtitle-text {
+                font-size: 0.6rem !important;
+                letter-spacing: 1px !important;
+                gap: 4px !important;
+            }
+            
+            .subtitle-text i {
+                font-size: 0.5rem !important;
+            }
+            
+            .header-logo {
+                height: 35px !important;
+            }
+            
+            .d-flex-header {
+                gap: 5px !important;
+            }
+            
+            .subtitle-lines {
+                max-width: 15px !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- ============================================
@@ -101,35 +191,35 @@
     </div>
 
     <!-- ============================================
-    MAIN HEADER - Logo + Headings pushed together
+    MAIN HEADER - Logo + Headings pushed together (Responsive)
     ============================================ -->
     <header class="main-header" style="background: #1a5c3a; color: white; border-bottom: 4px solid #8B7355; padding: 15px 0;">
         <div class="container">
             <div class="row align-items-center">
                 <!-- Logo + Headings - Combined Left -->
                 <div class="col-12 col-md-8 text-center text-md-start">
-                    <div class="d-flex align-items-center justify-content-center justify-content-md-start" style="gap: 15px;">
+                    <div class="d-flex align-items-center justify-content-center justify-content-md-start d-flex-header" style="gap: 15px;">
                         <!-- Logo -->
                         <a href="{% url 'home' %}" class="logo-link" style="color: white; text-decoration: none; flex-shrink: 0;">
-                            <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue" class="site-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important; height: 65px; display: inline-block;">
+                            <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue" class="site-logo header-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important; height: 65px; display: inline-block;">
                         </a>
                         
                         <!-- Headings Group -->
                         <div class="header-titles" style="display: flex; flex-direction: column; line-height: 1.1;">
-                            <!-- MAIN TITLE - Single line -->
-                            <h1 style="font-family: 'Playfair Display', serif; font-weight: 900; font-size: 2.5rem; color: white; margin: 0; letter-spacing: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); white-space: nowrap;">
-                                THE EGERTON <span style="font-family: 'Playfair Display', serif; font-weight: 700; color: #a5d6a7; letter-spacing: 7px;">AVENUE</span>
+                            <!-- MAIN TITLE - Responsive single line -->
+                            <h1 class="main-title" style="font-family: 'Playfair Display', serif; font-weight: 900; font-size: 2.5rem; color: white; margin: 0; letter-spacing: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); white-space: nowrap;">
+                                THE EGERTON <span class="avenue-text" style="font-family: 'Playfair Display', serif; font-weight: 700; color: #a5d6a7; letter-spacing: 7px;">AVENUE</span>
                             </h1>
                             
-                            <!-- SUBTITLE -->
-                            <div style="display: flex; align-items: center; gap: 12px; margin-top: 2px;">
-                                <span style="flex: 1; max-width: 40px; height: 2px; background: #8B7355;"></span>
-                                <h2 style="font-family: 'Times New Roman', serif; font-weight: 400; font-size: 0.95rem; color: #c8e6c9; margin: 0; letter-spacing: 4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; white-space: nowrap;">
-                                    <i class="fas fa-leaf" style="color: #a5d6a7; font-size: 0.8rem;"></i>
+                            <!-- SUBTITLE - Responsive -->
+                            <div style="display: flex; align-items: center; gap: 12px; margin-top: 2px; flex-wrap: wrap; justify-content: flex-start;">
+                                <span class="subtitle-lines" style="flex: 1; max-width: 40px; height: 2px; background: #8B7355;"></span>
+                                <h2 class="subtitle-text" style="font-family: 'Times New Roman', serif; font-weight: 400; font-size: 0.95rem; color: #c8e6c9; margin: 0; letter-spacing: 4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                                    <i class="fas fa-leaf leaf-icon" style="color: #a5d6a7; font-size: 0.8rem;"></i>
                                     Environment &amp; Society
-                                    <i class="fas fa-users" style="color: #a5d6a7; font-size: 0.8rem;"></i>
+                                    <i class="fas fa-users users-icon" style="color: #a5d6a7; font-size: 0.8rem;"></i>
                                 </h2>
-                                <span style="flex: 1; max-width: 40px; height: 2px; background: #8B7355;"></span>
+                                <span class="subtitle-lines" style="flex: 1; max-width: 40px; height: 2px; background: #8B7355;"></span>
                             </div>
                         </div>
                     </div>
