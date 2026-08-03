@@ -9,9 +9,17 @@
                     <div class="ad-content">
                         {% get_ad_by_position 'header' as ad %}
                         {% if ad %}
-                        <a href="{{ ad.link_url }}" target="{{ ad.link_target }}">
-                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="img-fluid">
-                        </a>
+                            {% if ad.image %}
+                                <a href="{{ ad.link_url }}" target="{{ ad.link_target|default:'_blank' }}">
+                                    <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="img-fluid">
+                                </a>
+                            {% else %}
+                                <div class="ad-placeholder">
+                                    <i class="fas fa-ad"></i>
+                                    <span>{{ ad.title|default:'Advertise Here' }}</span>
+                                    <small>{{ ad.description|default:'Contact us for advertising opportunities' }}</small>
+                                </div>
+                            {% endif %}
                         {% else %}
                         <div class="ad-placeholder">
                             <i class="fas fa-ad"></i>

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.utils.html import format_html
+from django.utils.html import format_html, mark_safe
 from django.urls import reverse
 from django.utils import timezone
 from .models import Article, ArticleVersion, ArticleStatistics, RelatedArticle
@@ -46,14 +46,10 @@ class RelatedArticleInline(admin.TabularInline):
     ordering = ('order',)
     autocomplete_fields = ('target',)
     
-    # FIXED: Removed request._obj_ check
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "target":
-            # Check if we're editing an existing object
             if hasattr(request, '_obj_') and request._obj_ is not None:
-                # Exclude the source article itself from being selected as target
                 kwargs["queryset"] = Article.objects.exclude(id=request._obj_.id)
-            # If creating new, no exclusion needed
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -111,13 +107,11 @@ class ArticleAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('author', 'category')
     
-    # FIXED: formfield_for_foreignkey without request._obj_
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "category":
             kwargs["queryset"] = Category.objects.filter(is_active=True)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
-    # FIXED: formfield_for_manytomany to filter active tags
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "tags":
             kwargs["queryset"] = Tag.objects.filter(is_active=True)
@@ -151,27 +145,40 @@ class ArticleAdmin(admin.ModelAdmin):
     status_display.admin_order_field = 'status'
     
     def featured_badges(self, obj):
-        badges = []
-        if obj.is_featured:
-            badges.append('<span style="background:#c9a84c;color:#0a1628;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;margin:2px;">★ Featured</span>')
-        if obj.is_breaking:
-            badges.append('<span style="background:#dc3545;color:#fff;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;margin:2px;">⚡ Breaking</span>')
-        if obj.is_editor_pick:
-            badges.append('<span style="background:#4a2c6a;color:#fff;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;margin:2px;">📌 Editor\'s Pick</span>')
-        if obj.is_exclusive:
-            badges.append('<span style="background:#1a5c3a;color:#fff;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;margin:2px;">🔒 Exclusive</span>')
-        return format_html(' '.join(badges))
+        try:
+            badges = []
+            if obj.is_featured:
+                badges.append('<span style="background:#c9a84c;color:#0a1628;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;margin:2px;">★ Featured</span>')
+            if obj.is_breaking:
+                badges.append('<span style="background:#dc3545;color:#fff;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;margin:2px;">⚡ Breaking</span>')
+            if obj.is_editor_pick:
+                badges.append('<span style="background:#4a2c6a;color:#fff;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;margin:2px;">📌 Editor\'s Pick</span>')
+            if obj.is_exclusive:
+                badges.append('<span style="background:#1a5c3a;color:#fff;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;margin:2px;">🔒 Exclusive</span>')
+            
+            if not badges:
+                return mark_safe('<span style="color:#999;font-style:italic;">No badges</span>')
+            return mark_safe(' '.join(badges))
+        except Exception:
+            return "-"
     featured_badges.short_description = 'Badges'
+    featured_badges.admin_order_field = 'is_featured'
     
     def action_links(self, obj):
-        links = []
-        if obj.status != 'published':
-            links.append('<a href="#" onclick="return false;" style="color:#28a745;margin-right:8px;">Publish</a>')
-        else:
-            links.append('<a href="#" onclick="return false;" style="color:#ffc107;margin-right:8px;">Unpublish</a>')
-        links.append('<a href="{}" target="_blank" style="color:#1a5c3a;margin-right:8px;">View</a>'.format(obj.get_absolute_url()))
-        links.append('<a href="{}" style="color:#007bff;">Edit</a>'.format(reverse('admin:articles_article_change', args=[obj.id])))
-        return format_html(' '.join(links))
+        try:
+            links = []
+            if obj.status != 'published':
+                links.append('<a href="#" onclick="return false;" style="color:#28a745;margin-right:8px;">Publish</a>')
+            else:
+                links.append('<a href="#" onclick="return false;" style="color:#ffc107;margin-right:8px;">Unpublish</a>')
+            links.append('<a href="{}" target="_blank" style="color:#1a5c3a;margin-right:8px;">View</a>'.format(obj.get_absolute_url()))
+            links.append('<a href="{}" style="color:#007bff;">Edit</a>'.format(reverse('admin:articles_article_change', args=[obj.id])))
+            
+            if not links:
+                return "-"
+            return mark_safe(' '.join(links))
+        except Exception:
+            return "-"
     action_links.short_description = 'Actions'
     
     def make_featured(self, request, queryset):
@@ -205,7 +212,6 @@ class ArticleAdmin(admin.ModelAdmin):
     archive_selected.short_description = 'Archive selected articles'
     
     def delete_selected(self, request, queryset):
-        # Soft delete - move to trash instead of hard delete
         updated = queryset.update(status='trash')
         self.message_user(request, f'{updated} article(s) moved to trash.')
     delete_selected.short_description = 'Move selected to trash'
