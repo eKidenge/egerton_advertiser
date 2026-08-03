@@ -57,64 +57,148 @@
         /* ============================================
            RESPONSIVE HEADER STYLES
            ============================================ */
-        @media (max-width: 768px) {
+        /* Keep everything on the same line */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .logo-link {
+            flex-shrink: 0;
+        }
+        
+        .header-logo {
+            height: 65px;
+            display: inline-block;
+        }
+        
+        .main-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: white;
+            margin: 0;
+            letter-spacing: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+        
+        .avenue-text {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #a5d6a7;
+            letter-spacing: 7px;
+        }
+        
+        .subtitle-text {
+            font-family: 'Times New Roman', serif;
+            font-weight: 400;
+            font-size: 0.95rem;
+            color: #c8e6c9;
+            margin: 0;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        
+        .subtitle-text i {
+            color: #a5d6a7;
+            font-size: 0.8rem;
+        }
+        
+        .subtitle-lines {
+            flex: 1;
+            max-width: 40px;
+            height: 2px;
+            background: #8B7355;
+        }
+        
+        .subtitle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 2px;
+        }
+        
+        @media (max-width: 992px) {
+            .header-logo {
+                height: 50px !important;
+            }
+            
             .main-title {
                 font-size: 1.8rem !important;
                 letter-spacing: 3px !important;
-                white-space: normal !important;
-                word-wrap: break-word !important;
             }
             
-            .main-title .avenue-text {
+            .avenue-text {
                 font-size: 1.6rem !important;
                 letter-spacing: 4px !important;
-                display: inline-block !important;
             }
             
             .subtitle-text {
-                font-size: 0.7rem !important;
-                letter-spacing: 2px !important;
-                white-space: normal !important;
-                flex-wrap: wrap !important;
-                justify-content: center !important;
-            }
-            
-            .subtitle-text .leaf-icon,
-            .subtitle-text .users-icon {
-                font-size: 0.6rem !important;
-            }
-            
-            .subtitle-lines {
-                max-width: 20px !important;
-            }
-            
-            .header-logo {
-                height: 45px !important;
-            }
-            
-            .header-actions .btn {
                 font-size: 0.75rem !important;
-                padding: 0.2rem 0.5rem !important;
+                letter-spacing: 2px !important;
             }
             
-            .d-flex-header {
-                gap: 8px !important;
-                flex-wrap: wrap !important;
-                justify-content: center !important;
+            .subtitle-text i {
+                font-size: 0.65rem !important;
             }
             
-            .header-titles {
-                align-items: center !important;
+            .header-left {
+                gap: 10px !important;
+            }
+            
+            .header-right .btn {
+                font-size: 0.8rem !important;
+                padding: 0.25rem 0.6rem !important;
             }
         }
         
-        @media (max-width: 576px) {
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap !important;
+                gap: 8px;
+            }
+            
+            .header-left {
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+            
+            .header-right {
+                flex: 0 0 auto;
+            }
+            
+            .header-logo {
+                height: 40px !important;
+            }
+            
             .main-title {
                 font-size: 1.4rem !important;
                 letter-spacing: 2px !important;
             }
             
-            .main-title .avenue-text {
+            .avenue-text {
                 font-size: 1.2rem !important;
                 letter-spacing: 3px !important;
             }
@@ -129,16 +213,85 @@
                 font-size: 0.5rem !important;
             }
             
-            .header-logo {
-                height: 35px !important;
+            .subtitle-lines {
+                max-width: 20px !important;
             }
             
-            .d-flex-header {
-                gap: 5px !important;
+            .subtitle-wrapper {
+                gap: 6px !important;
+            }
+            
+            .header-left {
+                gap: 8px !important;
+            }
+            
+            .header-right .btn {
+                font-size: 0.7rem !important;
+                padding: 0.2rem 0.4rem !important;
+            }
+            
+            .header-right .btn-sm {
+                font-size: 0.65rem !important;
+                padding: 0.15rem 0.35rem !important;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .header-container {
+                flex-wrap: wrap !important;
+                gap: 5px;
+                justify-content: center !important;
+            }
+            
+            .header-left {
+                flex: 0 0 100% !important;
+                justify-content: center !important;
+            }
+            
+            .header-right {
+                flex: 0 0 100% !important;
+                justify-content: center !important;
+            }
+            
+            .header-logo {
+                height: 32px !important;
+            }
+            
+            .main-title {
+                font-size: 1.1rem !important;
+                letter-spacing: 1px !important;
+            }
+            
+            .avenue-text {
+                font-size: 1rem !important;
+                letter-spacing: 2px !important;
+            }
+            
+            .subtitle-text {
+                font-size: 0.5rem !important;
+                letter-spacing: 1px !important;
+                gap: 3px !important;
+            }
+            
+            .subtitle-text i {
+                font-size: 0.4rem !important;
             }
             
             .subtitle-lines {
-                max-width: 15px !important;
+                max-width: 12px !important;
+            }
+            
+            .subtitle-wrapper {
+                gap: 4px !important;
+            }
+            
+            .header-left {
+                gap: 5px !important;
+            }
+            
+            .header-right .btn {
+                font-size: 0.6rem !important;
+                padding: 0.1rem 0.3rem !important;
             }
         }
     </style>
@@ -191,82 +344,78 @@
     </div>
 
     <!-- ============================================
-    MAIN HEADER - Logo + Headings pushed together (Responsive)
+    MAIN HEADER - Logo + Headings on left, Actions on right
     ============================================ -->
     <header class="main-header" style="background: #1a5c3a; color: white; border-bottom: 4px solid #8B7355; padding: 15px 0;">
         <div class="container">
-            <div class="row align-items-center">
-                <!-- Logo + Headings - Combined Left -->
-                <div class="col-12 col-md-8 text-center text-md-start">
-                    <div class="d-flex align-items-center justify-content-center justify-content-md-start d-flex-header" style="gap: 15px;">
-                        <!-- Logo -->
-                        <a href="{% url 'home' %}" class="logo-link" style="color: white; text-decoration: none; flex-shrink: 0;">
-                            <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue" class="site-logo header-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important; height: 65px; display: inline-block;">
-                        </a>
+            <div class="header-container">
+                <!-- Left: Logo + Headings -->
+                <div class="header-left">
+                    <!-- Logo -->
+                    <a href="{% url 'home' %}" class="logo-link" style="color: white; text-decoration: none;">
+                        <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue" class="header-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important;">
+                    </a>
+                    
+                    <!-- Headings Group -->
+                    <div style="display: flex; flex-direction: column; line-height: 1.1;">
+                        <!-- MAIN TITLE -->
+                        <h1 class="main-title">
+                            THE EGERTON <span class="avenue-text">AVENUE</span>
+                        </h1>
                         
-                        <!-- Headings Group -->
-                        <div class="header-titles" style="display: flex; flex-direction: column; line-height: 1.1;">
-                            <!-- MAIN TITLE - Responsive single line -->
-                            <h1 class="main-title" style="font-family: 'Playfair Display', serif; font-weight: 900; font-size: 2.5rem; color: white; margin: 0; letter-spacing: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); white-space: nowrap;">
-                                THE EGERTON <span class="avenue-text" style="font-family: 'Playfair Display', serif; font-weight: 700; color: #a5d6a7; letter-spacing: 7px;">AVENUE</span>
-                            </h1>
-                            
-                            <!-- SUBTITLE - Responsive -->
-                            <div style="display: flex; align-items: center; gap: 12px; margin-top: 2px; flex-wrap: wrap; justify-content: flex-start;">
-                                <span class="subtitle-lines" style="flex: 1; max-width: 40px; height: 2px; background: #8B7355;"></span>
-                                <h2 class="subtitle-text" style="font-family: 'Times New Roman', serif; font-weight: 400; font-size: 0.95rem; color: #c8e6c9; margin: 0; letter-spacing: 4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; white-space: nowrap;">
-                                    <i class="fas fa-leaf leaf-icon" style="color: #a5d6a7; font-size: 0.8rem;"></i>
-                                    Environment &amp; Society
-                                    <i class="fas fa-users users-icon" style="color: #a5d6a7; font-size: 0.8rem;"></i>
-                                </h2>
-                                <span class="subtitle-lines" style="flex: 1; max-width: 40px; height: 2px; background: #8B7355;"></span>
-                            </div>
+                        <!-- SUBTITLE -->
+                        <div class="subtitle-wrapper">
+                            <span class="subtitle-lines"></span>
+                            <h2 class="subtitle-text">
+                                <i class="fas fa-leaf"></i>
+                                Environment &amp; Society
+                                <i class="fas fa-users"></i>
+                            </h2>
+                            <span class="subtitle-lines"></span>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Header Actions - Right -->
-                <div class="col-12 col-md-4 text-center text-md-end mt-2 mt-md-0">
-                    <div class="header-actions">
-                        <a href="{% url 'search:search' %}" class="btn btn-outline-light btn-sm me-1" title="Search" style="border-color: rgba(255,255,255,0.5); color: white;">
-                            <i class="fas fa-search"></i>
+                <!-- Right: Actions -->
+                <div class="header-right">
+                    <a href="{% url 'search:search' %}" class="btn btn-outline-light btn-sm" title="Search" style="border-color: rgba(255,255,255,0.5); color: white;">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    
+                    {% if user.is_authenticated %}
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
+                                <i class="fas fa-user-circle"></i> 
+                                <span class="d-none d-md-inline">{{ user.get_full_name|default:user.username|truncatechars:10 }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'dashboard:home' %}">
+                                    <i class="fas fa-tachometer-alt" style="color: #2e7d32;"></i> Dashboard
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                                    <i class="fas fa-user" style="color: #2e7d32;"></i> Profile
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-none d-sm-inline-block" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
+                            <i class="fas fa-sign-in-alt"></i> <span class="d-none d-md-inline">Login</span>
                         </a>
-                        
-                        {% if user.is_authenticated %}
-                            <div class="dropdown d-inline-block">
-                                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
-                                    <i class="fas fa-user-circle"></i> 
-                                    <span class="d-none d-md-inline">{{ user.get_full_name|default:user.username|truncatechars:10 }}</span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{% url 'dashboard:home' %}">
-                                        <i class="fas fa-tachometer-alt" style="color: #2e7d32;"></i> Dashboard
-                                    </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                                        <i class="fas fa-user" style="color: #2e7d32;"></i> Profile
-                                    </a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
-                                    </a></li>
-                                </ul>
-                            </div>
-                        {% else %}
-                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-none d-sm-inline-block" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
-                                <i class="fas fa-sign-in-alt"></i> Login
-                            </a>
-                            <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm d-none d-sm-inline-block" style="background: #a5d6a7; color: #1a5c3a; border: none; font-weight: bold;">
-                                <i class="fas fa-user-plus"></i> Register
-                            </a>
-                            <!-- Mobile icons -->
-                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-inline-block d-sm-none" title="Login" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
-                                <i class="fas fa-sign-in-alt"></i>
-                            </a>
-                            <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm d-inline-block d-sm-none" title="Register" style="background: #a5d6a7; color: #1a5c3a; border: none;">
-                                <i class="fas fa-user-plus"></i>
-                            </a>
-                        {% endif %}
-                    </div>
+                        <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm d-none d-sm-inline-block" style="background: #a5d6a7; color: #1a5c3a; border: none; font-weight: bold;">
+                            <i class="fas fa-user-plus"></i> <span class="d-none d-md-inline">Register</span>
+                        </a>
+                        <!-- Mobile icons -->
+                        <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-inline-block d-sm-none" title="Login" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </a>
+                        <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm d-inline-block d-sm-none" title="Register" style="background: #a5d6a7; color: #1a5c3a; border: none;">
+                            <i class="fas fa-user-plus"></i>
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

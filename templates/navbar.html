@@ -1,8 +1,8 @@
 {% load static %}
 <nav class="main-navigation navbar navbar-expand-lg navbar-dark" style="background: #1a5c3a; border-bottom: 3px solid #8B7355; font-family: 'Times New Roman', serif; padding: 0;">
     <div class="container">
-        <!-- Navbar Toggler - Left aligned -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" 
+        <!-- Navbar Toggler - Push to RIGHT with ms-auto -->
+        <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" 
                 aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" style="border-color: rgba(255,255,255,0.2); margin: 8px 0;">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -224,11 +224,12 @@
         border-top-color: #ffffff;
     }
     
-    /* Navbar Toggler - Left aligned */
+    /* Navbar Toggler - Keep on RIGHT */
     .main-navigation .navbar-toggler {
         border-color: rgba(255,255,255,0.2);
         padding: 8px 12px;
-        margin-right: auto;
+        margin-left: auto !important;
+        margin-right: 0 !important;
         transition: all 0.3s ease;
     }
     
