@@ -21,7 +21,7 @@ mkdir -p apps/articles/static
 mkdir -p apps/dashboard/static
 
 # ============================================
-# FIX: Drop all tables and start fresh (SQLite compatible)
+# RESET DATABASE AND MIGRATE
 # ============================================
 echo ""
 echo "🗄️  Resetting database completely..."
@@ -42,136 +42,141 @@ echo "📁 Collecting static files..."
 python manage.py collectstatic --noinput
 
 # ============================================
-# CREATE SUPERUSER AND DEMO USERS
+# SEED DATABASE WITH DEMO DATA
 # ============================================
 echo ""
-echo "👤 Creating users..."
+echo "🌱 Seeding database with demo data..."
+echo "This may take a few minutes..."
+
+# Run the seed_data command (creates categories, tags, articles, comments, ads, subscribers, etc.)
+python manage.py seed_data
+
+# ============================================
+# CREATE SUPERUSER (if seed_data didn't create one)
+# ============================================
+echo ""
+echo "👤 Creating superuser..."
 
 python manage.py shell << EOF
-import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'egerton_advertiser.settings')
-
 from django.contrib.auth import get_user_model
 from apps.accounts.models import User, UserProfile
 
 User = get_user_model()
 
 print("\n" + "="*50)
-print("  CREATING USERS")
+print("  CREATING SUPERUSER")
 print("="*50)
 
-# ============================================
-# CREATE SUPERUSER (ADMIN)
-# ============================================
-print("\nCreating Superuser...")
-User.objects.filter(username='admin').delete()
-
-admin = User.objects.create_superuser(
-    username='admin',
-    email='admin@theegertonadvertiser.com',
-    password='Admin@123!',
-    first_name='System',
-    last_name='Admin',
-    role='super_admin',
-    is_verified=True,
-    is_active=True
-)
-UserProfile.objects.get_or_create(user=admin)
-print("✅ Superuser created successfully!")
-print("   Username: admin")
-print("   Email: admin@theegertonadvertiser.com")
-print("   Password: Admin@123!")
-
-# ============================================
-# CREATE EDITOR USER
-# ============================================
-print("\nCreating Editor...")
-User.objects.filter(username='editor').delete()
-
-editor = User.objects.create_user(
-    username='editor',
-    email='editor@theegertonadvertiser.com',
-    password='Editor@123',
-    first_name='Editor',
-    last_name='User',
-    role='editor',
-    is_verified=True,
-    is_active=True,
-    department='editorial'
-)
-UserProfile.objects.get_or_create(user=editor)
-print("✅ Editor created successfully!")
-print("   Username: editor")
-print("   Email: editor@theegertonadvertiser.com")
-print("   Password: Editor@123")
+# Check if superuser exists
+if not User.objects.filter(is_superuser=True).exists():
+    print("\nCreating superuser...")
+    
+    # Delete any existing admin user to avoid conflicts
+    User.objects.filter(username='admin').delete()
+    
+    admin = User.objects.create_superuser(
+        username='admin',
+        email='admin@theegertonadvertiser.com',
+        password='Admin@123!',
+        first_name='System',
+        last_name='Admin',
+        role='super_admin',
+        is_verified=True,
+        is_active=True
+    )
+    UserProfile.objects.get_or_create(user=admin)
+    print("✅ Superuser created successfully!")
+    print("   Username: admin")
+    print("   Email: admin@theegertonadvertiser.com")
+    print("   Password: Admin@123!")
+else:
+    print("✅ Superuser already exists.")
+    
+    # Ensure admin user has proper profile
+    try:
+        admin = User.objects.get(username='admin')
+        UserProfile.objects.get_or_create(user=admin)
+    except User.DoesNotExist:
+        pass
 
 # ============================================
-# CREATE JOURNALIST USER
+# CREATE ADDITIONAL DEMO USERS (if not created by seed_data)
 # ============================================
-print("\nCreating Journalist...")
-User.objects.filter(username='journalist').delete()
+print("\n" + "="*50)
+print("  CREATING DEMO USERS")
+print("="*50)
 
-journalist = User.objects.create_user(
-    username='journalist',
-    email='journalist@theegertonadvertiser.com',
-    password='Journalist@123',
-    first_name='Journalist',
-    last_name='User',
-    role='journalist',
-    is_verified=True,
-    is_active=True,
-    department='news'
-)
-UserProfile.objects.get_or_create(user=journalist)
-print("✅ Journalist created successfully!")
-print("   Username: journalist")
-print("   Email: journalist@theegertonadvertiser.com")
-print("   Password: Journalist@123")
+# Create Editor if not exists
+if not User.objects.filter(username='editor').exists():
+    print("\nCreating Editor...")
+    editor = User.objects.create_user(
+        username='editor',
+        email='editor@theegertonadvertiser.com',
+        password='Editor@123',
+        first_name='Editor',
+        last_name='User',
+        role='editor',
+        is_verified=True,
+        is_active=True
+    )
+    UserProfile.objects.get_or_create(user=editor)
+    print("✅ Editor created!")
+    print("   Username: editor")
+    print("   Password: Editor@123")
 
-# ============================================
-# CREATE ADVERTISER USER
-# ============================================
-print("\nCreating Advertiser...")
-User.objects.filter(username='advertiser').delete()
+# Create Journalist if not exists
+if not User.objects.filter(username='journalist').exists():
+    print("\nCreating Journalist...")
+    journalist = User.objects.create_user(
+        username='journalist',
+        email='journalist@theegertonadvertiser.com',
+        password='Journalist@123',
+        first_name='Journalist',
+        last_name='User',
+        role='journalist',
+        is_verified=True,
+        is_active=True
+    )
+    UserProfile.objects.get_or_create(user=journalist)
+    print("✅ Journalist created!")
+    print("   Username: journalist")
+    print("   Password: Journalist@123")
 
-advertiser = User.objects.create_user(
-    username='advertiser',
-    email='advertiser@theegertonadvertiser.com',
-    password='Advertiser@123',
-    first_name='Advertiser',
-    last_name='User',
-    role='advertiser',
-    is_verified=True,
-    is_active=True,
-    department='advertising'
-)
-UserProfile.objects.get_or_create(user=advertiser)
-print("✅ Advertiser created successfully!")
-print("   Username: advertiser")
-print("   Email: advertiser@theegertonadvertiser.com")
-print("   Password: Advertiser@123")
+# Create Advertiser if not exists
+if not User.objects.filter(username='advertiser').exists():
+    print("\nCreating Advertiser...")
+    advertiser = User.objects.create_user(
+        username='advertiser',
+        email='advertiser@theegertonadvertiser.com',
+        password='Advertiser@123',
+        first_name='Advertiser',
+        last_name='User',
+        role='advertiser',
+        is_verified=True,
+        is_active=True
+    )
+    UserProfile.objects.get_or_create(user=advertiser)
+    print("✅ Advertiser created!")
+    print("   Username: advertiser")
+    print("   Password: Advertiser@123")
 
-# ============================================
-# CREATE SUBSCRIBER USER
-# ============================================
-print("\nCreating Subscriber...")
-User.objects.filter(username='subscriber').delete()
-
-subscriber = User.objects.create_user(
-    username='subscriber',
-    email='subscriber@theegertonadvertiser.com',
-    password='Subscriber@123',
-    first_name='Subscriber',
-    last_name='User',
-    role='subscriber',
-    is_verified=True,
-    is_active=True
-)
-UserProfile.objects.get_or_create(user=subscriber)
-print("✅ Subscriber created successfully!")
-print("   Username: subscriber")
-print("   Email: subscriber@theegertonadvertiser.com")
-print("   Password: Subscriber@123")
+# Create Subscriber if not exists
+if not User.objects.filter(username='subscriber').exists():
+    print("\nCreating Subscriber...")
+    subscriber = User.objects.create_user(
+        username='subscriber',
+        email='subscriber@theegertonadvertiser.com',
+        password='Subscriber@123',
+        first_name='Subscriber',
+        last_name='User',
+        role='subscriber',
+        is_verified=True,
+        is_active=True
+    )
+    UserProfile.objects.get_or_create(user=subscriber)
+    print("✅ Subscriber created!")
+    print("   Username: subscriber")
+    print("   Password: Subscriber@123")
 
 # ============================================
 # SUMMARY
@@ -180,23 +185,23 @@ print("\n" + "="*50)
 print("  USER SUMMARY")
 print("="*50)
 print("")
-print("🔑 ADMIN (Full System Access)")
+print("🔑 SUPER ADMIN (Full System Access)")
 print("   Username: admin")
 print("   Password: Admin@123!")
 print("")
-print("📝 EDITOR (Content Management)")
+print("EDITOR (Content Management)")
 print("   Username: editor")
 print("   Password: Editor@123")
 print("")
-print("✍️  JOURNALIST (Article Writing)")
+print("JOURNALIST (Article Writing)")
 print("   Username: journalist")
 print("   Password: Journalist@123")
 print("")
-print("📢 ADVERTISER (Ad Management)")
+print("ADVERTISER (Ad Management)")
 print("   Username: advertiser")
 print("   Password: Advertiser@123")
 print("")
-print("👤 SUBSCRIBER (Content Reader)")
+print("SUBSCRIBER (Content Reader)")
 print("   Username: subscriber")
 print("   Password: Subscriber@123")
 print("")

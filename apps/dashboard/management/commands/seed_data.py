@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 import random
+import os
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand
 from django.contrib.auth.hashers import make_password
@@ -489,7 +491,7 @@ class Command(BaseCommand):
             )
         
         # ============================================
-        # 11. CREATE MEDIA FILES (Images & Videos)
+        # 11. CREATE MEDIA FILES (FIXED - with required fields)
         # ============================================
         self.stdout.write('🖼️ Creating media files...')
         
@@ -497,23 +499,39 @@ class Command(BaseCommand):
         
         # Create 30 image files
         for i in range(30):
-            MediaFile.objects.create(
-                title=f'Image {i+1} - {fake.word()}',
-                description=fake.sentence(nb_words=5),
-                file_type='image',
-                uploaded_by=random.choice(uploaders),
-                created_at=timezone.now() - timedelta(days=random.randint(1, 60)),
-            )
+            try:
+                MediaFile.objects.create(
+                    title=f'Image {i+1} - {fake.word()}',
+                    description=fake.sentence(nb_words=5),
+                    file_type='image',
+                    uploaded_by=random.choice(uploaders),
+                    file_size=random.randint(100000, 5000000),  # 100KB to 5MB
+                    width=random.randint(800, 1920),
+                    height=random.randint(600, 1080),
+                    mime_type=random.choice(['image/jpeg', 'image/png', 'image/webp']),
+                    created_at=timezone.now() - timedelta(days=random.randint(1, 60)),
+                )
+            except Exception as e:
+                # Skip if there's an error with specific fields
+                self.stdout.write(f'   ⚠️ Skipped image {i+1}: {str(e)[:50]}')
         
         # Create 10 video files
         for i in range(10):
-            MediaFile.objects.create(
-                title=f'Video {i+1} - {fake.word()}',
-                description=fake.sentence(nb_words=5),
-                file_type='video',
-                uploaded_by=random.choice(uploaders),
-                created_at=timezone.now() - timedelta(days=random.randint(1, 60)),
-            )
+            try:
+                MediaFile.objects.create(
+                    title=f'Video {i+1} - {fake.word()}',
+                    description=fake.sentence(nb_words=5),
+                    file_type='video',
+                    uploaded_by=random.choice(uploaders),
+                    file_size=random.randint(10000000, 100000000),  # 10MB to 100MB
+                    width=random.randint(1280, 3840),
+                    height=random.randint(720, 2160),
+                    duration=random.randint(30, 600),
+                    mime_type=random.choice(['video/mp4', 'video/webm', 'video/quicktime']),
+                    created_at=timezone.now() - timedelta(days=random.randint(1, 60)),
+                )
+            except Exception as e:
+                self.stdout.write(f'   ⚠️ Skipped video {i+1}: {str(e)[:50]}')
         
         # ============================================
         # 12. CREATE USER ACTIVITY LOGS
