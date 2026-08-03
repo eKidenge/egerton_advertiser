@@ -8,60 +8,8 @@
 {% block extra_css %}
 <style>
     /* ============================================
-       HERO SECTION - GREEN THEME
+       HERO SECTION - REMOVED (Already in header)
        ============================================ */
-    .hero-section {
-        background: linear-gradient(135deg, #1a5c3a 0%, #2e7d32 50%, #388e3c 100%);
-        padding: 35px 0 30px;
-        margin-bottom: 35px;
-        border-bottom: 5px solid #a5d6a7;
-        position: relative;
-    }
-    .hero-section::after {
-        content: '';
-        position: absolute;
-        bottom: -7px;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #a5d6a7, transparent);
-    }
-    .hero-section h1 {
-        font-family: 'Playfair Display', 'Times New Roman', serif;
-        font-weight: 900;
-        font-size: 38px;
-        color: #fff;
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
-        margin-bottom: 5px;
-        letter-spacing: 3px;
-    }
-    .hero-section h1 .soil-text {
-        color: #8B7355;
-    }
-    .hero-section .subtitle {
-        font-family: 'Times New Roman', 'Playfair Display', serif;
-        font-size: 17px;
-        color: #c8e6c9;
-        font-style: italic;
-        letter-spacing: 1px;
-    }
-    .hero-date {
-        font-family: 'Times New Roman', serif;
-        color: #a5d6a7;
-        font-size: 14px;
-        letter-spacing: 2px;
-        font-weight: 600;
-    }
-    .hero-date i {
-        color: #fff;
-    }
-    .hero-volume {
-        font-family: 'Times New Roman', serif;
-        color: #c8e6c9;
-        font-size: 13px;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-    }
 
     /* ============================================
        FEATURED ARTICLE
@@ -595,9 +543,6 @@
         }
     }
     @media (max-width: 992px) {
-        .hero-section h1 {
-            font-size: 32px;
-        }
         .featured-article img {
             height: 280px;
         }
@@ -609,19 +554,6 @@
         }
     }
     @media (max-width: 768px) {
-        .hero-section {
-            padding: 25px 0 20px;
-        }
-        .hero-section h1 {
-            font-size: 26px;
-            letter-spacing: 1px;
-        }
-        .hero-section .subtitle {
-            font-size: 15px;
-        }
-        .hero-date {
-            font-size: 12px;
-        }
         .featured-article img {
             height: 200px;
         }
@@ -656,15 +588,6 @@
         }
     }
     @media (max-width: 576px) {
-        .hero-section h1 {
-            font-size: 22px;
-        }
-        .hero-section .subtitle {
-            font-size: 13px;
-        }
-        .hero-date {
-            font-size: 11px;
-        }
         .featured-article img {
             height: 160px;
         }
@@ -751,35 +674,6 @@
 {% endblock %}
 
 {% block content %}
-<!-- ============================================
-   HERO SECTION
-   ============================================ -->
-<section class="hero-section fade-in-up">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h1>
-                    <span style="color: #fff;">ENVIRONMENT</span> 
-                    <span class="soil-text">&amp;</span> 
-                    <span class="soil-text">SOCIETY</span>
-                </h1>
-                <p class="subtitle">The Egerton Avenue — Official Gazette on Environment and Society</p>
-            </div>
-            <div class="col-md-4 text-md-end">
-                <span class="hero-date">
-                    <i class="far fa-calendar-alt"></i> 
-                    <span id="currentDate"></span>
-                </span>
-                <div class="mt-1">
-                    <span class="hero-volume">
-                        <i class="fas fa-flag"></i> Volume I, Issue No. 1
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <div class="container">
     <div class="row">
         <!-- ============================================
@@ -981,7 +875,8 @@
             {% endif %}
 
             <!-- ============================================
-            LATEST ARTICLES            ============================================ -->
+            LATEST ARTICLES
+            ============================================ -->
             <div class="category-section fade-in-up">
                 <div class="section-header">
                     <h3><i class="fas fa-newspaper"></i> Latest News</h3>
@@ -1129,19 +1024,4 @@
         </div>
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Display current date
-    const now = new Date();
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-    document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
-});
-</script>
 {% endblock %}
