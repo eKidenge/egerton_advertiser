@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Environment - The Egerton Avenue{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 style="font-family: 'Playfair Display', serif; color: #1a5c3a; font-weight: 900;">
+                <i class="fas fa-leaf" style="color: #8B7355;"></i> Environment
+            </h1>
+            <p style="font-family: 'Times New Roman', serif; color: #6c757d; font-size: 18px;">
+                Climate action, conservation, sustainability, and green energy
+            </p>
+            <hr style="border-color: #8B7355; opacity: 0.3;">
+        </div>
+    </div>
+    
+    <!-- Featured Article -->
+    {% if featured_article %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="featured-article" style="background: #e8f5e9; border-left: 4px solid #1a5c3a; padding: 20px; border-radius: 8px;">
+                <span class="badge" style="background: #1a5c3a; color: #fff;">Featured</span>
+                <h3 style="font-family: 'Playfair Display', serif; color: #1a5c3a; margin-top: 10px;">
+                    <a href="{{ featured_article.get_absolute_url }}" style="color: inherit; text-decoration: none;">
+                        {{ featured_article.title }}
+                    </a>
+                </h3>
+                <p style="font-family: 'Times New Roman', serif; color: #6c757d;">{{ featured_article.excerpt|truncatewords:30 }}</p>
+                <div style="font-family: 'Times New Roman', serif; font-size: 12px; color: #6c757d;">
+                    <i class="fas fa-user"></i> {{ featured_article.author.get_full_name|default:featured_article.author.username }}
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-calendar-alt"></i> {{ featured_article.published_at|date:"M d, Y" }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Articles Grid -->
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100" style="border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e8ecef;">
+                {% if article.featured_image %}
+                <img src="{{ article.featured_image.url }}" class="card-img-top" alt="{{ article.title }}" style="height: 180px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 style="font-family: 'Playfair Display', serif; color: #1a5c3a; font-size: 18px;">
+                        <a href="{{ article.get_absolute_url }}" style="color: inherit; text-decoration: none;">
+                            {{ article.title }}
+                        </a>
+                    </h5>
+                    <p style="font-family: 'Times New Roman', serif; color: #6c757d; font-size: 14px;">
+                        {{ article.excerpt|truncatewords:20 }}
+                    </p>
+                    <div style="font-family: 'Times New Roman', serif; font-size: 12px; color: #6c757d;">
+                        <i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-leaf" style="font-size: 3rem; color: #a5d6a7; opacity: 0.5;"></i>
+            <h3 style="font-family: 'Playfair Display', serif; color: #1a5c3a;">No Environment Articles Yet</h3>
+            <p style="font-family: 'Times New Roman', serif; color: #6c757d;">Environmental news and stories will appear here soon.</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if articles.has_other_pages %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if articles.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ articles.previous_page_number }}">&laquo; Previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in articles.paginator.page_range %}
+                    <li class="page-item {% if articles.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if articles.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ articles.next_page_number }}">Next &raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

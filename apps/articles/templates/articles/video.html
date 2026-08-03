@@ -1,0 +1,495 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Video - The Egerton Avenue{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ============================================
+       VIDEO PAGE - The Egerton Avenue Style
+       ============================================ */
+    .video-header {
+        background: linear-gradient(135deg, #1a5c3a 0%, #2e7d32 100%);
+        padding: 40px 0 30px;
+        margin-bottom: 30px;
+        border-bottom: 4px solid #8B7355;
+        position: relative;
+    }
+    .video-header::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, #8B7355, transparent);
+    }
+    .video-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        color: white;
+        margin: 0;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .video-header h1 i {
+        color: #a5d6a7;
+        margin-right: 12px;
+    }
+    .video-header p {
+        font-family: 'Times New Roman', serif;
+        color: rgba(255,255,255,0.8);
+        font-size: 1.1rem;
+        margin: 5px 0 0;
+        font-style: italic;
+    }
+
+    /* Featured Videos */
+    .featured-videos {
+        margin-bottom: 40px;
+    }
+    .featured-videos .featured-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a5c3a;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #8B7355;
+        display: inline-block;
+    }
+    .featured-videos .featured-title i {
+        color: #8B7355;
+        margin-right: 10px;
+    }
+
+    /* Video Card */
+    .video-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        background: #ffffff;
+        border: 1px solid #e8ecef;
+        height: 100%;
+    }
+    .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(26, 92, 58, 0.2);
+        border-color: #1a5c3a;
+    }
+    .video-card .video-thumbnail {
+        position: relative;
+        overflow: hidden;
+        background: #1a5c3a;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .video-card .video-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+    .video-card:hover .video-thumbnail img {
+        transform: scale(1.05);
+    }
+    .video-card .video-play-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(26, 92, 58, 0.85);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.8rem;
+        transition: all 0.3s ease;
+        border: 3px solid white;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .video-card .video-play-btn:hover {
+        background: #8B7355;
+        transform: translate(-50%, -50%) scale(1.1);
+        color: white;
+    }
+    .video-card .video-duration {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 3px 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        border-radius: 0;
+        font-weight: 700;
+    }
+    .video-card .video-info {
+        padding: 15px;
+    }
+    .video-card .video-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1a5c3a;
+        margin: 0 0 4px;
+        line-height: 1.3;
+    }
+    .video-card .video-meta {
+        font-family: 'Times New Roman', serif;
+        font-size: 0.8rem;
+        color: #6b7a8f;
+    }
+    .video-card .video-meta i {
+        margin-right: 4px;
+        color: #8B7355;
+    }
+    .video-card .video-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #8B7355;
+        color: white;
+        padding: 3px 12px;
+        font-family: 'Times New Roman', serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-radius: 0;
+    }
+
+    /* Filter Categories */
+    .filter-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 25px;
+        padding: 15px 0;
+        border-bottom: 1px solid #e8ecef;
+    }
+    .filter-categories .filter-link {
+        font-family: 'Times New Roman', serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #1a5c3a;
+        padding: 5px 16px;
+        border: 2px solid #1a5c3a;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+    }
+    .filter-categories .filter-link:hover,
+    .filter-categories .filter-link.active {
+        background: #1a5c3a;
+        color: white;
+        border-color: #1a5c3a;
+        text-decoration: none;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: #f5f0e8;
+        border: 2px dashed #d4c8b8;
+    }
+    .empty-state i {
+        font-size: 4rem;
+        color: #8B7355;
+        opacity: 0.3;
+        margin-bottom: 15px;
+    }
+    .empty-state h3 {
+        font-family: 'Playfair Display', serif;
+        color: #1a5c3a;
+        margin-bottom: 10px;
+    }
+    .empty-state p {
+        font-family: 'Times New Roman', serif;
+        color: #6b7a8f;
+        font-size: 1rem;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* Pagination */
+    .pagination-wrapper {
+        margin-top: 30px;
+        text-align: center;
+    }
+    .pagination-wrapper .step-links {
+        display: inline-flex;
+        gap: 5px;
+        align-items: center;
+        background: #ffffff;
+        padding: 5px;
+        border: 1px solid #e8ecef;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .pagination-wrapper .step-links a,
+    .pagination-wrapper .step-links .current {
+        font-family: 'Times New Roman', serif;
+        font-weight: 700;
+        padding: 8px 16px;
+        color: #1a5c3a;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+    .pagination-wrapper .step-links a:hover {
+        background: #1a5c3a;
+        color: white;
+        border-color: #1a5c3a;
+    }
+    .pagination-wrapper .step-links .current {
+        background: #1a5c3a;
+        color: white;
+        border-color: #1a5c3a;
+    }
+    .pagination-wrapper .step-links .disabled {
+        color: #d4c8b8;
+        cursor: not-allowed;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .video-header h1 {
+            font-size: 1.8rem;
+        }
+        .video-header {
+            padding: 30px 0 20px;
+        }
+        .video-card .video-thumbnail {
+            height: 160px;
+        }
+        .video-card .video-play-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+        }
+        .filter-categories .filter-link {
+            font-size: 0.75rem;
+            padding: 4px 12px;
+        }
+    }
+    @media (max-width: 576px) {
+        .video-header h1 {
+            font-size: 1.4rem;
+        }
+        .video-card .video-thumbnail {
+            height: 140px;
+        }
+        .video-card .video-play-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+        .pagination-wrapper .step-links a,
+        .pagination-wrapper .step-links .current {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ============================================
+     VIDEO HEADER
+     ============================================ -->
+<div class="video-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-8">
+                <h1>
+                    <i class="fas fa-video"></i> Video Gallery
+                </h1>
+                <p>Watch stories from our environment and society</p>
+            </div>
+            <div class="col-12 col-md-4 text-md-end mt-2 mt-md-0">
+                <span style="color: rgba(255,255,255,0.6); font-family: 'Times New Roman', serif; font-size: 0.85rem;">
+                    <i class="fas fa-play-circle"></i> {{ videos.paginator.count }} videos
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- ============================================
+         FEATURED VIDEOS
+         ============================================ -->
+    {% if featured_videos %}
+    <div class="featured-videos">
+        <div class="featured-title">
+            <i class="fas fa-star"></i> Featured Videos
+        </div>
+        <div class="row g-3">
+            {% for video in featured_videos %}
+            <div class="col-12 col-md-4">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        {% if video.thumbnail %}
+                            <img src="{{ video.thumbnail.url }}" alt="{{ video.title|default:'Video' }}" loading="lazy">
+                        {% else %}
+                            <div style="background: #2e7d32; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                                <i class="fas fa-film"></i>
+                            </div>
+                        {% endif %}
+                        <a href="{{ video.file.url }}" class="video-play-btn" target="_blank" title="Play Video">
+                            <i class="fas fa-play"></i>
+                        </a>
+                        {% if video.duration %}
+                        <span class="video-duration">{{ video.duration }}</span>
+                        {% endif %}
+                        <span class="video-badge">Featured</span>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">{{ video.title|default:'Untitled'|truncatechars:35 }}</div>
+                        <div class="video-meta">
+                            <i class="fas fa-calendar-alt"></i> {{ video.created_at|date:"M d, Y" }}
+                            {% if video.views %}
+                            <span class="ms-3"><i class="fas fa-eye"></i> {{ video.views }} views</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ============================================
+         FILTER CATEGORIES
+         ============================================ -->
+    {% if categories %}
+    <div class="filter-categories">
+        <a href="{% url 'articles:video' %}" class="filter-link {% if not request.GET.category %}active{% endif %}">
+            All Videos
+        </a>
+        {% for category in categories %}
+        <a href="?category={{ category.slug }}" class="filter-link {% if request.GET.category == category.slug %}active{% endif %}">
+            {{ category.name }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ============================================
+         VIDEOS GRID
+         ============================================ -->
+    {% if videos %}
+    <div class="row g-3">
+        {% for video in videos %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    {% if video.thumbnail %}
+                        <img src="{{ video.thumbnail.url }}" alt="{{ video.title|default:'Video' }}" loading="lazy">
+                    {% else %}
+                        <div style="background: #2e7d32; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                            <i class="fas fa-film"></i>
+                        </div>
+                    {% endif %}
+                    <a href="{{ video.file.url }}" class="video-play-btn" target="_blank" title="Play Video">
+                        <i class="fas fa-play"></i>
+                    </a>
+                    {% if video.duration %}
+                    <span class="video-duration">{{ video.duration }}</span>
+                    {% endif %}
+                </div>
+                <div class="video-info">
+                    <div class="video-title">{{ video.title|default:'Untitled'|truncatechars:35 }}</div>
+                    <div class="video-meta">
+                        <i class="fas fa-calendar-alt"></i> {{ video.created_at|date:"M d, Y" }}
+                        {% if video.views %}
+                        <span class="ms-3"><i class="fas fa-eye"></i> {{ video.views }} views</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ============================================
+         PAGINATION
+         ============================================ -->
+    {% if videos.has_other_pages %}
+    <div class="pagination-wrapper">
+        <div class="step-links">
+            {% if videos.has_previous %}
+                <a href="?page=1{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+                <a href="?page={{ videos.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+            {% else %}
+                <span class="disabled"><i class="fas fa-angle-double-left"></i></span>
+                <span class="disabled"><i class="fas fa-angle-left"></i></span>
+            {% endif %}
+
+            <span class="current">
+                Page {{ videos.number }} of {{ videos.paginator.num_pages }}
+            </span>
+
+            {% if videos.has_next %}
+                <a href="?page={{ videos.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <a href="?page={{ videos.paginator.num_pages }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+            {% else %}
+                <span class="disabled"><i class="fas fa-angle-right"></i></span>
+                <span class="disabled"><i class="fas fa-angle-double-right"></i></span>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- ============================================
+         EMPTY STATE
+         ============================================ -->
+    <div class="empty-state">
+        <i class="fas fa-video"></i>
+        <h3>No Videos Yet</h3>
+        <p>Videos will appear here once they are uploaded. Check back soon!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Video click handler
+        const videoCards = document.querySelectorAll('.video-card .video-play-btn');
+        videoCards.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const videoUrl = this.getAttribute('href');
+                if (videoUrl) {
+                    // Open in new tab or modal
+                    window.open(videoUrl, '_blank');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

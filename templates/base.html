@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ENVIRONMENT & SOCIETY - Official Gazette{% endblock %}</title>
+    <title>{% block title %}The Egerton Avenue - Environment & Society{% endblock %}</title>
     
     <!-- Pass API keys to JavaScript -->
     <script>
-        // Weather API configuration
         window.OPENWEATHER_API_KEY = "{{ OPENWEATHER_API_KEY|default:'' }}";
         window.OPENWEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/";
-        // City for weather (default: Egerton, Kenya)
         window.WEATHER_CITY = "Egerton,KE";
         window.WEATHER_LAT = "-0.5";
         window.WEATHER_LON = "35.8";
@@ -36,9 +34,9 @@
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     
     <!-- Meta tags -->
-    <meta name="description" content="{% block meta_description %}ENVIRONMENT & SOCIETY - Official Publication. Latest news on environment, sustainability, climate action, and social development.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}The Egerton Avenue - Official Publication on Environment and Society{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}environment, society, sustainability, climate, Kenya, news, green energy, conservation, social development{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}ENVIRONMENT & SOCIETY{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}The Egerton Avenue{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Official Publication on Environment and Society{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
@@ -59,7 +57,7 @@
     <!-- ============================================
     TOP ANNOUNCEMENT BAR - Green Theme
     ============================================ -->
-    <div class="announcement-bar" style="background: #1a5c3a; color: white;">
+    <div class="announcement-bar" style="background: #1a5c3a; color: white; padding: 6px 0; font-size: 13px;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12 col-md-6 text-center text-md-start">
@@ -87,7 +85,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <span class="breaking-label" style="background: #2e7d32; color: white;">
+                    <span class="breaking-label" style="background: #2e7d32; color: white; padding: 2px 12px; font-weight: 700; font-size: 12px;">
                         <i class="fas fa-circle pulse"></i> BREAKING
                     </span>
                 </div>
@@ -103,46 +101,45 @@
     </div>
 
     <!-- ============================================
-    MAIN HEADER - Green Theme
+    MAIN HEADER - "The Egerton Avenue Ser.com" Style
     ============================================ -->
-    <header class="main-header" style="background: linear-gradient(135deg, #1a5c3a 0%, #2e7d32 50%, #388e3c 100%); color: white; border-bottom: 4px solid #a5d6a7;">
+    <header class="main-header" style="background: #1a5c3a; color: white; border-bottom: 4px solid #8B7355; padding: 15px 0;">
         <div class="container">
-            <div class="row align-items-center py-2 py-md-3">
+            <div class="row align-items-center">
                 <!-- Logo - Left -->
-                <div class="col-6 col-md-3">
+                <div class="col-12 col-md-3 text-center text-md-start">
                     <div class="logo-container">
                         <a href="{% url 'home' %}" class="logo-link" style="color: white; text-decoration: none;">
-                            <!-- FIXED: Added inline styles to override CSS and show original logo -->
-                            <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" class="site-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important;">
-                            <span class="logo-text" style="color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
-                                ENVIRONMENT<br><small style="color: #a5d6a7;">&amp; SOCIETY</small>
+                            <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue" class="site-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important; height: 50px; display: inline-block;">
+                            <span class="logo-text" style="color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); font-family: 'Playfair Display', serif; font-weight: 900; font-size: 14px; letter-spacing: 2px; display: inline-block; vertical-align: middle; margin-left: 5px;">
+                                THE EGERTON<br><small style="color: #a5d6a7; font-size: 10px; letter-spacing: 1px;">AVENUE</small>
                             </span>
                         </a>
                     </div>
                 </div>
                 
-                <!-- Motto - Center (hidden on mobile) -->
-                <div class="col-md-6 text-center d-none d-md-block">
-                    <div class="header-motto">
-                        <span class="motto-text" style="color: #c8e6c9; font-style: italic;">
-                            "Preserving Nature, Building Communities"
-                        </span>
+                <!-- Center - Site Title with Soil Color -->
+                <div class="col-12 col-md-6 text-center py-2 py-md-0">
+                    <div class="header-title">
+                        <h1 style="font-family: 'Playfair Display', serif; font-weight: 900; font-size: 2.2rem; color: white; margin: 0; letter-spacing: 3px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                            ENVIRONMENT<br>
+                            <span style="color: #8B7355; font-style: italic; font-weight: 700; font-size: 1.8rem;">&amp; SOCIETY</span>
+                        </h1>
                     </div>
                 </div>
                 
                 <!-- Header Actions - Right -->
-                <div class="col-6 col-md-3 text-end">
+                <div class="col-12 col-md-3 text-center text-md-end mt-2 mt-md-0">
                     <div class="header-actions">
-                        <a href="{% url 'search:search' %}" class="btn btn-outline-light btn-sm me-1 me-md-2" title="Search" style="border-color: rgba(255,255,255,0.5); color: white;">
+                        <a href="{% url 'search:search' %}" class="btn btn-outline-light btn-sm me-1" title="Search" style="border-color: rgba(255,255,255,0.5); color: white;">
                             <i class="fas fa-search"></i>
                         </a>
                         
                         {% if user.is_authenticated %}
                             <div class="dropdown d-inline-block">
-                                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3);">
+                                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
                                     <i class="fas fa-user-circle"></i> 
                                     <span class="d-none d-md-inline">{{ user.get_full_name|default:user.username|truncatechars:10 }}</span>
-                                    <span class="d-inline d-md-none"><i class="fas fa-chevron-down"></i></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{% url 'dashboard:home' %}">
@@ -151,9 +148,6 @@
                                     <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
                                         <i class="fas fa-user" style="color: #2e7d32;"></i> Profile
                                     </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'accounts:change_password' %}">
-                                        <i class="fas fa-key" style="color: #2e7d32;"></i> Change Password
-                                    </a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
                                         <i class="fas fa-sign-out-alt"></i> Logout
@@ -161,14 +155,14 @@
                                 </ul>
                             </div>
                         {% else %}
-                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-none d-sm-inline-block" style="background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3);">
+                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-none d-sm-inline-block" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </a>
                             <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm d-none d-sm-inline-block" style="background: #a5d6a7; color: #1a5c3a; border: none; font-weight: bold;">
                                 <i class="fas fa-user-plus"></i> Register
                             </a>
-                            <!-- Mobile icons for login/register -->
-                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-inline-block d-sm-none" title="Login" style="background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3);">
+                            <!-- Mobile icons -->
+                            <a href="{% url 'accounts:login' %}" class="btn btn-light btn-sm d-inline-block d-sm-none" title="Login" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.2);">
                                 <i class="fas fa-sign-in-alt"></i>
                             </a>
                             <a href="{% url 'accounts:register' %}" class="btn btn-success btn-sm d-inline-block d-sm-none" title="Register" style="background: #a5d6a7; color: #1a5c3a; border: none;">
@@ -178,22 +172,11 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Mobile Motto (visible only on mobile) -->
-            <div class="row d-md-none">
-                <div class="col-12 text-center pb-2">
-                    <div class="mobile-motto">
-                        <span class="motto-text-small" style="color: #c8e6c9; font-style: italic; font-size: 0.85rem;">
-                            "Preserving Nature, Building Communities"
-                        </span>
-                    </div>
-                </div>
-            </div>
         </div>
     </header>
 
     <!-- ============================================
-    NAVIGATION (Responsive) - Green Theme
+    NAVIGATION - Using navbar.html
     ============================================ -->
     {% include 'navbar.html' %}
 
@@ -215,7 +198,7 @@
     </main>
 
     <!-- ============================================
-    FOOTER - Green Theme
+    FOOTER - Using footer.html
     ============================================ -->
     {% include 'footer.html' %}
 

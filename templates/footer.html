@@ -5,16 +5,8 @@
             <!-- Brand & Social -->
             <div class="col-lg-4 col-md-6">
                 <div class="footer-brand">
-                    <!-- Option A: Remove filter -->
-                    <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" class="footer-logo" height="50">
-                    
-                    <!-- OR Option B: Use better filter -->
-                    <!-- <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" class="footer-logo" height="50" style="filter: brightness(2) contrast(2) invert(1);"> -->
-                    
-                    <!-- OR Option C: Use white version -->
-                    <!-- <img src="{% static 'images/logo3-white.png' %}" alt="ENVIRONMENT & SOCIETY" class="footer-logo" height="50"> -->
-                    
-                    <h5 class="footer-title">ENVIRONMENT &amp; SOCIETY</h5>
+                    <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue" class="footer-logo" height="50">
+                    <h5 class="footer-title">The Egerton Avenue</h5>
                     <p class="footer-motto">"Preserving Nature, Building Communities"</p>
                     <p class="footer-description">
                         Official Publication on Environment and Society. 
@@ -32,29 +24,28 @@
                 </div>
             </div>
             
-            <!-- Categories -->
+            <!-- Quick Links - Matching Navigation -->
             <div class="col-lg-2 col-md-6">
-                <h6 class="footer-heading">Categories</h6>
+                <h6 class="footer-heading">Explore</h6>
                 <ul class="footer-links">
-                    <li><a href="{% url 'categories:detail' slug='climate-change' %}">Climate Change</a></li>
-                    <li><a href="{% url 'categories:detail' slug='conservation' %}">Conservation</a></li>
-                    <li><a href="{% url 'categories:detail' slug='renewable-energy' %}">Renewable Energy</a></li>
-                    <li><a href="{% url 'categories:detail' slug='sustainability' %}">Sustainability</a></li>
-                    <li><a href="{% url 'categories:detail' slug='social-issues' %}">Social Issues</a></li>
-                    <li><a href="{% url 'categories:detail' slug='community' %}">Community</a></li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'categories:detail' slug='opinion' %}">Opinion</a></li>
+                    <li><a href="{% url 'categories:detail' slug='environment' %}">Environment</a></li>
+                    <li><a href="{% url 'categories:detail' slug='society' %}">Society</a></li>
+                    <li><a href="{% url 'articles:photos' %}">Photos</a></li>
+                    <li><a href="{% url 'articles:video' %}">Video</a></li>
                 </ul>
             </div>
             
-            <!-- Quick Links -->
+            <!-- More Links -->
             <div class="col-lg-2 col-md-6">
-                <h6 class="footer-heading">Quick Links</h6>
+                <h6 class="footer-heading">More</h6>
                 <ul class="footer-links">
-                    <li><a href="{% url 'articles:latest' %}">Latest News</a></li>
-                    <li><a href="{% url 'articles:breaking_news' %}">Breaking News</a></li>
-                    <li><a href="{% url 'advertisements:list' %}">Advertise</a></li>
-                    <li><a href="{% url 'newsletter:subscribe' %}">Newsletter</a></li>
-                    <li><a href="{% url 'contacts:contact' %}">Contact Us</a></li>
                     <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contacts:contact' %}">Contact Us</a></li>
+                    <li><a href="/advertisements/create/">Advertise</a></li>
+                    <li><a href="{% url 'accounts:login' %}">Login</a></li>
+                    <li><a href="{% url 'accounts:register' %}">Register</a></li>
                 </ul>
             </div>
             
@@ -74,7 +65,7 @@
                 <div class="footer-contact mt-3">
                     <p><i class="fas fa-map-marker-alt"></i> Egerton, Kenya</p>
                     <p><i class="fas fa-phone"></i> +254 700 000 000</p>
-                    <p><i class="fas fa-envelope"></i> info@environmentandsociety.com</p>
+                    <p><i class="fas fa-envelope"></i> info@theegertonavenue.com</p>
                 </div>
                 
                 <!-- Weather & Time Widget -->
@@ -100,7 +91,7 @@
         <div class="footer-bottom">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="copyright">&copy; {% now "Y" %} ENVIRONMENT &amp; SOCIETY. All Rights Reserved.</p>
+                    <p class="copyright">&copy; {% now "Y" %} The Egerton Avenue. All Rights Reserved.</p>
                 </div>
                 <div class="col-md-6 text-end">
                     <ul class="footer-bottom-links">
@@ -122,7 +113,7 @@
 .main-footer {
     background: linear-gradient(180deg, #1a5c3a 0%, #0d3d26 100%);
     color: #e8f5e9;
-    border-top: 4px solid #a5d6a7;
+    border-top: 4px solid #8B7355;
     margin-top: 50px;
     font-family: 'Times New Roman', serif;
 }
@@ -132,15 +123,7 @@
    ============================================ */
 .footer-logo {
     margin-bottom: 10px;
-    /* Remove any filters that might cause fading */
     filter: none;
-    /* Optional: Add a slight glow for better visibility on dark background */
-    /* filter: drop-shadow(0 0 2px rgba(165, 214, 167, 0.3)); */
-}
-
-/* Alternative: If you need to use the filter, use this stronger version */
-.footer-logo-filtered {
-    filter: brightness(2) contrast(2) invert(1);
 }
 
 .footer-title {
@@ -150,12 +133,14 @@
     font-size: 20px;
     letter-spacing: 1px;
 }
+
 .footer-motto {
     font-family: 'Playfair Display', serif;
     font-style: italic;
     color: #a5d6a7;
     font-size: 14px;
 }
+
 .footer-description {
     font-family: 'Times New Roman', serif;
     font-size: 14px;
@@ -170,20 +155,23 @@
     font-family: 'Playfair Display', serif;
     color: #fff;
     font-weight: 700;
-    border-bottom: 2px solid #a5d6a7;
+    border-bottom: 2px solid #8B7355;
     padding-bottom: 10px;
     margin-bottom: 15px;
     font-size: 16px;
     letter-spacing: 1px;
 }
+
 .footer-links {
     list-style: none;
     padding: 0;
     margin: 0;
 }
+
 .footer-links li {
     margin-bottom: 6px;
 }
+
 .footer-links a {
     color: #c8e6c9;
     text-decoration: none;
@@ -191,6 +179,7 @@
     font-size: 14px;
     transition: all 0.3s ease;
 }
+
 .footer-links a:hover {
     color: #fff;
     padding-left: 5px;
@@ -212,9 +201,10 @@
     transition: all 0.3s ease;
     font-size: 14px;
 }
+
 .footer-social .social-link:hover {
-    background: #a5d6a7;
-    color: #1a5c3a;
+    background: #8B7355;
+    color: #ffffff;
     transform: translateY(-2px);
 }
 
@@ -225,6 +215,7 @@
     border-radius: 4px;
     overflow: hidden;
 }
+
 .footer-newsletter .form-control {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.05);
@@ -233,14 +224,17 @@
     font-family: 'Times New Roman', serif;
     font-size: 14px;
 }
+
 .footer-newsletter .form-control::placeholder {
     color: #6c757d;
 }
+
 .footer-newsletter .form-control:focus {
     border-color: #a5d6a7;
     box-shadow: 0 0 0 0.2rem rgba(165, 214, 167, 0.15);
     background: rgba(255, 255, 255, 0.08);
 }
+
 .footer-newsletter .btn-success {
     border-radius: 0;
     background: #2e7d32;
@@ -250,6 +244,7 @@
     font-weight: 700;
     font-family: 'Times New Roman', serif;
 }
+
 .footer-newsletter .btn-success:hover {
     background: #1b5e20;
 }
@@ -263,8 +258,9 @@
     color: #c8e6c9;
     margin-bottom: 4px;
 }
+
 .footer-contact i {
-    color: #a5d6a7;
+    color: #8B7355;
     width: 22px;
     text-align: center;
     margin-right: 8px;
@@ -277,6 +273,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     padding-top: 15px;
 }
+
 .weather-widget {
     display: flex;
     align-items: center;
@@ -286,19 +283,23 @@
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 .weather-widget .weather-icon {
     font-size: 28px;
     color: #a5d6a7;
 }
+
 .weather-widget .weather-info {
     flex: 1;
 }
+
 .weather-widget .temp {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     font-size: 18px;
     color: #fff;
 }
+
 .weather-widget .condition {
     display: block;
     font-family: 'Times New Roman', serif;
@@ -306,15 +307,18 @@
     color: #c8e6c9;
     text-transform: capitalize;
 }
+
 .weather-widget .weather-time {
     text-align: right;
 }
+
 .weather-widget .weather-time span {
     display: block;
     font-family: 'Times New Roman', serif;
     font-size: 13px;
     color: #c8e6c9;
 }
+
 .weather-widget .weather-time span:first-child {
     font-weight: 700;
     color: #a5d6a7;
@@ -329,21 +333,25 @@
     padding: 15px 0;
     margin-top: 30px;
 }
+
 .copyright {
     font-family: 'Times New Roman', serif;
     font-size: 13px;
     color: #6c757d;
     margin: 0;
 }
+
 .footer-bottom-links {
     list-style: none;
     padding: 0;
     margin: 0;
 }
+
 .footer-bottom-links li {
     display: inline-block;
     margin-left: 20px;
 }
+
 .footer-bottom-links a {
     color: #6c757d;
     text-decoration: none;
@@ -351,6 +359,7 @@
     font-size: 13px;
     transition: all 0.3s ease;
 }
+
 .footer-bottom-links a:hover {
     color: #a5d6a7;
 }

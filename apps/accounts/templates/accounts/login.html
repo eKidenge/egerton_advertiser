@@ -88,7 +88,7 @@
         border-radius: 2px;
     }
     
-    /* --- Decorative Top Border - Green Theme --- */
+    /* --- Decorative Top Border - Green Theme with Soil Color --- */
     .login-container::before {
         content: '';
         position: absolute;
@@ -96,7 +96,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #1a5c3a, #a5d6a7, #1a5c3a);
+        background: linear-gradient(90deg, #1a5c3a, #8B7355, #1a5c3a);
         background-size: 200% 100%;
         animation: shimmer 3s ease-in-out infinite;
     }
@@ -106,7 +106,7 @@
         50% { background-position: 100% 50%; }
     }
     
-    /* --- Government Seal / Emblem - Green Theme --- */
+    /* --- Government Seal / Emblem - Green Theme with Logo --- */
     .gov-seal {
         text-align: center;
         margin-bottom: 15px;
@@ -121,14 +121,17 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 3px solid #a5d6a7;
+        border: 3px solid #8B7355;
         box-shadow: 0 0 0 5px rgba(26, 92, 58, 0.1);
         transition: all 0.3s ease;
+        overflow: hidden;
     }
     
-    .gov-seal .seal-icon i {
-        font-size: 32px;
-        color: #ffffff;
+    .gov-seal .seal-icon img {
+        width: 45px;
+        height: 45px;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
     }
     
     .gov-seal .seal-icon:hover {
@@ -140,7 +143,7 @@
         margin-top: 5px;
         font-family: 'Cormorant Garamond', 'Playfair Display', serif;
         font-size: 11px;
-        color: #2e7d32;
+        color: #8B7355;
         letter-spacing: 3px;
         text-transform: uppercase;
         font-weight: 700;
@@ -149,7 +152,7 @@
     /* --- Header --- */
     .login-header {
         text-align: center;
-        border-bottom: 3px solid #1a5c3a;
+        border-bottom: 3px solid #8B7355;
         padding-bottom: 15px;
         margin-bottom: 20px;
     }
@@ -166,7 +169,7 @@
     
     .login-header .subtitle {
         font-family: 'Cormorant Garamond', 'Times New Roman', serif;
-        color: #2e7d32;
+        color: #8B7355;
         font-size: 14px;
         font-weight: 600;
         letter-spacing: 2px;
@@ -231,7 +234,7 @@
     }
     
     .form-group label i {
-        color: #a5d6a7;
+        color: #8B7355;
         margin-right: 6px;
         width: 16px;
         font-size: 13px;
@@ -316,7 +319,7 @@
     }
     
     .form-check-label i {
-        color: #a5d6a7;
+        color: #8B7355;
     }
     
     .form-options {
@@ -338,7 +341,7 @@
     }
     
     .forgot-link i {
-        color: #a5d6a7;
+        color: #8B7355;
         margin-right: 4px;
         font-size: 12px;
     }
@@ -412,7 +415,7 @@
     
     .divider span {
         padding: 0 18px;
-        color: #2e7d32;
+        color: #8B7355;
         font-family: 'Cormorant Garamond', 'Playfair Display', serif;
         font-size: 12px;
         text-transform: uppercase;
@@ -478,8 +481,13 @@
     }
     
     .security-footer small i {
-        color: #2e7d32;
+        color: #8B7355;
         margin-right: 4px;
+    }
+    
+    .security-footer .the-egerton {
+        color: #8B7355;
+        font-weight: 700;
     }
     
     /* --- Loading Spinner --- */
@@ -558,8 +566,9 @@
             height: 50px;
         }
         
-        .gov-seal .seal-icon i {
-            font-size: 24px;
+        .gov-seal .seal-icon img {
+            width: 35px;
+            height: 35px;
         }
         
         .btn-login {
@@ -604,12 +613,12 @@
 <div class="login-wrapper">
     <div class="login-container">
         
-        <!-- Government Seal - Green Theme -->
+        <!-- Government Seal with Logo -->
         <div class="gov-seal">
             <div class="seal-icon">
-                <i class="fas fa-leaf"></i>
+                <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue">
             </div>
-            <div class="seal-text">Official Portal</div>
+            <div class="seal-text">The Egerton Avenue</div>
         </div>
         
         <!-- Header - ENVIRONMENT & SOCIETY -->
@@ -617,7 +626,7 @@
             <h2>ENVIRONMENT &amp; SOCIETY</h2>
             <div class="subtitle">
                 <i class="fas fa-asterisk"></i> 
-                Official Publication on Environment and Society
+                <span style="color: #8B7355; font-weight: 700;">The Egerton Avenue</span>
                 <i class="fas fa-asterisk"></i>
             </div>
         </div>
@@ -641,7 +650,7 @@
             </div>
         {% endif %}
         
-        <!-- Login Form -->
+        <!-- Login Form (UNCHANGED - preserves all functionality) -->
         <form method="post" action="{% url 'accounts:login' %}" id="loginForm">
             {% csrf_token %}
             
@@ -732,6 +741,10 @@
                 <i class="fas fa-shield-alt"></i> 
                 Secured &amp; Confidential · Authorized Access Only
             </small>
+            <br>
+            <small style="color: #a5d6a7; font-size: 10px; letter-spacing: 1px;">
+                <i class="fas fa-leaf"></i> <span class="the-egerton">The Egerton Avenue</span> · Established {% now "Y" %}
+            </small>
         </div>
         
     </div>
@@ -821,6 +834,7 @@
         
         console.log('🔐 Login page loaded successfully');
         console.log('🌿 ENVIRONMENT & SOCIETY - Official Portal');
+        console.log('📰 The Egerton Avenue');
         
     })();
 </script>

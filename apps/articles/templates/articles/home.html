@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ENVIRONMENT & SOCIETY - Official Gazette of Environment and Society{% endblock %}
+{% block title %}The Egerton Avenue - Official Gazette of Environment & Society{% endblock %}
 
-{% block meta_description %}ENVIRONMENT & SOCIETY - Official Publication on Environment and Society. Latest news on climate action, sustainability, conservation, and social development in Kenya.{% endblock %}
+{% block meta_description %}The Egerton Avenue - Official Publication on Environment and Society. Latest news on climate action, sustainability, conservation, and social development in Kenya.{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -34,6 +34,9 @@
         text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
         margin-bottom: 5px;
         letter-spacing: 3px;
+    }
+    .hero-section h1 .soil-text {
+        color: #8B7355;
     }
     .hero-section .subtitle {
         font-family: 'Times New Roman', 'Playfair Display', serif;
@@ -97,6 +100,9 @@
         letter-spacing: 2px;
         margin-bottom: 12px;
         border-radius: 4px;
+    }
+    .featured-article .category-tag.soil {
+        background: #8B7355;
     }
     .featured-article h2 {
         font-family: 'Playfair Display', 'Times New Roman', serif;
@@ -752,8 +758,12 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h1>ENVIRONMENT &amp; SOCIETY</h1>
-                <p class="subtitle">Official Gazette on Environment and Society</p>
+                <h1>
+                    <span style="color: #fff;">ENVIRONMENT</span> 
+                    <span class="soil-text">&amp;</span> 
+                    <span class="soil-text">SOCIETY</span>
+                </h1>
+                <p class="subtitle">The Egerton Avenue — Official Gazette on Environment and Society</p>
             </div>
             <div class="col-md-4 text-md-end">
                 <span class="hero-date">
@@ -791,7 +801,9 @@
                         <img src="{% static 'images/default-featured.jpg' %}" class="d-block w-100" alt="Featured article">
                         {% endif %}
                         <div class="featured-content">
-                            <span class="category-tag">{{ article.category.name|upper }}</span>
+                            <span class="category-tag {% if article.category.name|lower == 'society' %}soil{% endif %}">
+                                {{ article.category.name|upper }}
+                            </span>
                             <h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
                             <p class="excerpt">{{ article.excerpt|truncatewords:35 }}</p>
                             <div class="meta">
@@ -876,7 +888,7 @@
                         <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
                         <span class="mx-2">•</span>
                         <i class="fas fa-user"></i> 
-                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                        <a href="{% url 'accounts:profile' user_id=article.author.id %}" class="author-link">
                             {{ article.author.get_full_name|default:article.author.username }}
                         </a>
                         <span class="mx-2">•</span>
@@ -903,7 +915,7 @@
                         <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
                         <span class="mx-2">•</span>
                         <i class="fas fa-user"></i> 
-                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                        <a href="{% url 'accounts:profile' user_id=article.author.id %}" class="author-link">
                             {{ article.author.get_full_name|default:article.author.username }}
                         </a>
                         <span class="mx-2">•</span>
@@ -930,7 +942,7 @@
                         <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
                         <span class="mx-2">•</span>
                         <i class="fas fa-user"></i> 
-                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                        <a href="{% url 'accounts:profile' user_id=article.author.id %}" class="author-link">
                             {{ article.author.get_full_name|default:article.author.username }}
                         </a>
                         <span class="mx-2">•</span>
@@ -957,7 +969,7 @@
                         <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
                         <span class="mx-2">•</span>
                         <i class="fas fa-user"></i> 
-                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                        <a href="{% url 'accounts:profile' user_id=article.author.id %}" class="author-link">
                             {{ article.author.get_full_name|default:article.author.username }}
                         </a>
                         <span class="mx-2">•</span>
@@ -969,8 +981,7 @@
             {% endif %}
 
             <!-- ============================================
-            LATEST ARTICLES
-            ============================================ -->
+            LATEST ARTICLES            ============================================ -->
             <div class="category-section fade-in-up">
                 <div class="section-header">
                     <h3><i class="fas fa-newspaper"></i> Latest News</h3>
@@ -983,7 +994,7 @@
                         <i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
                         <span class="mx-2">•</span>
                         <i class="fas fa-user"></i> 
-                        <a href="{% url 'accounts:profile' username=article.author.username %}" class="author-link">
+                        <a href="{% url 'accounts:profile' user_id=article.author.id %}" class="author-link">
                             {{ article.author.get_full_name|default:article.author.username }}
                         </a>
                         <span class="mx-2">•</span>
@@ -1017,7 +1028,7 @@
                     <a href="{% url 'newsletter:subscribe' %}" class="btn btn-outline-success btn-sm">
                         <i class="fas fa-envelope"></i> Subscribe
                     </a>
-                    <a href="{% url 'advertisements:list' %}" class="btn btn-outline-warning btn-sm">
+                    <a href="/advertisements/create/" class="btn btn-outline-warning btn-sm">
                         <i class="fas fa-ad"></i> Advertise
                     </a>
                     <a href="{% url 'contacts:contact' %}" class="btn btn-outline-info btn-sm">

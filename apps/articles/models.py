@@ -8,6 +8,7 @@ from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from apps.categories.models import Category
 from apps.tags.models import Tag
+import re
 
 User = get_user_model()
 
@@ -172,7 +173,17 @@ class Article(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
+            # Generate slug from title
             self.slug = slugify(self.title)
+            
+            # Remove any special characters that aren't allowed in URLs
+            # Keep only alphanumeric, hyphens, and underscores
+            self.slug = re.sub(r'[^a-zA-Z0-9_-]', '', self.slug)
+            
+            # If slug is empty after cleaning, use a fallback
+            if not self.slug:
+                self.slug = f"article-{timezone.now().strftime('%Y%m%d%H%M%S')}"
+            
             # Ensure unique slug
             original_slug = self.slug
             counter = 1
@@ -227,6 +238,7 @@ class Article(models.Model):
         self.likes_count += 1
         self.save(update_fields=['likes_count'])
 
+
 class ArticleVersion(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='versions')
     version_number = models.PositiveIntegerField()
@@ -246,6 +258,7 @@ class ArticleVersion(models.Model):
     def __str__(self):
         return f"Version {self.version_number} of {self.article.title}"
 
+
 class RelatedArticle(models.Model):
     source = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='source_relations')
     target = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='target_relations')
@@ -259,6 +272,7 @@ class RelatedArticle(models.Model):
     
     def __str__(self):
         return f"{self.source.title} → {self.target.title}"
+
 
 class ArticleStatistics(models.Model):
     article = models.OneToOneField(Article, on_delete=models.CASCADE, related_name='statistics')
@@ -293,6 +307,7 @@ class ArticleStatistics(models.Model):
     
     def __str__(self):
         return f"Statistics for {self.article.title}"
+
 
 class ArticleSchedule(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='schedules')

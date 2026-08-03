@@ -1,695 +1,346 @@
 {% load static %}
-<nav class="main-navigation navbar navbar-expand-lg navbar-dark">
+<nav class="main-navigation navbar navbar-expand-lg navbar-dark" style="background: #1a5c3a; border-bottom: 3px solid #8B7355; font-family: 'Times New Roman', serif; padding: 0;">
     <div class="container">
-        <!-- Brand/Logo - Always Visible -->
-        <a class="navbar-brand" href="{% url 'home' %}">
-            <!-- FIXED: Removed filter to make logo visible -->
-            <img src="{% static 'images/logo3.png' %}" alt="ENVIRONMENT & SOCIETY" height="40" class="d-inline-block align-top">
-            <span class="brand-text d-none d-sm-inline-block">ENVIRONMENT &amp; SOCIETY</span>
-        </a>
-        
-        <!-- Navbar Toggler - Always Visible on Mobile -->
+        <!-- Navbar Toggler - Left aligned -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" 
-                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" style="border-color: rgba(255,255,255,0.2); margin: 8px 0;">
             <span class="navbar-toggler-icon"></span>
         </button>
         
         <!-- Collapsible Menu -->
         <div class="collapse navbar-collapse" id="mainNavbar">
-            <!-- Main Navigation Links -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="width: 100%; align-items: center; justify-content: center;">
+                <!-- ============================================
+                MAIN NAVIGATION - "The Egerton Avenue" Style
+                ============================================ -->
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
-                        <i class="fas fa-home"></i> Home
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                        <i class="fas fa-home" style="color: #a5d6a7; margin-right: 6px;"></i> Home
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if 'latest' in request.path %}active{% endif %}" href="{% url 'articles:latest' %}">
-                        <i class="fas fa-newspaper"></i> Latest News
+                    <a class="nav-link {% if 'opinion' in request.path %}active{% endif %}" href="{% url 'articles:opinion' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                        <i class="fas fa-pen-fancy" style="color: #a5d6a7; margin-right: 6px;"></i> Opinion
                     </a>
                 </li>
-                
-                <!-- Environment Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if 'environment' in request.path %}active{% endif %}" 
-                       href="#" id="environmentDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-leaf"></i> Environment
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="environmentDropdown">
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='climate-change' %}">
-                            <i class="fas fa-temperature-high"></i> Climate Change
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='conservation' %}">
-                            <i class="fas fa-tree"></i> Conservation
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='renewable-energy' %}">
-                            <i class="fas fa-sun"></i> Renewable Energy
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='biodiversity' %}">
-                            <i class="fas fa-paw"></i> Biodiversity
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='sustainability' %}">
-                            <i class="fas fa-recycle"></i> Sustainability
-                        </a></li>
-                    </ul>
-                </li>
-                
-                <!-- Society Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if 'society' in request.path %}active{% endif %}" 
-                       href="#" id="societyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-users"></i> Society
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="societyDropdown">
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='social-issues' %}">
-                            <i class="fas fa-hand-holding-heart"></i> Social Issues
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='community' %}">
-                            <i class="fas fa-people-arrows"></i> Community
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='education' %}">
-                            <i class="fas fa-graduation-cap"></i> Education
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='health' %}">
-                            <i class="fas fa-heartbeat"></i> Health
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='human-rights' %}">
-                            <i class="fas fa-balance-scale"></i> Human Rights
-                        </a></li>
-                    </ul>
-                </li>
-                
-                <!-- Politics Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if 'politics' in request.path %}active{% endif %}" 
-                       href="#" id="politicsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-gavel"></i> Politics
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="politicsDropdown">
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='national-politics' %}">
-                            <i class="fas fa-landmark"></i> National Politics
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='environmental-policy' %}">
-                            <i class="fas fa-leaf"></i> Environmental Policy
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='governance' %}">
-                            <i class="fas fa-building"></i> Governance
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='climate-policy' %}">
-                            <i class="fas fa-globe-africa"></i> Climate Policy
-                        </a></li>
-                    </ul>
-                </li>
-                
-                <!-- Business & Economy Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if 'business' in request.path %}active{% endif %}" 
-                       href="#" id="businessDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-chart-line"></i> Business
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="businessDropdown">
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='green-economy' %}">
-                            <i class="fas fa-seedling"></i> Green Economy
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='sustainable-business' %}">
-                            <i class="fas fa-recycle"></i> Sustainable Business
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='agriculture' %}">
-                            <i class="fas fa-tractor"></i> Agriculture
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='markets' %}">
-                            <i class="fas fa-arrow-trend-up"></i> Markets
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:detail' slug='real-estate' %}">
-                            <i class="fas fa-home"></i> Real Estate
-                        </a></li>
-                    </ul>
-                </li>
-                
-                <!-- More Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-ellipsis-h"></i> More
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="moreDropdown">
-                        <li><a class="dropdown-item" href="{% url 'articles:breaking_news' %}">
-                            <i class="fas fa-bolt"></i> Breaking News
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'categories:list' %}">
-                            <i class="fas fa-tags"></i> All Categories
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'tags:list' %}">
-                            <i class="fas fa-hashtag"></i> Tags
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'advertisements:list' %}">
-                            <i class="fas fa-ad"></i> Advertise With Us
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'contacts:contact' %}">
-                            <i class="fas fa-envelope"></i> Contact Us
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'newsletter:subscribe' %}">
-                            <i class="fas fa-envelope-open-text"></i> Newsletter
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'about' %}">
-                            <i class="fas fa-info-circle"></i> About Us
-                        </a></li>
-                    </ul>
-                </li>
-            </ul>
-            
-            <!-- Right side of navbar -->
-            <ul class="navbar-nav ms-auto">
-                <!-- Search Form -->
                 <li class="nav-item">
-                    <form class="d-flex" action="{% url 'search:search' %}" method="get">
-                        <div class="input-group input-group-sm">
-                            <input class="form-control form-control-sm" type="search" name="q" 
-                                   placeholder="Search news..." aria-label="Search">
-                            <button class="btn btn-light btn-sm" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </form>
+                    <a class="nav-link {% if 'environment' in request.path %}active{% endif %}" href="{% url 'articles:environment' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                        <i class="fas fa-leaf" style="color: #a5d6a7; margin-right: 6px;"></i> Environment
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'society' in request.path %}active{% endif %}" href="{% url 'articles:society' %}" style="color: #8B7355; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                        <i class="fas fa-users" style="color: #8B7355; margin-right: 6px;"></i> Society
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'photos' in request.path %}active{% endif %}" href="{% url 'articles:photos' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                        <i class="fas fa-images" style="color: #a5d6a7; margin-right: 6px;"></i> Photos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'video' in request.path %}active{% endif %}" href="{% url 'articles:video' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                        <i class="fas fa-video" style="color: #a5d6a7; margin-right: 6px;"></i> Video
+                    </a>
                 </li>
                 
-                <!-- Notifications -->
-                {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notificationBadge">
-                            {{ unread_notifications|default:0 }}
-                        </span>
+                <!-- ============================================
+                RIGHT SIDE: More Options (Hamburger dropdown)
+                ============================================ -->
+                <li class="nav-item dropdown" style="margin-left: auto;">
+                    <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                       style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                        <i class="fas fa-bars"></i> More
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end notification-dropdown" id="notificationList">
-                        <li class="dropdown-header"><i class="fas fa-bell"></i> Notifications</li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li class="text-center py-2 text-muted">Loading notifications...</li>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreDropdown" 
+                        style="background: #1a5c3a; border: 2px solid #8B7355; border-radius: 0; padding: 0; min-width: 220px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+                        
+                        <!-- About Us -->
+                        <li>
+                            <a class="dropdown-item {% if 'about' in request.path %}active{% endif %}" href="{% url 'about' %}" 
+                               style="color: white; font-family: 'Times New Roman', serif; font-size: 15px; font-weight: 600; padding: 12px 22px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <i class="fas fa-info-circle" style="color: #a5d6a7; width: 22px; text-align: center;"></i> About Us
+                            </a>
+                        </li>
+                        
+                        <!-- Contact Us -->
+                        <li>
+                            <a class="dropdown-item {% if 'contact' in request.path %}active{% endif %}" href="{% url 'contacts:contact' %}" 
+                               style="color: white; font-family: 'Times New Roman', serif; font-size: 15px; font-weight: 600; padding: 12px 22px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <i class="fas fa-envelope" style="color: #a5d6a7; width: 22px; text-align: center;"></i> Contact Us
+                            </a>
+                        </li>
+                        
+                        <!-- Advertise -->
+                        <li>
+                            <a class="dropdown-item {% if 'advertise' in request.path %}active{% endif %}" href="/advertisements/create/" 
+                               style="color: white; font-family: 'Times New Roman', serif; font-size: 15px; font-weight: 600; padding: 12px 22px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <i class="fas fa-ad" style="color: #a5d6a7; width: 22px; text-align: center;"></i> Advertise
+                            </a>
+                        </li>
+                        
+                        <!-- NO LOGIN/REGISTER HERE - They are already in the header -->
                     </ul>
                 </li>
-                {% endif %}
-                
-                <!-- Logout Button -->
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link text-danger" href="{% url 'accounts:logout' %}" title="Logout">
-                        <i class="fas fa-sign-out-alt"></i> 
-                        <span class="d-none d-md-inline">Logout</span>
-                    </a>
-                </li>
-                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
 
 <style>
-/* ============================================
-   MAIN NAVIGATION - GREEN THEME
-   ============================================ */
-.main-navigation {
-    background: linear-gradient(135deg, #1a5c3a 0%, #2e7d32 50%, #388e3c 100%);
-    border-bottom: 3px solid #a5d6a7;
-    font-family: 'Times New Roman', 'Playfair Display', serif;
-    padding: 6px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1050;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.3);
-    min-height: 60px;
-}
-
-/* ============================================
-   BRAND / LOGO
-   ============================================ */
-.main-navigation .navbar-brand {
-    color: #fff;
-    font-family: 'Playfair Display', 'Times New Roman', serif;
-    font-weight: 900;
-    font-size: 18px;
-    letter-spacing: 2px;
-    padding: 4px 0;
-    display: flex;
-    align-items: center;
-}
-.main-navigation .navbar-brand .brand-text {
-    font-size: 14px;
-    letter-spacing: 2px;
-    color: #a5d6a7;
-    margin-left: 10px;
-    font-weight: 700;
-}
-.main-navigation .navbar-brand:hover {
-    color: #a5d6a7;
-}
-
-/* ============================================
-   NAV LINKS - BOLDED HEADINGS
-   ============================================ */
-.main-navigation .nav-link {
-    color: #e8f5e9;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 10px 16px;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    position: relative;
-    font-family: 'Times New Roman', 'Playfair Display', serif;
-}
-.main-navigation .nav-link i {
-    margin-right: 6px;
-    color: #a5d6a7;
-    width: 18px;
-    text-align: center;
-}
-.main-navigation .nav-link:hover,
-.main-navigation .nav-link.active {
-    color: #fff;
-    background: rgba(165, 214, 167, 0.15);
-}
-.main-navigation .nav-link.active {
-    color: #fff;
-    font-weight: 900;
-}
-.main-navigation .nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 3px;
-    background: #a5d6a7;
-    border-radius: 2px 2px 0 0;
-}
-
-/* ============================================
-   DROPDOWN - BOLDED ITEMS
-   ============================================ */
-.main-navigation .dropdown-menu {
-    background: #1a5c3a;
-    border: 1px solid #a5d6a7;
-    border-radius: 0;
-    padding: 0;
-    min-width: 220px;
-    margin-top: 0;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-}
-.main-navigation .dropdown-item {
-    color: #e8f5e9;
-    font-family: 'Times New Roman', 'Playfair Display', serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-bottom: 1px solid rgba(165, 214, 167, 0.06);
-    transition: all 0.3s ease;
-}
-.main-navigation .dropdown-item i {
-    margin-right: 10px;
-    color: #a5d6a7;
-    width: 20px;
-    text-align: center;
-}
-.main-navigation .dropdown-item:hover {
-    background: rgba(165, 214, 167, 0.15);
-    color: #fff;
-    font-weight: 700;
-}
-.main-navigation .dropdown-divider {
-    border-top: 1px solid rgba(165, 214, 167, 0.12);
-}
-.main-navigation .dropdown-toggle::after {
-    margin-left: 6px;
-    border-top-color: #a5d6a7;
-}
-
-/* ============================================
-   TOGGLER / HAMBURGER MENU
-   ============================================ */
-.main-navigation .navbar-toggler {
-    border-color: rgba(255,255,255,0.2);
-    padding: 6px 10px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-.main-navigation .navbar-toggler:hover {
-    border-color: #a5d6a7;
-}
-.main-navigation .navbar-toggler:focus {
-    box-shadow: 0 0 0 2px rgba(165, 214, 167, 0.3);
-}
-.main-navigation .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
-/* ============================================
-   NOTIFICATION BADGE
-   ============================================ */
-.notification-badge {
-    font-family: 'Times New Roman', 'Playfair Display', serif;
-    font-size: 9px;
-    padding: 2px 6px;
-    position: absolute;
-    top: -2px;
-    right: -4px;
-    border-radius: 50%;
-    min-width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #dc3545;
-    color: #fff;
-    font-weight: 700;
-}
-
-/* ============================================
-   NOTIFICATION DROPDOWN
-   ============================================ */
-.notification-dropdown {
-    min-width: 340px;
-    max-height: 450px;
-    overflow-y: auto;
-    background: #1a5c3a;
-    border: 1px solid #a5d6a7;
-    border-radius: 0;
-}
-.notification-dropdown .dropdown-header {
-    color: #a5d6a7;
-    font-weight: 700;
-    font-family: 'Playfair Display', 'Times New Roman', serif;
-    letter-spacing: 1px;
-    padding: 12px 18px;
-    background: rgba(165, 214, 167, 0.05);
-}
-.notification-dropdown .dropdown-item {
-    white-space: normal;
-    padding: 10px 18px;
-    border-bottom: 1px solid rgba(165, 214, 167, 0.05);
-}
-.notification-dropdown .dropdown-item:hover {
-    background: rgba(165, 214, 167, 0.08);
-}
-.notification-dropdown .dropdown-item .notif-title {
-    font-weight: 700;
-    color: #fff;
-    font-family: 'Playfair Display', 'Times New Roman', serif;
-}
-.notification-dropdown .dropdown-item .notif-message {
-    color: #c8e6c9;
-    font-size: 12px;
-    font-family: 'Times New Roman', serif;
-}
-.notification-dropdown .dropdown-item .notif-time {
-    color: #6c757d;
-    font-size: 11px;
-    font-family: 'Times New Roman', serif;
-}
-
-/* ============================================
-   SEARCH
-   ============================================ */
-.main-navigation .input-group {
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s ease;
-}
-.main-navigation .input-group:focus-within {
-    border-color: #a5d6a7;
-    background: rgba(255,255,255,0.08);
-}
-.main-navigation .input-group .form-control {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-family: 'Times New Roman', 'Playfair Display', serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 6px 12px;
-}
-.main-navigation .input-group .form-control::placeholder {
-    color: #a5d6a7;
-    font-weight: 400;
-}
-.main-navigation .input-group .form-control:focus {
-    box-shadow: none;
-}
-.main-navigation .input-group .btn-light {
-    background: transparent;
-    border: none;
-    color: #a5d6a7;
-    font-weight: 700;
-}
-.main-navigation .input-group .btn-light:hover {
-    background: rgba(165, 214, 167, 0.1);
-    color: #a5d6a7;
-}
-
-/* ============================================
-   LOGOUT BUTTON STYLES
-   ============================================ */
-.main-navigation .nav-link.text-danger {
-    color: #ff6b6b !important;
-    font-weight: 700 !important;
-}
-.main-navigation .nav-link.text-danger:hover {
-    color: #ff8a8a !important;
-    background: rgba(255, 107, 107, 0.1);
-}
-
-/* ============================================
-   RESPONSIVE - TABLET & MOBILE
-   ============================================ */
-@media (max-width: 991.98px) {
+    /* ============================================
+       MAIN NAVIGATION - "The Egerton Avenue" Style
+       ============================================ */
     .main-navigation {
-        padding: 4px 0;
-    }
-    .main-navigation .navbar-brand .brand-text {
-        font-size: 12px;
-        letter-spacing: 1px;
-    }
-    .main-navigation .navbar-collapse {
         background: #1a5c3a;
-        padding: 15px 20px;
-        border-top: 1px solid rgba(165, 214, 167, 0.15);
-        max-height: calc(100vh - 180px);
-        overflow-y: auto;
-        margin-top: 8px;
+        border-bottom: 3px solid #8B7355;
+        font-family: 'Times New Roman', serif;
+        padding: 0;
+        position: sticky;
+        top: 0;
+        z-index: 1050;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
-    .main-navigation .nav-link {
-        padding: 8px 12px;
-        border-bottom: 1px solid rgba(255,255,255,0.04);
-        font-size: 13px;
-        text-transform: none;
-        font-weight: 700;
-    }
-    .main-navigation .nav-link:last-child {
-        border-bottom: none;
-    }
-    .main-navigation .nav-link.active::after {
-        bottom: 0;
-        left: 0;
-        transform: none;
-        width: 4px;
-        height: 100%;
-        border-radius: 0 2px 2px 0;
-    }
-    .main-navigation .dropdown-menu {
-        background: rgba(255,255,255,0.04);
-        border: none;
-        border-left: 2px solid #a5d6a7;
-        margin-left: 15px;
-        min-width: auto;
-        box-shadow: none;
-    }
-    .main-navigation .dropdown-item {
-        padding: 8px 15px;
-        font-size: 13px;
-        font-weight: 600;
-        border-bottom: none;
-    }
-    .main-navigation .navbar-nav .dropdown-toggle::after {
-        float: right;
-        margin-top: 6px;
-    }
-    .main-navigation .ms-auto {
-        margin-left: 0 !important;
-        border-top: 1px solid rgba(165, 214, 167, 0.1);
-        padding-top: 10px;
-        margin-top: 10px;
-    }
-    .main-navigation .ms-auto .nav-item {
-        width: 100%;
-    }
-    .main-navigation .ms-auto .d-flex {
-        width: 100%;
-    }
-    .main-navigation .ms-auto .input-group {
-        width: 100%;
-    }
-    .notification-dropdown {
-        min-width: 100%;
-        max-height: 300px;
-    }
-}
-
-@media (max-width: 575.98px) {
-    .main-navigation .navbar-brand img {
-        height: 30px;
-    }
-    .main-navigation .navbar-brand .brand-text {
-        font-size: 10px;
-        letter-spacing: 1px;
-        display: none !important;
-    }
-    .main-navigation .nav-link {
-        font-size: 12px;
-        padding: 6px 10px;
-        font-weight: 700;
-    }
-    .main-navigation .nav-link i {
-        width: 16px;
-        font-size: 13px;
-    }
-    .main-navigation .dropdown-item {
-        font-size: 12px;
-        padding: 6px 12px;
-        font-weight: 600;
-    }
-    .notification-dropdown {
-        min-width: 100%;
-        max-height: 250px;
-    }
-    .main-navigation .input-group .form-control {
-        font-size: 12px;
-        padding: 4px 10px;
-        font-weight: 600;
-    }
-    .main-navigation .input-group .btn-light {
-        font-size: 12px;
-        padding: 4px 8px;
-    }
-}
-
-/* ============================================
-   SCROLLBAR
-   ============================================ */
-.notification-dropdown::-webkit-scrollbar {
-    width: 4px;
-}
-.notification-dropdown::-webkit-scrollbar-track {
-    background: #1a5c3a;
-}
-.notification-dropdown::-webkit-scrollbar-thumb {
-    background: #a5d6a7;
-    border-radius: 2px;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ============================================
-    // NOTIFICATION DROPDOWN LOADER
-    // ============================================
-    const notificationBtn = document.getElementById('notificationDropdown');
-    if (notificationBtn) {
-        notificationBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            loadNotifications();
-        });
-    }
-
-    function loadNotifications() {
-        const container = document.getElementById('notificationList');
-        if (!container) return;
-        
-        fetch('/notifications/api/recent/')
-            .then(response => response.json())
-            .then(data => {
-                let html = '<li class="dropdown-header"><i class="fas fa-bell"></i> Notifications</li><li><hr class="dropdown-divider"></li>';
-                
-                if (data.notifications && data.notifications.length > 0) {
-                    data.notifications.forEach(notification => {
-                        const unreadClass = notification.is_read ? '' : 'bg-light';
-                        html += `
-                            <li class="dropdown-item ${unreadClass}">
-                                <div class="notif-title">${notification.title}</div>
-                                <div class="notif-message">${notification.message}</div>
-                                <div class="notif-time">${notification.created_at}</div>
-                            </li>
-                        `;
-                    });
-                    
-                    html += '<li><hr class="dropdown-divider"></li>';
-                    html += '<li class="text-center"><a href="/notifications/" class="dropdown-item" style="color:#a5d6a7; font-weight:700;">View All Notifications</a></li>';
-                } else {
-                    html += '<li class="text-center py-3 text-muted">No notifications</li>';
-                }
-                
-                container.innerHTML = html;
-                
-                const badge = document.getElementById('notificationBadge');
-                if (badge) {
-                    const count = data.unread_count || 0;
-                    badge.textContent = count;
-                    badge.style.display = count > 0 ? 'flex' : 'none';
-                }
-            })
-            .catch(error => {
-                console.error('Error loading notifications:', error);
-                container.innerHTML = '<li class="text-center py-3 text-danger">Failed to load</li>';
-            });
-    }
-
-    // ============================================
-    // CLOSE MOBILE MENU ON LINK CLICK
-    // ============================================
-    const navLinks = document.querySelectorAll('#mainNavbar .nav-link, #mainNavbar .dropdown-item');
-    const toggler = document.querySelector('.navbar-toggler');
     
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth < 992 && toggler) {
-                const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
-                if (isExpanded) {
-                    toggler.click();
-                }
-            }
-        });
-    });
-
-    // ============================================
-    // HANDLE DROPDOWN ON MOBILE
-    // ============================================
-    const dropdownToggles = document.querySelectorAll('.main-navigation .dropdown-toggle');
-    dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', function(e) {
-            if (window.innerWidth < 992) {
-                e.preventDefault();
-                const parent = this.closest('.dropdown');
-                const menu = parent.querySelector('.dropdown-menu');
-                if (menu) {
-                    const isOpen = menu.classList.contains('show');
-                    // Close all other dropdowns
-                    document.querySelectorAll('.main-navigation .dropdown-menu.show').forEach(m => {
-                        if (m !== menu) m.classList.remove('show');
-                    });
-                    if (isOpen) {
-                        menu.classList.remove('show');
-                    } else {
-                        menu.classList.add('show');
-                    }
-                }
-            }
-        });
-    });
-});
-</script>
+    .main-navigation .navbar-nav {
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .main-navigation .nav-link {
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        padding: 14px 22px;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    
+    .main-navigation .nav-link i {
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .main-navigation .nav-link:hover {
+        background: rgba(255,255,255,0.08);
+        color: #a5d6a7;
+    }
+    
+    .main-navigation .nav-link:hover i {
+        color: #ffffff;
+        transform: scale(1.1);
+    }
+    
+    .main-navigation .nav-link.active {
+        color: #a5d6a7;
+        background: rgba(165, 214, 167, 0.1);
+    }
+    
+    .main-navigation .nav-link.active i {
+        color: #ffffff;
+    }
+    
+    .main-navigation .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 3px;
+        background: #a5d6a7;
+        border-radius: 2px 2px 0 0;
+    }
+    
+    /* Dropdown Menu */
+    .main-navigation .dropdown-menu {
+        background: #1a5c3a;
+        border: 2px solid #8B7355;
+        border-radius: 0;
+        padding: 0;
+        min-width: 220px;
+        margin-top: 0;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    
+    .main-navigation .dropdown-item {
+        color: white;
+        font-family: 'Times New Roman', serif;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 12px 22px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+    
+    .main-navigation .dropdown-item i {
+        color: #a5d6a7;
+        width: 22px;
+        text-align: center;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .main-navigation .dropdown-item:hover {
+        background: rgba(165, 214, 167, 0.15);
+        color: white;
+    }
+    
+    .main-navigation .dropdown-item:hover i {
+        color: #ffffff;
+    }
+    
+    .main-navigation .dropdown-item.active {
+        background: rgba(165, 214, 167, 0.2);
+        color: #a5d6a7;
+    }
+    
+    .main-navigation .dropdown-item.active i {
+        color: #ffffff;
+    }
+    
+    .main-navigation .dropdown-item:last-child {
+        border-bottom: none;
+    }
+    
+    .main-navigation .dropdown-divider {
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .main-navigation .dropdown-toggle::after {
+        margin-left: 8px;
+        border-top-color: #a5d6a7;
+        transition: all 0.3s ease;
+    }
+    
+    .main-navigation .dropdown-toggle:hover::after {
+        border-top-color: #ffffff;
+    }
+    
+    /* Navbar Toggler - Left aligned */
+    .main-navigation .navbar-toggler {
+        border-color: rgba(255,255,255,0.2);
+        padding: 8px 12px;
+        margin-right: auto;
+        transition: all 0.3s ease;
+    }
+    
+    .main-navigation .navbar-toggler:hover {
+        border-color: #a5d6a7;
+        background: rgba(255,255,255,0.05);
+    }
+    
+    .main-navigation .navbar-toggler:focus {
+        box-shadow: 0 0 0 2px rgba(165, 214, 167, 0.3);
+    }
+    
+    .main-navigation .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    
+    /* ============================================
+       RESPONSIVE - Mobile
+       ============================================ */
+    @media (max-width: 991.98px) {
+        .main-navigation .navbar-collapse {
+            background: #1a5c3a;
+            padding: 10px 15px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+        }
+        
+        .main-navigation .navbar-nav {
+            flex-direction: column;
+            align-items: stretch !important;
+        }
+        
+        .main-navigation .nav-link {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 16px;
+            text-align: left;
+            justify-content: flex-start;
+        }
+        
+        .main-navigation .nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .main-navigation .nav-link:last-child {
+            border-bottom: none;
+        }
+        
+        .main-navigation .nav-link.active::after {
+            bottom: 0;
+            left: 0;
+            transform: none;
+            width: 4px;
+            height: 100%;
+            border-radius: 0 2px 2px 0;
+        }
+        
+        /* Dropdown on mobile */
+        .main-navigation .dropdown-menu {
+            background: rgba(255,255,255,0.04);
+            border: none;
+            border-left: 2px solid #8B7355;
+            margin-left: 15px;
+            min-width: auto;
+            box-shadow: none;
+        }
+        
+        .main-navigation .dropdown-item {
+            padding: 8px 15px;
+            font-size: 14px;
+            border-bottom: none;
+        }
+        
+        .main-navigation .dropdown-item i {
+            width: 20px;
+        }
+        
+        .main-navigation .navbar-nav .dropdown-toggle::after {
+            float: right;
+            margin-top: 6px;
+        }
+        
+        /* "More" dropdown on mobile - full width */
+        .main-navigation .nav-item.dropdown {
+            width: 100%;
+        }
+        
+        .main-navigation .nav-item.dropdown .dropdown-menu {
+            width: 100%;
+        }
+    }
+    
+    @media (max-width: 575.98px) {
+        .main-navigation .nav-link {
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+        
+        .main-navigation .nav-link i {
+            width: 20px;
+            font-size: 14px;
+        }
+        
+        .main-navigation .dropdown-item {
+            font-size: 13px;
+            padding: 6px 12px;
+        }
+        
+        .main-navigation .dropdown-item i {
+            width: 18px;
+        }
+    }
+</style>
