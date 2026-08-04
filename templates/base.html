@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}The Egerton Avenue - Environment & Society{% endblock %}</title>
+    <title>{% block title %}The Egerton Advertiser - Environment & Society{% endblock %}</title>
     
     <!-- Pass API keys to JavaScript -->
     <script>
@@ -34,9 +34,9 @@
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     
     <!-- Meta tags -->
-    <meta name="description" content="{% block meta_description %}The Egerton Avenue - Official Publication on Environment and Society{% endblock %}">
+    <meta name="description" content="{% block meta_description %}The Egerton Advertiser - Official Publication on Environment and Society{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}environment, society, sustainability, climate, Kenya, news, green energy, conservation, social development{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}The Egerton Avenue{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}The Egerton Advertiser{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Official Publication on Environment and Society{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
@@ -100,7 +100,7 @@
             white-space: nowrap;
         }
         
-        .avenue-text {
+        .advertiser-text {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
             color: #a5d6a7;
@@ -150,7 +150,7 @@
                 letter-spacing: 3px !important;
             }
             
-            .avenue-text {
+            .advertiser-text {
                 font-size: 1.6rem !important;
                 letter-spacing: 4px !important;
             }
@@ -198,7 +198,7 @@
                 letter-spacing: 2px !important;
             }
             
-            .avenue-text {
+            .advertiser-text {
                 font-size: 1.2rem !important;
                 letter-spacing: 3px !important;
             }
@@ -262,7 +262,7 @@
                 letter-spacing: 1px !important;
             }
             
-            .avenue-text {
+            .advertiser-text {
                 font-size: 1rem !important;
                 letter-spacing: 2px !important;
             }
@@ -353,14 +353,14 @@
                 <div class="header-left">
                     <!-- Logo -->
                     <a href="{% url 'home' %}" class="logo-link" style="color: white; text-decoration: none;">
-                        <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue" class="header-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important;">
+                        <img src="{% static 'images/logo3.png' %}" alt="The Egerton Advertiser" class="header-logo" style="filter: none !important; background: transparent !important; opacity: 1 !important;">
                     </a>
                     
                     <!-- Headings Group -->
                     <div style="display: flex; flex-direction: column; line-height: 1.1;">
                         <!-- MAIN TITLE -->
                         <h1 class="main-title">
-                            THE EGERTON <span class="avenue-text">AVENUE</span>
+                            THE EGERTON <span class="advertiser-text">ADVERTISER</span>
                         </h1>
                         
                         <!-- SUBTITLE -->
