@@ -1,6 +1,7 @@
 from django.urls import path, reverse
 from django.shortcuts import redirect
 from . import views
+from apps.articles import views as article_views  # Add this import
 
 app_name = 'dashboard'
 
@@ -21,6 +22,13 @@ urlpatterns = [
     path('admin/articles/<int:article_id>/publish/', views.admin_article_publish, name='article_publish'),
     path('admin/articles/<int:article_id>/feature/', views.admin_article_feature, name='article_feature'),
     path('admin/articles/<int:article_id>/breaking/', views.admin_article_breaking, name='article_breaking'),
+    
+    # ============================================
+    # ADMIN - ARTICLE MODERATION (Approve/Reject)
+    # Using article_views from articles app
+    # ============================================
+    path('admin/articles/<int:article_id>/approve/', article_views.approve_article, name='article_approve'),
+    path('admin/articles/<int:article_id>/reject/', article_views.reject_article, name='article_reject'),
     
     # ============================================
     # ADMIN - CATEGORIES
@@ -166,8 +174,8 @@ urlpatterns = [
     path('admin/photos/<int:photo_id>/feature/', views.admin_photos_feature, name='photos_feature'),
 
     # ============================================
-    # # ADMIN - VIDEOS
-    # # ============================================
+    # ADMIN - VIDEOS
+    # ============================================
     path('admin/videos/', views.admin_videos, name='video_list'),
     path('admin/videos/upload/', views.admin_video_upload, name='video_upload'),
     path('admin/videos/<int:video_id>/edit/', views.admin_video_edit, name='video_edit'),

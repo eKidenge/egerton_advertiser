@@ -15,3 +15,5 @@ WARNING 2026-08-02 12:21:26,604 views 4680 8360 Auto-login issue: Error 10061 co
 ERROR 2026-08-02 12:38:47,264 views 1188 6836 Form errors: 
 ERROR 2026-08-02 12:39:00,975 views 1188 6836 Form errors: 
 WARNING 2026-08-02 13:06:34,295 log 9280 8544 Forbidden (CSRF token from POST incorrect.): /accounts/login/
+WARNING 2026-08-04 13:16:53,256 log 1872 516 Forbidden (CSRF token from POST incorrect.): /admin/login/
+WARNING 2026-08-04 13:17:00,393 log 1872 516 Forbidden (CSRF token from POST incorrect.): /admin/login/

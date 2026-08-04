@@ -16,7 +16,7 @@ from .forms import ArticleForm, ArticleFilterForm
 from apps.categories.models import Category
 from apps.tags.models import Tag
 from apps.comments.models import Comment
-from apps.accounts.models import UserActivityLog
+from apps.accounts.models import User, UserActivityLog
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -997,3 +997,244 @@ def society_view(request):
     }
     
     return render(request, 'categories/category_detail.html', context)
+
+
+# ============================================================
+# NEW: SECTION-SPECIFIC CREATE VIEWS FOR JOURNALISTS
+# ============================================================
+
+@login_required
+def create_opinion_article(request):
+    """Create an Opinion article (Journalists can submit, needs approval)"""
+    return create_section_article(request, 'opinion', 'Opinion')
+
+
+@login_required
+def create_environment_article(request):
+    """Create an Environment article (Journalists can submit, needs approval)"""
+    return create_section_article(request, 'environment', 'Environment')
+
+
+@login_required
+def create_society_article(request):
+    """Create a Society article (Journalists can submit, needs approval)"""
+    return create_section_article(request, 'society', 'Society')
+
+
+@login_required
+def create_photos_article(request):
+    """Create a Photos article (Journalists can submit, needs approval)"""
+    return create_section_article(request, 'photos', 'Photos')
+
+
+@login_required
+def create_video_article(request):
+    """Create a Video article (Journalists can submit, needs approval)"""
+    return create_section_article(request, 'video', 'Video')
+
+
+def create_section_article(request, section_slug, section_name):
+    """Generic function to create section-specific articles"""
+    
+    # Check if user is journalist, editor, or admin
+    if request.user.role not in ['journalist', 'editor', 'admin', 'super_admin']:
+        messages.error(request, 'You do not have permission to create articles.')
+        return redirect('dashboard:dashboard')
+    
+    # Get the category for this section
+    category = get_object_or_404(Category, slug=section_slug)
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.author = request.user
+            article.category = category  # Force the section category
+            
+            # Determine status based on role
+            if request.user.role in ['super_admin', 'admin', 'editor']:
+                # Editors and above can publish directly
+                publish_option = form.cleaned_data.get('publish_option')
+                if publish_option == Article.PUBLISH_NOW:
+                    article.status = 'published'
+                    article.published_at = timezone.now()
+                elif publish_option == Article.SCHEDULE:
+                    article.status = 'scheduled'
+                    article.scheduled_for = form.cleaned_data.get('scheduled_for')
+                else:
+                    article.status = 'draft'
+            else:
+                # Journalists: Must be approved
+                article.status = 'pending'
+                send_moderation_notification(article, 'submitted')
+            
+            article.save()
+            form.save_m2m()
+            
+            # Log activity
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='create',
+                model_name='Article',
+                object_id=article.id,
+                description=f'Created {section_name} article: {article.title} (Status: {article.status})',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            if article.status == 'pending':
+                messages.success(request, 
+                    f'✅ Your {section_name} article "{article.title}" has been submitted for review! '
+                    f'You will be notified once approved.')
+            elif article.status == 'draft':
+                messages.success(request, f'📝 Your {section_name} article "{article.title}" saved as draft!')
+            else:
+                messages.success(request, f'🎉 Your {section_name} article "{article.title}" published successfully!')
+            
+            return redirect('articles:article_list')
+    else:
+        form = ArticleForm(initial={'category': category})
+    
+    tags = Tag.objects.filter(is_active=True)
+    
+    context = {
+        'form': form,
+        'section_name': section_name,
+        'section_slug': section_slug,
+        'category': category,
+        'tags': tags,
+        'action': 'create',
+        'page_title': f'Create {section_name} Article - The Egerton Avenue',
+        'is_editor': request.user.role in ['super_admin', 'admin', 'editor'],
+        'is_journalist': request.user.role == 'journalist',
+        'needs_approval': request.user.role == 'journalist',
+        'section_icon': get_section_icon(section_slug),
+    }
+    return render(request, 'articles/article_create.html', context)
+
+
+def get_section_icon(section_slug):
+    """Get icon for each section"""
+    icons = {
+        'opinion': 'fas fa-pencil-alt',
+        'environment': 'fas fa-leaf',
+        'society': 'fas fa-users',
+        'photos': 'fas fa-camera',
+        'video': 'fas fa-video',
+    }
+    return icons.get(section_slug, 'fas fa-newspaper')
+
+
+def send_moderation_notification(article, action):
+    """Send notification to all admins and editors about article moderation"""
+    try:
+        from apps.notifications.models import Notification
+        
+        # Get all admins and editors
+        moderators = User.objects.filter(role__in=['super_admin', 'admin', 'editor'])
+        
+        if action == 'submitted':
+            message = f'📝 New article "{article.title}" submitted for review by {article.author.get_full_name()}.'
+            url = reverse('dashboard:article_edit', args=[article.id])
+        elif action == 'approved':
+            message = f'✅ Article "{article.title}" has been approved and published.'
+            url = article.get_absolute_url()
+        elif action == 'rejected':
+            message = f'❌ Article "{article.title}" has been rejected.'
+            url = reverse('dashboard:article_edit', args=[article.id])
+        else:
+            return
+        
+        for moderator in moderators:
+            Notification.objects.create(
+                user=moderator,
+                title=f'Article Moderation: {article.title}',
+                message=message,
+                url=url,
+                type='article_moderation'
+            )
+    except:
+        pass
+
+
+# ============================================================
+# NEW: ADMIN / EDITOR MODERATION VIEWS
+# ============================================================
+
+@login_required
+@user_passes_test(lambda u: u.role in ['super_admin', 'admin', 'editor'])
+def approve_article(request, article_id):
+    """Approve a pending article (Admin/Editor only)"""
+    article = get_object_or_404(Article, id=article_id)
+    
+    if article.status != 'pending':
+        messages.warning(request, f'Article "{article.title}" is not pending review.')
+        return redirect('dashboard:article_list')
+    
+    article.status = 'published'
+    article.published_at = timezone.now()
+    article.save()
+    
+    # Notify the author
+    try:
+        from apps.notifications.models import Notification
+        Notification.objects.create(
+            user=article.author,
+            title='🎉 Article Approved!',
+            message=f'Your article "{article.title}" has been approved and published!',
+            url=article.get_absolute_url(),
+            type='article_approved'
+        )
+    except:
+        pass
+    
+    UserActivityLog.objects.create(
+        user=request.user,
+        action='approve',
+        model_name='Article',
+        object_id=article.id,
+        description=f'Approved article: {article.title}',
+        ip_address=request.META.get('REMOTE_ADDR')
+    )
+    
+    messages.success(request, f'✅ Article "{article.title}" has been approved and published!')
+    return redirect('dashboard:article_list')
+
+
+@login_required
+@user_passes_test(lambda u: u.role in ['super_admin', 'admin', 'editor'])
+def reject_article(request, article_id):
+    """Reject a pending article with reason (Admin/Editor only)"""
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        reason = request.POST.get('reason', 'No reason provided')
+        
+        article.status = 'draft'
+        article.save()
+        
+        # Notify the author
+        try:
+            from apps.notifications.models import Notification
+            Notification.objects.create(
+                user=article.author,
+                title='❌ Article Rejected',
+                message=f'Your article "{article.title}" was rejected. Reason: {reason}',
+                url=reverse('articles:article_edit', args=[article.id]),
+                type='article_rejected'
+            )
+        except:
+            pass
+        
+        UserActivityLog.objects.create(
+            user=request.user,
+            action='reject',
+            model_name='Article',
+            object_id=article.id,
+            description=f'Rejected article: {article.title}. Reason: {reason}',
+            ip_address=request.META.get('REMOTE_ADDR')
+        )
+        
+        messages.warning(request, f'❌ Article "{article.title}" has been rejected.')
+        return redirect('dashboard:article_list')
+    
+    return render(request, 'articles/reject_article.html', {'article': article})

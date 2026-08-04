@@ -64,6 +64,11 @@ def dashboard(request):
     # Get notifications
     notifications = DashboardActivityFeed.objects.filter(user=user, is_read=False)[:5]
     
+    # Get pending articles count for editors/admins
+    pending_count = 0
+    if role in ['super_admin', 'admin', 'editor']:
+        pending_count = Article.objects.filter(status='pending').count()
+    
     context = {
         'preferences': preferences,
         'widgets': widgets,
@@ -73,6 +78,7 @@ def dashboard(request):
         'recent_items': recent_items,
         'notifications': notifications,
         'role': role,
+        'pending_count': pending_count,
         'is_super_admin': role == 'super_admin',
         'is_admin': role == 'admin',
         'is_editor': role == 'editor',
@@ -124,8 +130,10 @@ def get_role_based_stats(user, role):
         stats['breaking_news'] = Article.objects.filter(is_breaking=True).count()
         
     elif role == 'journalist':
-        # Journalist Stats - My Articles
+        # Journalist Stats - My Articles by Section
         my_articles = Article.objects.filter(author=user)
+        
+        # Overall stats
         stats['my_articles'] = my_articles.count()
         stats['my_published'] = my_articles.filter(status='published').count()
         stats['my_drafts'] = my_articles.filter(status='draft').count()
@@ -135,9 +143,17 @@ def get_role_based_stats(user, role):
         stats['total_articles'] = Article.objects.count()
         stats['total_views'] = Article.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0
         
+        # Section-specific counts for Journalist
+        stats['opinion_count'] = my_articles.filter(category__slug='opinion').count()
+        stats['environment_count'] = my_articles.filter(category__slug='environment').count()
+        stats['society_count'] = my_articles.filter(category__slug='society').count()
+        stats['photos_count'] = my_articles.filter(category__slug='photos').count()
+        stats['video_count'] = my_articles.filter(category__slug='video').count()
+        stats['total_my_articles'] = my_articles.count()
+        
     elif role == 'subscriber':
         # Subscriber Stats - Personal
-        stats['saved_articles'] = 0
+        stats['saved_articles'] = 0  # Will implement later
         stats['my_comments'] = Comment.objects.filter(user=user).count()
         stats['subscription_status'] = 'Active' if Subscriber.objects.filter(email=user.email, status='active').exists() else 'Inactive'
         stats['total_articles'] = Article.objects.filter(status='published').count()
@@ -3662,3 +3678,22 @@ def admin_video_gallery(request):
         videos = paginator.page(paginator.num_pages)
     
     return render(request, 'dashboard/admin_video_gallery.html', {'videos': videos})
+
+# ============================================
+# ARTICLE MODERATION VIEWS (Proxy to articles app)
+# ============================================
+
+@login_required
+@user_passes_test(lambda u: u.role in ['super_admin', 'admin', 'editor'])
+def approve_article(request, article_id):
+    """Proxy view for article approval"""
+    from apps.articles.views import approve_article as articles_approve
+    return articles_approve(request, article_id)
+
+
+@login_required
+@user_passes_test(lambda u: u.role in ['super_admin', 'admin', 'editor'])
+def reject_article(request, article_id):
+    """Proxy view for article rejection"""
+    from apps.articles.views import reject_article as articles_reject
+    return articles_reject(request, article_id)

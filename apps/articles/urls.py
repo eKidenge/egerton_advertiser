@@ -67,6 +67,13 @@ urlpatterns = [
     # Create article
     path('create/', views.article_create, name='article_create'),
     
+    # NEW: Section-specific create URLs for Journalists
+    path('create/opinion/', views.create_opinion_article, name='create_opinion'),
+    path('create/environment/', views.create_environment_article, name='create_environment'),
+    path('create/society/', views.create_society_article, name='create_society'),
+    path('create/photos/', views.create_photos_article, name='create_photos'),
+    path('create/video/', views.create_video_article, name='create_video'),
+    
     # Edit article
     path('<int:article_id>/edit/', views.article_edit, name='article_edit'),
     
@@ -81,6 +88,16 @@ urlpatterns = [
     
     # Article statistics
     path('<int:article_id>/statistics/', views.article_statistics, name='statistics'),
+    
+    # ============================================================
+    # ADMIN / MODERATION VIEWS (Admin & Editor only)
+    # ============================================================
+    
+    # Approve pending article
+    path('admin/<int:article_id>/approve/', views.approve_article, name='approve'),
+    
+    # Reject pending article
+    path('admin/<int:article_id>/reject/', views.reject_article, name='reject'),
     
     # ============================================================
     # STATUS-SPECIFIC LISTS

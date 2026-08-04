@@ -167,6 +167,10 @@
 .status-badge.pending { background: #ffc107; color: #000; }
 .status-badge.scheduled { background: #17a2b8; color: #fff; }
 .status-badge.archived { background: #dc3545; color: #fff; }
+.status-badge.rejected { background: #dc3545; color: #fff; }
+.status-badge.active { background: #28a745; color: #fff; }
+.status-badge.inactive { background: #6c757d; color: #fff; }
+.status-badge.expired { background: #dc3545; color: #fff; }
 .activity-item {
     display: flex;
     gap: 10px;
@@ -222,11 +226,80 @@
 .notification-item .badge {
     font-size: 10px;
 }
+.section-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.section-stat-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s;
+}
+.section-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.section-stat-card .section-icon {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+.section-stat-card .section-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: #1a1a1a;
+}
+.section-stat-card .section-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+.section-stat-card .section-action {
+    margin-top: 8px;
+}
+.section-stat-card .section-action a {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: 'Times New Roman', serif;
+}
+.section-stat-card.opinion { border-top: 3px solid #6f42c1; }
+.section-stat-card.environment { border-top: 3px solid #28a745; }
+.section-stat-card.society { border-top: 3px solid #17a2b8; }
+.section-stat-card.photos { border-top: 3px solid #fd7e14; }
+.section-stat-card.video { border-top: 3px solid #dc3545; }
+
+/* Approval Notice */
+.approval-notice {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 12px 18px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-family: 'Times New Roman', serif;
+}
+.approval-notice i {
+    color: #ffc107;
+    margin-right: 8px;
+}
+.approval-notice strong {
+    color: #856404;
+}
+
 @media (max-width: 768px) {
     .stats-grid .col-md-3 {
         margin-bottom: 15px;
     }
     .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .section-stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
@@ -242,17 +315,10 @@
                 <div class="col-md-8">
                     <h1>Welcome back, {{ user.get_full_name|default:user.username }}!</h1>
                     <p class="text-muted">
-                        {% if is_super_admin or is_admin %}
-                        System Administrator Dashboard
-                        {% elif is_editor %}
-                        Editorial Dashboard
-                        {% elif is_journalist %}
-                        Journalist Dashboard
-                        {% elif is_advertiser %}
-                        Advertising Dashboard
-                        {% else %}
-                        Subscriber Dashboard
-                        {% endif %}
+                        {% if is_editor %}Editorial Dashboard
+                        {% elif is_journalist %}Journalist Dashboard
+                        {% elif is_advertiser %}Advertising Dashboard
+                        {% else %}Subscriber Dashboard{% endif %}
                     </p>
                 </div>
                 <div class="col-md-4 text-end">
@@ -269,61 +335,31 @@
             </div>
         </div>
 
-        <!-- Stats Cards - Role Based -->
+        <!-- ============================================
+        APPROVAL NOTICE - JOURNALISTS ONLY
+        ============================================ -->
+        {% if is_journalist %}
+        <div class="approval-notice">
+            <i class="fas fa-info-circle"></i>
+            <strong>Note:</strong> Your articles will be submitted for review. 
+            They will not be visible to the public until approved by an editor or admin.
+            You will be notified once your article is reviewed.
+        </div>
+        {% endif %}
+
+        <!-- ============================================
+        STATS CARDS - ROLE BASED
+        ============================================ -->
         <div class="stats-grid">
             <div class="row">
-                {% if is_super_admin or is_admin %}
-                <!-- Admin Stats -->
-                <div class="col-md-3">
-                    <div class="stat-card blue">
-                        <div class="stat-icon"><i class="fas fa-users"></i></div>
-                        <div class="stat-content">
-                            <div class="stat-number">{{ stats.total_users|default:0 }}</div>
-                            <div class="stat-label">Total Users</div>
-                            <div class="stat-change"><span class="text-success"><i class="fas fa-arrow-up"></i> {{ stats.user_growth|default:0 }}%</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card green">
-                        <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
-                        <div class="stat-content">
-                            <div class="stat-number">{{ stats.total_articles|default:0 }}</div>
-                            <div class="stat-label">Total Articles</div>
-                            <div class="stat-change"><span class="text-success"><i class="fas fa-arrow-up"></i> {{ stats.article_growth|default:0 }}%</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card yellow">
-                        <div class="stat-icon"><i class="fas fa-eye"></i></div>
-                        <div class="stat-content">
-                            <div class="stat-number">{{ stats.total_views|default:0|intcomma }}</div>
-                            <div class="stat-label">Total Views</div>
-                            <div class="stat-change"><span class="text-success"><i class="fas fa-arrow-up"></i> {{ stats.view_growth|default:0 }}%</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card red">
-                        <div class="stat-icon"><i class="fas fa-comments"></i></div>
-                        <div class="stat-content">
-                            <div class="stat-number">{{ stats.total_comments|default:0 }}</div>
-                            <div class="stat-label">Total Comments</div>
-                            <div class="stat-change"><span class="text-muted">-</span></div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
                 {% if is_editor %}
-                <!-- Editor Stats -->
                 <div class="col-md-3">
                     <div class="stat-card orange">
                         <div class="stat-icon"><i class="fas fa-clock"></i></div>
                         <div class="stat-content">
                             <div class="stat-number">{{ stats.pending_articles|default:0 }}</div>
                             <div class="stat-label">Pending Review</div>
+                            <div class="stat-change"><a href="{% url 'articles:pending' %}" class="text-warning">Review Now</a></div>
                         </div>
                     </div>
                 </div>
@@ -357,7 +393,6 @@
                 {% endif %}
 
                 {% if is_journalist %}
-                <!-- Journalist Stats -->
                 <div class="col-md-3">
                     <div class="stat-card blue">
                         <div class="stat-icon"><i class="fas fa-pen-fancy"></i></div>
@@ -381,7 +416,8 @@
                         <div class="stat-icon"><i class="fas fa-clock"></i></div>
                         <div class="stat-content">
                             <div class="stat-number">{{ stats.my_pending|default:0 }}</div>
-                            <div class="stat-label">Pending Review</div>
+                            <div class="stat-label">Awaiting Approval</div>
+                            <div class="stat-change"><span class="text-warning">Pending Review</span></div>
                         </div>
                     </div>
                 </div>
@@ -397,13 +433,13 @@
                 {% endif %}
 
                 {% if is_subscriber %}
-                <!-- Subscriber Stats -->
                 <div class="col-md-4">
                     <div class="stat-card blue">
                         <div class="stat-icon"><i class="fas fa-bookmark"></i></div>
                         <div class="stat-content">
                             <div class="stat-number">{{ stats.saved_articles|default:0 }}</div>
                             <div class="stat-label">Saved Articles</div>
+                            <div class="stat-change"><a href="{% url 'articles:latest' %}" class="text-primary">Browse Articles</a></div>
                         </div>
                     </div>
                 </div>
@@ -413,6 +449,7 @@
                         <div class="stat-content">
                             <div class="stat-number">{{ stats.my_comments|default:0 }}</div>
                             <div class="stat-label">My Comments</div>
+                            <div class="stat-change"><a href="{% url 'articles:latest' %}" class="text-success">Read & Comment</a></div>
                         </div>
                     </div>
                 </div>
@@ -420,15 +457,21 @@
                     <div class="stat-card yellow">
                         <div class="stat-icon"><i class="fas fa-envelope"></i></div>
                         <div class="stat-content">
-                            <div class="stat-number">{{ stats.subscription_status|default:'Active' }}</div>
-                            <div class="stat-label">Subscription</div>
+                            <div class="stat-number">{{ stats.subscription_status|default:'Inactive' }}</div>
+                            <div class="stat-label">Newsletter</div>
+                            <div class="stat-change">
+                                {% if stats.subscription_status == 'Active' %}
+                                <a href="{% url 'newsletter:unsubscribe' %}" class="text-warning">Unsubscribe</a>
+                                {% else %}
+                                <a href="{% url 'newsletter:subscribe' %}" class="text-success">Subscribe</a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
                 {% endif %}
 
                 {% if is_advertiser %}
-                <!-- Advertiser Stats -->
                 <div class="col-md-3">
                     <div class="stat-card blue">
                         <div class="stat-icon"><i class="fas fa-ad"></i></div>
@@ -469,150 +512,244 @@
             </div>
         </div>
 
+        <!-- ============================================
+        JOURNALIST - SECTION STATS CARDS (CREATE OPINION, ENVIRONMENT, SOCIETY, PHOTOS, VIDEO)
+        ============================================ -->
+        {% if is_journalist %}
+        <div class="section-stats-grid">
+            <div class="section-stat-card opinion">
+                <div class="section-icon"><i class="fas fa-pencil-alt" style="color: #6f42c1;"></i></div>
+                <div class="section-number">{{ stats.opinion_count|default:0 }}</div>
+                <div class="section-label">Opinion</div>
+                <div class="section-action">
+                    <a href="{% url 'articles:create_opinion' %}" class="btn btn-sm btn-outline-primary">Write</a>
+                    <a href="{% url 'articles:article_list' %}?category=opinion" class="btn btn-sm btn-outline-secondary">View</a>
+                </div>
+            </div>
+            <div class="section-stat-card environment">
+                <div class="section-icon"><i class="fas fa-leaf" style="color: #28a745;"></i></div>
+                <div class="section-number">{{ stats.environment_count|default:0 }}</div>
+                <div class="section-label">Environment</div>
+                <div class="section-action">
+                    <a href="{% url 'articles:create_environment' %}" class="btn btn-sm btn-outline-success">Write</a>
+                    <a href="{% url 'articles:article_list' %}?category=environment" class="btn btn-sm btn-outline-secondary">View</a>
+                </div>
+            </div>
+            <div class="section-stat-card society">
+                <div class="section-icon"><i class="fas fa-users" style="color: #17a2b8;"></i></div>
+                <div class="section-number">{{ stats.society_count|default:0 }}</div>
+                <div class="section-label">Society</div>
+                <div class="section-action">
+                    <a href="{% url 'articles:create_society' %}" class="btn btn-sm btn-outline-info">Write</a>
+                    <a href="{% url 'articles:article_list' %}?category=society" class="btn btn-sm btn-outline-secondary">View</a>
+                </div>
+            </div>
+            <div class="section-stat-card photos">
+                <div class="section-icon"><i class="fas fa-camera" style="color: #fd7e14;"></i></div>
+                <div class="section-number">{{ stats.photos_count|default:0 }}</div>
+                <div class="section-label">Photos</div>
+                <div class="section-action">
+                    <a href="{% url 'articles:create_photos' %}" class="btn btn-sm btn-outline-warning">Upload</a>
+                    <a href="{% url 'articles:article_list' %}?category=photos" class="btn btn-sm btn-outline-secondary">View</a>
+                </div>
+            </div>
+            <div class="section-stat-card video">
+                <div class="section-icon"><i class="fas fa-video" style="color: #dc3545;"></i></div>
+                <div class="section-number">{{ stats.video_count|default:0 }}</div>
+                <div class="section-label">Video</div>
+                <div class="section-action">
+                    <a href="{% url 'articles:create_video' %}" class="btn btn-sm btn-outline-danger">Upload</a>
+                    <a href="{% url 'articles:article_list' %}?category=video" class="btn btn-sm btn-outline-secondary">View</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ============================================
+        MAIN CONTENT ROW
+        ============================================ -->
         <div class="row">
             <div class="col-lg-8">
-                <!-- Quick Actions - Role Based -->
+                <!-- ============================================
+                QUICK ACTIONS - ROLE BASED
+                ============================================ -->
                 <div class="quick-actions-card">
                     <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
                     <div class="quick-actions-grid">
-                        {% if is_super_admin or is_admin %}
-                        <a href="{% url 'accounts:user_list' %}" class="quick-action">
-                            <i class="fas fa-users-cog"></i>
-                            <span>Manage Users</span>
-                        </a>
-                        <a href="{% url 'settings:general' %}" class="quick-action">
-                            <i class="fas fa-cog"></i>
-                            <span>Site Settings</span>
-                        </a>
-                        <a href="{% url 'articles:article_list' %}" class="quick-action">
-                            <i class="fas fa-newspaper"></i>
-                            <span>All Articles</span>
-                        </a>
-                        <a href="{% url 'analytics:dashboard' %}" class="quick-action">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Analytics</span>
-                        </a>
-                        {% endif %}
-
-                        {% if is_editor or is_journalist %}
-                        <a href="{% url 'articles:article_create' %}" class="quick-action">
-                            <i class="fas fa-pen-fancy"></i>
-                            <span>Write Article</span>
-                        </a>
-                        <a href="{% url 'articles:article_list' %}" class="quick-action">
-                            <i class="fas fa-list"></i>
-                            <span>My Articles</span>
-                        </a>
+                        <!-- EDITOR -->
                         {% if is_editor %}
-                        <a href="{% url 'articles:pending' %}" class="quick-action">
-                            <i class="fas fa-clock"></i>
-                            <span>Pending Review</span>
+                        <a href="{% url 'articles:article_create' %}" class="quick-action">
+                            <i class="fas fa-pen-fancy"></i><span>Write Article</span>
                         </a>
-                        {% endif %}
-                        <a href="{% url 'media_library:upload' %}" class="quick-action">
-                            <i class="fas fa-images"></i>
-                            <span>Upload Media</span>
+                        <a href="{% url 'articles:article_list' %}" class="quick-action">
+                            <i class="fas fa-list"></i><span>My Articles</span>
+                        </a>
+                        <a href="{% url 'articles:pending' %}" class="quick-action">
+                            <i class="fas fa-clock"></i><span>Pending Review ({{ pending_count|default:0 }})</span>
+                        </a>
+                        <a href="{% url 'dashboard:category_list' %}" class="quick-action">
+                            <i class="fas fa-folder"></i><span>Categories</span>
+                        </a>
+                        <a href="{% url 'dashboard:tag_list' %}" class="quick-action">
+                            <i class="fas fa-tags"></i><span>Tags</span>
+                        </a>
+                        <a href="{% url 'dashboard:comment_list' %}" class="quick-action">
+                            <i class="fas fa-comments"></i><span>Comments</span>
                         </a>
                         {% endif %}
 
+                        <!-- JOURNALIST -->
+                        {% if is_journalist %}
+                        <a href="{% url 'articles:create_opinion' %}" class="quick-action">
+                            <i class="fas fa-pencil-alt" style="color: #6f42c1;"></i><span>Write Opinion</span>
+                        </a>
+                        <a href="{% url 'articles:create_environment' %}" class="quick-action">
+                            <i class="fas fa-leaf" style="color: #28a745;"></i><span>Environment</span>
+                        </a>
+                        <a href="{% url 'articles:create_society' %}" class="quick-action">
+                            <i class="fas fa-users" style="color: #17a2b8;"></i><span>Society</span>
+                        </a>
+                        <a href="{% url 'articles:create_photos' %}" class="quick-action">
+                            <i class="fas fa-camera" style="color: #fd7e14;"></i><span>Upload Photos</span>
+                        </a>
+                        <a href="{% url 'articles:create_video' %}" class="quick-action">
+                            <i class="fas fa-video" style="color: #dc3545;"></i><span>Upload Video</span>
+                        </a>
+                        <a href="{% url 'articles:article_list' %}" class="quick-action">
+                            <i class="fas fa-list"></i><span>My Articles</span>
+                        </a>
+                        <a href="{% url 'media_library:upload' %}" class="quick-action">
+                            <i class="fas fa-images"></i><span>Upload Media</span>
+                        </a>
+                        {% endif %}
+
+                        <!-- ADVERTISER -->
                         {% if is_advertiser %}
                         <a href="{% url 'advertisements:create' %}" class="quick-action">
-                            <i class="fas fa-ad"></i>
-                            <span>Create Ad</span>
+                            <i class="fas fa-ad"></i><span>Create Ad</span>
                         </a>
                         <a href="{% url 'advertisements:list' %}" class="quick-action">
-                            <i class="fas fa-list"></i>
-                            <span>My Ads</span>
+                            <i class="fas fa-list"></i><span>My Ads</span>
                         </a>
                         <a href="{% url 'advertisements:statistics' %}" class="quick-action">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Ad Statistics</span>
+                            <i class="fas fa-chart-line"></i><span>Ad Statistics</span>
                         </a>
                         {% endif %}
 
+                        <!-- SUBSCRIBER -->
                         {% if is_subscriber %}
                         <a href="{% url 'articles:latest' %}" class="quick-action">
-                            <i class="fas fa-newspaper"></i>
-                            <span>Read News</span>
+                            <i class="fas fa-newspaper"></i><span>Read Latest</span>
+                        </a>
+                        <a href="{% url 'articles:home' %}" class="quick-action">
+                            <i class="fas fa-home"></i><span>Homepage</span>
                         </a>
                         <a href="{% url 'newsletter:subscribe' %}" class="quick-action">
-                            <i class="fas fa-envelope"></i>
-                            <span>Newsletter</span>
+                            <i class="fas fa-envelope"></i><span>Newsletter</span>
+                        </a>
+                        <a href="{% url 'accounts:profile' %}" class="quick-action">
+                            <i class="fas fa-user"></i><span>My Profile</span>
                         </a>
                         <a href="{% url 'accounts:profile_edit' %}" class="quick-action">
-                            <i class="fas fa-user-edit"></i>
-                            <span>Edit Profile</span>
+                            <i class="fas fa-user-edit"></i><span>Edit Profile</span>
+                        </a>
+                        <a href="{% url 'search:search' %}" class="quick-action">
+                            <i class="fas fa-search"></i><span>Search Articles</span>
+                        </a>
+                        <a href="{% url 'categories:list' %}" class="quick-action">
+                            <i class="fas fa-tags"></i><span>Browse Categories</span>
+                        </a>
+                        <a href="{% url 'contacts:contact' %}" class="quick-action">
+                            <i class="fas fa-headset"></i><span>Contact Support</span>
                         </a>
                         {% endif %}
                     </div>
                 </div>
 
-                <!-- Recent Items - Role Based -->
+                <!-- ============================================
+                RECENT ITEMS - ROLE BASED
+                ============================================ -->
                 <div class="recent-items-card">
                     <h5><i class="fas fa-clock"></i> Recent Items</h5>
                     <div class="item-list">
-                        {% if is_super_admin or is_admin %}
-                            <!-- Recent Users -->
-                            <h6 class="text-muted mt-2">Recent Users</h6>
-                            {% for user in recent_items.recent_users %}
-                            <div class="item">
-                                <span class="title">{{ user.get_full_name|default:user.username }}</span>
-                                <span class="meta">{{ user.date_joined|timesince }} ago</span>
-                            </div>
-                            {% empty %}
-                            <p class="text-muted">No recent users</p>
-                            {% endfor %}
-                            
-                            <!-- Recent Articles -->
-                            <h6 class="text-muted mt-3">Recent Articles</h6>
-                            {% for article in recent_items.recent_articles %}
-                            <div class="item">
-                                <span class="title"><a href="{{ article.get_absolute_url }}" target="_blank">{{ article.title|truncatewords:8 }}</a></span>
-                                <span class="meta">{{ article.created_at|timesince }} ago</span>
-                            </div>
-                            {% empty %}
-                            <p class="text-muted">No recent articles</p>
-                            {% endfor %}
-
-                        {% elif is_editor %}
-                            <!-- Pending Articles -->
+                        {% if is_editor %}
                             <h6 class="text-muted mt-2">Pending Review</h6>
                             {% for article in recent_items.pending_articles %}
                             <div class="item">
-                                <span class="title"><a href="{% url 'articles:article_edit' article.id %}">{{ article.title|truncatewords:8 }}</a></span>
+                                <span class="title"><a href="{% url 'dashboard:article_edit' article.id %}">{{ article.title|truncatewords:8 }}</a></span>
                                 <span class="status-badge pending">Pending</span>
+                                <span class="meta">
+                                    <a href="{% url 'dashboard:article_approve' article.id %}" class="text-success" onclick="return confirm('Approve this article?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                    <a href="{% url 'dashboard:article_reject' article.id %}" class="text-danger" onclick="return confirm('Reject this article?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                </span>
                             </div>
                             {% empty %}
-                            <p class="text-muted">No pending articles</p>
+                            <p class="text-muted">No pending articles to review</p>
                             {% endfor %}
 
                         {% elif is_journalist %}
-                            <!-- My Articles -->
                             <h6 class="text-muted mt-2">My Articles</h6>
                             {% for article in recent_items.my_articles %}
                             <div class="item">
                                 <span class="title"><a href="{% url 'articles:article_edit' article.id %}">{{ article.title|truncatewords:8 }}</a></span>
-                                <span class="status-badge {{ article.status }}">{{ article.get_status_display }}</span>
+                                <span class="status-badge {{ article.status }}">
+                                    {% if article.status == 'pending' %}Awaiting Approval
+                                    {% elif article.status == 'published' %}Published
+                                    {% elif article.status == 'draft' %}Draft
+                                    {% elif article.status == 'rejected' %}Rejected
+                                    {% else %}{{ article.get_status_display }}{% endif %}
+                                </span>
+                                <span class="meta">{{ article.created_at|timesince }} ago</span>
                             </div>
                             {% empty %}
-                            <p class="text-muted">No articles yet</p>
+                            <p class="text-muted">No articles yet. <a href="{% url 'articles:create_opinion' %}">Write your first article</a></p>
                             {% endfor %}
 
                         {% elif is_advertiser %}
-                            <!-- My Ads -->
                             <h6 class="text-muted mt-2">My Ads</h6>
                             {% for ad in recent_items.my_ads %}
                             <div class="item">
-                                <span class="title">{{ ad.title|truncatewords:8 }}</span>
-                                <span class="meta">{{ ad.views_count }} views</span>
+                                <span class="title"><a href="{% url 'advertisements:edit' ad.id %}">{{ ad.title|truncatewords:8 }}</a></span>
+                                <span class="meta">{{ ad.views_count }} views | {{ ad.clicks_count }} clicks</span>
+                                <span class="status-badge {{ ad.status }}">{{ ad.get_status_display }}</span>
                             </div>
                             {% empty %}
-                            <p class="text-muted">No ads yet</p>
+                            <p class="text-muted">No ads yet. <a href="{% url 'advertisements:create' %}">Create your first ad</a></p>
                             {% endfor %}
 
                         {% elif is_subscriber %}
-                            <!-- Latest Articles -->
-                            <h6 class="text-muted mt-2">Latest Articles</h6>
+                            <h6 class="text-muted mt-2"><i class="fas fa-bookmark"></i> Saved Articles</h6>
+                            {% for article in recent_items.saved_articles %}
+                            <div class="item">
+                                <span class="title"><a href="{{ article.get_absolute_url }}">{{ article.title|truncatewords:8 }}</a></span>
+                                <span class="meta">{{ article.published_at|timesince }} ago</span>
+                            </div>
+                            {% empty %}
+                            <p class="text-muted">No saved articles yet. <a href="{% url 'articles:latest' %}">Start reading</a></p>
+                            {% endfor %}
+
+                            <h6 class="text-muted mt-3"><i class="fas fa-comment"></i> My Comments</h6>
+                            {% for comment in recent_items.my_comments %}
+                            <div class="item">
+                                <span class="title">
+                                    <a href="{{ comment.article.get_absolute_url }}#comment-{{ comment.id }}">
+                                        {{ comment.content|truncatewords:10 }}
+                                    </a>
+                                </span>
+                                <span class="meta">
+                                    <span class="badge bg-secondary">{{ comment.get_status_display }}</span>
+                                    <span class="ms-2">{{ comment.created_at|timesince }} ago</span>
+                                </span>
+                            </div>
+                            {% empty %}
+                            <p class="text-muted">You haven't commented yet. <a href="{% url 'articles:latest' %}">Read and share your thoughts</a></p>
+                            {% endfor %}
+
+                            <h6 class="text-muted mt-3"><i class="fas fa-newspaper"></i> Latest Articles</h6>
                             {% for article in recent_items.latest_articles %}
                             <div class="item">
                                 <span class="title"><a href="{{ article.get_absolute_url }}">{{ article.title|truncatewords:8 }}</a></span>
@@ -625,7 +762,9 @@
                     </div>
                 </div>
 
-                <!-- Activity Feed -->
+                <!-- ============================================
+                ACTIVITY FEED
+                ============================================ -->
                 <div class="activity-feed-card">
                     <h5><i class="fas fa-history"></i> Recent Activity</h5>
                     <div class="activity-list">
@@ -636,7 +775,7 @@
                             </div>
                             <div class="activity-content">
                                 <p>{{ activity.description }}</p>
-                                <small class="text-muted">{{ activity.timestamp|timesince }} ago</small>
+                                <small>{{ activity.timestamp|timesince }} ago</small>
                             </div>
                         </div>
                         {% empty %}
@@ -646,109 +785,78 @@
                 </div>
             </div>
 
+            <!-- ============================================
+            SIDEBAR
+            ============================================ -->
             <div class="col-lg-4">
-                <!-- Role-specific Sidebar -->
-                {% if is_super_admin or is_admin %}
-                <!-- Admin Sidebar -->
-                <div class="sidebar-card">
-                    <h5><i class="fas fa-chart-pie"></i> Quick Stats</h5>
-                    <div class="quick-stats">
-                        <div class="stat-row">
-                            <span>Active Users</span>
-                            <span class="stat-value">{{ stats.active_users|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Pending Comments</span>
-                            <span class="stat-value">{{ stats.pending_comments|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Subscribers</span>
-                            <span class="stat-value">{{ stats.total_subscribers|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Active Ads</span>
-                            <span class="stat-value">{{ stats.active_ads|default:0 }}</span>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
+                <!-- EDITOR SIDEBAR -->
                 {% if is_editor %}
-                <!-- Editor Sidebar -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-flag"></i> Content Overview</h5>
                     <div class="quick-stats">
-                        <div class="stat-row">
-                            <span>Featured Articles</span>
-                            <span class="stat-value">{{ stats.featured_articles|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Breaking News</span>
-                            <span class="stat-value">{{ stats.breaking_news|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Total Comments</span>
-                            <span class="stat-value">{{ stats.total_comments|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Total Views</span>
-                            <span class="stat-value">{{ stats.total_views|default:0 }}</span>
-                        </div>
+                        <div class="stat-row"><span>Featured Articles</span><span class="stat-value">{{ stats.featured_articles|default:0 }}</span></div>
+                        <div class="stat-row"><span>Breaking News</span><span class="stat-value">{{ stats.breaking_news|default:0 }}</span></div>
+                        <div class="stat-row"><span>Total Comments</span><span class="stat-value">{{ stats.total_comments|default:0 }}</span></div>
+                        <div class="stat-row"><span>Total Views</span><span class="stat-value">{{ stats.total_views|default:0 }}</span></div>
+                        <div class="stat-row"><span>Pending Review</span><span class="stat-value">{{ stats.pending_articles|default:0 }}</span></div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'articles:pending' %}" class="btn btn-sm btn-warning w-100">Review Pending Articles</a>
                     </div>
                 </div>
                 {% endif %}
 
+                <!-- JOURNALIST SIDEBAR -->
                 {% if is_journalist %}
-                <!-- Journalist Sidebar -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-chart-simple"></i> My Performance</h5>
                     <div class="quick-stats">
-                        <div class="stat-row">
-                            <span>Total Articles</span>
-                            <span class="stat-value">{{ stats.my_articles|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Published</span>
-                            <span class="stat-value">{{ stats.my_published|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Total Views</span>
-                            <span class="stat-value">{{ stats.my_views|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Comments on Articles</span>
-                            <span class="stat-value">{{ stats.my_comments|default:0 }}</span>
-                        </div>
+                        <div class="stat-row"><span>Total Articles</span><span class="stat-value">{{ stats.my_articles|default:0 }}</span></div>
+                        <div class="stat-row"><span>Published</span><span class="stat-value">{{ stats.my_published|default:0 }}</span></div>
+                        <div class="stat-row"><span>Awaiting Approval</span><span class="stat-value">{{ stats.my_pending|default:0 }}</span></div>
+                        <div class="stat-row"><span>Total Views</span><span class="stat-value">{{ stats.my_views|default:0 }}</span></div>
+                        <div class="stat-row"><span>Comments on Articles</span><span class="stat-value">{{ stats.my_comments|default:0 }}</span></div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'articles:article_list' %}" class="btn btn-sm btn-primary w-100">View My Articles</a>
                     </div>
                 </div>
                 {% endif %}
 
+                <!-- ADVERTISER SIDEBAR -->
                 {% if is_advertiser %}
-                <!-- Advertiser Sidebar -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-chart-line"></i> Ad Performance</h5>
                     <div class="quick-stats">
-                        <div class="stat-row">
-                            <span>CTR</span>
-                            <span class="stat-value">{{ stats.ctr|default:0 }}%</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Pending Ads</span>
-                            <span class="stat-value">{{ stats.pending_ads|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Expired Ads</span>
-                            <span class="stat-value">{{ stats.expired_ads|default:0 }}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Top Ad Views</span>
-                            <span class="stat-value">{{ stats.top_ad.views_count|default:0 }}</span>
-                        </div>
+                        <div class="stat-row"><span>CTR</span><span class="stat-value">{{ stats.ctr|default:0 }}%</span></div>
+                        <div class="stat-row"><span>Pending Ads</span><span class="stat-value">{{ stats.pending_ads|default:0 }}</span></div>
+                        <div class="stat-row"><span>Expired Ads</span><span class="stat-value">{{ stats.expired_ads|default:0 }}</span></div>
+                        <div class="stat-row"><span>Top Ad Views</span><span class="stat-value">{{ stats.top_ad.views_count|default:0 }}</span></div>
+                        <div class="stat-row"><span>Total Clicks</span><span class="stat-value">{{ stats.ad_clicks|default:0 }}</span></div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'advertisements:list' %}" class="btn btn-sm btn-primary w-100">Manage Ads</a>
                     </div>
                 </div>
                 {% endif %}
 
-                <!-- Notifications -->
+                <!-- SUBSCRIBER SIDEBAR -->
+                {% if is_subscriber %}
+                <div class="sidebar-card">
+                    <h5><i class="fas fa-user"></i> My Profile</h5>
+                    <div class="quick-stats">
+                        <div class="stat-row"><span>Member Since</span><span class="stat-value">{{ user.date_joined|date:"M d, Y" }}</span></div>
+                        <div class="stat-row"><span>Saved Articles</span><span class="stat-value">{{ stats.saved_articles|default:0 }}</span></div>
+                        <div class="stat-row"><span>Comments</span><span class="stat-value">{{ stats.my_comments|default:0 }}</span></div>
+                        <div class="stat-row"><span>Newsletter</span><span class="stat-value">{{ stats.subscription_status|default:'Inactive' }}</span></div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-sm btn-outline-primary w-100">Edit Profile</a>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- NOTIFICATIONS -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-bell"></i> Notifications</h5>
                     {% if notifications %}
@@ -763,13 +871,13 @@
                     {% endif %}
                 </div>
 
-                <!-- Quick Links -->
+                <!-- QUICK LINKS -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-link"></i> Quick Links</h5>
                     <div class="quick-links">
-                        <a href="{% url 'home' %}" class="d-block">View Site</a>
-                        <a href="{% url 'accounts:profile' %}" class="d-block">My Profile</a>
-                        <a href="{% url 'contacts:contact' %}" class="d-block">Support</a>
+                        <a href="{% url 'home' %}" class="d-block"><i class="fas fa-globe"></i> View Site</a>
+                        <a href="{% url 'accounts:profile' %}" class="d-block"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="{% url 'contacts:contact' %}" class="d-block"><i class="fas fa-headset"></i> Support</a>
                     </div>
                 </div>
             </div>
