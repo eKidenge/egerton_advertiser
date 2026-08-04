@@ -256,3 +256,49 @@ def get_ad_by_position(request, position):
             })
     
     return JsonResponse({'ad': None})
+
+# ============================================
+# ADMIN - ADVERTISEMENT MODERATION
+# ============================================
+
+@login_required
+@user_passes_test(lambda u: u.can_manage_users)
+def admin_ad_approve(request, ad_id):
+    """Approve advertisement"""
+    ad = get_object_or_404(Advertisement, id=ad_id)
+    ad.status = 'active'
+    ad.approved_at = timezone.now()
+    ad.approved_by = request.user
+    ad.save()
+    
+    UserActivityLog.objects.create(
+        user=request.user,
+        action='approve',
+        model_name='Advertisement',
+        object_id=ad.id,
+        description=f'Approved advertisement: {ad.title}',
+        ip_address=request.META.get('REMOTE_ADDR')
+    )
+    
+    messages.success(request, f'Advertisement "{ad.title}" approved and activated!')
+    return redirect('advertisements:list')
+
+@login_required
+@user_passes_test(lambda u: u.can_manage_users)
+def admin_ad_reject(request, ad_id):
+    """Reject advertisement"""
+    ad = get_object_or_404(Advertisement, id=ad_id)
+    ad.status = 'rejected'
+    ad.save()
+    
+    UserActivityLog.objects.create(
+        user=request.user,
+        action='reject',
+        model_name='Advertisement',
+        object_id=ad.id,
+        description=f'Rejected advertisement: {ad.title}',
+        ip_address=request.META.get('REMOTE_ADDR')
+    )
+    
+    messages.warning(request, f'Advertisement "{ad.title}" rejected!')
+    return redirect('advertisements:list')

@@ -1,14 +1,504 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Media Library - The Egerton Advertiser{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ============================================
+   MEDIA LIBRARY - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --admin-primary: #0a1a2a;
+    --admin-secondary: #1a3c5e;
+    --admin-gold: #c9a84c;
+    --admin-cream: #f5f0e8;
+}
+
+.media-library {
+    padding: 30px 0;
+    background: var(--admin-cream);
+    min-height: calc(100vh - 200px);
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   PAGE HEADER - OFFICIAL STYLE
+   ============================================ */
+.page-header {
+    border-bottom: 3px solid var(--admin-gold);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: var(--admin-primary);
+    letter-spacing: 1px;
+    font-size: 28px;
+}
+
+.page-header h1 i {
+    color: var(--admin-gold);
+    margin-right: 10px;
+}
+
+.page-header p {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #6c757d;
+    margin: 0;
+}
+
+.page-header .btn-primary {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 0;
+    background: var(--admin-gold);
+    border-color: var(--admin-gold);
+    color: var(--admin-primary);
+    padding: 10px 25px;
+}
+
+.page-header .btn-primary:hover {
+    background: #d4b85c;
+    border-color: #d4b85c;
+    color: var(--admin-primary);
+}
+
+.page-header .btn-primary i {
+    margin-right: 8px;
+}
+
+/* ============================================
+   STATS BOXES - OFFICIAL STYLE
+   ============================================ */
+.stats-row {
+    margin-bottom: 25px;
+}
+
+.stat-box {
+    background: #fff;
+    border: 1px solid #d4cdc0;
+    border-radius: 4px;
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.3s;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.stat-box .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: var(--admin-primary);
+}
+
+.stat-box .stat-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.stat-box .stat-icon {
+    font-size: 24px;
+    color: var(--admin-gold);
+    opacity: 0.3;
+}
+
+/* ============================================
+   FILTERS BAR - OFFICIAL STYLE
+   ============================================ */
+.filters-bar {
+    background: #fff;
+    border: 1px solid #d4cdc0;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.filters-bar .form-control,
+.filters-bar .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 0;
+    border-color: #d4cdc0;
+    font-size: 14px;
+}
+
+.filters-bar .form-control:focus,
+.filters-bar .form-select:focus {
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 0.2rem rgba(201, 168, 76, 0.2);
+}
+
+.filters-bar .btn-primary {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 0;
+    background: var(--admin-primary);
+    border-color: var(--admin-primary);
+    color: #fff;
+    padding: 10px;
+}
+
+.filters-bar .btn-primary:hover {
+    background: var(--admin-secondary);
+    border-color: var(--admin-secondary);
+}
+
+/* ============================================
+   MEDIA GRID - OFFICIAL STYLE
+   ============================================ */
+.media-grid {
+    margin-top: 10px;
+}
+
+.media-item {
+    background: #fff;
+    border: 1px solid #d4cdc0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.media-item:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+}
+
+/* ============================================
+   MEDIA THUMBNAIL
+   ============================================ */
+.media-thumbnail {
+    height: 150px;
+    overflow: hidden;
+    background: #f8f5f0;
+    position: relative;
+}
+
+.media-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Video Thumbnail */
+.media-thumbnail .video-thumb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: var(--admin-primary);
+    color: #fff;
+    position: relative;
+}
+
+.media-thumbnail .video-thumb i {
+    font-size: 48px;
+    color: var(--admin-gold);
+}
+
+.media-thumbnail .video-thumb .file-type-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 2px 10px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Times New Roman', serif;
+}
+
+/* Audio Thumbnail */
+.media-thumbnail .audio-thumb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: linear-gradient(135deg, #2c5a7a 0%, #1a3c5e 100%);
+    color: #fff;
+    position: relative;
+}
+
+.media-thumbnail .audio-thumb i {
+    font-size: 48px;
+}
+
+/* Document Thumbnail */
+.media-thumbnail .document-thumb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: #f0ebe3;
+    color: var(--admin-secondary);
+    position: relative;
+}
+
+.media-thumbnail .document-thumb i {
+    font-size: 48px;
+}
+
+/* Featured Badge */
+.featured-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--admin-gold);
+    color: var(--admin-primary);
+    padding: 2px 10px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Times New Roman', serif;
+    z-index: 2;
+}
+
+.featured-badge i {
+    margin-right: 3px;
+}
+
+/* Status Badge */
+.status-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 2px 10px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Times New Roman', serif;
+    z-index: 2;
+}
+
+.status-badge.available {
+    background: #1a5a3a;
+    color: #fff;
+}
+
+.status-badge.processing {
+    background: #b8860b;
+    color: #fff;
+}
+
+.status-badge.uploading {
+    background: #6c757d;
+    color: #fff;
+}
+
+/* File Type Badge */
+.file-type-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 2px 10px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Times New Roman', serif;
+    z-index: 2;
+}
+
+/* ============================================
+   MEDIA INFO - OFFICIAL STYLE
+   ============================================ */
+.media-info {
+    padding: 12px 15px;
+}
+
+.media-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--admin-primary);
+    margin: 0 0 3px 0;
+    letter-spacing: 0.5px;
+}
+
+.media-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.media-meta .file-size {
+    font-weight: 600;
+}
+
+.media-meta .file-date {
+    font-style: italic;
+}
+
+.media-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.media-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 0;
+    padding: 3px 10px;
+}
+
+.media-actions .btn-outline-primary {
+    border-color: var(--admin-primary);
+    color: var(--admin-primary);
+}
+
+.media-actions .btn-outline-primary:hover {
+    background: var(--admin-primary);
+    color: #fff;
+}
+
+.media-actions .btn-outline-secondary {
+    border-color: #d4cdc0;
+    color: #6c757d;
+}
+
+.media-actions .btn-outline-secondary:hover {
+    background: #6c757d;
+    color: #fff;
+}
+
+.media-actions .btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.media-actions .btn-outline-danger:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
+/* ============================================
+   EMPTY STATE - OFFICIAL STYLE
+   ============================================ */
+.empty-state {
+    padding: 60px 20px;
+    background: #fff;
+    border: 2px dashed #d4cdc0;
+    border-radius: 4px;
+}
+
+.empty-state i {
+    color: var(--admin-gold);
+    opacity: 0.5;
+}
+
+.empty-state h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+    margin-top: 15px;
+}
+
+.empty-state p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 16px;
+}
+
+.empty-state .btn-primary {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 0;
+    background: var(--admin-gold);
+    border-color: var(--admin-gold);
+    color: var(--admin-primary);
+    padding: 10px 30px;
+}
+
+.empty-state .btn-primary:hover {
+    background: #d4b85c;
+    border-color: #d4b85c;
+    color: var(--admin-primary);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .page-header .btn-primary {
+        margin-top: 10px;
+    }
+    .filters-bar .row {
+        gap: 10px;
+    }
+    .media-thumbnail {
+        height: 120px;
+    }
+    .media-title {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 576px) {
+    .media-thumbnail {
+        height: 100px;
+    }
+    .stat-box .stat-number {
+        font-size: 22px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="media-library">
-        <div class="page-header d-flex justify-content-between align-items-center">
+<div class="media-library">
+    <div class="container">
+        <!-- ============================================
+        PAGE HEADER - OFFICIAL STYLE
+        ============================================ -->
+        <div class="page-header">
             <div>
-                <h1><i class="fas fa-images"></i> Media Library</h1>
-                <p class="text-muted">Manage all your media files</p>
+                <h1><i class="fas fa-folder-open"></i> MEDIA LIBRARY</h1>
+                <p>Official Media Repository — Manage all your media files</p>
             </div>
             <div>
                 <a href="{% url 'media_library:upload' %}" class="btn btn-primary">
@@ -17,42 +507,52 @@
             </div>
         </div>
 
-        <!-- Stats -->
+        <!-- ============================================
+        STATS ROW
+        ============================================ -->
         <div class="stats-row row mb-4">
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6">
                 <div class="stat-box">
+                    <div class="stat-icon"><i class="fas fa-files"></i></div>
                     <div class="stat-number">{{ media_files.paginator.count }}</div>
                     <div class="stat-label">Total Files</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6">
                 <div class="stat-box">
+                    <div class="stat-icon"><i class="fas fa-image"></i></div>
                     <div class="stat-number">{{ image_count|default:0 }}</div>
                     <div class="stat-label">Images</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6">
                 <div class="stat-box">
+                    <div class="stat-icon"><i class="fas fa-video"></i></div>
                     <div class="stat-number">{{ video_count|default:0 }}</div>
                     <div class="stat-label">Videos</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6">
                 <div class="stat-box">
+                    <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
                     <div class="stat-number">{{ document_count|default:0 }}</div>
                     <div class="stat-label">Documents</div>
                 </div>
             </div>
         </div>
 
-        <!-- Filters -->
+        <!-- ============================================
+        FILTERS BAR
+        ============================================ -->
         <div class="filters-bar">
-            <form method="get" class="row g-2">
+            <form method="get" class="row g-2 align-items-end">
                 <div class="col-md-3">
+                    <label class="form-label small text-muted">Search</label>
                     <input type="text" name="search" class="form-control" placeholder="Search files..." 
                            value="{{ request.GET.search|default:'' }}">
                 </div>
                 <div class="col-md-2">
+                    <label class="form-label small text-muted">File Type</label>
                     <select name="file_type" class="form-select">
                         <option value="">All Types</option>
                         <option value="image" {% if request.GET.file_type == 'image' %}selected{% endif %}>Images</option>
@@ -62,9 +562,11 @@
                     </select>
                 </div>
                 <div class="col-md-2">
+                    <label class="form-label small text-muted">Date From</label>
                     <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from|default:'' }}">
                 </div>
                 <div class="col-md-2">
+                    <label class="form-label small text-muted">Date To</label>
                     <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to|default:'' }}">
                 </div>
                 <div class="col-md-3">
@@ -75,13 +577,26 @@
             </form>
         </div>
 
-        <!-- Media Grid -->
+        <!-- ============================================
+        MEDIA GRID
+        ============================================ -->
         <div class="media-grid">
             <div class="row">
                 {% for media in media_files %}
                 <div class="col-md-3 col-sm-4 col-6">
                     <div class="media-item">
                         <div class="media-thumbnail">
+                            <!-- Featured Badge -->
+                            {% if media.featured %}
+                            <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                            {% endif %}
+                            
+                            <!-- Status Badge -->
+                            {% if media.status != 'available' %}
+                            <span class="status-badge {{ media.status }}">{{ media.get_status_display }}</span>
+                            {% endif %}
+                            
+                            <!-- Thumbnail Content -->
                             {% if media.file_type == 'image' %}
                                 <img src="{{ media.get_thumbnail_url|default:media.file.url }}" alt="{{ media.title }}">
                             {% elif media.file_type == 'video' %}
@@ -109,13 +624,13 @@
                             </div>
                             <div class="media-actions">
                                 <a href="{{ media.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye"></i> View
                                 </a>
                                 <a href="{% url 'media_library:detail' media.id %}" class="btn btn-sm btn-outline-secondary">
-                                    <i class="fas fa-info"></i>
+                                    <i class="fas fa-info"></i> Detail
                                 </a>
                                 <a href="{% url 'media_library:delete' media.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this file?')">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-trash"></i> Delete
                                 </a>
                             </div>
                         </div>
@@ -124,9 +639,9 @@
                 {% empty %}
                 <div class="col-12">
                     <div class="empty-state text-center py-5">
-                        <i class="fas fa-images fa-4x text-muted"></i>
-                        <h4 class="mt-3">No Media Files Found</h4>
-                        <p class="text-muted">Upload your first media file</p>
+                        <i class="fas fa-images fa-4x"></i>
+                        <h4>No Media Files Found</h4>
+                        <p>Upload your first media file to get started.</p>
                         <a href="{% url 'media_library:upload' %}" class="btn btn-primary">
                             <i class="fas fa-upload"></i> Upload Files
                         </a>
@@ -136,139 +651,10 @@
             </div>
         </div>
 
-        <!-- Pagination -->
+        <!-- ============================================
+        PAGINATION
+        ============================================ -->
         {% include 'pagination.html' %}
     </div>
 </div>
-
-<style>
-.media-library {
-    padding: 30px 0;
-}
-.page-header {
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-}
-.page-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    color: #1a3c5e;
-}
-.stat-box {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-}
-.stat-box .stat-number {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    font-size: 28px;
-    color: #1a3c5e;
-}
-.stat-box .stat-label {
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.filters-bar {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-}
-.filters-bar .form-control,
-.filters-bar .form-select {
-    font-family: 'Times New Roman', serif;
-    border-radius: 4px;
-}
-.media-item {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    transition: all 0.3s;
-}
-.media-item:hover {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-.media-thumbnail {
-    height: 150px;
-    overflow: hidden;
-    background: #f8f9fa;
-    position: relative;
-}
-.media-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.video-thumb,
-.audio-thumb,
-.document-thumb {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #6c757d;
-}
-.video-thumb i,
-.audio-thumb i,
-.document-thumb i {
-    font-size: 48px;
-}
-.file-type-badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(0,0,0,0.7);
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 3px;
-    font-family: 'Times New Roman', serif;
-    font-size: 10px;
-    letter-spacing: 1px;
-}
-.media-info {
-    padding: 10px 12px;
-}
-.media-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-size: 14px;
-    color: #1a3c5e;
-    margin: 0 0 3px 0;
-}
-.media-meta {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'Times New Roman', serif;
-    font-size: 12px;
-    color: #6c757d;
-}
-.media-actions {
-    display: flex;
-    gap: 5px;
-    margin-top: 8px;
-}
-.media-actions .btn {
-    font-family: 'Times New Roman', serif;
-    font-size: 12px;
-    padding: 2px 8px;
-}
-.empty-state i {
-    color: #dee2e6;
-}
-.empty-state h4 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-}
-</style>
 {% endblock %}

@@ -64,8 +64,8 @@ def media_library(request):
     return render(request, 'media_library/media_library.html', context)
 
 @login_required
-@require_http_methods(["POST"])
 def media_upload(request):
+    """Upload media files - supports both GET and POST"""
     if request.method == 'POST':
         form = MediaFileForm(request.POST, request.FILES)
         if form.is_valid():

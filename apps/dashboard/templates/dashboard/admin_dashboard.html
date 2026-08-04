@@ -317,6 +317,11 @@
 .status-badge.verified { background: #1a5a3a; color: #fff; }
 .status-badge.unverified { background: #b8860b; color: #fff; }
 .status-badge.rejected { background: #dc3545; color: #fff; }
+.status-badge.approved { background: #1a5a3a; color: #fff; }
+.status-badge.expired { background: #6c757d; color: #fff; }
+.status-badge.featured { background: var(--admin-gold); color: #0a1a2a; }
+.status-badge.available { background: #1a5a3a; color: #fff; }
+.status-badge.processing { background: #b8860b; color: #fff; }
 
 /* ============================================
    ACTIVITY FEED - OFFICIAL
@@ -503,6 +508,7 @@
 .section-card.society { border-top: 4px solid #17a2b8; }
 .section-card.photos { border-top: 4px solid #fd7e14; }
 .section-card.video { border-top: 4px solid #dc3545; }
+.section-card.ads { border-top: 4px solid var(--admin-gold); }
 
 /* ============================================
    APPROVAL BUTTONS
@@ -516,10 +522,13 @@
     font-size: 11px;
     font-weight: 700;
     font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    display: inline-block;
 }
 .btn-approve:hover {
     background: #2e7d32;
     color: #fff;
+    text-decoration: none;
 }
 .btn-reject {
     background: #8b1a1a;
@@ -530,10 +539,64 @@
     font-size: 11px;
     font-weight: 700;
     font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    display: inline-block;
 }
 .btn-reject:hover {
     background: #a71d1d;
     color: #fff;
+    text-decoration: none;
+}
+.btn-feature {
+    background: var(--admin-gold);
+    color: #0a1a2a;
+    border: none;
+    padding: 2px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-feature:hover {
+    background: #d4b85c;
+    color: #0a1a2a;
+    text-decoration: none;
+}
+.btn-publish {
+    background: #1a5a3a;
+    color: #fff;
+    border: none;
+    padding: 2px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-publish:hover {
+    background: #2e7d32;
+    color: #fff;
+    text-decoration: none;
+}
+.btn-unpublish {
+    background: #b8860b;
+    color: #fff;
+    border: none;
+    padding: 2px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Times New Roman', serif;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-unpublish:hover {
+    background: #d4a017;
+    color: #fff;
+    text-decoration: none;
 }
 
 /* ============================================
@@ -579,6 +642,30 @@
 }
 
 /* ============================================
+   MEDIA PREVIEW
+   ============================================ */
+.media-preview {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #d4cdc0;
+}
+.media-preview-video {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #d4cdc0;
+    background: #0a1a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
@@ -608,6 +695,11 @@
     }
     .section-cards .col-md-2 {
         margin-bottom: 15px;
+    }
+    .item-list .item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
     }
 }
 
@@ -670,7 +762,7 @@
         <!-- ========================================
         PENDING ITEMS ALERT
         ======================================== -->
-        {% if pending_items.articles > 0 or pending_items.comments > 0 or pending_items.ads > 0 or pending_items.contacts > 0 %}
+        {% if pending_items.articles > 0 or pending_items.comments > 0 or pending_items.ads > 0 or pending_items.contacts > 0 or pending_items.photos > 0 or pending_items.videos > 0 %}
         <div class="pending-alert">
             <div class="row align-items-center">
                 <div class="col-md-4">
@@ -694,6 +786,18 @@
                         <div class="pending-item">
                             <span class="count">{{ pending_items.ads }}</span>
                             <span class="label">Pending Ads</span>
+                        </div>
+                        {% endif %}
+                        {% if pending_items.photos > 0 %}
+                        <div class="pending-item">
+                            <span class="count">{{ pending_items.photos }}</span>
+                            <span class="label">Pending Photos</span>
+                        </div>
+                        {% endif %}
+                        {% if pending_items.videos > 0 %}
+                        <div class="pending-item">
+                            <span class="count">{{ pending_items.videos }}</span>
+                            <span class="label">Pending Videos</span>
                         </div>
                         {% endif %}
                         {% if pending_items.contacts > 0 %}
@@ -785,8 +889,35 @@
                         </div>
                     </div>
                 </div>
-                <!-- Subscribers -->
+                <!-- Photos -->
                 <div class="col-xl-3 col-md-6">
+                    <div class="stat-card" style="border-top: 4px solid #fd7e14;">
+                        <div class="stat-icon"><i class="fas fa-camera"></i></div>
+                        <div class="stat-number">{{ total_photos|default:0 }}</div>
+                        <div class="stat-label">Photos</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Featured: {{ featured_photos|default:0 }} | Pending: {{ pending_photos_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Videos -->
+                <div class="col-xl-3 col-md-6">
+                    <div class="stat-card" style="border-top: 4px solid #dc3545;">
+                        <div class="stat-icon"><i class="fas fa-video"></i></div>
+                        <div class="stat-number">{{ total_videos|default:0 }}</div>
+                        <div class="stat-label">Videos</div>
+                        <div class="stat-change">
+                            <span class="text-muted">Featured: {{ featured_videos|default:0 }} | Pending: {{ pending_videos_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Third Row - Subscribers & Contacts -->
+        <div class="stats-grid">
+            <div class="row">
+                <div class="col-xl-4 col-md-6">
                     <div class="stat-card green">
                         <div class="stat-icon"><i class="fas fa-envelope"></i></div>
                         <div class="stat-number">{{ total_subscribers|default:0 }}</div>
@@ -796,8 +927,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Contacts -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-4 col-md-6">
                     <div class="stat-card red">
                         <div class="stat-icon"><i class="fas fa-envelope-open-text"></i></div>
                         <div class="stat-number">{{ total_contacts|default:0 }}</div>
@@ -807,13 +937,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Third Row - Role Breakdown -->
-        <div class="stats-grid">
-            <div class="row">
-                <div class="col-12">
+                <div class="col-xl-4 col-md-6">
                     <div class="stat-card" style="border-top: 4px solid var(--admin-gold);">
                         <div class="stat-icon"><i class="fas fa-user-tag"></i></div>
                         <div class="stat-number" style="font-size: 18px;">
@@ -830,7 +954,7 @@
         </div>
 
         <!-- ========================================
-        SECTION CARDS - OPINION, ENVIRONMENT, SOCIETY, PHOTOS, VIDEO
+        SECTION CARDS - OPINION, ENVIRONMENT, SOCIETY, PHOTOS, VIDEO, ADS
         ======================================== -->
         <div class="section-cards">
             <div class="row">
@@ -880,12 +1004,12 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="section-card" style="border-top: 4px solid var(--admin-gold);">
+                    <div class="section-card ads">
                         <div class="section-icon"><i class="fas fa-ad" style="color: var(--admin-gold);"></i></div>
                         <div class="section-number">{{ total_ads|default:0 }}</div>
                         <div class="section-label">Adsboard</div>
                         <div class="section-count">Active: {{ active_ads|default:0 }}</div>
-                        <a href="{% url 'dashboard:ad_list' %}" class="btn btn-sm btn-outline-secondary mt-2">Manage</a>
+                        <a href="{% url 'advertisements:list' %}" class="btn btn-sm btn-outline-secondary mt-2">Manage</a>
                     </div>
                 </div>
             </div>
@@ -900,6 +1024,7 @@
                 <div class="quick-actions-card">
                     <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
                     <div class="quick-actions-grid">
+                        <!-- Article Actions -->
                         <a href="{% url 'dashboard:article_create' %}" class="quick-action">
                             <i class="fas fa-pen-fancy"></i>
                             <span>Write Article</span>
@@ -916,47 +1041,89 @@
                             <i class="fas fa-tags"></i>
                             <span>Tags</span>
                         </a>
+                        
+                        <!-- Opinion Actions -->
                         <a href="{% url 'dashboard:opinion_list' %}" class="quick-action">
                             <i class="fas fa-pencil-alt"></i>
-                            <span>Opinion</span>
+                            <span>Opinions</span>
                         </a>
+                        
+                        <!-- Environment Actions -->
                         <a href="{% url 'dashboard:environment_list' %}" class="quick-action">
                             <i class="fas fa-leaf"></i>
                             <span>Environment</span>
                         </a>
+                        
+                        <!-- Society Actions -->
                         <a href="{% url 'dashboard:society_list' %}" class="quick-action">
                             <i class="fas fa-users"></i>
                             <span>Society</span>
                         </a>
+                        
+                        <!-- Photo Actions -->
                         <a href="{% url 'dashboard:photos_list' %}" class="quick-action">
                             <i class="fas fa-camera"></i>
                             <span>Photos</span>
                         </a>
+                        <a href="{% url 'media_library:library' %}?type=image" class="quick-action">
+                            <i class="fas fa-images"></i>
+                            <span>Photo Library</span>
+                        </a>
+                        <a href="{% url 'media_library:upload' %}" class="quick-action">
+                            <i class="fas fa-upload"></i>
+                            <span>Upload Photo</span>
+                        </a>
+                        
+                        <!-- Video Actions -->
                         <a href="{% url 'dashboard:video_list' %}" class="quick-action">
                             <i class="fas fa-video"></i>
                             <span>Videos</span>
                         </a>
-                        <a href="{% url 'dashboard:video_upload' %}" class="quick-action">
+                        <a href="{% url 'media_library:library' %}?type=video" class="quick-action">
+                            <i class="fas fa-film"></i>
+                            <span>Video Library</span>
+                        </a>
+                        <a href="{% url 'media_library:upload' %}" class="quick-action">
                             <i class="fas fa-upload"></i>
                             <span>Upload Video</span>
                         </a>
+                        
+                        <!-- Advertisement Actions -->
+                        <a href="{% url 'advertisements:create' %}" class="quick-action">
+                            <i class="fas fa-ad"></i>
+                            <span>Create Ad</span>
+                        </a>
+                        <a href="{% url 'advertisements:list' %}" class="quick-action">
+                            <i class="fas fa-list"></i>
+                            <span>Manage Ads</span>
+                        </a>
+                        <a href="{% url 'advertisements:statistics' %}" class="quick-action">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Ad Stats</span>
+                        </a>
+                        <a href="{% url 'advertisements:positions' %}" class="quick-action">
+                            <i class="fas fa-th-large"></i>
+                            <span>Ad Positions</span>
+                        </a>
+                        
+                        <!-- User Actions -->
                         <a href="{% url 'dashboard:user_list' %}" class="quick-action">
                             <i class="fas fa-users-cog"></i>
                             <span>Manage Users</span>
                         </a>
-                        <a href="{% url 'dashboard:comment_list' %}" class="quick-action">
+                        
+                        <!-- Comment Actions -->
+                        <a href="{% url 'comments:list' %}" class="quick-action">
                             <i class="fas fa-comments"></i>
                             <span>Comments</span>
                         </a>
-                        <a href="{% url 'dashboard:ad_list' %}" class="quick-action">
-                            <i class="fas fa-ad"></i>
-                            <span>Advertisements</span>
+                        <a href="{% url 'comments:pending' %}" class="quick-action">
+                            <i class="fas fa-clock"></i>
+                            <span>Pending Comments</span>
                         </a>
-                        <a href="{% url 'dashboard:ad_create' %}" class="quick-action">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>Create Ad</span>
-                        </a>
-                        <a href="{% url 'dashboard:media_list' %}" class="quick-action">
+                        
+                        <!-- Other Actions -->
+                        <a href="{% url 'media_library:library' %}" class="quick-action">
                             <i class="fas fa-images"></i>
                             <span>Media Library</span>
                         </a>
@@ -980,7 +1147,7 @@
                 </div>
 
                 <!-- ========================================
-                PENDING OPINION ARTICLES - APPROVE/REJECT
+                PENDING OPINION ARTICLES - PUBLISH/UNPUBLISH
                 ======================================== -->
                 {% if pending_opinion_articles %}
                 <div class="recent-items-card">
@@ -995,11 +1162,8 @@
                             <div>
                                 <span class="status-badge pending">Pending</span>
                                 <span class="meta ms-2">
-                                    <a href="{% url 'dashboard:article_approve' article.id %}" class="btn-approve" onclick="return confirm('Approve this Opinion article?')">
-                                        <i class="fas fa-check"></i> Approve
-                                    </a>
-                                    <a href="{% url 'dashboard:article_reject' article.id %}" class="btn-reject" onclick="return confirm('Reject this Opinion article?')">
-                                        <i class="fas fa-times"></i> Reject
+                                    <a href="{% url 'dashboard:opinion_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Opinion article?')">
+                                        <i class="fas fa-check"></i> Publish
                                     </a>
                                 </span>
                             </div>
@@ -1010,7 +1174,7 @@
                 {% endif %}
 
                 <!-- ========================================
-                PENDING ENVIRONMENT ARTICLES - APPROVE/REJECT
+                PENDING ENVIRONMENT ARTICLES - PUBLISH/UNPUBLISH
                 ======================================== -->
                 {% if pending_environment_articles %}
                 <div class="recent-items-card">
@@ -1025,11 +1189,8 @@
                             <div>
                                 <span class="status-badge pending">Pending</span>
                                 <span class="meta ms-2">
-                                    <a href="{% url 'dashboard:article_approve' article.id %}" class="btn-approve" onclick="return confirm('Approve this Environment article?')">
-                                        <i class="fas fa-check"></i> Approve
-                                    </a>
-                                    <a href="{% url 'dashboard:article_reject' article.id %}" class="btn-reject" onclick="return confirm('Reject this Environment article?')">
-                                        <i class="fas fa-times"></i> Reject
+                                    <a href="{% url 'dashboard:environment_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Environment article?')">
+                                        <i class="fas fa-check"></i> Publish
                                     </a>
                                 </span>
                             </div>
@@ -1040,7 +1201,7 @@
                 {% endif %}
 
                 <!-- ========================================
-                PENDING SOCIETY ARTICLES - APPROVE/REJECT
+                PENDING SOCIETY ARTICLES - PUBLISH/UNPUBLISH
                 ======================================== -->
                 {% if pending_society_articles %}
                 <div class="recent-items-card">
@@ -1055,11 +1216,8 @@
                             <div>
                                 <span class="status-badge pending">Pending</span>
                                 <span class="meta ms-2">
-                                    <a href="{% url 'dashboard:article_approve' article.id %}" class="btn-approve" onclick="return confirm('Approve this Society article?')">
-                                        <i class="fas fa-check"></i> Approve
-                                    </a>
-                                    <a href="{% url 'dashboard:article_reject' article.id %}" class="btn-reject" onclick="return confirm('Reject this Society article?')">
-                                        <i class="fas fa-times"></i> Reject
+                                    <a href="{% url 'dashboard:society_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Society article?')">
+                                        <i class="fas fa-check"></i> Publish
                                     </a>
                                 </span>
                             </div>
@@ -1070,7 +1228,7 @@
                 {% endif %}
 
                 <!-- ========================================
-                PENDING PHOTOS - APPROVE/REJECT
+                PENDING PHOTOS
                 ======================================== -->
                 {% if pending_photos %}
                 <div class="recent-items-card">
@@ -1078,17 +1236,76 @@
                     <div class="item-list">
                         {% for photo in pending_photos %}
                         <div class="item">
-                            <span class="title">
+                            <div class="title">
+                                {% if photo.thumbnail_small %}
+                                <img src="{{ photo.thumbnail_small.url }}" alt="{{ photo.title }}" class="media-preview me-2">
+                                {% endif %}
                                 <a href="{% url 'dashboard:photos_edit' photo.id %}">{{ photo.title|truncatewords:8 }}</a>
                                 <span class="text-muted ms-2">by {{ photo.uploaded_by.get_full_name|default:photo.uploaded_by.username }}</span>
-                            </span>
+                            </div>
+                            <div>
+                                <span class="status-badge processing">Processing</span>
+                                <span class="meta ms-2">{{ photo.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING VIDEOS
+                ======================================== -->
+                {% if pending_videos %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-video" style="color: #dc3545;"></i> Pending Videos</h5>
+                    <div class="item-list">
+                        {% for video in pending_videos %}
+                        <div class="item">
+                            <div class="title">
+                                {% if video.thumbnail %}
+                                <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" class="media-preview me-2">
+                                {% else %}
+                                <div class="media-preview-video me-2">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                {% endif %}
+                                <a href="{% url 'dashboard:video_edit' video.id %}">{{ video.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ video.uploaded_by.get_full_name|default:video.uploaded_by.username }}</span>
+                            </div>
+                            <div>
+                                <span class="status-badge processing">Processing</span>
+                                <span class="meta ms-2">{{ video.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING ADS - APPROVE/REJECT
+                ======================================== -->
+                {% if pending_ads_list %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-ad" style="color: var(--admin-gold);"></i> Pending Advertisements</h5>
+                    <div class="item-list">
+                        {% for ad in pending_ads_list %}
+                        <div class="item">
+                            <div class="title">
+                                {% if ad.image %}
+                                <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="media-preview me-2">
+                                {% endif %}
+                                <a href="{% url 'advertisements:detail' ad.id %}">{{ ad.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ ad.advertiser.get_full_name|default:ad.advertiser.username }}</span>
+                            </div>
                             <div>
                                 <span class="status-badge pending">Pending</span>
                                 <span class="meta ms-2">
-                                    <a href="{% url 'dashboard:photos_approve' photo.id %}" class="btn-approve" onclick="return confirm('Approve this photo?')">
+                                    <a href="{% url 'advertisements:approve' ad.id %}" class="btn-approve" onclick="return confirm('Approve this advertisement?')">
                                         <i class="fas fa-check"></i> Approve
                                     </a>
-                                    <a href="{% url 'dashboard:photos_reject' photo.id %}" class="btn-reject" onclick="return confirm('Reject this photo?')">
+                                    <a href="{% url 'advertisements:reject' ad.id %}" class="btn-reject" onclick="return confirm('Reject this advertisement?')">
                                         <i class="fas fa-times"></i> Reject
                                     </a>
                                 </span>
@@ -1100,36 +1317,8 @@
                 {% endif %}
 
                 <!-- ========================================
-                PENDING VIDEOS - APPROVE/REJECT
+                ADSBOARD - AD PERFORMANCE OVERVIEW
                 ======================================== -->
-                {% if pending_videos %}
-                <div class="recent-items-card">
-                    <h5><i class="fas fa-video" style="color: #dc3545;"></i> Pending Videos</h5>
-                    <div class="item-list">
-                        {% for video in pending_videos %}
-                        <div class="item">
-                            <span class="title">
-                                <a href="{% url 'dashboard:video_edit' video.id %}">{{ video.title|truncatewords:8 }}</a>
-                                <span class="text-muted ms-2">by {{ video.uploaded_by.get_full_name|default:video.uploaded_by.username }}</span>
-                            </span>
-                            <div>
-                                <span class="status-badge pending">Pending</span>
-                                <span class="meta ms-2">
-                                    <a href="{% url 'dashboard:video_approve' video.id %}" class="btn-approve" onclick="return confirm('Approve this video?')">
-                                        <i class="fas fa-check"></i> Approve
-                                    </a>
-                                    <a href="{% url 'dashboard:video_reject' video.id %}" class="btn-reject" onclick="return confirm('Reject this video?')">
-                                        <i class="fas fa-times"></i> Reject
-                                    </a>
-                                </span>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Adsboard - Ad Performance Overview -->
                 <div class="adsboard-card">
                     <h5><i class="fas fa-chart-line"></i> Ad Performance Overview</h5>
                     <div class="row">
@@ -1147,6 +1336,20 @@
                         </div>
                         <div class="col-6 col-md-3">
                             <div class="ad-stat">
+                                <span class="label">Pending</span>
+                                <span class="value">{{ pending_ads|default:0 }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="ad-stat">
+                                <span class="label">Expired</span>
+                                <span class="value">{{ expired_ads|default:0 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6 col-md-3">
+                            <div class="ad-stat">
                                 <span class="label">Total Views</span>
                                 <span class="value">{{ total_ad_views|default:0|intcomma }}</span>
                             </div>
@@ -1157,16 +1360,90 @@
                                 <span class="value">{{ total_ad_clicks|default:0|intcomma }}</span>
                             </div>
                         </div>
+                        <div class="col-6 col-md-3">
+                            <div class="ad-stat">
+                                <span class="label">CTR</span>
+                                <span class="value">{{ ad_ctr|default:"0.00" }}%</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="ad-stat">
+                                <span class="label">Revenue</span>
+                                <span class="value">${{ total_ad_revenue|default:0|floatformat:2 }}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-2">
-                        <a href="{% url 'dashboard:ad_performance' %}" class="btn btn-sm btn-outline-primary">View Full Performance</a>
-                        <a href="{% url 'dashboard:ad_revenue' %}" class="btn btn-sm btn-outline-success">Revenue Dashboard</a>
-                        <a href="{% url 'dashboard:ad_list' %}" class="btn btn-sm btn-outline-secondary">Manage Ads</a>
-                        <a href="{% url 'dashboard:ad_create' %}" class="btn btn-sm btn-outline-warning">Create Ad</a>
+                    <div class="mt-3">
+                        <a href="{% url 'advertisements:statistics' %}" class="btn btn-sm btn-outline-primary">View Full Stats</a>
+                        <a href="{% url 'advertisements:positions' %}" class="btn btn-sm btn-outline-success">Ad Positions</a>
+                        <a href="{% url 'advertisements:list' %}" class="btn btn-sm btn-outline-secondary">Manage Ads</a>
+                        <a href="{% url 'advertisements:create' %}" class="btn btn-sm btn-outline-warning">Create Ad</a>
                     </div>
                 </div>
 
-                <!-- Recent Articles -->
+                <!-- ========================================
+                RECENT PHOTOS
+                ======================================== -->
+                {% if recent_photos %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-camera" style="color: #fd7e14;"></i> Recent Photos</h5>
+                    <div class="item-list">
+                        {% for photo in recent_photos %}
+                        <div class="item">
+                            <div class="title">
+                                {% if photo.thumbnail_small %}
+                                <img src="{{ photo.thumbnail_small.url }}" alt="{{ photo.title }}" class="media-preview me-2">
+                                {% endif %}
+                                <a href="{% url 'dashboard:photos_edit' photo.id %}">{{ photo.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ photo.uploaded_by.get_full_name|default:photo.uploaded_by.username }}</span>
+                            </div>
+                            <div>
+                                <span class="status-badge {% if photo.status == 'available' %}available{% else %}processing{% endif %}">
+                                    {{ photo.get_status_display }}
+                                </span>
+                                <span class="meta ms-2">{{ photo.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                RECENT VIDEOS
+                ======================================== -->
+                {% if recent_videos %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-video" style="color: #dc3545;"></i> Recent Videos</h5>
+                    <div class="item-list">
+                        {% for video in recent_videos %}
+                        <div class="item">
+                            <div class="title">
+                                {% if video.thumbnail %}
+                                <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" class="media-preview me-2">
+                                {% else %}
+                                <div class="media-preview-video me-2">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                {% endif %}
+                                <a href="{% url 'dashboard:video_edit' video.id %}">{{ video.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ video.uploaded_by.get_full_name|default:video.uploaded_by.username }}</span>
+                            </div>
+                            <div>
+                                <span class="status-badge {% if video.status == 'available' %}available{% else %}processing{% endif %}">
+                                    {{ video.get_status_display }}
+                                </span>
+                                <span class="meta ms-2">{{ video.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                RECENT ARTICLES
+                ======================================== -->
                 <div class="recent-items-card">
                     <h5><i class="fas fa-clock"></i> Recent Articles</h5>
                     <div class="item-list">
@@ -1188,7 +1465,9 @@
                     </div>
                 </div>
 
-                <!-- Recent Users -->
+                <!-- ========================================
+                RECENT USERS
+                ======================================== -->
                 <div class="recent-items-card">
                     <h5><i class="fas fa-users"></i> Recent Users</h5>
                     <div class="item-list">
@@ -1210,14 +1489,16 @@
                     </div>
                 </div>
 
-                <!-- Activity Feed -->
+                <!-- ========================================
+                ACTIVITY FEED
+                ======================================== -->
                 <div class="activity-feed-card">
                     <h5><i class="fas fa-history"></i> Recent Activity</h5>
                     <div class="activity-list">
                         {% for activity in recent_activity %}
                         <div class="activity-item">
                             <div class="activity-icon">
-                                <i class="fas fa-{% if activity.action == 'create' %}plus-circle text-success{% elif activity.action == 'update' %}edit text-primary{% elif activity.action == 'delete' %}trash text-danger{% elif activity.action == 'login' %}sign-in-alt text-info{% else %}circle text-muted{% endif %}"></i>
+                                <i class="fas fa-{% if activity.action == 'create' %}plus-circle text-success{% elif activity.action == 'update' %}edit text-primary{% elif activity.action == 'delete' %}trash text-danger{% elif activity.action == 'login' %}sign-in-alt text-info{% elif activity.action == 'publish' %}check-circle text-success{% elif activity.action == 'unpublish' %}times-circle text-warning{% elif activity.action == 'approve' %}check-circle text-success{% elif activity.action == 'reject' %}times-circle text-danger{% else %}circle text-muted{% endif %}"></i>
                             </div>
                             <div class="activity-content">
                                 <p>{{ activity.description }}</p>
@@ -1272,12 +1553,24 @@
                             <span class="stat-value">{{ active_ads|default:0 }}</span>
                         </div>
                         <div class="stat-row">
+                            <span>Pending Ads</span>
+                            <span class="stat-value">{{ pending_ads|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
                             <span>Photos</span>
                             <span class="stat-value">{{ total_photos|default:0 }}</span>
                         </div>
                         <div class="stat-row">
+                            <span>Pending Photos</span>
+                            <span class="stat-value">{{ pending_photos_count|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
                             <span>Videos</span>
                             <span class="stat-value">{{ total_videos|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Pending Videos</span>
+                            <span class="stat-value">{{ pending_videos_count|default:0 }}</span>
                         </div>
                     </div>
                 </div>
@@ -1298,9 +1591,61 @@
                             <span>Expired Ads</span>
                             <span class="stat-value">{{ expired_ads|default:0 }}</span>
                         </div>
+                        <div class="stat-row">
+                            <span>Total Clicks</span>
+                            <span class="stat-value">{{ total_ad_clicks|default:0|intcomma }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>CTR</span>
+                            <span class="stat-value">{{ ad_ctr|default:"0.00" }}%</span>
+                        </div>
                     </div>
                     <div class="mt-2">
-                        <a href="{% url 'dashboard:ad_revenue' %}" class="btn btn-sm btn-outline-success w-100">View Revenue Details</a>
+                        <a href="{% url 'advertisements:statistics' %}" class="btn btn-sm btn-outline-success w-100">View Revenue Details</a>
+                    </div>
+                </div>
+
+                <!-- Photo Stats -->
+                <div class="sidebar-card">
+                    <h5><i class="fas fa-camera" style="color: #fd7e14;"></i> Photo Stats</h5>
+                    <div class="quick-stats">
+                        <div class="stat-row">
+                            <span>Total Photos</span>
+                            <span class="stat-value">{{ total_photos|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Available</span>
+                            <span class="stat-value">{{ available_photos|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Processing</span>
+                            <span class="stat-value">{{ processing_photos|default:0 }}</span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'dashboard:photos_list' %}" class="btn btn-sm btn-outline-warning w-100">Manage Photos</a>
+                    </div>
+                </div>
+
+                <!-- Video Stats -->
+                <div class="sidebar-card">
+                    <h5><i class="fas fa-video" style="color: #dc3545;"></i> Video Stats</h5>
+                    <div class="quick-stats">
+                        <div class="stat-row">
+                            <span>Total Videos</span>
+                            <span class="stat-value">{{ total_videos|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Available</span>
+                            <span class="stat-value">{{ available_videos|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Processing</span>
+                            <span class="stat-value">{{ processing_videos|default:0 }}</span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <a href="{% url 'dashboard:video_list' %}" class="btn btn-sm btn-outline-danger w-100">Manage Videos</a>
                     </div>
                 </div>
 

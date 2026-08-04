@@ -54,6 +54,12 @@ class MediaFile(models.Model):
     # Status
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='uploading')
     
+    # Featured flag
+    featured = models.BooleanField(
+        default=False,
+        help_text="Mark this media as featured for display on the homepage and galleries"
+    )
+    
     # Usage tracking
     usage_count = models.PositiveIntegerField(default=0)
     last_used = models.DateTimeField(null=True, blank=True)
@@ -73,6 +79,7 @@ class MediaFile(models.Model):
             models.Index(fields=['file_type', 'status']),
             models.Index(fields=['uploaded_by', 'created_at']),
             models.Index(fields=['file_hash']),
+            models.Index(fields=['featured']),  # Added index for featured field
         ]
     
     def __str__(self):

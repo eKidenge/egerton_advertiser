@@ -569,9 +569,29 @@ def admin_dashboard(request):
     society_articles = Article.objects.filter(category__slug='society').count()
     society_published = Article.objects.filter(category__slug='society', status='published').count()
     
-    # Photos
+    # ========================================
+    # PHOTOS & VIDEOS - UPDATED STATISTICS
+    # ========================================
+    
+    # Photos (images)
     total_photos = MediaFile.objects.filter(file_type='image').count()
-    featured_photos = 0
+    available_photos = MediaFile.objects.filter(file_type='image', status='available').count()
+    processing_photos = MediaFile.objects.filter(file_type='image', status='processing').count()
+    pending_photos_count = MediaFile.objects.filter(file_type='image', status='processing').count()
+    featured_photos = MediaFile.objects.filter(file_type='image', featured=True).count()
+    
+    # Videos
+    total_videos = MediaFile.objects.filter(file_type='video').count()
+    available_videos = MediaFile.objects.filter(file_type='video', status='available').count()
+    processing_videos = MediaFile.objects.filter(file_type='video', status='processing').count()
+    pending_videos_count = MediaFile.objects.filter(file_type='video', status='processing').count()
+    featured_videos = MediaFile.objects.filter(file_type='video', featured=True).count()
+    
+    # Recent photos and videos for display
+    recent_photos = MediaFile.objects.filter(file_type='image').order_by('-created_at')[:10]
+    recent_videos = MediaFile.objects.filter(file_type='video').order_by('-created_at')[:10]
+    pending_photos = MediaFile.objects.filter(file_type='image', status='processing').order_by('-created_at')[:10]
+    pending_videos = MediaFile.objects.filter(file_type='video', status='processing').order_by('-created_at')[:10]
     
     # Categories
     total_categories = Category.objects.count()
@@ -607,6 +627,7 @@ def admin_dashboard(request):
     expired_ads = Advertisement.objects.filter(status='expired').count()
     total_ad_views = Advertisement.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0
     total_ad_clicks = Advertisement.objects.aggregate(Sum('clicks_count'))['clicks_count__sum'] or 0
+    ad_ctr = (total_ad_clicks / total_ad_views * 100) if total_ad_views > 0 else 0
     
     total_ad_revenue = 0
     all_ads = Advertisement.objects.all()
@@ -618,7 +639,10 @@ def admin_dashboard(request):
         elif ad.budget and ad.budget > 0:
             total_ad_revenue += ad.budget
     
-    # Media
+    # Pending ads for display
+    pending_ads_list = Advertisement.objects.filter(status='pending').order_by('-created_at')[:10]
+    
+    # Media (total)
     total_media = MediaFile.objects.count()
     media_images = MediaFile.objects.filter(file_type='image').count()
     media_videos = MediaFile.objects.filter(file_type='video').count()
@@ -649,6 +673,8 @@ def admin_dashboard(request):
         'comments': pending_comments,
         'ads': pending_ads,
         'contacts': new_contacts,
+        'photos': pending_photos_count,
+        'videos': pending_videos_count,
     }
     
     # Chart data - Last 30 days
@@ -678,9 +704,27 @@ def admin_dashboard(request):
         'society_articles': society_articles,
         'society_published': society_published,
         
-        # Photos stats
+        # ========================================
+        # PHOTOS STATS - UPDATED
+        # ========================================
         'total_photos': total_photos,
+        'available_photos': available_photos,
+        'processing_photos': processing_photos,
+        'pending_photos_count': pending_photos_count,
         'featured_photos': featured_photos,
+        'recent_photos': recent_photos,
+        'pending_photos': pending_photos,
+        
+        # ========================================
+        # VIDEOS STATS - UPDATED
+        # ========================================
+        'total_videos': total_videos,
+        'available_videos': available_videos,
+        'processing_videos': processing_videos,
+        'pending_videos_count': pending_videos_count,
+        'featured_videos': featured_videos,
+        'recent_videos': recent_videos,
+        'pending_videos': pending_videos,
         
         # Category & Tag stats
         'total_categories': total_categories,
@@ -712,7 +756,9 @@ def admin_dashboard(request):
         'expired_ads': expired_ads,
         'total_ad_views': total_ad_views,
         'total_ad_clicks': total_ad_clicks,
+        'ad_ctr': ad_ctr,
         'total_ad_revenue': total_ad_revenue,
+        'pending_ads_list': pending_ads_list,
         
         # Media stats
         'total_media': total_media,

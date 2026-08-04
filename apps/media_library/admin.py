@@ -4,10 +4,12 @@ from .models import MediaFile, MediaTag, MediaCategory, MediaFileTag, MediaFileC
 
 @admin.register(MediaFile)
 class MediaFileAdmin(admin.ModelAdmin):
-    list_display = ('title_preview', 'file_type', 'file_size', 'uploaded_by', 'status', 'usage_count', 'created_at')
-    list_filter = ('file_type', 'status', 'created_at')
+    list_display = ('title_preview', 'featured', 'file_type', 'file_size', 'uploaded_by', 'status', 'usage_count', 'created_at')
+    list_filter = ('featured', 'file_type', 'status', 'created_at')
     search_fields = ('title', 'description', 'alt_text', 'uploaded_by__username')
     readonly_fields = ('file_size', 'mime_type', 'file_hash', 'usage_count', 'last_used', 'created_at', 'updated_at')
+    list_editable = ('featured',)  # Allows inline editing of featured status
+    actions = ['mark_as_featured', 'unmark_as_featured']
     
     fieldsets = (
         ('Basic Information', {
@@ -19,8 +21,8 @@ class MediaFileAdmin(admin.ModelAdmin):
         ('Metadata', {
             'fields': ('width', 'height', 'duration', 'metadata')
         }),
-        ('Status', {
-            'fields': ('status',)
+        ('Status & Featured', {
+            'fields': ('status', 'featured')
         }),
         ('Thumbnails', {
             'fields': ('thumbnail_small', 'thumbnail_medium', 'thumbnail_large')
@@ -41,6 +43,16 @@ class MediaFileAdmin(admin.ModelAdmin):
             )
         return obj.title[:50]
     title_preview.short_description = 'Preview'
+    
+    def mark_as_featured(self, request, queryset):
+        updated = queryset.update(featured=True)
+        self.message_user(request, f'{updated} media files marked as featured.')
+    mark_as_featured.short_description = 'Mark selected as featured'
+    
+    def unmark_as_featured(self, request, queryset):
+        updated = queryset.update(featured=False)
+        self.message_user(request, f'{updated} media files unmarked as featured.')
+    unmark_as_featured.short_description = 'Unmark selected as featured'
 
 @admin.register(MediaTag)
 class MediaTagAdmin(admin.ModelAdmin):

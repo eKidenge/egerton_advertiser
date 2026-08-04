@@ -1,29 +1,413 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Upload Media - The Egerton Advertiser{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ============================================
+   MEDIA UPLOAD - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --admin-primary: #0a1a2a;
+    --admin-secondary: #1a3c5e;
+    --admin-gold: #c9a84c;
+    --admin-cream: #f5f0e8;
+}
+
+.upload-page {
+    padding: 30px 0;
+    background: var(--admin-cream);
+    min-height: calc(100vh - 200px);
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   UPLOAD CARD - OFFICIAL STYLE
+   ============================================ */
+.upload-card {
+    background: #fff;
+    border: 1px solid #d4cdc0;
+    border-radius: 4px;
+    padding: 35px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-card::before {
+    content: 'OFFICIAL';
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(201,168,76,0.03);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 10px;
+}
+
+/* ============================================
+   UPLOAD HEADER - OFFICIAL STYLE
+   ============================================ */
+.upload-header {
+    border-bottom: 3px solid var(--admin-gold);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.upload-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: var(--admin-primary);
+    letter-spacing: 1px;
+    font-size: 28px;
+}
+
+.upload-header h2 i {
+    color: var(--admin-gold);
+    margin-right: 10px;
+}
+
+.upload-header p {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* ============================================
+   DROP ZONE - OFFICIAL STYLE
+   ============================================ */
+.upload-area {
+    border: 2px dashed #d4cdc0;
+    border-radius: 4px;
+    padding: 50px 20px;
+    text-align: center;
+    margin-bottom: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #f8f5f0;
+    position: relative;
+}
+
+.upload-area:hover {
+    border-color: var(--admin-gold);
+    background: #f5f0e8;
+}
+
+.upload-area.dragover {
+    border-color: var(--admin-gold);
+    background: #f0ebe3;
+    border-style: solid;
+}
+
+.upload-area .upload-icon i {
+    font-size: 72px;
+    color: var(--admin-gold);
+    opacity: 0.6;
+}
+
+.upload-area h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+    margin: 10px 0 5px;
+    letter-spacing: 1px;
+}
+
+.upload-area p {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 15px;
+    margin: 0;
+}
+
+.upload-area .upload-limits {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* ============================================
+   FORM - OFFICIAL STYLE
+   ============================================ */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--admin-primary);
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.form-group label i {
+    margin-right: 8px;
+    color: var(--admin-gold);
+}
+
+.form-control, .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 0;
+    border: 1px solid #d4cdc0;
+    padding: 10px 15px;
+    font-size: 15px;
+    background: #fff;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--admin-gold);
+    box-shadow: 0 0 0 0.2rem rgba(201, 168, 76, 0.2);
+}
+
+.form-control::placeholder {
+    color: #b0a8a0;
+    font-style: italic;
+}
+
+.help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 3px;
+}
+
+.text-danger {
+    color: #8b1a1a !important;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+}
+
+/* ============================================
+   FORM ACTIONS - OFFICIAL STYLE
+   ============================================ */
+.form-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #d4cdc0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+.form-actions .btn-primary {
+    background: var(--admin-gold);
+    border-color: var(--admin-gold);
+    color: var(--admin-primary);
+}
+
+.form-actions .btn-primary:hover {
+    background: #d4b85c;
+    border-color: #d4b85c;
+    color: var(--admin-primary);
+}
+
+.form-actions .btn-primary i {
+    margin-right: 8px;
+}
+
+.form-actions .btn-outline-secondary {
+    border-color: #d4cdc0;
+    color: var(--admin-primary);
+}
+
+.form-actions .btn-outline-secondary:hover {
+    background: var(--admin-secondary);
+    border-color: var(--admin-secondary);
+    color: #fff;
+}
+
+.form-actions .btn-outline-secondary i {
+    margin-right: 8px;
+}
+
+/* ============================================
+   BULK UPLOAD - OFFICIAL STYLE
+   ============================================ */
+.bulk-upload {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #d4cdc0;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #d4cdc0;
+}
+
+.divider span {
+    padding: 0 15px;
+    color: #6c757d;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.bulk-upload .btn-success {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+    background: #1a5a3a;
+    border-color: #1a5a3a;
+    color: #fff;
+}
+
+.bulk-upload .btn-success:hover {
+    background: #2e7d32;
+    border-color: #2e7d32;
+}
+
+.bulk-upload .btn-success i {
+    margin-right: 8px;
+}
+
+/* ============================================
+   PROGRESS BAR - OFFICIAL STYLE
+   ============================================ */
+.progress {
+    height: 25px;
+    border-radius: 0;
+    background: #f0ebe3;
+    border: 1px solid #d4cdc0;
+}
+
+.progress-bar {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 13px;
+    background: var(--admin-gold);
+    color: var(--admin-primary);
+}
+
+.progress-bar.bg-danger {
+    background: #8b1a1a !important;
+    color: #fff;
+}
+
+#bulkStatus {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .upload-card {
+        padding: 20px;
+    }
+    .upload-header h2 {
+        font-size: 22px;
+    }
+    .upload-area {
+        padding: 30px 15px;
+    }
+    .upload-area .upload-icon i {
+        font-size: 48px;
+    }
+    .form-actions {
+        flex-direction: column;
+    }
+    .form-actions .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .upload-card::before {
+        font-size: 40px;
+        right: -15px;
+        top: -15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .upload-header h2 {
+        font-size: 18px;
+    }
+    .upload-area {
+        padding: 20px 10px;
+    }
+    .upload-area .upload-icon i {
+        font-size: 36px;
+    }
+    .upload-area h4 {
+        font-size: 16px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="upload-page">
+<div class="upload-page">
+    <div class="container">
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <div class="upload-card">
+                    <!-- ============================================
+                    UPLOAD HEADER - OFFICIAL STYLE
+                    ============================================ -->
                     <div class="upload-header">
-                        <h2><i class="fas fa-upload"></i> Upload Media Files</h2>
-                        <p class="text-muted">Upload images, videos, audio, and documents</p>
+                        <h2><i class="fas fa-upload"></i> UPLOAD MEDIA</h2>
+                        <p>Official Media Upload — Upload images, videos, audio, and documents</p>
                     </div>
 
+                    <!-- ============================================
+                    DROP ZONE - OFFICIAL STYLE
+                    ============================================ -->
                     <div class="upload-area" id="dropZone">
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
                         </div>
                         <h4>Drag & Drop Files Here</h4>
-                        <p class="text-muted">or click to browse</p>
-                        <span class="upload-limits">Max file size: 10MB • Supported: JPG, PNG, GIF, WEBP, MP4, PDF</span>
+                        <p>or click to browse</p>
+                        <span class="upload-limits">
+                            <i class="fas fa-info-circle"></i> 
+                            Max file size: 10MB • Supported: JPG, PNG, GIF, WEBP, MP4, PDF, MP3, DOC, XLS
+                        </span>
                     </div>
 
+                    <!-- ============================================
+                    UPLOAD FORM - OFFICIAL STYLE
+                    ============================================ -->
                     <form method="post" enctype="multipart/form-data" id="uploadForm">
                         {% csrf_token %}
+                        
                         <div class="form-group">
                             <label for="id_file"><i class="fas fa-file"></i> Select File</label>
                             <input type="file" name="file" id="id_file" class="form-control" required>
@@ -45,14 +429,15 @@
                         <div class="form-group">
                             <label for="id_description"><i class="fas fa-align-left"></i> Description</label>
                             <textarea name="description" id="id_description" class="form-control" rows="3" 
-                                      placeholder="Enter a description">{{ form.description.value|default:'' }}</textarea>
+                                      placeholder="Enter a description for this file">{{ form.description.value|default:'' }}</textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="id_alt_text"><i class="fas fa-font"></i> Alt Text</label>
                             <input type="text" name="alt_text" id="id_alt_text" class="form-control" 
-                                   placeholder="Alternative text for accessibility"
+                                   placeholder="Alternative text for accessibility (screen readers)"
                                    value="{{ form.alt_text.value|default:'' }}">
+                            <small class="help-text">Describe the image for visually impaired users</small>
                         </div>
 
                         <div class="row">
@@ -60,8 +445,9 @@
                                 <div class="form-group">
                                     <label for="id_tag_names"><i class="fas fa-tags"></i> Tags</label>
                                     <input type="text" name="tag_names" id="id_tag_names" class="form-control" 
-                                           placeholder="Enter tags separated by commas">
-                                    <small class="help-text">e.g., nature, landscape, event</small>
+                                           placeholder="Enter tags separated by commas"
+                                           value="{{ form.tag_names.value|default:'' }}">
+                                    <small class="help-text">e.g., nature, landscape, event, wildlife</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -87,8 +473,10 @@
                         </div>
                     </form>
 
-                    <!-- Bulk Upload -->
-                    <div class="bulk-upload mt-4">
+                    <!-- ============================================
+                    BULK UPLOAD - OFFICIAL STYLE
+                    ============================================ -->
+                    <div class="bulk-upload">
                         <div class="divider">
                             <span>or upload multiple files</span>
                         </div>
@@ -96,8 +484,8 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="bulkFiles"><i class="fas fa-files"></i> Bulk Upload</label>
-                                <input type="file" name="files" id="bulkFiles" class="form-control" multiple accept="image/*">
-                                <small class="help-text">Select multiple images to upload at once</small>
+                                <input type="file" name="files" id="bulkFiles" class="form-control" multiple accept="image/*,video/*,audio/*,document/*">
+                                <small class="help-text">Select multiple files to upload at once</small>
                             </div>
                             <button type="button" class="btn btn-success" id="bulkUploadBtn">
                                 <i class="fas fa-cloud-upload-alt"></i> Upload All
@@ -117,133 +505,11 @@
     </div>
 </div>
 
-<style>
-.upload-page {
-    padding: 30px 0;
-}
-.upload-card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-.upload-header {
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-}
-.upload-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-}
-.upload-area {
-    border: 2px dashed #ced4da;
-    border-radius: 8px;
-    padding: 40px;
-    text-align: center;
-    margin-bottom: 25px;
-    cursor: pointer;
-    transition: all 0.3s;
-    background: #f8f9fa;
-}
-.upload-area:hover {
-    border-color: #1a3c5e;
-    background: #f5f0e8;
-}
-.upload-area.dragover {
-    border-color: #1a3c5e;
-    background: #e8f0f8;
-}
-.upload-icon i {
-    font-size: 64px;
-    color: #1a3c5e;
-}
-.upload-area h4 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    margin: 10px 0;
-}
-.upload-area .upload-limits {
-    display: block;
-    font-family: 'Times New Roman', serif;
-    font-size: 12px;
-    color: #6c757d;
-    margin-top: 10px;
-}
-.form-group {
-    margin-bottom: 20px;
-}
-.form-group label {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    display: block;
-    margin-bottom: 5px;
-}
-.form-group label i {
-    margin-right: 8px;
-    color: #c9a84c;
-}
-.form-control, .form-select {
-    font-family: 'Times New Roman', serif;
-    border-radius: 4px;
-    border: 1px solid #ced4da;
-    padding: 10px 15px;
-}
-.form-control:focus, .form-select:focus {
-    border-color: #1a3c5e;
-    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
-}
-.help-text {
-    font-family: 'Times New Roman', serif;
-    font-size: 12px;
-    color: #6c757d;
-}
-.form-actions {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-}
-.form-actions .btn {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    padding: 10px 30px;
-    border-radius: 4px;
-}
-.divider {
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-}
-.divider::before,
-.divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #e0e0e0;
-}
-.divider span {
-    padding: 0 15px;
-    color: #6c757d;
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-    text-transform: uppercase;
-}
-.progress {
-    height: 20px;
-    border-radius: 4px;
-}
-.progress-bar {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-}
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Drag and drop
+    // ============================================
+    // DRAG AND DROP
+    // ============================================
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('id_file');
     
@@ -264,7 +530,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (files.length > 0) {
             fileInput.files = files;
             // Auto-fill title from filename
-            document.getElementById('id_title').value = files[0].name.replace(/\.[^/.]+$/, '');
+            const titleInput = document.getElementById('id_title');
+            const fileName = files[0].name.replace(/\.[^/.]+$/, '');
+            titleInput.value = fileName;
+            titleInput.dispatchEvent(new Event('input'));
         }
     });
     
@@ -274,11 +543,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     fileInput.addEventListener('change', function() {
         if (this.files.length > 0) {
-            document.getElementById('id_title').value = this.files[0].name.replace(/\.[^/.]+$/, '');
+            const titleInput = document.getElementById('id_title');
+            const fileName = this.files[0].name.replace(/\.[^/.]+$/, '');
+            titleInput.value = fileName;
+            titleInput.dispatchEvent(new Event('input'));
         }
     });
 
-    // Bulk upload
+    // ============================================
+    // BULK UPLOAD
+    // ============================================
     const bulkBtn = document.getElementById('bulkUploadBtn');
     const bulkFiles = document.getElementById('bulkFiles');
     const bulkProgress = document.getElementById('bulkProgress');
@@ -293,6 +567,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         bulkProgress.style.display = 'block';
+        progressBar.style.width = '0%';
+        progressBar.textContent = '0%';
+        progressBar.classList.remove('bg-danger');
+        bulkStatus.textContent = 'Uploading files...';
+
         const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
             formData.append('files', files[i]);
@@ -312,22 +591,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         xhr.onload = function() {
-            const data = JSON.parse(this.response);
-            if (data.success) {
-                progressBar.style.width = '100%';
-                progressBar.textContent = '100%';
-                bulkStatus.textContent = 'Upload complete!';
-                setTimeout(function() {
-                    window.location.href = '{% url "media_library:library" %}';
-                }, 1500);
-            } else {
-                bulkStatus.textContent = 'Upload failed. Please try again.';
+            try {
+                const data = JSON.parse(this.response);
+                if (data.success) {
+                    progressBar.style.width = '100%';
+                    progressBar.textContent = '100%';
+                    bulkStatus.textContent = '✅ Upload complete! Redirecting...';
+                    setTimeout(function() {
+                        window.location.href = '{% url "media_library:library" %}';
+                    }, 1500);
+                } else {
+                    bulkStatus.textContent = '❌ Upload failed. Please try again.';
+                    progressBar.classList.add('bg-danger');
+                }
+            } catch (e) {
+                bulkStatus.textContent = '❌ Upload failed. Please try again.';
                 progressBar.classList.add('bg-danger');
             }
         };
 
         xhr.onerror = function() {
-            bulkStatus.textContent = 'Upload failed. Please try again.';
+            bulkStatus.textContent = '❌ Upload failed. Please try again.';
             progressBar.classList.add('bg-danger');
         };
 
