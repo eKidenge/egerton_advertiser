@@ -29,11 +29,11 @@
                 <h6 class="footer-heading">Explore</h6>
                 <ul class="footer-links">
                     <li><a href="{% url 'home' %}">Home</a></li>
-                    <li><a href="{% url 'categories:detail' slug='opinion' %}">Opinion</a></li>
-                    <li><a href="{% url 'categories:detail' slug='environment' %}">Environment</a></li>
-                    <li><a href="{% url 'categories:detail' slug='society' %}">Society</a></li>
-                    <li><a href="{% url 'articles:photos' %}">Photos</a></li>
-                    <li><a href="{% url 'articles:video' %}">Video</a></li>
+                    <li><a href="{% url 'articles:opinion' %}">Opinion</a></li>
+                    <li><a href="{% url 'articles:environment' %}">Environment</a></li>
+                    <li><a href="{% url 'articles:society' %}">Society</a></li>
+                    <li><a href="{% url 'media_library:gallery' %}">Photos</a></li>
+                    <li><a href="{% url 'media_library:gallery' %}?type=video">Video</a></li>
                 </ul>
             </div>
             
@@ -43,7 +43,7 @@
                 <ul class="footer-links">
                     <li><a href="{% url 'about' %}">About Us</a></li>
                     <li><a href="{% url 'contacts:contact' %}">Contact Us</a></li>
-                    <li><a href="/advertisements/create/">Advertise</a></li>
+                    <li><a href="{% url 'advertisements:create' %}">Advertise</a></li>
                     <li><a href="{% url 'accounts:login' %}">Login</a></li>
                     <li><a href="{% url 'accounts:register' %}">Register</a></li>
                 </ul>

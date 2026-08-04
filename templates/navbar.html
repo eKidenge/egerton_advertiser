@@ -29,17 +29,17 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if 'society' in request.path %}active{% endif %}" href="{% url 'articles:society' %}" style="color: #8B7355; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
-                        <i class="fas fa-users" style="color: #8B7355; margin-right: 6px;"></i> Society
+                    <a class="nav-link {% if 'society' in request.path %}active{% endif %}" href="{% url 'articles:society' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                        <i class="fas fa-users" style="color: #a5d6a7; margin-right: 6px;"></i> Society
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if 'photos' in request.path %}active{% endif %}" href="{% url 'articles:photos' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                    <a class="nav-link {% if 'gallery' in request.path and request.GET.type != 'video' %}active{% endif %}" href="{% url 'media_library:gallery' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
                         <i class="fas fa-images" style="color: #a5d6a7; margin-right: 6px;"></i> Photos
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if 'video' in request.path %}active{% endif %}" href="{% url 'articles:video' %}" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
+                    <a class="nav-link {% if 'gallery' in request.path and request.GET.type == 'video' %}active{% endif %}" href="{% url 'media_library:gallery' %}?type=video" style="color: white; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 14px 22px;">
                         <i class="fas fa-video" style="color: #a5d6a7; margin-right: 6px;"></i> Video
                     </a>
                 </li>
@@ -73,9 +73,17 @@
                         
                         <!-- Advertise -->
                         <li>
-                            <a class="dropdown-item {% if 'advertise' in request.path %}active{% endif %}" href="/advertisements/create/" 
+                            <a class="dropdown-item {% if 'advertise' in request.path %}active{% endif %}" href="{% url 'advertisements:create' %}" 
                                style="color: white; font-family: 'Times New Roman', serif; font-size: 15px; font-weight: 600; padding: 12px 22px; border-bottom: 1px solid rgba(255,255,255,0.05);">
                                 <i class="fas fa-ad" style="color: #a5d6a7; width: 22px; text-align: center;"></i> Advertise
+                            </a>
+                        </li>
+                        
+                        <!-- Media Library -->
+                        <li>
+                            <a class="dropdown-item {% if 'library' in request.path %}active{% endif %}" href="{% url 'media_library:library' %}" 
+                               style="color: white; font-family: 'Times New Roman', serif; font-size: 15px; font-weight: 600; padding: 12px 22px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <i class="fas fa-folder-open" style="color: #a5d6a7; width: 22px; text-align: center;"></i> Media Library
                             </a>
                         </li>
                         

@@ -534,7 +534,7 @@ def settings_update(request):
 
 
 # ============================================
-# ADMIN DASHBOARD - MAIN VIEW (FIXED)
+# ADMIN DASHBOARD - MAIN VIEW
 # ============================================
 
 @login_required
@@ -569,9 +569,9 @@ def admin_dashboard(request):
     society_articles = Article.objects.filter(category__slug='society').count()
     society_published = Article.objects.filter(category__slug='society', status='published').count()
     
-    # Photos - FIXED: removed is_featured filter
+    # Photos
     total_photos = MediaFile.objects.filter(file_type='image').count()
-    featured_photos = 0  # No is_featured field in MediaFile model
+    featured_photos = 0
     
     # Categories
     total_categories = Category.objects.count()
@@ -608,7 +608,6 @@ def admin_dashboard(request):
     total_ad_views = Advertisement.objects.aggregate(Sum('views_count'))['views_count__sum'] or 0
     total_ad_clicks = Advertisement.objects.aggregate(Sum('clicks_count'))['clicks_count__sum'] or 0
     
-    # FIXED: Calculate revenue from available fields (no 'revenue' field exists)
     total_ad_revenue = 0
     all_ads = Advertisement.objects.all()
     for ad in all_ads:
@@ -679,7 +678,7 @@ def admin_dashboard(request):
         'society_articles': society_articles,
         'society_published': society_published,
         
-        # Photos stats - FIXED
+        # Photos stats
         'total_photos': total_photos,
         'featured_photos': featured_photos,
         
@@ -713,7 +712,7 @@ def admin_dashboard(request):
         'expired_ads': expired_ads,
         'total_ad_views': total_ad_views,
         'total_ad_clicks': total_ad_clicks,
-        'total_ad_revenue': total_ad_revenue,  # FIXED
+        'total_ad_revenue': total_ad_revenue,
         
         # Media stats
         'total_media': total_media,
@@ -806,8 +805,9 @@ def admin_opinion(request):
         'status_filter': status,
         'search': search,
         'section': 'opinion',
+        'page_title': 'Opinion Articles - The Egerton Avenue',
     }
-    return render(request, 'dashboard/admin_opinion.html', context)
+    return render(request, 'articles/article_list.html', context)
 
 
 @login_required
@@ -825,10 +825,12 @@ def admin_opinion_edit(request, article_id):
     else:
         form = ArticleForm(instance=article)
     
-    return render(request, 'dashboard/admin_opinion_edit.html', {
+    # Use article_edit.html from articles app
+    return render(request, 'articles/article_edit.html', {
         'form': form, 
         'article': article,
-        'section': 'opinion'
+        'section': 'opinion',
+        'action': 'edit',
     })
 
 
@@ -844,10 +846,10 @@ def admin_opinion_delete(request, article_id):
         messages.success(request, f'Opinion article "{title}" deleted!')
         return redirect('dashboard:opinion_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
-        'object': article,
-        'type': 'Opinion Article',
-        'back_url': 'dashboard:opinion_list'
+    # Use article_delete.html from articles app
+    return render(request, 'articles/article_delete.html', {
+        'article': article,
+        'page_title': f'Delete Opinion Article - {article.title}',
     })
 
 
@@ -904,8 +906,9 @@ def admin_environment(request):
         'status_filter': status,
         'search': search,
         'section': 'environment',
+        'page_title': 'Environment Articles - The Egerton Avenue',
     }
-    return render(request, 'dashboard/admin_environment.html', context)
+    return render(request, 'articles/article_list.html', context)
 
 
 @login_required
@@ -923,10 +926,12 @@ def admin_environment_edit(request, article_id):
     else:
         form = ArticleForm(instance=article)
     
-    return render(request, 'dashboard/admin_environment_edit.html', {
+    # Use article_edit.html from articles app
+    return render(request, 'articles/article_edit.html', {
         'form': form, 
         'article': article,
-        'section': 'environment'
+        'section': 'environment',
+        'action': 'edit',
     })
 
 
@@ -942,10 +947,10 @@ def admin_environment_delete(request, article_id):
         messages.success(request, f'Environment article "{title}" deleted!')
         return redirect('dashboard:environment_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
-        'object': article,
-        'type': 'Environment Article',
-        'back_url': 'dashboard:environment_list'
+    # Use article_delete.html from articles app
+    return render(request, 'articles/article_delete.html', {
+        'article': article,
+        'page_title': f'Delete Environment Article - {article.title}',
     })
 
 
@@ -1002,8 +1007,10 @@ def admin_society(request):
         'status_filter': status,
         'search': search,
         'section': 'society',
+        'page_title': 'Society Articles - The Egerton Avenue',
     }
-    return render(request, 'dashboard/admin_society.html', context)
+    # Use article_list.html from articles app instead of dashboard/admin_society.html
+    return render(request, 'articles/article_list.html', context)
 
 
 @login_required
@@ -1021,10 +1028,12 @@ def admin_society_edit(request, article_id):
     else:
         form = ArticleForm(instance=article)
     
-    return render(request, 'dashboard/admin_society_edit.html', {
+    # Use article_edit.html from articles app
+    return render(request, 'articles/article_edit.html', {
         'form': form, 
         'article': article,
-        'section': 'society'
+        'section': 'society',
+        'action': 'edit',
     })
 
 
@@ -1040,10 +1049,10 @@ def admin_society_delete(request, article_id):
         messages.success(request, f'Society article "{title}" deleted!')
         return redirect('dashboard:society_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
-        'object': article,
-        'type': 'Society Article',
-        'back_url': 'dashboard:society_list'
+    # Use article_delete.html from articles app
+    return render(request, 'articles/article_delete.html', {
+        'article': article,
+        'page_title': f'Delete Society Article - {article.title}',
     })
 
 
@@ -1067,7 +1076,11 @@ def admin_society_publish(request, article_id):
 
 
 # ============================================
-# ADMIN - PHOTOS (FIXED)
+# ADMIN - PHOTOS
+# ============================================
+
+# ============================================
+# ADMIN - PHOTOS (UPDATED to use media_library app templates)
 # ============================================
 
 @login_required
@@ -1090,12 +1103,16 @@ def admin_photos(request):
         photos = paginator.page(paginator.num_pages)
     
     context = {
-        'photos': photos,
+        'media': photos,
         'search': search,
-        'total_photos': MediaFile.objects.filter(file_type='image').count(),
-        'featured_photos': 0,
+        'total_media': MediaFile.objects.filter(file_type='image').count(),
+        'images': MediaFile.objects.filter(file_type='image').count(),
+        'videos': MediaFile.objects.filter(file_type='video').count(),
+        'documents': MediaFile.objects.filter(file_type='document').count(),
+        'file_type_filter': 'image',
+        'page_title': 'Manage Photos - The Egerton Avenue',
     }
-    return render(request, 'dashboard/admin_photos.html', context)
+    return render(request, 'media_library/media_library.html', context)
 
 
 @login_required
@@ -1113,7 +1130,7 @@ def admin_photos_edit(request, photo_id):
     else:
         form = MediaFileForm(instance=photo)
     
-    return render(request, 'dashboard/admin_photos_edit.html', {'form': form, 'photo': photo})
+    return render(request, 'media_library/media_detail.html', {'media': photo, 'form': form})
 
 
 @login_required
@@ -1128,10 +1145,9 @@ def admin_photos_delete(request, photo_id):
         messages.success(request, f'Photo "{title}" deleted!')
         return redirect('dashboard:photos_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
+    return render(request, 'media_library/media_confirm_delete.html', {
+        'media': photo,
         'object': photo,
-        'type': 'Photo',
-        'back_url': 'dashboard:photos_list'
     })
 
 
@@ -1144,7 +1160,7 @@ def admin_photos_feature(request, photo_id):
 
 
 # ============================================
-# ADMIN - ARTICLES
+# ADMIN - ARTICLES (UPDATED to use articles app templates)
 # ============================================
 
 @login_required
@@ -1182,8 +1198,10 @@ def admin_articles(request):
         'status_filter': status,
         'category_filter': category,
         'search': search,
+        'page_title': 'Manage Articles - The Egerton Avenue',
     }
-    return render(request, 'dashboard/admin_articles.html', context)
+    # Use article_list.html from articles app
+    return render(request, 'articles/article_list.html', context)
 
 
 @login_required
@@ -1203,7 +1221,18 @@ def admin_article_create(request):
     else:
         form = ArticleForm()
     
-    return render(request, 'dashboard/admin_article_form.html', {'form': form, 'action': 'Create'})
+    # Use article_create.html from articles app
+    categories = Category.objects.filter(is_active=True)
+    tags = Tag.objects.filter(is_active=True)
+    
+    context = {
+        'form': form,
+        'categories': categories,
+        'tags': tags,
+        'action': 'create',
+        'page_title': 'Create Article - The Egerton Avenue',
+    }
+    return render(request, 'articles/article_create.html', context)
 
 
 @login_required
@@ -1221,7 +1250,21 @@ def admin_article_edit(request, article_id):
     else:
         form = ArticleForm(instance=article)
     
-    return render(request, 'dashboard/admin_article_form.html', {'form': form, 'action': 'Edit', 'article': article})
+    # Use article_edit.html from articles app
+    categories = Category.objects.filter(is_active=True)
+    tags = Tag.objects.filter(is_active=True)
+    versions = article.versions.all()
+    
+    context = {
+        'form': form,
+        'article': article,
+        'categories': categories,
+        'tags': tags,
+        'versions': versions,
+        'action': 'edit',
+        'page_title': f'Edit {article.title} - The Egerton Avenue',
+    }
+    return render(request, 'articles/article_edit.html', context)
 
 
 @login_required
@@ -1236,11 +1279,12 @@ def admin_article_delete(request, article_id):
         messages.success(request, f'Article "{title}" deleted successfully!')
         return redirect('dashboard:article_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
-        'object': article,
-        'type': 'Article',
-        'back_url': 'dashboard:article_list'
-    })
+    # Use article_delete.html from articles app
+    context = {
+        'article': article,
+        'page_title': f'Delete {article.title} - The Egerton Avenue',
+    }
+    return render(request, 'articles/article_delete.html', context)
 
 
 @login_required
@@ -1289,7 +1333,7 @@ def admin_article_breaking(request, article_id):
 
 
 # ============================================
-# ADMIN - CATEGORIES
+# ADMIN - CATEGORIES (UPDATED to use categories app templates)
 # ============================================
 
 @login_required
@@ -1299,7 +1343,7 @@ def admin_categories(request):
     categories = Category.objects.all().order_by('order', 'name')
     
     context = {'categories': categories}
-    return render(request, 'dashboard/admin_categories.html', context)
+    return render(request, 'categories/category_list.html', context)
 
 
 @login_required
@@ -1315,7 +1359,7 @@ def admin_category_create(request):
     else:
         form = CategoryForm()
     
-    return render(request, 'dashboard/admin_category_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'categories/category_create.html', {'form': form})
 
 
 @login_required
@@ -1333,7 +1377,7 @@ def admin_category_edit(request, category_id):
     else:
         form = CategoryForm(instance=category)
     
-    return render(request, 'dashboard/admin_category_form.html', {'form': form, 'action': 'Edit', 'category': category})
+    return render(request, 'categories/category_edit.html', {'form': form, 'category': category})
 
 
 @login_required
@@ -1348,15 +1392,14 @@ def admin_category_delete(request, category_id):
         messages.success(request, f'Category "{name}" deleted!')
         return redirect('dashboard:category_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
+    return render(request, 'categories/category_delete.html', {
         'object': category,
-        'type': 'Category',
-        'back_url': 'dashboard:category_list'
+        'category': category,
     })
 
 
 # ============================================
-# ADMIN - TAGS
+# ADMIN - TAGS (UPDATED to use tags app templates)
 # ============================================
 
 @login_required
@@ -1366,7 +1409,7 @@ def admin_tags(request):
     tags = Tag.objects.all().order_by('name')
     
     context = {'tags': tags}
-    return render(request, 'dashboard/admin_tags.html', context)
+    return render(request, 'tags/tag_list.html', context)
 
 
 @login_required
@@ -1382,7 +1425,7 @@ def admin_tag_create(request):
     else:
         form = TagForm()
     
-    return render(request, 'dashboard/admin_tag_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'tags/tag_create.html', {'form': form})
 
 
 @login_required
@@ -1400,7 +1443,7 @@ def admin_tag_edit(request, tag_id):
     else:
         form = TagForm(instance=tag)
     
-    return render(request, 'dashboard/admin_tag_form.html', {'form': form, 'action': 'Edit', 'tag': tag})
+    return render(request, 'tags/tag_edit.html', {'form': form, 'tag': tag})
 
 
 @login_required
@@ -1415,15 +1458,14 @@ def admin_tag_delete(request, tag_id):
         messages.success(request, f'Tag "{name}" deleted!')
         return redirect('dashboard:tag_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
+    return render(request, 'tags/tag_delete.html', {
         'object': tag,
-        'type': 'Tag',
-        'back_url': 'dashboard:tag_list'
+        'tag': tag,
     })
 
 
 # ============================================
-# ADMIN - USERS
+# ADMIN - USERS (KEEP dashboard templates - no app templates)
 # ============================================
 
 @login_required
@@ -1603,7 +1645,7 @@ def admin_user_reset_password(request, user_id):
 
 
 # ============================================
-# ADMIN - COMMENTS
+# ADMIN - COMMENTS (KEEP dashboard templates)
 # ============================================
 
 @login_required
@@ -1688,7 +1730,7 @@ def admin_comment_delete(request, comment_id):
 
 
 # ============================================
-# ADMIN - ADVERTISEMENTS (COMPLETE ADSBOARD)
+# ADMIN - ADVERTISEMENTS (KEEP dashboard templates)
 # ============================================
 
 @login_required
@@ -1925,7 +1967,6 @@ def admin_ad_revenue(request):
     """Ad revenue dashboard"""
     ads = Advertisement.objects.filter(status='active')
     
-    # FIXED: Calculate revenue from available fields
     total_revenue = 0
     for ad in ads:
         if ad.cost_per_click and ad.cost_per_click > 0:
@@ -2055,7 +2096,7 @@ def admin_ad_reports(request):
 
 
 # ============================================
-# ADMIN - CONTACTS
+# ADMIN - CONTACTS (KEEP dashboard templates)
 # ============================================
 
 @login_required
@@ -2175,7 +2216,7 @@ def admin_contact_mark_read(request, contact_id):
 
 
 # ============================================
-# ADMIN - MEDIA
+# ADMIN - MEDIA (KEEP dashboard templates)
 # ============================================
 
 @login_required
@@ -2265,7 +2306,7 @@ def admin_media_gallery(request):
 
 
 # ============================================
-# ADMIN - SUBSCRIBERS
+# ADMIN - SUBSCRIBERS (KEEP dashboard templates)
 # ============================================
 
 @login_required
@@ -2336,7 +2377,7 @@ def admin_subscriber_toggle(request, subscriber_id):
 
 
 # ============================================
-# ADMIN - NEWSLETTERS
+# ADMIN - NEWSLETTERS (KEEP dashboard templates)
 # ============================================
 
 @login_required
@@ -2434,7 +2475,7 @@ def admin_newsletter_delete(request, newsletter_id):
 
 
 # ============================================
-# ADMIN - SETTINGS
+# ADMIN - SETTINGS (KEEP dashboard templates)
 # ============================================
 
 @login_required
@@ -2546,7 +2587,7 @@ def get_setting_value(category, key, default=''):
 
 
 # ============================================
-# ADMIN - ANALYTICS
+# ADMIN - ANALYTICS (KEEP dashboard templates)
 # ============================================
 
 @login_required
@@ -2586,7 +2627,7 @@ def admin_analytics(request):
 
 
 # ============================================
-# API ENDPOINTS
+# API ENDPOINTS (NO CHANGES)
 # ============================================
 
 @login_required
@@ -3146,7 +3187,6 @@ def admin_analytics_audience(request):
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_analytics_revenue(request):
-    # FIXED: Calculate revenue from available fields
     total_revenue = 0
     all_ads = Advertisement.objects.all()
     for ad in all_ads:
@@ -3519,8 +3559,9 @@ def widget_list(request):
     }
     return render(request, 'dashboard/widget_list.html', context)
 
+
 # ============================================
-# ADMIN - VIDEOS
+# ADMIN - VIDEOS (UPDATED to use media_library app templates)
 # ============================================
 
 @login_required
@@ -3543,12 +3584,16 @@ def admin_videos(request):
         videos = paginator.page(paginator.num_pages)
     
     context = {
-        'videos': videos,
+        'media': videos,
         'search': search,
-        'total_videos': MediaFile.objects.filter(file_type='video').count(),
-        'featured_videos': 0,
+        'total_media': MediaFile.objects.filter(file_type='video').count(),
+        'images': MediaFile.objects.filter(file_type='image').count(),
+        'videos': MediaFile.objects.filter(file_type='video').count(),
+        'documents': MediaFile.objects.filter(file_type='document').count(),
+        'file_type_filter': 'video',
+        'page_title': 'Manage Videos - The Egerton Avenue',
     }
-    return render(request, 'dashboard/admin_videos.html', context)
+    return render(request, 'media_library/media_library.html', context)
 
 
 @login_required
@@ -3568,7 +3613,7 @@ def admin_video_upload(request):
     else:
         form = MediaFileForm()
     
-    return render(request, 'dashboard/admin_video_upload.html', {'form': form})
+    return render(request, 'media_library/media_upload.html', {'form': form})
 
 
 @login_required
@@ -3586,7 +3631,7 @@ def admin_video_edit(request, video_id):
     else:
         form = MediaFileForm(instance=video)
     
-    return render(request, 'dashboard/admin_video_edit.html', {'form': form, 'video': video})
+    return render(request, 'media_library/media_detail.html', {'form': form, 'media': video})
 
 
 @login_required
@@ -3601,10 +3646,9 @@ def admin_video_delete(request, video_id):
         messages.success(request, f'Video "{title}" deleted successfully!')
         return redirect('dashboard:video_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
+    return render(request, 'media_library/media_confirm_delete.html', {
+        'media': video,
         'object': video,
-        'type': 'Video',
-        'back_url': 'dashboard:video_list'
     })
 
 
@@ -3637,7 +3681,7 @@ def admin_video_bulk_upload(request):
         messages.success(request, f'{uploaded_count} videos uploaded successfully!')
         return redirect('dashboard:video_list')
     
-    return render(request, 'dashboard/admin_video_bulk_upload.html')
+    return render(request, 'media_library/media_bulk_upload.html')
 
 
 @login_required
@@ -3677,7 +3721,8 @@ def admin_video_gallery(request):
     except EmptyPage:
         videos = paginator.page(paginator.num_pages)
     
-    return render(request, 'dashboard/admin_video_gallery.html', {'videos': videos})
+    return render(request, 'media_library/media_gallery.html', {'media': videos})
+
 
 # ============================================
 # ARTICLE MODERATION VIEWS (Proxy to articles app)

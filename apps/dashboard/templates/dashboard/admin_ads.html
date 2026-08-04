@@ -79,7 +79,7 @@
                 <p class="text-muted">Create, approve, and manage all ads</p>
             </div>
             <div>
-                <a href="{% url 'dashboard:admin_ad_create' %}" class="btn btn-primary">
+                <a href="{% url 'dashboard:ad_create' %}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> New Ad
                 </a>
             </div>
@@ -111,7 +111,7 @@
                     </button>
                 </div>
                 <div class="col-md-2">
-                    <a href="{% url 'dashboard:admin_ads' %}" class="btn btn-outline-secondary w-100">
+                    <a href="{% url 'dashboard:ad_list' %}" class="btn btn-outline-secondary w-100">
                         <i class="fas fa-undo"></i> Clear
                     </a>
                 </div>
@@ -143,7 +143,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{% url 'dashboard:admin_ad_edit' ad.id %}">
+                            <a href="{% url 'dashboard:ad_edit' ad.id %}">
                                 {{ ad.title|truncatewords:5 }}
                             </a>
                         </td>
@@ -155,18 +155,18 @@
                         <td>{{ ad.clicks_count }}</td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{% url 'dashboard:admin_ad_edit' ad.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                <a href="{% url 'dashboard:ad_edit' ad.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 {% if ad.status == 'pending' %}
-                                <a href="{% url 'dashboard:admin_ad_approve' ad.id %}?action=approve" class="btn btn-sm btn-outline-success" title="Approve">
+                                <a href="{% url 'dashboard:ad_approve' ad.id %}" class="btn btn-sm btn-outline-success" title="Approve">
                                     <i class="fas fa-check"></i>
                                 </a>
-                                <a href="{% url 'dashboard:admin_ad_approve' ad.id %}?action=reject" class="btn btn-sm btn-outline-danger" title="Reject">
+                                <a href="{% url 'dashboard:ad_reject' ad.id %}" class="btn btn-sm btn-outline-danger" title="Reject">
                                     <i class="fas fa-times"></i>
                                 </a>
                                 {% endif %}
-                                <a href="{% url 'dashboard:admin_ad_delete' ad.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Delete this ad?')">
+                                <a href="{% url 'dashboard:ad_delete' ad.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Delete this ad?')">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </div>

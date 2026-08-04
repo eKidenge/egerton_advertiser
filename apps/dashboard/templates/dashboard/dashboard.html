@@ -292,6 +292,33 @@
     color: #856404;
 }
 
+.quick-stats .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-family: 'Times New Roman', serif;
+}
+.quick-stats .stat-row:last-child {
+    border-bottom: none;
+}
+.quick-stats .stat-value {
+    font-weight: 700;
+    color: #1a3c5e;
+}
+.quick-links a {
+    padding: 5px 0;
+    color: #1a3c5e;
+    text-decoration: none;
+    font-family: 'Times New Roman', serif;
+}
+.quick-links a:hover {
+    text-decoration: underline;
+}
+.quick-links a i {
+    width: 20px;
+}
+
 @media (max-width: 768px) {
     .stats-grid .col-md-3 {
         margin-bottom: 15px;
@@ -513,7 +540,7 @@
         </div>
 
         <!-- ============================================
-        JOURNALIST - SECTION STATS CARDS (CREATE OPINION, ENVIRONMENT, SOCIETY, PHOTOS, VIDEO)
+        JOURNALIST - SECTION STATS CARDS
         ============================================ -->
         {% if is_journalist %}
         <div class="section-stats-grid">
