@@ -316,6 +316,7 @@
 .status-badge.inactive { background: #6c757d; color: #fff; }
 .status-badge.verified { background: #1a5a3a; color: #fff; }
 .status-badge.unverified { background: #b8860b; color: #fff; }
+.status-badge.rejected { background: #dc3545; color: #fff; }
 
 /* ============================================
    ACTIVITY FEED - OFFICIAL
@@ -502,6 +503,38 @@
 .section-card.society { border-top: 4px solid #17a2b8; }
 .section-card.photos { border-top: 4px solid #fd7e14; }
 .section-card.video { border-top: 4px solid #dc3545; }
+
+/* ============================================
+   APPROVAL BUTTONS
+   ============================================ */
+.btn-approve {
+    background: #1a5a3a;
+    color: #fff;
+    border: none;
+    padding: 2px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Times New Roman', serif;
+}
+.btn-approve:hover {
+    background: #2e7d32;
+    color: #fff;
+}
+.btn-reject {
+    background: #8b1a1a;
+    color: #fff;
+    border: none;
+    padding: 2px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Times New Roman', serif;
+}
+.btn-reject:hover {
+    background: #a71d1d;
+    color: #fff;
+}
 
 /* ============================================
    ADSBOARD CARDS
@@ -945,6 +978,156 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- ========================================
+                PENDING OPINION ARTICLES - APPROVE/REJECT
+                ======================================== -->
+                {% if pending_opinion_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-pencil-alt" style="color: #6f42c1;"></i> Pending Opinion Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_opinion_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:opinion_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:article_approve' article.id %}" class="btn-approve" onclick="return confirm('Approve this Opinion article?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                    <a href="{% url 'dashboard:article_reject' article.id %}" class="btn-reject" onclick="return confirm('Reject this Opinion article?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING ENVIRONMENT ARTICLES - APPROVE/REJECT
+                ======================================== -->
+                {% if pending_environment_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-leaf" style="color: #28a745;"></i> Pending Environment Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_environment_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:environment_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:article_approve' article.id %}" class="btn-approve" onclick="return confirm('Approve this Environment article?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                    <a href="{% url 'dashboard:article_reject' article.id %}" class="btn-reject" onclick="return confirm('Reject this Environment article?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING SOCIETY ARTICLES - APPROVE/REJECT
+                ======================================== -->
+                {% if pending_society_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-users" style="color: #17a2b8;"></i> Pending Society Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_society_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:society_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:article_approve' article.id %}" class="btn-approve" onclick="return confirm('Approve this Society article?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                    <a href="{% url 'dashboard:article_reject' article.id %}" class="btn-reject" onclick="return confirm('Reject this Society article?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING PHOTOS - APPROVE/REJECT
+                ======================================== -->
+                {% if pending_photos %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-camera" style="color: #fd7e14;"></i> Pending Photos</h5>
+                    <div class="item-list">
+                        {% for photo in pending_photos %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:photos_edit' photo.id %}">{{ photo.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ photo.uploaded_by.get_full_name|default:photo.uploaded_by.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:photos_approve' photo.id %}" class="btn-approve" onclick="return confirm('Approve this photo?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                    <a href="{% url 'dashboard:photos_reject' photo.id %}" class="btn-reject" onclick="return confirm('Reject this photo?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING VIDEOS - APPROVE/REJECT
+                ======================================== -->
+                {% if pending_videos %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-video" style="color: #dc3545;"></i> Pending Videos</h5>
+                    <div class="item-list">
+                        {% for video in pending_videos %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:video_edit' video.id %}">{{ video.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ video.uploaded_by.get_full_name|default:video.uploaded_by.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:video_approve' video.id %}" class="btn-approve" onclick="return confirm('Approve this video?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                    <a href="{% url 'dashboard:video_reject' video.id %}" class="btn-reject" onclick="return confirm('Reject this video?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
 
                 <!-- Adsboard - Ad Performance Overview -->
                 <div class="adsboard-card">
