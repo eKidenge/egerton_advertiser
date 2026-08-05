@@ -13,10 +13,16 @@ from .models import MediaFile, MediaTag, MediaCategory, MediaFileTag, MediaFileC
 from .forms import MediaFileForm, MediaTagForm, MediaCategoryForm, MediaFilterForm
 from apps.accounts.models import UserActivityLog
 
+# ============================================================
+# USER'S PERSONAL MEDIA LIBRARY (Logged in users only)
+# ============================================================
+
 @login_required
 def media_library(request):
+    """User's personal media library - shows only their own uploads"""
     user = request.user
     
+    # Only show media uploaded by the current user
     media_files = MediaFile.objects.filter(
         uploaded_by=user,
         status__in=['available', 'processing']
@@ -55,13 +61,155 @@ def media_library(request):
     tags = MediaTag.objects.all().order_by('name')
     categories = MediaCategory.objects.all().order_by('name')
     
+    # User-specific stats
     context = {
         'media_files': media_files,
         'form': form,
         'tags': tags,
         'categories': categories,
+        'total_count': MediaFile.objects.filter(uploaded_by=user, status='available').count(),
+        'image_count': MediaFile.objects.filter(uploaded_by=user, status='available', file_type='image').count(),
+        'video_count': MediaFile.objects.filter(uploaded_by=user, status='available', file_type='video').count(),
+        'is_personal_library': True,
     }
     return render(request, 'media_library/media_library.html', context)
+
+
+# ============================================================
+# PUBLIC GALLERY VIEWS (No login required - shows ALL media)
+# ============================================================
+
+def public_photos(request):
+    """Public photos gallery - displays ALL available photos from ALL users"""
+    media_files = MediaFile.objects.filter(
+        file_type='image',
+        status='available'
+    ).order_by('-created_at')
+    
+    # Pagination
+    paginator = Paginator(media_files, 24)
+    page = request.GET.get('page')
+    try:
+        media_files = paginator.page(page)
+    except PageNotAnInteger:
+        media_files = paginator.page(1)
+    except EmptyPage:
+        media_files = paginator.page(paginator.num_pages)
+    
+    # Get tags and categories for filter
+    tags = MediaTag.objects.all().order_by('name')
+    categories = MediaCategory.objects.all().order_by('name')
+    
+    context = {
+        'media_files': media_files,
+        'form': MediaFilterForm(request.GET),
+        'tags': tags,
+        'categories': categories,
+        'total_count': MediaFile.objects.filter(file_type='image', status='available').count(),
+        'image_count': MediaFile.objects.filter(file_type='image', status='available').count(),
+        'video_count': MediaFile.objects.filter(file_type='video', status='available').count(),
+        'is_public': True,
+        'section_title': 'Photos',
+        'section_icon': 'fa-images',
+    }
+    return render(request, 'media_library/media_library.html', context)
+
+
+def public_videos(request):
+    """Public videos gallery - displays ALL available videos from ALL users"""
+    media_files = MediaFile.objects.filter(
+        file_type='video',
+        status='available'
+    ).order_by('-created_at')
+    
+    # Pagination
+    paginator = Paginator(media_files, 24)
+    page = request.GET.get('page')
+    try:
+        media_files = paginator.page(page)
+    except PageNotAnInteger:
+        media_files = paginator.page(1)
+    except EmptyPage:
+        media_files = paginator.page(paginator.num_pages)
+    
+    # Get tags and categories for filter
+    tags = MediaTag.objects.all().order_by('name')
+    categories = MediaCategory.objects.all().order_by('name')
+    
+    context = {
+        'media_files': media_files,
+        'form': MediaFilterForm(request.GET),
+        'tags': tags,
+        'categories': categories,
+        'total_count': MediaFile.objects.filter(file_type='video', status='available').count(),
+        'image_count': MediaFile.objects.filter(file_type='image', status='available').count(),
+        'video_count': MediaFile.objects.filter(file_type='video', status='available').count(),
+        'is_public': True,
+        'section_title': 'Videos',
+        'section_icon': 'fa-video',
+    }
+    return render(request, 'media_library/media_library.html', context)
+
+
+# ============================================================
+# ADMIN VIEW - Shows ALL media (For admin dashboard)
+# ============================================================
+
+@login_required
+@user_passes_test(lambda u: u.role in ['super_admin', 'admin'] or u.is_staff)
+def admin_media_library(request):
+    """Admin view - shows ALL media from ALL users"""
+    media_files = MediaFile.objects.filter(
+        status__in=['available', 'processing']
+    ).order_by('-created_at')
+    
+    # Filtering
+    form = MediaFilterForm(request.GET)
+    if form.is_valid():
+        if form.cleaned_data.get('file_type'):
+            media_files = media_files.filter(file_type=form.cleaned_data['file_type'])
+        if form.cleaned_data.get('search'):
+            query = form.cleaned_data['search']
+            media_files = media_files.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(alt_text__icontains=query)
+            )
+        if form.cleaned_data.get('date_from'):
+            media_files = media_files.filter(created_at__gte=form.cleaned_data['date_from'])
+        if form.cleaned_data.get('date_to'):
+            media_files = media_files.filter(created_at__lte=form.cleaned_data['date_to'])
+        if form.cleaned_data.get('tag'):
+            media_files = media_files.filter(tags__tag__id=form.cleaned_data['tag'])
+    
+    paginator = Paginator(media_files, 24)
+    page = request.GET.get('page')
+    try:
+        media_files = paginator.page(page)
+    except PageNotAnInteger:
+        media_files = paginator.page(1)
+    except EmptyPage:
+        media_files = paginator.page(paginator.num_pages)
+    
+    tags = MediaTag.objects.all().order_by('name')
+    categories = MediaCategory.objects.all().order_by('name')
+    
+    context = {
+        'media_files': media_files,
+        'form': form,
+        'tags': tags,
+        'categories': categories,
+        'total_count': MediaFile.objects.filter(status='available').count(),
+        'image_count': MediaFile.objects.filter(status='available', file_type='image').count(),
+        'video_count': MediaFile.objects.filter(status='available', file_type='video').count(),
+        'is_admin_view': True,
+    }
+    return render(request, 'media_library/media_library.html', context)
+
+
+# ============================================================
+# MEDIA UPLOAD
+# ============================================================
 
 @login_required
 def media_upload(request):
@@ -131,6 +279,11 @@ def media_upload(request):
     }
     return render(request, 'media_library/media_upload.html', context)
 
+
+# ============================================================
+# THUMBNAIL PROCESSING
+# ============================================================
+
 def process_image_thumbnails(media_file):
     """Generate thumbnails for uploaded images"""
     from django.core.files import File
@@ -164,9 +317,14 @@ def process_image_thumbnails(media_file):
     
     media_file.save()
 
+
+# ============================================================
+# MEDIA GALLERY (User's personal gallery)
+# ============================================================
+
 @login_required
 def media_gallery(request):
-    """Grid view of media files"""
+    """User's personal gallery - shows only their own media"""
     user = request.user
     media_files = MediaFile.objects.filter(
         uploaded_by=user,
@@ -182,6 +340,11 @@ def media_gallery(request):
         'media_files': media_files,
         'file_type_filter': file_type,
     })
+
+
+# ============================================================
+# MEDIA DETAIL
+# ============================================================
 
 @login_required
 def media_detail(request, media_id):
@@ -205,6 +368,11 @@ def media_detail(request, media_id):
         'categories': categories,
     }
     return render(request, 'media_library/media_detail.html', context)
+
+
+# ============================================================
+# MEDIA DELETE
+# ============================================================
 
 @login_required
 @require_http_methods(["POST"])
@@ -240,6 +408,11 @@ def media_delete(request, media_id):
     
     messages.success(request, f'Media file "{media_file.title}" deleted successfully.')
     return redirect('media_library:library')
+
+
+# ============================================================
+# BULK UPLOAD
+# ============================================================
 
 @login_required
 @require_http_methods(["POST"])
@@ -281,6 +454,11 @@ def bulk_upload_media(request):
         'errors': errors
     })
 
+
+# ============================================================
+# TAG MANAGEMENT
+# ============================================================
+
 @login_required
 def tag_list(request):
     tags = MediaTag.objects.annotate(
@@ -288,6 +466,7 @@ def tag_list(request):
     ).order_by('name')
     
     return render(request, 'media_library/tag_list.html', {'tags': tags})
+
 
 @login_required
 def tag_create(request):
@@ -301,6 +480,7 @@ def tag_create(request):
         form = MediaTagForm()
     
     return render(request, 'media_library/tag_create.html', {'form': form})
+
 
 @login_required
 def tag_edit(request, tag_id):
@@ -317,6 +497,7 @@ def tag_edit(request, tag_id):
     
     return render(request, 'media_library/tag_edit.html', {'form': form, 'tag': tag})
 
+
 @login_required
 def tag_delete(request, tag_id):
     tag = get_object_or_404(MediaTag, id=tag_id)
@@ -329,6 +510,11 @@ def tag_delete(request, tag_id):
     
     return render(request, 'media_library/tag_delete.html', {'tag': tag})
 
+
+# ============================================================
+# CATEGORY MANAGEMENT
+# ============================================================
+
 @login_required
 def category_list(request):
     categories = MediaCategory.objects.annotate(
@@ -336,6 +522,7 @@ def category_list(request):
     ).order_by('name')
     
     return render(request, 'media_library/category_list.html', {'categories': categories})
+
 
 @login_required
 def category_create(request):
@@ -349,6 +536,7 @@ def category_create(request):
         form = MediaCategoryForm()
     
     return render(request, 'media_library/category_create.html', {'form': form})
+
 
 @login_required
 def category_edit(request, category_id):
@@ -364,6 +552,7 @@ def category_edit(request, category_id):
         form = MediaCategoryForm(instance=category)
     
     return render(request, 'media_library/category_edit.html', {'form': form, 'category': category})
+
 
 @login_required
 def category_delete(request, category_id):

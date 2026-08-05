@@ -3,129 +3,910 @@
 
 {% block title %}{{ page_title }}{% endblock %}
 
+{% block meta_description %}Latest news and articles on {{ category }} from The Egerton Advertiser. Official publication of Egerton Green Movement Network (EGMN).{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ============================================
+   SECTION LIST - OFFICIAL GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --primary-green: #0d2a1a;
+    --secondary-green: #1a5c3a;
+    --accent-gold: #8B7355;
+    --light-green: #a5d6a7;
+    --cream: #f5f0e8;
+    --dark-text: #1a1a1a;
+    --light-text: #e8f5e9;
+}
+
+.section-page {
+    background: var(--cream);
+    padding: 30px 0 60px;
+    min-height: 100vh;
+}
+
+/* ============================================
+   SECTION HEADER - OFFICIAL STYLE
+   ============================================ */
+.section-header-wrapper {
+    text-align: center;
+    padding: 40px 0 35px;
+    margin-bottom: 40px;
+    background: linear-gradient(180deg, #0d2a1a 0%, #1a5c3a 100%);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 6px solid var(--accent-gold);
+}
+
+.section-header-wrapper::before {
+    content: 'OFFICIAL GAZETTE';
+    position: absolute;
+    right: -20px;
+    top: -10px;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.02);
+    font-family: 'Times New Roman', serif;
+    letter-spacing: 15px;
+    transform: rotate(-3deg);
+}
+
+.section-header-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+
+.section-header-wrapper .section-icon {
+    display: inline-block;
+    border: 3px solid var(--accent-gold);
+    border-radius: 50%;
+    padding: 20px;
+    margin-bottom: 15px;
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.section-header-wrapper .section-icon i {
+    font-size: 48px;
+    color: var(--accent-gold);
+}
+
+.section-header-wrapper h1 {
+    font-family: 'Times New Roman', serif;
+    font-weight: 900;
+    color: #ffffff;
+    font-size: 40px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+    margin: 0;
+}
+
+.section-header-wrapper .section-subtitle {
+    font-family: 'Times New Roman', serif;
+    color: var(--accent-gold);
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 3px;
+    position: relative;
+    z-index: 1;
+    margin-top: 5px;
+}
+
+.section-header-wrapper .article-count {
+    font-family: 'Times New Roman', serif;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    margin-top: 8px;
+}
+
+.section-header-wrapper .article-count i {
+    color: var(--accent-gold);
+    margin-right: 8px;
+}
+
+.section-header-wrapper .header-decoration {
+    position: relative;
+    z-index: 1;
+    margin-top: 15px;
+}
+
+.section-header-wrapper .header-decoration .line {
+    display: inline-block;
+    width: 60px;
+    height: 2px;
+    background: var(--accent-gold);
+    margin: 0 10px;
+    vertical-align: middle;
+}
+
+.section-header-wrapper .header-decoration .diamond {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--accent-gold);
+    transform: rotate(45deg);
+    vertical-align: middle;
+}
+
+/* ============================================
+   FEATURED ARTICLE - OFFICIAL STYLE
+   ============================================ */
+.featured-card {
+    background: #ffffff;
+    border: 2px solid var(--accent-gold);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(13, 42, 26, 0.08);
+    margin-bottom: 35px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.featured-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-green), var(--accent-gold), var(--secondary-green));
+    z-index: 1;
+}
+
+.featured-card:hover {
+    box-shadow: 0 8px 45px rgba(13, 42, 26, 0.15);
+    transform: translateY(-3px);
+}
+
+.featured-card .featured-image {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    position: relative;
+}
+
+.featured-card .featured-image .featured-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: var(--accent-gold);
+    color: #0d2a1a;
+    padding: 6px 20px;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 2px;
+    z-index: 2;
+}
+
+.featured-card .featured-body {
+    padding: 30px 35px;
+}
+
+.featured-card .featured-body .category-label {
+    display: inline-block;
+    background: var(--secondary-green);
+    color: #fff;
+    padding: 4px 16px;
+    font-family: 'Times New Roman', serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    border-radius: 2px;
+}
+
+.featured-card .featured-body h3 {
+    font-family: 'Times New Roman', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: var(--secondary-green);
+    margin-bottom: 12px;
+    line-height: 1.25;
+}
+
+.featured-card .featured-body h3 a {
+    color: var(--secondary-green);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.featured-card .featured-body h3 a:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+.featured-card .featured-body .excerpt {
+    font-family: 'Times New Roman', serif;
+    font-size: 17px;
+    color: var(--dark-text);
+    line-height: 1.9;
+}
+
+.featured-card .featured-body .meta {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 18px;
+    padding-top: 15px;
+    border-top: 1px solid #e8f5e9;
+}
+
+.featured-card .featured-body .meta i {
+    color: var(--accent-gold);
+    margin-right: 6px;
+}
+
+.featured-card .featured-body .meta .author-name {
+    color: var(--secondary-green);
+    font-weight: 700;
+}
+
+.featured-card .featured-body .btn-read {
+    background: var(--secondary-green);
+    border: none;
+    color: #fff;
+    padding: 10px 25px;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.featured-card .featured-body .btn-read:hover {
+    background: #0d2a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(13, 42, 26, 0.2);
+}
+
+/* ============================================
+   ARTICLE GRID CARDS
+   ============================================ */
+.article-grid-card {
+    background: #ffffff;
+    border: 1px solid #d4cdc0;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.article-grid-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-gold);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.article-grid-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(13, 42, 26, 0.08);
+    border-color: var(--accent-gold);
+}
+
+.article-grid-card:hover::before {
+    opacity: 1;
+}
+
+.article-grid-card .card-image {
+    height: 220px;
+    width: 100%;
+    object-fit: cover;
+    position: relative;
+}
+
+.article-grid-card .card-image .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.5));
+}
+
+.article-grid-card .card-image .image-overlay .badge-breaking {
+    background: #dc3545;
+    color: #fff;
+    padding: 4px 12px;
+    font-family: 'Times New Roman', serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 2px;
+}
+
+.article-grid-card .card-image .image-overlay .badge-featured {
+    background: var(--accent-gold);
+    color: #0d2a1a;
+    padding: 4px 12px;
+    font-family: 'Times New Roman', serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 2px;
+}
+
+.article-grid-card .card-body {
+    padding: 20px 22px;
+}
+
+.article-grid-card .card-body .meta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.article-grid-card .card-body .meta-top .date {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.article-grid-card .card-body .meta-top .date i {
+    color: var(--accent-gold);
+    margin-right: 4px;
+}
+
+.article-grid-card .card-body .card-title {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--secondary-green);
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.article-grid-card .card-body .card-title a {
+    color: var(--secondary-green);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.article-grid-card .card-body .card-title a:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+.article-grid-card .card-body .excerpt {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #4a4a4a;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+.article-grid-card .card-footer {
+    background: #f9f6f0;
+    border-top: 1px solid #e8f5e9;
+    padding: 12px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.article-grid-card .card-footer .author {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #4a4a4a;
+}
+
+.article-grid-card .card-footer .author i {
+    color: var(--accent-gold);
+    margin-right: 4px;
+}
+
+.article-grid-card .card-footer .author .name {
+    color: var(--secondary-green);
+    font-weight: 600;
+}
+
+.article-grid-card .card-footer .views {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.article-grid-card .card-footer .views i {
+    color: var(--accent-gold);
+    margin-right: 4px;
+}
+
+.article-grid-card .card-footer .btn-read-small {
+    background: transparent;
+    border: 2px solid var(--secondary-green);
+    color: var(--secondary-green);
+    padding: 4px 14px;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.article-grid-card .card-footer .btn-read-small:hover {
+    background: var(--secondary-green);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: #ffffff;
+    border: 2px solid #d4cdc0;
+    border-radius: 8px;
+}
+
+.empty-state i {
+    font-size: 64px;
+    color: var(--accent-gold);
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--secondary-green);
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.empty-state p {
+    font-family: 'Times New Roman', serif;
+    font-size: 17px;
+    color: #6c757d;
+}
+
+/* ============================================
+   PAGINATION - OFFICIAL STYLE
+   ============================================ */
+.pagination-wrapper {
+    background: #ffffff;
+    border: 1px solid #d4cdc0;
+    border-radius: 8px;
+    padding: 20px 25px;
+    margin-top: 30px;
+}
+
+.pagination {
+    margin: 0;
+    justify-content: center;
+    gap: 4px;
+}
+
+.pagination .page-link {
+    font-family: 'Times New Roman', serif;
+    color: var(--secondary-green);
+    border: 1px solid #d4cdc0;
+    padding: 10px 18px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #fff;
+    border-radius: 4px;
+}
+
+.pagination .page-link:hover {
+    background: var(--secondary-green);
+    color: #fff;
+    border-color: var(--secondary-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(13, 42, 26, 0.15);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--secondary-green);
+    border-color: var(--secondary-green);
+    color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background: #f8f9fa;
+}
+
+.pagination .page-item .page-link i {
+    font-size: 14px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .section-header-wrapper h1 {
+        font-size: 34px;
+        letter-spacing: 4px;
+    }
+    .featured-card .featured-body h3 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 992px) {
+    .section-header-wrapper {
+        padding: 30px 20px;
+    }
+    .section-header-wrapper h1 {
+        font-size: 28px;
+        letter-spacing: 3px;
+    }
+    .section-header-wrapper .section-subtitle {
+        font-size: 16px;
+    }
+    .section-header-wrapper .section-icon i {
+        font-size: 36px;
+    }
+    .section-header-wrapper .section-icon {
+        padding: 15px;
+    }
+    .featured-card .featured-image {
+        height: 250px;
+    }
+    .featured-card .featured-body {
+        padding: 25px;
+    }
+    .featured-card .featured-body h3 {
+        font-size: 22px;
+    }
+    .article-grid-card .card-image {
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-header-wrapper h1 {
+        font-size: 22px;
+        letter-spacing: 2px;
+    }
+    .section-header-wrapper .section-subtitle {
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+    .section-header-wrapper .article-count {
+        font-size: 12px;
+        letter-spacing: 2px;
+    }
+    .section-header-wrapper::before {
+        font-size: 40px;
+        letter-spacing: 8px;
+    }
+    .section-header-wrapper .section-icon i {
+        font-size: 28px;
+    }
+    .section-header-wrapper .section-icon {
+        padding: 12px;
+    }
+    .featured-card .featured-image {
+        height: 200px;
+    }
+    .featured-card .featured-body {
+        padding: 20px;
+    }
+    .featured-card .featured-body h3 {
+        font-size: 20px;
+    }
+    .featured-card .featured-body .excerpt {
+        font-size: 15px;
+    }
+    .article-grid-card .card-image {
+        height: 160px;
+    }
+    .article-grid-card .card-body {
+        padding: 15px 18px;
+    }
+    .article-grid-card .card-body .card-title {
+        font-size: 16px;
+    }
+    .article-grid-card .card-footer {
+        padding: 10px 18px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .pagination .page-link {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    .pagination-wrapper {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .section-header-wrapper h1 {
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+    .section-header-wrapper .section-subtitle {
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+    .section-header-wrapper::before {
+        font-size: 25px;
+        letter-spacing: 5px;
+        right: -5px;
+        top: -5px;
+    }
+    .section-header-wrapper .section-icon i {
+        font-size: 22px;
+    }
+    .section-header-wrapper .section-icon {
+        padding: 10px;
+    }
+    .section-header-wrapper .header-decoration .line {
+        width: 30px;
+    }
+    .section-header-wrapper .header-decoration .diamond {
+        width: 6px;
+        height: 6px;
+    }
+    .featured-card .featured-image {
+        height: 160px;
+    }
+    .featured-card .featured-body {
+        padding: 15px;
+    }
+    .featured-card .featured-body h3 {
+        font-size: 17px;
+    }
+    .featured-card .featured-body .excerpt {
+        font-size: 14px;
+    }
+    .featured-card .featured-body .meta {
+        font-size: 12px;
+    }
+    .featured-card .featured-body .btn-read {
+        padding: 8px 18px;
+        font-size: 12px;
+    }
+    .article-grid-card .card-image {
+        height: 140px;
+    }
+    .article-grid-card .card-body .card-title {
+        font-size: 15px;
+    }
+    .article-grid-card .card-body .excerpt {
+        font-size: 13px;
+    }
+    .article-grid-card .card-footer .author {
+        font-size: 12px;
+    }
+    .article-grid-card .card-footer .views {
+        font-size: 11px;
+    }
+    .article-grid-card .card-footer .btn-read-small {
+        font-size: 10px;
+        padding: 3px 10px;
+    }
+    .pagination .page-link {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    .empty-state i {
+        font-size: 40px;
+    }
+    .empty-state h3 {
+        font-size: 20px;
+    }
+    .empty-state p {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 400px) {
+    .section-header-wrapper h1 {
+        font-size: 15px;
+        letter-spacing: 0.5px;
+    }
+    .section-header-wrapper .section-subtitle {
+        font-size: 11px;
+    }
+    .featured-card .featured-body h3 {
+        font-size: 15px;
+    }
+    .article-grid-card .card-body .card-title {
+        font-size: 14px;
+    }
+    .pagination .page-link {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container py-4">
-    <div class="row">
-        <!-- Header -->
-        <div class="col-12 mb-4">
-            <div class="d-flex align-items-center">
-                <i class="{{ section_icon }} me-3 text-success" style="font-size: 2.5rem;"></i>
-                <div>
-                    <h1 class="display-5 mb-0">{{ category }}</h1>
-                    <p class="text-muted">{{ article_count }} articles</p>
-                </div>
-            </div>
-            <hr>
-        </div>
-    </div>
+<div class="section-page">
+    <div class="container">
 
-    <!-- Featured Article -->
-    {% if featured_article %}
-    <div class="row mb-5">
-        <div class="col-md-8 mx-auto">
-            <div class="card border-0 shadow-sm">
+        <!-- ============================================
+        SECTION HEADER - OFFICIAL
+        ============================================ -->
+        <div class="section-header-wrapper">
+            <div class="section-icon">
+                <i class="{{ section_icon|default:'fas fa-newspaper' }}"></i>
+            </div>
+            <h1>{{ category }}</h1>
+            <p class="section-subtitle">Official Gazette Section</p>
+            <div class="article-count">
+                <i class="fas fa-file-alt"></i> {{ article_count }} Articles Published
+            </div>
+            <div class="header-decoration">
+                <span class="line"></span>
+                <span class="diamond"></span>
+                <span class="line"></span>
+            </div>
+        </div>
+
+        <!-- ============================================
+        FEATURED ARTICLE
+        ============================================ -->
+        {% if featured_article %}
+        <div class="featured-card">
+            <div style="position: relative;">
                 {% if featured_article.featured_image %}
-                <img src="{{ featured_article.featured_image.url }}" class="card-img-top" alt="{{ featured_article.title }}" style="max-height: 400px; object-fit: cover;">
+                <img src="{{ featured_article.featured_image.url }}" alt="{{ featured_article.title }}" class="featured-image">
+                <div class="featured-badge">
+                    <i class="fas fa-star" style="margin-right: 4px;"></i> FEATURED
+                </div>
+                {% else %}
+                <div class="featured-image" style="background: linear-gradient(135deg, #1a5c3a, #0d2a1a); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-newspaper" style="font-size: 80px; color: rgba(255,255,255,0.1);"></i>
+                </div>
                 {% endif %}
-                <div class="card-body">
-                    <span class="badge bg-success mb-2">Featured</span>
-                    <h3 class="card-title">
-                        <a href="{{ featured_article.get_absolute_url }}" class="text-decoration-none text-dark">
-                            {{ featured_article.title }}
-                        </a>
-                    </h3>
-                    <p class="card-text">{{ featured_article.excerpt|truncatewords:30 }}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            By {{ featured_article.author.get_full_name }} | 
-                            {{ featured_article.published_at|date:"F j, Y" }}
-                        </small>
-                        <a href="{{ featured_article.get_absolute_url }}" class="btn btn-success btn-sm">
-                            Read More <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
+            </div>
+            <div class="featured-body">
+                <span class="category-label">{{ featured_article.category.name|upper }}</span>
+                <h3><a href="{{ featured_article.get_absolute_url }}">{{ featured_article.title }}</a></h3>
+                <p class="excerpt">{{ featured_article.excerpt|truncatewords:35 }}</p>
+                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                    <div class="meta">
+                        <i class="fas fa-user"></i> 
+                        <span class="author-name">{{ featured_article.author.get_full_name|default:featured_article.author.username }}</span>
+                        <span class="mx-2">|</span>
+                        <i class="fas fa-calendar-alt"></i> {{ featured_article.published_at|date:"F d, Y" }}
+                        <span class="mx-2">|</span>
+                        <i class="fas fa-eye"></i> {{ featured_article.views_count }} views
                     </div>
+                    <a href="{{ featured_article.get_absolute_url }}" class="btn-read">
+                        Read Full Article <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-    {% endif %}
+        {% endif %}
 
-    <!-- Article Grid -->
-    <div class="row">
-        {% for article in articles %}
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm hover-card">
-                {% if article.featured_image %}
-                <img src="{{ article.featured_image.url }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;">
-                {% else %}
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <i class="fas fa-newspaper fa-3x text-muted"></i>
-                </div>
-                {% endif %}
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <small class="text-muted">
-                            <i class="far fa-calendar-alt me-1"></i>
-                            {{ article.published_at|date:"M d, Y" }}
-                        </small>
-                        {% if article.is_breaking %}
-                        <span class="badge bg-danger">Breaking</span>
+        <!-- ============================================
+        ARTICLE GRID
+        ============================================ -->
+        <div class="row">
+            {% for article in articles %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="article-grid-card">
+                    <div style="position: relative;">
+                        {% if article.featured_image %}
+                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="card-image">
+                        <div class="image-overlay">
+                            {% if article.is_breaking %}
+                            <span class="badge-breaking"><i class="fas fa-bolt"></i> Breaking</span>
+                            {% endif %}
+                            {% if article.is_featured %}
+                            <span class="badge-featured"><i class="fas fa-star"></i> Featured</span>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="card-image" style="background: linear-gradient(135deg, #2a5a3a, #1a3a2a); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-newspaper" style="font-size: 50px; color: rgba(255,255,255,0.08);"></i>
+                        </div>
                         {% endif %}
                     </div>
-                    <h5 class="card-title">
-                        <a href="{{ article.get_absolute_url }}" class="text-decoration-none text-dark">
-                            {{ article.title }}
-                        </a>
-                    </h5>
-                    <p class="card-text text-muted small">{{ article.excerpt|truncatewords:20 }}</p>
-                </div>
-                <div class="card-footer bg-transparent border-0">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            <i class="far fa-user me-1"></i>
-                            {{ article.author.get_full_name|default:article.author.username }}
-                        </small>
-                        <div class="d-flex gap-2">
-                            <span class="badge bg-light text-dark">
-                                <i class="far fa-eye me-1"></i> {{ article.views_count }}
+                    <div class="card-body">
+                        <div class="meta-top">
+                            <span class="date">
+                                <i class="far fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}
                             </span>
-                            <a href="{{ article.get_absolute_url }}" class="btn btn-outline-success btn-sm">
-                                Read
-                            </a>
+                            <span class="date">
+                                <i class="far fa-clock"></i> {{ article.published_at|date:"H:i" }}
+                            </span>
                         </div>
+                        <h5 class="card-title">
+                            <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                        </h5>
+                        <p class="excerpt">{{ article.excerpt|truncatewords:20 }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="author">
+                            <i class="fas fa-user"></i> 
+                            <span class="name">{{ article.author.get_full_name|default:article.author.username }}</span>
+                        </span>
+                        <span class="views">
+                            <i class="fas fa-eye"></i> {{ article.views_count }}
+                        </span>
+                        <a href="{{ article.get_absolute_url }}" class="btn-read-small">
+                            Read <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
                 </div>
             </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No Articles Found</h3>
+                    <p>There are no articles published in this section yet. Please check back later.</p>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-            <h3>No articles found</h3>
-            <p class="text-muted">There are no articles in this section yet. Check back soon!</p>
-        </div>
-        {% endfor %}
-    </div>
 
-    <!-- Pagination -->
-    {% if articles.has_other_pages %}
-    <div class="row mt-4">
-        <div class="col-12">
+        <!-- ============================================
+        PAGINATION
+        ============================================ -->
+        {% if articles.has_other_pages %}
+        <div class="pagination-wrapper">
             <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
+                <ul class="pagination">
                     {% if articles.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1">&laquo; First</a>
+                        <a class="page-link" href="?page=1">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ articles.previous_page_number }}">Previous</a>
+                        <a class="page-link" href="?page={{ articles.previous_page_number }}">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="fas fa-angle-left"></i></span>
                     </li>
                     {% endif %}
 
                     {% for num in articles.paginator.page_range %}
                         {% if articles.number == num %}
-                        <li class="page-item active">
-                            <span class="page-link">{{ num }}</span>
-                        </li>
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
                         {% elif num > articles.number|add:'-3' and num < articles.number|add:'3' %}
                         <li class="page-item">
                             <a class="page-link" href="?page={{ num }}">{{ num }}</a>
@@ -135,29 +916,27 @@
 
                     {% if articles.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ articles.next_page_number }}">Next</a>
+                        <a class="page-link" href="?page={{ articles.next_page_number }}">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ articles.paginator.num_pages }}">Last &raquo;</a>
+                        <a class="page-link" href="?page={{ articles.paginator.num_pages }}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="fas fa-angle-right"></i></span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="fas fa-angle-double-right"></i></span>
                     </li>
                     {% endif %}
                 </ul>
             </nav>
         </div>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
-
-<style>
-    .hover-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .hover-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-    }
-    .hover-card .card-title a:hover {
-        color: #1a5c3a !important;
-    }
-</style>
 {% endblock %}

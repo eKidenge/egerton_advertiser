@@ -26,8 +26,11 @@ from django.conf import settings
 # PUBLIC VIEWS
 # ============================================================
 
+# apps/articles/views.py - UPDATED home function
+
 def home(request):
-    """Homepage - The Egerton Avenue"""
+    """Homepage - The Egerton Advertiser"""
+    
     # Get featured articles
     featured_articles = Article.objects.filter(
         status='published',
@@ -48,28 +51,87 @@ def home(request):
         published_at__lte=timezone.now()
     ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at')[:10]
     
-    # Get articles by category (for The Egerton Avenue sections)
-    environment_articles = Article.objects.filter(
+    # ========================================
+    # ALL SECTION ARTICLES - For Homepage Display
+    # ========================================
+    
+    # Education & Research
+    education_articles = Article.objects.filter(
+        Q(category__name__icontains='education') |
+        Q(category__name__icontains='research'),
         status='published',
-        category__slug='environment',
         published_at__lte=timezone.now()
     ).select_related('author')[:5]
     
-    society_articles = Article.objects.filter(
+    # Technology
+    technology_articles = Article.objects.filter(
+        category__name__icontains='technology',
         status='published',
-        category__slug='society',
         published_at__lte=timezone.now()
     ).select_related('author')[:5]
     
-    politics_articles = Article.objects.filter(
-        status='published',
-        category__slug='politics',
-        published_at__lte=timezone.now()
-    ).select_related('author')[:5]
-    
+    # Business
     business_articles = Article.objects.filter(
+        category__name__icontains='business',
         status='published',
-        category__slug='business',
+        published_at__lte=timezone.now()
+    ).select_related('author')[:5]
+    
+    # Health
+    health_articles = Article.objects.filter(
+        category__name__icontains='health',
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author')[:5]
+    
+    # Agriculture
+    agriculture_articles = Article.objects.filter(
+        Q(category__name__icontains='agriculture') |
+        Q(category__name__icontains='farming'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author')[:5]
+    
+    # Environment
+    environment_articles = Article.objects.filter(
+        Q(category__name__icontains='environment') |
+        Q(category__name__icontains='climate'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author')[:5]
+    
+    # Opinion
+    opinion_articles = Article.objects.filter(
+        category__name__icontains='opinion',
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author')[:5]
+    
+    # Society
+    society_articles = Article.objects.filter(
+        category__name__icontains='society',
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author')[:5]
+    
+    # Careers
+    careers_articles = Article.objects.filter(
+        Q(category__name__icontains='career') |
+        Q(category__name__icontains='jobs') |
+        Q(category__name__icontains='employment'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author')[:5]
+    
+    # Photos (articles with images)
+    photos_articles = Article.objects.filter(
+        status='published',
+        featured_image__isnull=False
+    ).exclude(featured_image='').select_related('author')[:5]
+    
+    # Videos (articles with video content)
+    videos_articles = Article.objects.filter(
+        status='published',
         published_at__lte=timezone.now()
     ).select_related('author')[:5]
     
@@ -87,16 +149,28 @@ def home(request):
     ).select_related('author').order_by('-views_count')[:5]
     
     context = {
-        'page_title': 'The Egerton Avenue - Environment & Society',
+        'page_title': 'The Egerton Advertiser - Informing Society · Empowering Business',
+        
+        # Featured & Breaking
         'featured_articles': featured_articles,
         'breaking_news': breaking_news,
         'latest_articles': latest_articles,
-        'environment_articles': environment_articles,
-        'society_articles': society_articles,
-        'politics_articles': politics_articles,
-        'business_articles': business_articles,
         'editor_pick': editor_pick,
         'popular_articles': popular_articles,
+        
+        # All Sections
+        'education_articles': education_articles,
+        'technology_articles': technology_articles,
+        'business_articles': business_articles,
+        'health_articles': health_articles,
+        'agriculture_articles': agriculture_articles,
+        'environment_articles': environment_articles,
+        'opinion_articles': opinion_articles,
+        'society_articles': society_articles,
+        'careers_articles': careers_articles,
+        'photos_articles': photos_articles,
+        'videos_articles': videos_articles,
+        
         'section': 'home',
     }
     
