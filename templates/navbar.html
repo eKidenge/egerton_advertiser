@@ -21,59 +21,59 @@
                     </a>
                 </li>
                 
-                <!-- EDUCATION & RESEARCH -->
+                <!-- POLITICS -->
                 <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'education' in request.path or 'research' in request.path %}active{% endif %}" href="{% url 'articles:education_research' %}" style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap;">
-                        EDUCATION & RESEARCH
-                    </a>
-                </li>
-                
-                <!-- TECHNOLOGY -->
-                <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'technology' in request.path %}active{% endif %}" href="{% url 'articles:technology' %}" style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap;">
-                        TECH
-                    </a>
-                </li>
-                
-                <!-- BUSINESS -->
-                <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'business' in request.path %}active{% endif %}" href="{% url 'articles:business_directory' %}" style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap;">
-                        BUSINESS
-                    </a>
-                </li>
-                
-                <!-- HEALTH -->
-                <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'health' in request.path %}active{% endif %}" href="{% url 'articles:health' %}" style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap;">
-                        HEALTH
-                    </a>
-                </li>
-                
-                <!-- AGRICULTURE -->
-                <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'agriculture' in request.path %}active{% endif %}" href="{% url 'articles:agriculture' %}" style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap;">
-                        AGRICULTURE
+                    <a class="nav-link {% if 'politics' in request.path %}active{% endif %}" href="{% url 'articles:category' 'politics' %}" 
+                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                        POLITICS
                     </a>
                 </li>
                 
                 <!-- ENVIRONMENT -->
                 <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'environment' in request.path %}active{% endif %}" href="{% url 'articles:environment' %}" style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap;">
+                    <a class="nav-link {% if 'environment' in request.path %}active{% endif %}" href="{% url 'articles:environment' %}" 
+                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
                         ENVIRONMENT
                     </a>
                 </li>
                 
-                <!-- VIDEOS - Updated to public gallery -->
+                <!-- EDUCATION & RESEARCH -->
                 <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'videos' in request.path %}active{% endif %}" href="{% url 'media_library:public_videos' %}" style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap;">
-                        VIDEOS
+                    <a class="nav-link {% if 'education' in request.path or 'research' in request.path %}active{% endif %}" href="{% url 'articles:education_research' %}" 
+                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                        EDUCATION & RESEARCH
                     </a>
                 </li>
                 
-                <!-- ADVERTISE -->
+                <!-- AGRICULTURE -->
                 <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'advertise' in request.path %}active{% endif %}" href="{% url 'advertisements:create' %}" style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap;">
-                        ADVERTISE
+                    <a class="nav-link {% if 'agriculture' in request.path %}active{% endif %}" href="{% url 'articles:agriculture' %}" 
+                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                        AGRICULTURE
+                    </a>
+                </li>
+                
+                <!-- HEALTH -->
+                <li class="nav-item" style="flex-shrink: 0;">
+                    <a class="nav-link {% if 'health' in request.path %}active{% endif %}" href="{% url 'articles:health' %}" 
+                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                        HEALTH
+                    </a>
+                </li>
+                
+                <!-- BUSINESS DIRECTORY -->
+                <li class="nav-item" style="flex-shrink: 0;">
+                    <a class="nav-link {% if 'business' in request.path %}active{% endif %}" href="{% url 'articles:business_directory' %}" 
+                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                        BUSINESS DIRECTORY
+                    </a>
+                </li>
+                
+                <!-- VIDEOS -->
+                <li class="nav-item" style="flex-shrink: 0;">
+                    <a class="nav-link {% if 'videos' in request.path %}active{% endif %}" href="{% url 'media_library:public_videos' %}" 
+                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                        VIDEOS
                     </a>
                 </li>
                 
@@ -87,14 +87,14 @@
                     <div class="custom-dropdown-menu" id="moreDropdownMenu" 
                          style="background: #1a5c3a; border: 2px solid #8B7355; border-radius: 0; padding: 0; min-width: 220px; box-shadow: 0 10px 50px rgba(0,0,0,0.8); position: fixed; top: auto; left: auto; right: 20px; z-index: 9999999; max-height: 70vh; overflow-y: auto; display: none;">
                         
-                        <!-- PHOTOS - Updated to public gallery -->
+                        <!-- PHOTOS -->
                         <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTOS</a>
                         
                         <!-- OPINION -->
                         <a class="dropdown-item" href="{% url 'articles:opinion' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">OPINION</a>
                         
-                        <!-- POLITICS -->
-                        <a class="dropdown-item" href="{% url 'articles:category' 'politics' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">POLITICS</a>
+                        <!-- TECHNOLOGY -->
+                        <a class="dropdown-item" href="{% url 'articles:technology' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">TECHNOLOGY</a>
                         
                         <!-- SOCIETY -->
                         <a class="dropdown-item" href="{% url 'articles:society' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">SOCIETY</a>
@@ -102,19 +102,22 @@
                         <!-- CAREERS -->
                         <a class="dropdown-item" href="{% url 'articles:careers' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CAREERS</a>
                         
+                        <!-- ADVERTISE -->
+                        <a class="dropdown-item" href="{% url 'advertisements:create' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ADVERTISE</a>
+                        
                         <!-- ABOUT US -->
                         <a class="dropdown-item" href="{% url 'about' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ABOUT US</a>
                         
                         <!-- CONTACT US -->
                         <a class="dropdown-item" href="{% url 'contacts:contact' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CONTACT US</a>
                         
-                        <!-- MEDIA LIBRARY - Personal library (login required) -->
+                        <!-- MEDIA LIBRARY -->
                         <a class="dropdown-item" href="{% url 'media_library:library' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">MEDIA LIBRARY</a>
                         
-                        <!-- PHOTO GALLERY - Public photos -->
+                        <!-- PHOTO GALLERY -->
                         <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTO GALLERY</a>
                         
-                        <!-- VIDEO GALLERY - Public videos -->
+                        <!-- VIDEO GALLERY -->
                         <a class="dropdown-item" href="{% url 'media_library:public_videos' %}" style="color: white; padding: 14px 22px; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">VIDEO GALLERY</a>
                         
                     </div>

@@ -47,6 +47,11 @@ def media_library(request):
         if form.cleaned_data.get('tag'):
             media_files = media_files.filter(tags__tag__id=form.cleaned_data['tag'])
     
+    # Store count BEFORE pagination
+    total_count = media_files.count()
+    image_count = media_files.filter(file_type='image').count()
+    video_count = media_files.filter(file_type='video').count()
+    
     # Pagination
     paginator = Paginator(media_files, 24)
     page = request.GET.get('page')
@@ -61,15 +66,14 @@ def media_library(request):
     tags = MediaTag.objects.all().order_by('name')
     categories = MediaCategory.objects.all().order_by('name')
     
-    # User-specific stats
     context = {
         'media_files': media_files,
         'form': form,
         'tags': tags,
         'categories': categories,
-        'total_count': MediaFile.objects.filter(uploaded_by=user, status='available').count(),
-        'image_count': MediaFile.objects.filter(uploaded_by=user, status='available', file_type='image').count(),
-        'video_count': MediaFile.objects.filter(uploaded_by=user, status='available', file_type='video').count(),
+        'total_count': total_count,
+        'image_count': image_count,
+        'video_count': video_count,
         'is_personal_library': True,
     }
     return render(request, 'media_library/media_library.html', context)
@@ -81,10 +85,29 @@ def media_library(request):
 
 def public_photos(request):
     """Public photos gallery - displays ALL available photos from ALL users"""
-    media_files = MediaFile.objects.filter(
+    from django.core.files.storage import default_storage
+    
+    # Get base queryset
+    base_media_files = MediaFile.objects.filter(
         file_type='image',
         status='available'
     ).order_by('-created_at')
+    
+    # Filter out files that don't have actual files on disk
+    valid_ids = []
+    for media in base_media_files:
+        if media.file and default_storage.exists(media.file.name):
+            valid_ids.append(media.id)
+    
+    if valid_ids:
+        media_files = base_media_files.filter(id__in=valid_ids)
+    else:
+        media_files = base_media_files.none()
+    
+    # Store count BEFORE pagination
+    total_count = media_files.count()
+    image_count = media_files.filter(file_type='image').count()
+    video_count = media_files.filter(file_type='video').count()
     
     # Pagination
     paginator = Paginator(media_files, 24)
@@ -105,9 +128,9 @@ def public_photos(request):
         'form': MediaFilterForm(request.GET),
         'tags': tags,
         'categories': categories,
-        'total_count': MediaFile.objects.filter(file_type='image', status='available').count(),
-        'image_count': MediaFile.objects.filter(file_type='image', status='available').count(),
-        'video_count': MediaFile.objects.filter(file_type='video', status='available').count(),
+        'total_count': total_count,
+        'image_count': image_count,
+        'video_count': video_count,
         'is_public': True,
         'section_title': 'Photos',
         'section_icon': 'fa-images',
@@ -117,10 +140,29 @@ def public_photos(request):
 
 def public_videos(request):
     """Public videos gallery - displays ALL available videos from ALL users"""
-    media_files = MediaFile.objects.filter(
+    from django.core.files.storage import default_storage
+    
+    # Get base queryset
+    base_media_files = MediaFile.objects.filter(
         file_type='video',
         status='available'
     ).order_by('-created_at')
+    
+    # Filter out files that don't have actual files on disk
+    valid_ids = []
+    for media in base_media_files:
+        if media.file and default_storage.exists(media.file.name):
+            valid_ids.append(media.id)
+    
+    if valid_ids:
+        media_files = base_media_files.filter(id__in=valid_ids)
+    else:
+        media_files = base_media_files.none()
+    
+    # Store count BEFORE pagination
+    total_count = media_files.count()
+    image_count = media_files.filter(file_type='image').count()
+    video_count = media_files.filter(file_type='video').count()
     
     # Pagination
     paginator = Paginator(media_files, 24)
@@ -141,9 +183,9 @@ def public_videos(request):
         'form': MediaFilterForm(request.GET),
         'tags': tags,
         'categories': categories,
-        'total_count': MediaFile.objects.filter(file_type='video', status='available').count(),
-        'image_count': MediaFile.objects.filter(file_type='image', status='available').count(),
-        'video_count': MediaFile.objects.filter(file_type='video', status='available').count(),
+        'total_count': total_count,
+        'image_count': image_count,
+        'video_count': video_count,
         'is_public': True,
         'section_title': 'Videos',
         'section_icon': 'fa-video',
@@ -159,9 +201,22 @@ def public_videos(request):
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'] or u.is_staff)
 def admin_media_library(request):
     """Admin view - shows ALL media from ALL users"""
-    media_files = MediaFile.objects.filter(
+    from django.core.files.storage import default_storage
+    
+    base_media_files = MediaFile.objects.filter(
         status__in=['available', 'processing']
     ).order_by('-created_at')
+    
+    # Filter out files that don't have actual files on disk
+    valid_ids = []
+    for media in base_media_files:
+        if media.file and default_storage.exists(media.file.name):
+            valid_ids.append(media.id)
+    
+    if valid_ids:
+        media_files = base_media_files.filter(id__in=valid_ids)
+    else:
+        media_files = base_media_files.none()
     
     # Filtering
     form = MediaFilterForm(request.GET)
@@ -182,6 +237,11 @@ def admin_media_library(request):
         if form.cleaned_data.get('tag'):
             media_files = media_files.filter(tags__tag__id=form.cleaned_data['tag'])
     
+    # Store count BEFORE pagination
+    total_count = media_files.count()
+    image_count = media_files.filter(file_type='image').count()
+    video_count = media_files.filter(file_type='video').count()
+    
     paginator = Paginator(media_files, 24)
     page = request.GET.get('page')
     try:
@@ -199,9 +259,9 @@ def admin_media_library(request):
         'form': form,
         'tags': tags,
         'categories': categories,
-        'total_count': MediaFile.objects.filter(status='available').count(),
-        'image_count': MediaFile.objects.filter(status='available', file_type='image').count(),
-        'video_count': MediaFile.objects.filter(status='available', file_type='video').count(),
+        'total_count': total_count,
+        'image_count': image_count,
+        'video_count': video_count,
         'is_admin_view': True,
     }
     return render(request, 'media_library/media_library.html', context)
