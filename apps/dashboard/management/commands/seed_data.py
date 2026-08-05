@@ -32,18 +32,18 @@ class Command(BaseCommand):
         self.stdout.write('📝 Creating site settings...')
         settings_data = [
             ('general', 'site_name', 'The Egerton Advertiser'),
-            ('general', 'site_tagline', 'Your Local News Source'),
-            ('general', 'site_description', 'Egerton\'s Leading Newspaper'),
+            ('general', 'site_tagline', 'Informing Society · Empowering Business'),
+            ('general', 'site_description', 'Official Publication of Egerton Green Movement Network (EGMN)'),
             ('general', 'site_timezone', 'Africa/Nairobi'),
             ('general', 'site_language', 'en'),
             ('email', 'smtp_host', 'smtp.gmail.com'),
             ('email', 'smtp_port', '587'),
-            ('email', 'smtp_username', 'admin@theegertonadvertiser.com'),
+            ('email', 'smtp_username', 'theegertonadvertiser@gmail.com'),
             ('email', 'use_tls', 'True'),
-            ('email', 'from_email', 'admin@theegertonadvertiser.com'),
+            ('email', 'from_email', 'theegertonadvertiser@gmail.com'),
             ('email', 'from_name', 'The Egerton Advertiser'),
-            ('seo', 'meta_title', 'The Egerton Advertiser - Your Local News'),
-            ('seo', 'meta_description', 'Latest news from Egerton and beyond'),
+            ('seo', 'meta_title', 'The Egerton Advertiser - Informing Society · Empowering Business'),
+            ('seo', 'meta_description', 'Official Publication of Egerton Green Movement Network (EGMN) covering environment, society, business, and sustainable development in Kenya.'),
             ('seo', 'enable_sitemap', 'True'),
             ('advertisement', 'enable_ads', 'True'),
             ('advertisement', 'auto_ads', 'False'),
@@ -57,21 +57,27 @@ class Command(BaseCommand):
             )
         
         # ============================================
-        # 2. CREATE CATEGORIES
+        # 2. CREATE CATEGORIES - ALL NAVIGATION SECTIONS
         # ============================================
         self.stdout.write('📂 Creating categories...')
         
         categories = [
-            {'name': 'Opinion', 'slug': 'opinion', 'description': 'Opinion pieces and editorials', 'is_active': True},
-            {'name': 'Environment', 'slug': 'environment', 'description': 'Environmental news and conservation', 'is_active': True},
-            {'name': 'Society', 'slug': 'society', 'description': 'Society and community news', 'is_active': True},
-            {'name': 'Politics', 'slug': 'politics', 'description': 'Political news and analysis', 'is_active': True},
-            {'name': 'Business', 'slug': 'business', 'description': 'Business and economy news', 'is_active': True},
-            {'name': 'Health', 'slug': 'health', 'description': 'Health and wellness news', 'is_active': True},
-            {'name': 'Education', 'slug': 'education', 'description': 'Education news and updates', 'is_active': True},
-            {'name': 'Sports', 'slug': 'sports', 'description': 'Sports news and coverage', 'is_active': True},
-            {'name': 'Entertainment', 'slug': 'entertainment', 'description': 'Entertainment and lifestyle', 'is_active': True},
-            {'name': 'Technology', 'slug': 'technology', 'description': 'Technology and innovation', 'is_active': True},
+            # Main Navigation Categories
+            {'name': 'Politics', 'slug': 'politics', 'description': 'Political news, analysis, and commentary', 'is_active': True, 'icon': 'fa-gavel'},
+            {'name': 'Environment', 'slug': 'environment', 'description': 'Environmental news, climate action, and conservation', 'is_active': True, 'icon': 'fa-leaf'},
+            {'name': 'Education & Research', 'slug': 'education', 'description': 'Education news, research, and academic developments', 'is_active': True, 'icon': 'fa-graduation-cap'},
+            {'name': 'Agriculture', 'slug': 'agriculture', 'description': 'Agricultural news, farming, and food security', 'is_active': True, 'icon': 'fa-tractor'},
+            {'name': 'Health', 'slug': 'health', 'description': 'Health news, wellness, and healthcare', 'is_active': True, 'icon': 'fa-heartbeat'},
+            {'name': 'Business & Directory', 'slug': 'business', 'description': 'Business news, economy, and directory', 'is_active': True, 'icon': 'fa-building'},
+            
+            # More Dropdown Categories
+            {'name': 'Photos', 'slug': 'photos', 'description': 'Photo galleries and visual stories', 'is_active': True, 'icon': 'fa-images'},
+            {'name': 'Opinion', 'slug': 'opinion', 'description': 'Opinion pieces, editorials, and commentary', 'is_active': True, 'icon': 'fa-pen-fancy'},
+            {'name': 'Technology', 'slug': 'technology', 'description': 'Technology news, innovation, and digital trends', 'is_active': True, 'icon': 'fa-microchip'},
+            {'name': 'Society', 'slug': 'society', 'description': 'Society news, community, and social issues', 'is_active': True, 'icon': 'fa-users'},
+            {'name': 'Careers', 'slug': 'careers', 'description': 'Career news, job opportunities, and employment', 'is_active': True, 'icon': 'fa-briefcase'},
+            {'name': 'Arts & Culture', 'slug': 'arts-culture', 'description': 'Arts, culture, music, literature, and creative expressions', 'is_active': True, 'icon': 'fa-palette'},
+            {'name': 'Videos', 'slug': 'videos', 'description': 'Video content and multimedia stories', 'is_active': True, 'icon': 'fa-video'},
         ]
         
         for cat_data in categories:
@@ -102,10 +108,14 @@ class Command(BaseCommand):
             {'name': 'Economy', 'slug': 'economy', 'is_active': True},
             {'name': 'Health', 'slug': 'health-tag', 'is_active': True},
             {'name': 'Education', 'slug': 'education-tag', 'is_active': True},
-            {'name': 'Sports', 'slug': 'sports-tag', 'is_active': True},
-            {'name': 'Entertainment', 'slug': 'entertainment-tag', 'is_active': True},
+            {'name': 'Agriculture', 'slug': 'agriculture-tag', 'is_active': True},
             {'name': 'Technology', 'slug': 'technology-tag', 'is_active': True},
             {'name': 'Innovation', 'slug': 'innovation', 'is_active': True},
+            {'name': 'Arts', 'slug': 'arts-tag', 'is_active': True},
+            {'name': 'Culture', 'slug': 'culture-tag', 'is_active': True},
+            {'name': 'Careers', 'slug': 'careers-tag', 'is_active': True},
+            {'name': 'Employment', 'slug': 'employment', 'is_active': True},
+            {'name': 'Sustainability', 'slug': 'sustainability', 'is_active': True},
         ]
         
         for tag_data in tags:
@@ -206,9 +216,9 @@ class Command(BaseCommand):
                 }
             )
         
-        # Create 50 random users
-        self.stdout.write('👤 Creating 50 random users...')
-        for i in range(50):
+        # Create 30 random users
+        self.stdout.write('👤 Creating 30 random users...')
+        for i in range(30):
             User.objects.get_or_create(
                 username=fake.user_name(),
                 defaults={
@@ -223,7 +233,7 @@ class Command(BaseCommand):
             )
         
         # ============================================
-        # 5. CREATE ARTICLES
+        # 5. CREATE ARTICLES - ALL SECTIONS
         # ============================================
         self.stdout.write('📰 Creating articles...')
         
@@ -231,18 +241,164 @@ class Command(BaseCommand):
         tags = Tag.objects.all()
         authors = User.objects.filter(role__in=['admin', 'editor', 'journalist'])
         
-        opinion_cat = Category.objects.get(slug='opinion')
+        # Get categories for each section
+        politics_cat = Category.objects.get(slug='politics')
         environment_cat = Category.objects.get(slug='environment')
+        education_cat = Category.objects.get(slug='education')
+        agriculture_cat = Category.objects.get(slug='agriculture')
+        health_cat = Category.objects.get(slug='health')
+        business_cat = Category.objects.get(slug='business')
+        opinion_cat = Category.objects.get(slug='opinion')
+        technology_cat = Category.objects.get(slug='technology')
         society_cat = Category.objects.get(slug='society')
+        careers_cat = Category.objects.get(slug='careers')
+        arts_cat = Category.objects.get(slug='arts-culture')
         
         articles_data = [
+            # Politics Articles
+            {
+                'title': 'New Political Alliance Formed in Kenya',
+                'content': fake.paragraph(nb_sentences=30),
+                'excerpt': 'Major political coalition announced ahead of elections',
+                'category': politics_cat,
+                'is_featured': True,
+                'is_breaking': True,
+                'views_count': random.randint(100, 5000),
+            },
+            {
+                'title': 'Parliament Passes Historic Climate Bill',
+                'content': fake.paragraph(nb_sentences=25),
+                'excerpt': 'Landmark climate legislation approved',
+                'category': politics_cat,
+                'is_featured': False,
+                'is_breaking': False,
+                'views_count': random.randint(50, 3000),
+            },
+            {
+                'title': 'Local Elections: What You Need to Know',
+                'content': fake.paragraph(nb_sentences=20),
+                'excerpt': 'Guide to upcoming local elections',
+                'category': politics_cat,
+                'is_featured': False,
+                'is_breaking': False,
+                'views_count': random.randint(30, 2000),
+            },
+            
+            # Environment Articles
+            {
+                'title': 'Kenya\'s Great Green Wall Initiative',
+                'content': fake.paragraph(nb_sentences=35),
+                'excerpt': 'Massive reforestation project transforming landscapes',
+                'category': environment_cat,
+                'is_featured': True,
+                'is_breaking': False,
+                'views_count': random.randint(100, 4000),
+            },
+            {
+                'title': 'Plastic Pollution Crisis in Nairobi',
+                'content': fake.paragraph(nb_sentences=28),
+                'excerpt': 'Growing plastic waste problem demands urgent action',
+                'category': environment_cat,
+                'is_featured': False,
+                'is_breaking': False,
+                'views_count': random.randint(50, 2500),
+            },
+            {
+                'title': 'Conservation Success in Maasai Mara',
+                'content': fake.paragraph(nb_sentences=30),
+                'excerpt': 'Wildlife conservation achievements celebrated',
+                'category': environment_cat,
+                'is_featured': True,
+                'is_breaking': False,
+                'views_count': random.randint(80, 3500),
+            },
+            
+            # Education Articles
+            {
+                'title': 'Education Reform: New Curriculum Rollout',
+                'content': fake.paragraph(nb_sentences=25),
+                'excerpt': 'Major education reforms taking shape in schools',
+                'category': education_cat,
+                'is_featured': True,
+                'is_breaking': False,
+                'views_count': random.randint(40, 1800),
+            },
+            {
+                'title': 'University Research Breakthrough',
+                'content': fake.paragraph(nb_sentences=30),
+                'excerpt': 'Kenyan researchers make significant discovery',
+                'category': education_cat,
+                'is_featured': False,
+                'is_breaking': False,
+                'views_count': random.randint(30, 1500),
+            },
+            
+            # Agriculture Articles
+            {
+                'title': 'Sustainable Farming Practices Transform Agriculture',
+                'content': fake.paragraph(nb_sentences=25),
+                'excerpt': 'Farmers adopt sustainable practices for better yields',
+                'category': agriculture_cat,
+                'is_featured': True,
+                'is_breaking': False,
+                'views_count': random.randint(60, 2800),
+            },
+            {
+                'title': 'Food Security: New Initiatives Launched',
+                'content': fake.paragraph(nb_sentences=20),
+                'excerpt': 'Government announces food security programs',
+                'category': agriculture_cat,
+                'is_featured': False,
+                'is_breaking': False,
+                'views_count': random.randint(30, 1500),
+            },
+            
+            # Health Articles
+            {
+                'title': 'Healthcare Access in Rural Communities',
+                'content': fake.paragraph(nb_sentences=30),
+                'excerpt': 'Challenges and solutions in rural healthcare delivery',
+                'category': health_cat,
+                'is_featured': True,
+                'is_breaking': False,
+                'views_count': random.randint(60, 2800),
+            },
+            {
+                'title': 'New Health Initiative Launched',
+                'content': fake.paragraph(nb_sentences=25),
+                'excerpt': 'Community health program aims to improve outcomes',
+                'category': health_cat,
+                'is_featured': False,
+                'is_breaking': False,
+                'views_count': random.randint(30, 1500),
+            },
+            
+            # Business Articles
+            {
+                'title': 'Small Business Growth in Egerton',
+                'content': fake.paragraph(nb_sentences=25),
+                'excerpt': 'Local businesses thrive in growing economy',
+                'category': business_cat,
+                'is_featured': True,
+                'is_breaking': False,
+                'views_count': random.randint(40, 2000),
+            },
+            {
+                'title': 'Business Directory: Top Companies in Egerton',
+                'content': fake.paragraph(nb_sentences=20),
+                'excerpt': 'Comprehensive directory of local businesses',
+                'category': business_cat,
+                'is_featured': False,
+                'is_breaking': False,
+                'views_count': random.randint(20, 1000),
+            },
+            
             # Opinion Articles
             {
                 'title': 'The Future of Democracy in Kenya',
                 'content': fake.paragraph(nb_sentences=30),
                 'excerpt': 'A deep dive into the democratic future of Kenya',
                 'category': opinion_cat,
-                'status': 'published',
                 'is_featured': True,
                 'is_breaking': False,
                 'views_count': random.randint(100, 5000),
@@ -252,103 +408,53 @@ class Command(BaseCommand):
                 'content': fake.paragraph(nb_sentences=25),
                 'excerpt': 'Urgent action needed on climate change',
                 'category': opinion_cat,
-                'status': 'published',
                 'is_featured': False,
                 'is_breaking': True,
                 'views_count': random.randint(50, 3000),
             },
-            {
-                'title': 'The Role of Media in Society',
-                'content': fake.paragraph(nb_sentences=20),
-                'excerpt': 'Media\'s responsibility in modern society',
-                'category': opinion_cat,
-                'status': 'published',
-                'is_featured': False,
-                'is_breaking': False,
-                'views_count': random.randint(30, 2000),
-            },
-            # Environment Articles
-            {
-                'title': 'Kenya\'s Great Green Wall Initiative',
-                'content': fake.paragraph(nb_sentences=35),
-                'excerpt': 'Massive reforestation project in Kenya',
-                'category': environment_cat,
-                'status': 'published',
-                'is_featured': True,
-                'is_breaking': False,
-                'views_count': random.randint(100, 4000),
-            },
-            {
-                'title': 'Plastic Pollution Crisis in Nairobi',
-                'content': fake.paragraph(nb_sentences=28),
-                'excerpt': 'The growing plastic waste problem',
-                'category': environment_cat,
-                'status': 'published',
-                'is_featured': False,
-                'is_breaking': False,
-                'views_count': random.randint(50, 2500),
-            },
-            {
-                'title': 'Conservation Success Stories from Maasai Mara',
-                'content': fake.paragraph(nb_sentences=30),
-                'excerpt': 'Wildlife conservation achievements',
-                'category': environment_cat,
-                'status': 'published',
-                'is_featured': True,
-                'is_breaking': False,
-                'views_count': random.randint(80, 3500),
-            },
-            # Society Articles
-            {
-                'title': 'Education Reform in Kenya',
-                'content': fake.paragraph(nb_sentences=25),
-                'excerpt': 'New education reforms taking shape',
-                'category': society_cat,
-                'status': 'published',
-                'is_featured': False,
-                'is_breaking': False,
-                'views_count': random.randint(40, 1800),
-            },
-            {
-                'title': 'Healthcare Access in Rural Communities',
-                'content': fake.paragraph(nb_sentences=30),
-                'excerpt': 'Challenges in rural healthcare delivery',
-                'category': society_cat,
-                'status': 'published',
-                'is_featured': True,
-                'is_breaking': False,
-                'views_count': random.randint(60, 2800),
-            },
-            {
-                'title': 'Youth Unemployment and Solutions',
-                'content': fake.paragraph(nb_sentences=25),
-                'excerpt': 'Addressing youth unemployment crisis',
-                'category': society_cat,
-                'status': 'published',
-                'is_featured': False,
-                'is_breaking': False,
-                'views_count': random.randint(30, 1500),
-            },
-            # Additional Random Articles
+            
+            # Technology Articles
             {
                 'title': 'Tech Innovation Hub Opens in Egerton',
                 'content': fake.paragraph(nb_sentences=20),
                 'excerpt': 'New technology innovation center launched',
-                'category': Category.objects.filter(slug='technology').first(),
-                'status': 'published',
+                'category': technology_cat,
                 'is_featured': False,
                 'is_breaking': False,
                 'views_count': random.randint(20, 1000),
             },
+            
+            # Society Articles
             {
-                'title': 'Sports: Egerton United Wins Championship',
+                'title': 'Youth Unemployment and Solutions',
+                'content': fake.paragraph(nb_sentences=25),
+                'excerpt': 'Addressing youth unemployment crisis in Kenya',
+                'category': society_cat,
+                'is_featured': True,
+                'is_breaking': False,
+                'views_count': random.randint(30, 1500),
+            },
+            
+            # Careers Articles
+            {
+                'title': 'Career Opportunities in Green Economy',
                 'content': fake.paragraph(nb_sentences=20),
-                'excerpt': 'Local football team triumphs',
-                'category': Category.objects.filter(slug='sports').first(),
-                'status': 'published',
+                'excerpt': 'Growing career opportunities in sustainable sectors',
+                'category': careers_cat,
                 'is_featured': False,
                 'is_breaking': False,
-                'views_count': random.randint(40, 2000),
+                'views_count': random.randint(20, 1000),
+            },
+            
+            # Arts & Culture Articles
+            {
+                'title': 'Cultural Festival Celebrates Kenyan Heritage',
+                'content': fake.paragraph(nb_sentences=25),
+                'excerpt': 'Annual cultural festival showcases local talent',
+                'category': arts_cat,
+                'is_featured': True,
+                'is_breaking': False,
+                'views_count': random.randint(30, 1500),
             },
         ]
         
@@ -360,7 +466,7 @@ class Command(BaseCommand):
                 excerpt=article_data['excerpt'],
                 category=article_data['category'],
                 author=author,
-                status=article_data['status'],
+                status='published',
                 is_featured=article_data.get('is_featured', False),
                 is_breaking=article_data.get('is_breaking', False),
                 views_count=article_data.get('views_count', 0),
@@ -372,12 +478,12 @@ class Command(BaseCommand):
             for tag in random.sample(list(tags), random.randint(2, 5)):
                 article.tags.add(tag)
         
-        # Create 50 more random articles
-        self.stdout.write('📰 Creating 50 random articles...')
+        # Create 30 more random articles
+        self.stdout.write('📰 Creating 30 random articles...')
         categories_list = list(Category.objects.all())
         tags_list = list(Tag.objects.all())
         
-        for i in range(50):
+        for i in range(30):
             cat = random.choice(categories_list)
             author = random.choice(authors)
             status = random.choice(['published', 'draft', 'pending'])
@@ -423,14 +529,29 @@ class Command(BaseCommand):
         self.stdout.write('📢 Creating advertisements...')
         
         advertisers = User.objects.filter(role='advertiser')
+        if not advertisers.exists():
+            advertisers = User.objects.filter(role='admin')
         
         ad_positions = ['header', 'sidebar', 'footer', 'in_article', 'popup']
+        ad_titles = [
+            'Reyes, Olson and Garcia - Ad 15',
+            'Thomas LLC - Ad 13',
+            'Thomas, Smith and Cook - Ad 6',
+            'Manning Ltd - Ad 5',
+            'Parker Group - Ad 2',
+            'Pineda-Brown - Ad 1',
+            'Jefferson, Fernandez and Barr - Ad 16',
+            'Harper-Davis - Ad 5',
+            'Cline, Wise and Parsons - Ad 2',
+            'Roberts-Thomas - Ad 1',
+        ]
         
         for i in range(20):
             advertiser = random.choice(advertisers) if advertisers.exists() else User.objects.first()
+            title = ad_titles[i % len(ad_titles)] if i < len(ad_titles) else fake.company() + ' - Ad ' + str(i+1)
             ad = Advertisement.objects.create(
                 advertiser=advertiser,
-                title=fake.company() + ' - Ad ' + str(i+1),
+                title=title,
                 description=fake.paragraph(nb_sentences=3),
                 link_url=fake.url(),
                 position=random.choice(ad_positions),
@@ -465,12 +586,14 @@ class Command(BaseCommand):
         # ============================================
         self.stdout.write('📰 Creating newsletters...')
         
+        admin_user = User.objects.filter(role='admin').first()
+        
         for i in range(5):
             Newsletter.objects.create(
                 subject=fake.sentence(nb_words=5),
                 content=fake.paragraph(nb_sentences=10),
                 status=random.choice(['draft', 'sent', 'scheduled']),
-                created_by=User.objects.filter(role='admin').first(),
+                created_by=admin_user,
                 sent_at=timezone.now() - timedelta(days=random.randint(1, 30)) if random.choice([True, False]) else None,
                 created_at=timezone.now() - timedelta(days=random.randint(1, 60)),
             )
@@ -491,44 +614,64 @@ class Command(BaseCommand):
             )
         
         # ============================================
-        # 11. CREATE MEDIA FILES (FIXED - with required fields)
+        # 11. CREATE MEDIA FILES
         # ============================================
         self.stdout.write('🖼️ Creating media files...')
         
         uploaders = User.objects.all()
         
-        # Create 30 image files
+        image_titles = [
+            'Image 30 - not', 'Image 29 - face', 'Image 28 - indeed', 
+            'Image 27 - under', 'Image 26 - design', 'Image 25 - action',
+            'Image 24 - produce', 'Image 23 - along', 'Image 22 - every',
+            'Image 21 - work', 'Image 20 - create', 'Image 19 - nature',
+            'Image 18 - people', 'Image 17 - building', 'Image 16 - landscape',
+            'Image 15 - animal', 'Image 14 - plant', 'Image 13 - water',
+            'Image 12 - mountain', 'Image 11 - river', 'Image 10 - forest',
+            'Image 9 - flower', 'Image 8 - ocean', 'Image 7 - city',
+            'Image 6 - village', 'Image 5 - market', 'Image 4 - school',
+            'Image 3 - hospital', 'Image 2 - road', 'Image 1 - tree',
+        ]
+        
         for i in range(30):
             try:
                 MediaFile.objects.create(
-                    title=f'Image {i+1} - {fake.word()}',
+                    title=image_titles[i % len(image_titles)] if i < len(image_titles) else f'Image {i+1} - {fake.word()}',
                     description=fake.sentence(nb_words=5),
                     file_type='image',
                     uploaded_by=random.choice(uploaders),
-                    file_size=random.randint(100000, 5000000),  # 100KB to 5MB
+                    file_size=random.randint(100000, 5000000),
                     width=random.randint(800, 1920),
                     height=random.randint(600, 1080),
                     mime_type=random.choice(['image/jpeg', 'image/png', 'image/webp']),
                     created_at=timezone.now() - timedelta(days=random.randint(1, 60)),
+                    status='available',
                 )
             except Exception as e:
-                # Skip if there's an error with specific fields
                 self.stdout.write(f'   ⚠️ Skipped image {i+1}: {str(e)[:50]}')
         
         # Create 10 video files
+        video_titles = [
+            'Video 10 - president', 'Video 9 - notice', 'Video 8 - central',
+            'Video 7 - section', 'Video 6 - occur', 'Video 5 - truth',
+            'Video 4 - window', 'Video 3 - life', 'Video 2 - which',
+            'Video 1 - style',
+        ]
+        
         for i in range(10):
             try:
                 MediaFile.objects.create(
-                    title=f'Video {i+1} - {fake.word()}',
+                    title=video_titles[i % len(video_titles)] if i < len(video_titles) else f'Video {i+1} - {fake.word()}',
                     description=fake.sentence(nb_words=5),
                     file_type='video',
                     uploaded_by=random.choice(uploaders),
-                    file_size=random.randint(10000000, 100000000),  # 10MB to 100MB
+                    file_size=random.randint(10000000, 100000000),
                     width=random.randint(1280, 3840),
                     height=random.randint(720, 2160),
                     duration=random.randint(30, 600),
                     mime_type=random.choice(['video/mp4', 'video/webm', 'video/quicktime']),
                     created_at=timezone.now() - timedelta(days=random.randint(1, 60)),
+                    status='available',
                 )
             except Exception as e:
                 self.stdout.write(f'   ⚠️ Skipped video {i+1}: {str(e)[:50]}')
@@ -538,14 +681,14 @@ class Command(BaseCommand):
         # ============================================
         self.stdout.write('📋 Creating activity logs...')
         
-        actions = ['create', 'update', 'delete', 'login', 'view']
+        actions = ['create', 'update', 'delete', 'login', 'view', 'publish', 'approve', 'reject']
         
         for i in range(100):
             user = random.choice(users)
             UserActivityLog.objects.create(
                 user=user,
                 action=random.choice(actions),
-                model_name=random.choice(['Article', 'Comment', 'Advertisement', 'User', 'Category']),
+                model_name=random.choice(['Article', 'Comment', 'Advertisement', 'User', 'Category', 'MediaFile']),
                 description=fake.sentence(nb_words=6),
                 timestamp=timezone.now() - timedelta(days=random.randint(0, 30)),
                 ip_address=fake.ipv4(),
@@ -555,7 +698,7 @@ class Command(BaseCommand):
         # SUMMARY
         # ============================================
         self.stdout.write(self.style.SUCCESS('✅ Database seeded successfully!'))
-        self.stdout.write(f'📊 Summary:')
+        self.stdout.write('📊 Summary:')
         self.stdout.write(f'   Users: {User.objects.count()}')
         self.stdout.write(f'   Articles: {Article.objects.count()}')
         self.stdout.write(f'   Categories: {Category.objects.count()}')

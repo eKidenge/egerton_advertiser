@@ -146,4 +146,6 @@ urlpatterns = [
     
     # Featured articles
     path('featured/', views.featured_articles, name='featured'),
+    # ARTS & CULTURE
+    path('arts-culture/', views.arts_culture, name='arts_culture'),
 ]

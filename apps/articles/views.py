@@ -1624,3 +1624,59 @@ def reject_article(request, article_id):
         return redirect('dashboard:article_list')
     
     return render(request, 'articles/reject_article.html', {'article': article})
+
+def arts_culture(request):
+    """Arts & Culture section"""
+    from apps.categories.models import Category
+    from django.core.paginator import Paginator
+    
+    category = Category.objects.filter(
+        Q(slug='arts-culture') | Q(name__icontains='arts') | Q(name__icontains='culture')
+    ).first()
+    
+    if not category:
+        category = Category.objects.create(
+            name='Arts & Culture',
+            slug='arts-culture',
+            is_active=True
+        )
+    
+    articles = Article.objects.filter(
+        Q(category=category) |
+        Q(category__name__icontains='arts') |
+        Q(category__name__icontains='culture'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    subcategories = category.children.filter(is_active=True)
+    article_count = Article.objects.filter(
+        Q(category=category) |
+        Q(category__name__icontains='arts') |
+        Q(category__name__icontains='culture'),
+        status='published'
+    ).count()
+    
+    context = {
+        'category': category,
+        'articles': articles,
+        'featured_article': featured_article,
+        'subcategories': subcategories,
+        'article_count': article_count,
+        'page_title': 'Arts & Culture - The Egerton Advertiser',
+        'section': 'arts-culture',
+        'section_icon': 'fas fa-palette',
+    }
+    
+    return render(request, 'categories/category_detail.html', context)
