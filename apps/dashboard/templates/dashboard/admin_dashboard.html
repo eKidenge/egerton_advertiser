@@ -171,6 +171,10 @@
 .stat-card.red { border-top: 4px solid var(--admin-red); }
 .stat-card.purple { border-top: 4px solid #6f42c1; }
 .stat-card.orange { border-top: 4px solid #fd7e14; }
+.stat-card.teal { border-top: 4px solid #20c997; }
+.stat-card.indigo { border-top: 4px solid #6610f2; }
+.stat-card.pink { border-top: 4px solid #e83e8c; }
+.stat-card.cyan { border-top: 4px solid #17a2b8; }
 
 /* ============================================
    QUICK ACTIONS - OFFICIAL BUTTONS
@@ -465,7 +469,7 @@
 }
 
 /* ============================================
-   SECTION CARDS - OPINION, ENVIRONMENT, SOCIETY, PHOTOS, VIDEO
+   SECTION CARDS - ALL SECTIONS
    ============================================ */
 .section-cards {
     margin-bottom: 25px;
@@ -503,12 +507,18 @@
     font-size: 12px;
     color: #6c757d;
 }
+.section-card.education { border-top: 4px solid #6f42c1; }
+.section-card.technology { border-top: 4px solid #0d6efd; }
+.section-card.business { border-top: 4px solid var(--admin-gold); }
+.section-card.health { border-top: 4px solid #dc3545; }
+.section-card.agriculture { border-top: 4px solid #28a745; }
+.section-card.environment { border-top: 4px solid #198754; }
 .section-card.opinion { border-top: 4px solid #6f42c1; }
-.section-card.environment { border-top: 4px solid #28a745; }
 .section-card.society { border-top: 4px solid #17a2b8; }
 .section-card.photos { border-top: 4px solid #fd7e14; }
 .section-card.video { border-top: 4px solid #dc3545; }
 .section-card.ads { border-top: 4px solid var(--admin-gold); }
+.section-card.careers { border-top: 4px solid #20c997; }
 
 /* ============================================
    APPROVAL BUTTONS
@@ -954,10 +964,82 @@
         </div>
 
         <!-- ========================================
-        SECTION CARDS - OPINION, ENVIRONMENT, SOCIETY, PHOTOS, VIDEO, ADS
+        SECTION CARDS - ALL SECTIONS
         ======================================== -->
         <div class="section-cards">
             <div class="row">
+                <!-- EDUCATION & RESEARCH -->
+                <div class="col-md-2">
+                    <div class="section-card education">
+                        <div class="section-icon"><i class="fas fa-graduation-cap" style="color: #6f42c1;"></i></div>
+                        <div class="section-number">{{ education_articles|default:0 }}</div>
+                        <div class="section-label">Education & Research</div>
+                        <div class="section-count">Published: {{ education_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:education_research_list' %}" class="btn btn-sm btn-outline-primary mt-2">Manage</a>
+                    </div>
+                </div>
+                
+                <!-- TECHNOLOGY -->
+                <div class="col-md-2">
+                    <div class="section-card technology">
+                        <div class="section-icon"><i class="fas fa-microchip" style="color: #0d6efd;"></i></div>
+                        <div class="section-number">{{ technology_articles|default:0 }}</div>
+                        <div class="section-label">Technology</div>
+                        <div class="section-count">Published: {{ technology_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:technology_list' %}" class="btn btn-sm btn-outline-primary mt-2">Manage</a>
+                    </div>
+                </div>
+                
+                <!-- BUSINESS & DIRECTORY -->
+                <div class="col-md-2">
+                    <div class="section-card business">
+                        <div class="section-icon"><i class="fas fa-building" style="color: var(--admin-gold);"></i></div>
+                        <div class="section-number">{{ business_articles|default:0 }}</div>
+                        <div class="section-label">Business & Directory</div>
+                        <div class="section-count">Published: {{ business_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:business_list' %}" class="btn btn-sm btn-outline-secondary mt-2">Manage</a>
+                    </div>
+                </div>
+                
+                <!-- HEALTH -->
+                <div class="col-md-2">
+                    <div class="section-card health">
+                        <div class="section-icon"><i class="fas fa-heartbeat" style="color: #dc3545;"></i></div>
+                        <div class="section-number">{{ health_articles|default:0 }}</div>
+                        <div class="section-label">Health</div>
+                        <div class="section-count">Published: {{ health_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:health_list' %}" class="btn btn-sm btn-outline-danger mt-2">Manage</a>
+                    </div>
+                </div>
+                
+                <!-- AGRICULTURE -->
+                <div class="col-md-2">
+                    <div class="section-card agriculture">
+                        <div class="section-icon"><i class="fas fa-tractor" style="color: #28a745;"></i></div>
+                        <div class="section-number">{{ agriculture_articles|default:0 }}</div>
+                        <div class="section-label">Agriculture</div>
+                        <div class="section-count">Published: {{ agriculture_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:agriculture_list' %}" class="btn btn-sm btn-outline-success mt-2">Manage</a>
+                    </div>
+                </div>
+                
+                <!-- CAREERS -->
+                <div class="col-md-2">
+                    <div class="section-card careers">
+                        <div class="section-icon"><i class="fas fa-briefcase" style="color: #20c997;"></i></div>
+                        <div class="section-number">{{ careers_articles|default:0 }}</div>
+                        <div class="section-label">Careers</div>
+                        <div class="section-count">Published: {{ careers_published|default:0 }}</div>
+                        <a href="{% url 'dashboard:careers_list' %}" class="btn btn-sm btn-outline-success mt-2">Manage</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row - Opinion, Environment, Society, Photos, Video, Ads -->
+        <div class="section-cards">
+            <div class="row">
+                <!-- OPINION -->
                 <div class="col-md-2">
                     <div class="section-card opinion">
                         <div class="section-icon"><i class="fas fa-pencil-alt" style="color: #6f42c1;"></i></div>
@@ -967,15 +1049,19 @@
                         <a href="{% url 'dashboard:opinion_list' %}" class="btn btn-sm btn-outline-primary mt-2">Manage</a>
                     </div>
                 </div>
+                
+                <!-- ENVIRONMENT -->
                 <div class="col-md-2">
                     <div class="section-card environment">
-                        <div class="section-icon"><i class="fas fa-leaf" style="color: #28a745;"></i></div>
+                        <div class="section-icon"><i class="fas fa-leaf" style="color: #198754;"></i></div>
                         <div class="section-number">{{ environment_articles|default:0 }}</div>
                         <div class="section-label">Environment</div>
                         <div class="section-count">Published: {{ environment_published|default:0 }}</div>
                         <a href="{% url 'dashboard:environment_list' %}" class="btn btn-sm btn-outline-success mt-2">Manage</a>
                     </div>
                 </div>
+                
+                <!-- SOCIETY -->
                 <div class="col-md-2">
                     <div class="section-card society">
                         <div class="section-icon"><i class="fas fa-users" style="color: #17a2b8;"></i></div>
@@ -985,6 +1071,8 @@
                         <a href="{% url 'dashboard:society_list' %}" class="btn btn-sm btn-outline-info mt-2">Manage</a>
                     </div>
                 </div>
+                
+                <!-- PHOTOS -->
                 <div class="col-md-2">
                     <div class="section-card photos">
                         <div class="section-icon"><i class="fas fa-camera" style="color: #fd7e14;"></i></div>
@@ -994,6 +1082,8 @@
                         <a href="{% url 'dashboard:photos_list' %}" class="btn btn-sm btn-outline-warning mt-2">Manage</a>
                     </div>
                 </div>
+                
+                <!-- VIDEOS -->
                 <div class="col-md-2">
                     <div class="section-card video">
                         <div class="section-icon"><i class="fas fa-video" style="color: #dc3545;"></i></div>
@@ -1003,6 +1093,8 @@
                         <a href="{% url 'dashboard:video_list' %}" class="btn btn-sm btn-outline-danger mt-2">Manage</a>
                     </div>
                 </div>
+                
+                <!-- ADS -->
                 <div class="col-md-2">
                     <div class="section-card ads">
                         <div class="section-icon"><i class="fas fa-ad" style="color: var(--admin-gold);"></i></div>
@@ -1040,6 +1132,66 @@
                         <a href="{% url 'dashboard:tag_list' %}" class="quick-action">
                             <i class="fas fa-tags"></i>
                             <span>Tags</span>
+                        </a>
+                        
+                        <!-- Education & Research Actions -->
+                        <a href="{% url 'dashboard:education_research_list' %}" class="quick-action">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Education</span>
+                        </a>
+                        <a href="{% url 'articles:article_create' %}?category=education-research" class="quick-action">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>New Education</span>
+                        </a>
+                        
+                        <!-- Technology Actions -->
+                        <a href="{% url 'dashboard:technology_list' %}" class="quick-action">
+                            <i class="fas fa-microchip"></i>
+                            <span>Technology</span>
+                        </a>
+                        <a href="{% url 'articles:article_create' %}?category=technology" class="quick-action">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>New Tech</span>
+                        </a>
+                        
+                        <!-- Business Actions -->
+                        <a href="{% url 'dashboard:business_list' %}" class="quick-action">
+                            <i class="fas fa-building"></i>
+                            <span>Business</span>
+                        </a>
+                        <a href="{% url 'articles:article_create' %}?category=business" class="quick-action">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>New Business</span>
+                        </a>
+                        
+                        <!-- Health Actions -->
+                        <a href="{% url 'dashboard:health_list' %}" class="quick-action">
+                            <i class="fas fa-heartbeat"></i>
+                            <span>Health</span>
+                        </a>
+                        <a href="{% url 'articles:article_create' %}?category=health" class="quick-action">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>New Health</span>
+                        </a>
+                        
+                        <!-- Agriculture Actions -->
+                        <a href="{% url 'dashboard:agriculture_list' %}" class="quick-action">
+                            <i class="fas fa-tractor"></i>
+                            <span>Agriculture</span>
+                        </a>
+                        <a href="{% url 'articles:article_create' %}?category=agriculture" class="quick-action">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>New Agriculture</span>
+                        </a>
+                        
+                        <!-- Careers Actions -->
+                        <a href="{% url 'dashboard:careers_list' %}" class="quick-action">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Careers</span>
+                        </a>
+                        <a href="{% url 'articles:article_create' %}?category=careers" class="quick-action">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>New Career</span>
                         </a>
                         
                         <!-- Opinion Actions -->
@@ -1147,7 +1299,169 @@
                 </div>
 
                 <!-- ========================================
-                PENDING OPINION ARTICLES - PUBLISH/UNPUBLISH
+                PENDING EDUCATION & RESEARCH ARTICLES
+                ======================================== -->
+                {% if pending_education_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-graduation-cap" style="color: #6f42c1;"></i> Pending Education & Research Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_education_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:education_research_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:education_research_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Education article?')">
+                                        <i class="fas fa-check"></i> Publish
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING TECHNOLOGY ARTICLES
+                ======================================== -->
+                {% if pending_technology_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-microchip" style="color: #0d6efd;"></i> Pending Technology Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_technology_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:technology_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:technology_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Technology article?')">
+                                        <i class="fas fa-check"></i> Publish
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING BUSINESS & DIRECTORY ARTICLES
+                ======================================== -->
+                {% if pending_business_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-building" style="color: var(--admin-gold);"></i> Pending Business & Directory Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_business_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:business_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:business_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Business article?')">
+                                        <i class="fas fa-check"></i> Publish
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING HEALTH ARTICLES
+                ======================================== -->
+                {% if pending_health_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-heartbeat" style="color: #dc3545;"></i> Pending Health Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_health_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:health_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:health_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Health article?')">
+                                        <i class="fas fa-check"></i> Publish
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING AGRICULTURE ARTICLES
+                ======================================== -->
+                {% if pending_agriculture_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-tractor" style="color: #28a745;"></i> Pending Agriculture Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_agriculture_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:agriculture_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:agriculture_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Agriculture article?')">
+                                        <i class="fas fa-check"></i> Publish
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING CAREERS ARTICLES
+                ======================================== -->
+                {% if pending_careers_articles %}
+                <div class="recent-items-card">
+                    <h5><i class="fas fa-briefcase" style="color: #20c997;"></i> Pending Careers Articles</h5>
+                    <div class="item-list">
+                        {% for article in pending_careers_articles %}
+                        <div class="item">
+                            <span class="title">
+                                <a href="{% url 'dashboard:careers_edit' article.id %}">{{ article.title|truncatewords:8 }}</a>
+                                <span class="text-muted ms-2">by {{ article.author.get_full_name|default:article.author.username }}</span>
+                            </span>
+                            <div>
+                                <span class="status-badge pending">Pending</span>
+                                <span class="meta ms-2">
+                                    <a href="{% url 'dashboard:careers_publish' article.id %}" class="btn-publish" onclick="return confirm('Publish this Careers article?')">
+                                        <i class="fas fa-check"></i> Publish
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ========================================
+                PENDING OPINION ARTICLES
                 ======================================== -->
                 {% if pending_opinion_articles %}
                 <div class="recent-items-card">
@@ -1174,11 +1488,11 @@
                 {% endif %}
 
                 <!-- ========================================
-                PENDING ENVIRONMENT ARTICLES - PUBLISH/UNPUBLISH
+                PENDING ENVIRONMENT ARTICLES
                 ======================================== -->
                 {% if pending_environment_articles %}
                 <div class="recent-items-card">
-                    <h5><i class="fas fa-leaf" style="color: #28a745;"></i> Pending Environment Articles</h5>
+                    <h5><i class="fas fa-leaf" style="color: #198754;"></i> Pending Environment Articles</h5>
                     <div class="item-list">
                         {% for article in pending_environment_articles %}
                         <div class="item">
@@ -1201,7 +1515,7 @@
                 {% endif %}
 
                 <!-- ========================================
-                PENDING SOCIETY ARTICLES - PUBLISH/UNPUBLISH
+                PENDING SOCIETY ARTICLES
                 ======================================== -->
                 {% if pending_society_articles %}
                 <div class="recent-items-card">
@@ -1531,6 +1845,42 @@
                         <div class="stat-row">
                             <span>Pending Review</span>
                             <span class="stat-value">{{ pending_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Education & Research</span>
+                            <span class="stat-value">{{ education_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Technology</span>
+                            <span class="stat-value">{{ technology_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Business & Directory</span>
+                            <span class="stat-value">{{ business_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Health</span>
+                            <span class="stat-value">{{ health_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Agriculture</span>
+                            <span class="stat-value">{{ agriculture_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Careers</span>
+                            <span class="stat-value">{{ careers_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Opinion</span>
+                            <span class="stat-value">{{ opinion_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Environment</span>
+                            <span class="stat-value">{{ environment_articles|default:0 }}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Society</span>
+                            <span class="stat-value">{{ society_articles|default:0 }}</span>
                         </div>
                         <div class="stat-row">
                             <span>Total Users</span>

@@ -391,6 +391,318 @@ def author_articles(request, author_id):
 
 
 # ============================================================
+# SECTION VIEWS (For Main Navigation Links)
+# ============================================================
+
+def education_research(request):
+    """Education & Research section"""
+    articles = Article.objects.filter(
+        Q(category__name__icontains='education') |
+        Q(category__name__icontains='research'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    # Get featured article
+    featured_article = articles.filter(is_featured=True).first()
+    
+    # Pagination
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Education & Research',
+        'section_slug': 'education-research',
+        'page_title': 'Education & Research - The Egerton Avenue',
+        'article_count': Article.objects.filter(
+            Q(category__name__icontains='education') |
+            Q(category__name__icontains='research'),
+            status='published'
+        ).count(),
+        'section_icon': 'fas fa-graduation-cap',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+def technology(request):
+    """Technology section"""
+    articles = Article.objects.filter(
+        category__name__icontains='technology',
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Technology',
+        'section_slug': 'technology',
+        'page_title': 'Technology - The Egerton Avenue',
+        'article_count': Article.objects.filter(category__name__icontains='technology', status='published').count(),
+        'section_icon': 'fas fa-microchip',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+def business_directory(request):
+    """Business & Directory section"""
+    articles = Article.objects.filter(
+        Q(category__name__icontains='business') |
+        Q(category__name__icontains='directory'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Business & Directory',
+        'section_slug': 'business-directory',
+        'page_title': 'Business & Directory - The Egerton Avenue',
+        'article_count': Article.objects.filter(
+            Q(category__name__icontains='business') |
+            Q(category__name__icontains='directory'),
+            status='published'
+        ).count(),
+        'section_icon': 'fas fa-building',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+def health(request):
+    """Health section"""
+    articles = Article.objects.filter(
+        category__name__icontains='health',
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Health',
+        'section_slug': 'health',
+        'page_title': 'Health - The Egerton Avenue',
+        'article_count': Article.objects.filter(category__name__icontains='health', status='published').count(),
+        'section_icon': 'fas fa-heartbeat',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+def agriculture(request):
+    """Agriculture section"""
+    articles = Article.objects.filter(
+        Q(category__name__icontains='agriculture') |
+        Q(category__name__icontains='farming'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Agriculture',
+        'section_slug': 'agriculture',
+        'page_title': 'Agriculture - The Egerton Avenue',
+        'article_count': Article.objects.filter(
+            Q(category__name__icontains='agriculture') |
+            Q(category__name__icontains='farming'),
+            status='published'
+        ).count(),
+        'section_icon': 'fas fa-tractor',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+def environment(request):
+    """Environment section"""
+    articles = Article.objects.filter(
+        Q(category__name__icontains='environment') |
+        Q(category__name__icontains='climate'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Environment',
+        'section_slug': 'environment',
+        'page_title': 'Environment - The Egerton Avenue',
+        'article_count': Article.objects.filter(
+            Q(category__name__icontains='environment') |
+            Q(category__name__icontains='climate'),
+            status='published'
+        ).count(),
+        'section_icon': 'fas fa-leaf',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+def careers(request):
+    """Careers section"""
+    articles = Article.objects.filter(
+        Q(category__name__icontains='career') |
+        Q(category__name__icontains='jobs') |
+        Q(category__name__icontains='employment'),
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Careers',
+        'section_slug': 'careers',
+        'page_title': 'Careers - The Egerton Avenue',
+        'article_count': Article.objects.filter(
+            Q(category__name__icontains='career') |
+            Q(category__name__icontains='jobs') |
+            Q(category__name__icontains='employment'),
+            status='published'
+        ).count(),
+        'section_icon': 'fas fa-briefcase',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+def opinion(request):
+    """Opinion section"""
+    articles = Article.objects.filter(
+        category__name__icontains='opinion',
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Opinion',
+        'section_slug': 'opinion',
+        'page_title': 'Opinion - The Egerton Avenue',
+        'article_count': Article.objects.filter(category__name__icontains='opinion', status='published').count(),
+        'section_icon': 'fas fa-pen-fancy',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+def society(request):
+    """Society section"""
+    articles = Article.objects.filter(
+        category__name__icontains='society',
+        status='published',
+        published_at__lte=timezone.now()
+    ).select_related('author', 'category').prefetch_related('tags').order_by('-published_at', '-created_at')
+    
+    featured_article = articles.filter(is_featured=True).first()
+    
+    paginator = Paginator(articles, 12)
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+    
+    context = {
+        'articles': articles,
+        'featured_article': featured_article,
+        'category': 'Society',
+        'section_slug': 'society',
+        'page_title': 'Society - The Egerton Avenue',
+        'article_count': Article.objects.filter(category__name__icontains='society', status='published').count(),
+        'section_icon': 'fas fa-users',
+    }
+    return render(request, 'articles/section_list.html', context)
+
+
+# ============================================================
 # DASHBOARD / AUTHOR VIEWS
 # ============================================================
 
@@ -1157,7 +1469,7 @@ def send_moderation_notification(article, action):
 
 
 # ============================================================
-# NEW: ADMIN / EDITOR MODERATION VIEWS
+# ADMIN / EDITOR MODERATION VIEWS
 # ============================================================
 
 @login_required

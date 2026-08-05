@@ -11,27 +11,36 @@ import json
 
 from .models import DashboardWidget, DashboardPreference, DashboardMetric, QuickAction, DashboardActivityFeed
 from .forms import DashboardWidgetForm, DashboardPreferenceForm
+
 from apps.articles.models import Article, ArticleVersion
 from apps.articles.forms import ArticleForm
+
 from apps.categories.models import Category
 from apps.categories.forms import CategoryForm
+
 from apps.tags.models import Tag
 from apps.tags.forms import TagForm
+
 from apps.comments.models import Comment
 from apps.comments.forms import CommentModerationForm
+
 from apps.accounts.models import User, UserActivityLog
 from apps.accounts.forms import UserCreateForm, UserEditForm
+
 from apps.advertisements.models import Advertisement, AdvertisementView, AdvertisementClick
 from apps.advertisements.forms import AdvertisementForm
+
 from apps.media_library.models import MediaFile
 from apps.media_library.forms import MediaFileForm
+
 from apps.newsletter.models import Subscriber, Newsletter
 from apps.newsletter.forms import NewsletterForm
+
 from apps.contacts.models import ContactMessage
 from apps.contacts.forms import ContactReplyForm
+
 from apps.settings_manager.models import SiteSetting
 from apps.settings_manager.forms import GeneralSettingsForm, EmailSettingsForm, SEOSettingsForm
-
 
 # ============================================
 # USER DASHBOARD - MAIN
@@ -570,6 +579,110 @@ def admin_dashboard(request):
     society_published = Article.objects.filter(category__slug='society', status='published').count()
     
     # ========================================
+    # EDUCATION & RESEARCH ARTICLES
+    # ========================================
+    education_articles = Article.objects.filter(
+        Q(category__slug='education') | 
+        Q(category__slug='research') |
+        Q(category__name__icontains='education') |
+        Q(category__name__icontains='research')
+    ).count()
+    
+    education_published = Article.objects.filter(
+        Q(category__slug='education') | 
+        Q(category__slug='research') |
+        Q(category__name__icontains='education') |
+        Q(category__name__icontains='research'),
+        status='published'
+    ).count()
+    
+    # ========================================
+    # TECHNOLOGY ARTICLES
+    # ========================================
+    technology_articles = Article.objects.filter(
+        Q(category__slug='technology') |
+        Q(category__name__icontains='technology')
+    ).count()
+    
+    technology_published = Article.objects.filter(
+        Q(category__slug='technology') |
+        Q(category__name__icontains='technology'),
+        status='published'
+    ).count()
+    
+    # ========================================
+    # BUSINESS & DIRECTORY ARTICLES
+    # ========================================
+    business_articles = Article.objects.filter(
+        Q(category__slug='business') | 
+        Q(category__slug='directory') |
+        Q(category__name__icontains='business') |
+        Q(category__name__icontains='directory')
+    ).count()
+    
+    business_published = Article.objects.filter(
+        Q(category__slug='business') | 
+        Q(category__slug='directory') |
+        Q(category__name__icontains='business') |
+        Q(category__name__icontains='directory'),
+        status='published'
+    ).count()
+    
+    # ========================================
+    # HEALTH ARTICLES
+    # ========================================
+    health_articles = Article.objects.filter(
+        Q(category__slug='health') |
+        Q(category__name__icontains='health')
+    ).count()
+    
+    health_published = Article.objects.filter(
+        Q(category__slug='health') |
+        Q(category__name__icontains='health'),
+        status='published'
+    ).count()
+    
+    # ========================================
+    # AGRICULTURE ARTICLES
+    # ========================================
+    agriculture_articles = Article.objects.filter(
+        Q(category__slug='agriculture') |
+        Q(category__slug='farming') |
+        Q(category__name__icontains='agriculture') |
+        Q(category__name__icontains='farming')
+    ).count()
+    
+    agriculture_published = Article.objects.filter(
+        Q(category__slug='agriculture') |
+        Q(category__slug='farming') |
+        Q(category__name__icontains='agriculture') |
+        Q(category__name__icontains='farming'),
+        status='published'
+    ).count()
+    
+    # ========================================
+    # CAREERS ARTICLES
+    # ========================================
+    careers_articles = Article.objects.filter(
+        Q(category__slug='careers') |
+        Q(category__slug='jobs') |
+        Q(category__slug='employment') |
+        Q(category__name__icontains='career') |
+        Q(category__name__icontains='jobs') |
+        Q(category__name__icontains='employment')
+    ).count()
+    
+    careers_published = Article.objects.filter(
+        Q(category__slug='careers') |
+        Q(category__slug='jobs') |
+        Q(category__slug='employment') |
+        Q(category__name__icontains='career') |
+        Q(category__name__icontains='jobs') |
+        Q(category__name__icontains='employment'),
+        status='published'
+    ).count()
+    
+    # ========================================
     # PHOTOS & VIDEOS - UPDATED STATISTICS
     # ========================================
     
@@ -677,6 +790,55 @@ def admin_dashboard(request):
         'videos': pending_videos_count,
     }
     
+    # ========================================
+    # PENDING ARTICLES FOR EACH SECTION
+    # ========================================
+    pending_education_articles = Article.objects.filter(
+        Q(category__slug='education') | 
+        Q(category__slug='research') |
+        Q(category__name__icontains='education') |
+        Q(category__name__icontains='research'),
+        status='pending'
+    ).order_by('-created_at')[:10]
+    
+    pending_technology_articles = Article.objects.filter(
+        Q(category__slug='technology') |
+        Q(category__name__icontains='technology'),
+        status='pending'
+    ).order_by('-created_at')[:10]
+    
+    pending_business_articles = Article.objects.filter(
+        Q(category__slug='business') | 
+        Q(category__slug='directory') |
+        Q(category__name__icontains='business') |
+        Q(category__name__icontains='directory'),
+        status='pending'
+    ).order_by('-created_at')[:10]
+    
+    pending_health_articles = Article.objects.filter(
+        Q(category__slug='health') |
+        Q(category__name__icontains='health'),
+        status='pending'
+    ).order_by('-created_at')[:10]
+    
+    pending_agriculture_articles = Article.objects.filter(
+        Q(category__slug='agriculture') |
+        Q(category__slug='farming') |
+        Q(category__name__icontains='agriculture') |
+        Q(category__name__icontains='farming'),
+        status='pending'
+    ).order_by('-created_at')[:10]
+    
+    pending_careers_articles = Article.objects.filter(
+        Q(category__slug='careers') |
+        Q(category__slug='jobs') |
+        Q(category__slug='employment') |
+        Q(category__name__icontains='career') |
+        Q(category__name__icontains='jobs') |
+        Q(category__name__icontains='employment'),
+        status='pending'
+    ).order_by('-created_at')[:10]
+    
     # Chart data - Last 30 days
     chart_data = get_admin_chart_data()
     
@@ -703,6 +865,48 @@ def admin_dashboard(request):
         # Society stats
         'society_articles': society_articles,
         'society_published': society_published,
+        
+        # ========================================
+        # EDUCATION & RESEARCH
+        # ========================================
+        'education_articles': education_articles,
+        'education_published': education_published,
+        'pending_education_articles': pending_education_articles,
+        
+        # ========================================
+        # TECHNOLOGY
+        # ========================================
+        'technology_articles': technology_articles,
+        'technology_published': technology_published,
+        'pending_technology_articles': pending_technology_articles,
+        
+        # ========================================
+        # BUSINESS & DIRECTORY
+        # ========================================
+        'business_articles': business_articles,
+        'business_published': business_published,
+        'pending_business_articles': pending_business_articles,
+        
+        # ========================================
+        # HEALTH
+        # ========================================
+        'health_articles': health_articles,
+        'health_published': health_published,
+        'pending_health_articles': pending_health_articles,
+        
+        # ========================================
+        # AGRICULTURE
+        # ========================================
+        'agriculture_articles': agriculture_articles,
+        'agriculture_published': agriculture_published,
+        'pending_agriculture_articles': pending_agriculture_articles,
+        
+        # ========================================
+        # CAREERS
+        # ========================================
+        'careers_articles': careers_articles,
+        'careers_published': careers_published,
+        'pending_careers_articles': pending_careers_articles,
         
         # ========================================
         # PHOTOS STATS - UPDATED
@@ -793,7 +997,6 @@ def admin_dashboard(request):
     }
     
     return render(request, 'dashboard/admin_dashboard.html', context)
-
 
 def get_admin_chart_data():
     """Get chart data for the last 30 days"""
@@ -3788,3 +3991,606 @@ def reject_article(request, article_id):
     """Proxy view for article rejection"""
     from apps.articles.views import reject_article as articles_reject
     return articles_reject(request, article_id)
+
+
+# ============================================
+# ADMIN - EDUCATION & RESEARCH
+# ============================================
+
+def admin_education_research(request):
+    """List all Education & Research articles"""
+    from apps.articles.models import Article
+    from django.db.models import Q
+    
+    articles = Article.objects.filter(
+        Q(category__name__icontains='education') | 
+        Q(category__name__icontains='research')
+    ).select_related('author', 'category').order_by('-created_at')
+    
+    context = {
+        'articles': articles,
+        'section': 'Education & Research',
+        'section_slug': 'education-research',
+        'page_title': 'Education & Research - Dashboard',
+    }
+    return render(request, 'articles/article_list.html', context)
+
+
+def admin_education_research_edit(request, article_id):
+    """Edit Education & Research article"""
+    from apps.articles.models import Article
+    from apps.articles.forms import ArticleForm
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.updated_at = timezone.now()
+            article.save()
+            form.save_m2m()
+            messages.success(request, f'Article "{article.title}" updated successfully!')
+            return redirect('dashboard:education_research_list')
+    else:
+        form = ArticleForm(instance=article)
+    
+    context = {
+        'form': form,
+        'article': article,
+        'section': 'Education & Research',
+        'section_slug': 'education-research',
+        'action': 'edit',
+        'page_title': f'Edit {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_create.html', context)
+
+
+def admin_education_research_delete(request, article_id):
+    """Delete Education & Research article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        title = article.title
+        article.delete()
+        messages.success(request, f'Article "{title}" deleted successfully!')
+        return redirect('dashboard:education_research_list')
+    
+    context = {
+        'article': article,
+        'section': 'Education & Research',
+        'page_title': f'Delete {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_delete.html', context)
+
+
+def admin_education_research_publish(request, article_id):
+    """Publish Education & Research article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.status = 'published'
+    article.published_at = timezone.now()
+    article.save()
+    messages.success(request, f'Article "{article.title}" published successfully!')
+    return redirect('dashboard:education_research_list')
+
+
+def admin_education_research_feature(request, article_id):
+    """Feature/Unfeature Education & Research article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.is_featured = not article.is_featured
+    article.save()
+    status = 'featured' if article.is_featured else 'unfeatured'
+    messages.success(request, f'Article "{article.title}" {status} successfully!')
+    return redirect('dashboard:education_research_list')
+
+
+# ============================================
+# ADMIN - TECHNOLOGY
+# ============================================
+
+def admin_technology(request):
+    """List all Technology articles"""
+    from apps.articles.models import Article
+    
+    articles = Article.objects.filter(
+        category__name__icontains='technology'
+    ).select_related('author', 'category').order_by('-created_at')
+    
+    context = {
+        'articles': articles,
+        'section': 'Technology',
+        'section_slug': 'technology',
+        'page_title': 'Technology - Dashboard',
+    }
+    return render(request, 'articles/article_list.html', context)
+
+
+def admin_technology_edit(request, article_id):
+    """Edit Technology article"""
+    from apps.articles.models import Article
+    from apps.articles.forms import ArticleForm
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.updated_at = timezone.now()
+            article.save()
+            form.save_m2m()
+            messages.success(request, f'Article "{article.title}" updated successfully!')
+            return redirect('dashboard:technology_list')
+    else:
+        form = ArticleForm(instance=article)
+    
+    context = {
+        'form': form,
+        'article': article,
+        'section': 'Technology',
+        'section_slug': 'technology',
+        'action': 'edit',
+        'page_title': f'Edit {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_create.html', context)
+
+
+def admin_technology_delete(request, article_id):
+    """Delete Technology article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        title = article.title
+        article.delete()
+        messages.success(request, f'Article "{title}" deleted successfully!')
+        return redirect('dashboard:technology_list')
+    
+    context = {
+        'article': article,
+        'section': 'Technology',
+        'page_title': f'Delete {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_delete.html', context)
+
+
+def admin_technology_publish(request, article_id):
+    """Publish Technology article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.status = 'published'
+    article.published_at = timezone.now()
+    article.save()
+    messages.success(request, f'Article "{article.title}" published successfully!')
+    return redirect('dashboard:technology_list')
+
+
+def admin_technology_feature(request, article_id):
+    """Feature/Unfeature Technology article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.is_featured = not article.is_featured
+    article.save()
+    status = 'featured' if article.is_featured else 'unfeatured'
+    messages.success(request, f'Article "{article.title}" {status} successfully!')
+    return redirect('dashboard:technology_list')
+
+
+# ============================================
+# ADMIN - BUSINESS & DIRECTORY
+# ============================================
+
+def admin_business(request):
+    """List all Business & Directory articles"""
+    from apps.articles.models import Article
+    from django.db.models import Q
+    
+    articles = Article.objects.filter(
+        Q(category__name__icontains='business') | 
+        Q(category__name__icontains='directory')
+    ).select_related('author', 'category').order_by('-created_at')
+    
+    context = {
+        'articles': articles,
+        'section': 'Business & Directory',
+        'section_slug': 'business-directory',
+        'page_title': 'Business & Directory - Dashboard',
+    }
+    return render(request, 'articles/article_list.html', context)
+
+
+def admin_business_edit(request, article_id):
+    """Edit Business & Directory article"""
+    from apps.articles.models import Article
+    from apps.articles.forms import ArticleForm
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.updated_at = timezone.now()
+            article.save()
+            form.save_m2m()
+            messages.success(request, f'Article "{article.title}" updated successfully!')
+            return redirect('dashboard:business_list')
+    else:
+        form = ArticleForm(instance=article)
+    
+    context = {
+        'form': form,
+        'article': article,
+        'section': 'Business & Directory',
+        'section_slug': 'business-directory',
+        'action': 'edit',
+        'page_title': f'Edit {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_create.html', context)
+
+
+def admin_business_delete(request, article_id):
+    """Delete Business & Directory article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        title = article.title
+        article.delete()
+        messages.success(request, f'Article "{title}" deleted successfully!')
+        return redirect('dashboard:business_list')
+    
+    context = {
+        'article': article,
+        'section': 'Business & Directory',
+        'page_title': f'Delete {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_delete.html', context)
+
+
+def admin_business_publish(request, article_id):
+    """Publish Business & Directory article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.status = 'published'
+    article.published_at = timezone.now()
+    article.save()
+    messages.success(request, f'Article "{article.title}" published successfully!')
+    return redirect('dashboard:business_list')
+
+
+def admin_business_feature(request, article_id):
+    """Feature/Unfeature Business & Directory article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.is_featured = not article.is_featured
+    article.save()
+    status = 'featured' if article.is_featured else 'unfeatured'
+    messages.success(request, f'Article "{article.title}" {status} successfully!')
+    return redirect('dashboard:business_list')
+
+
+# ============================================
+# ADMIN - HEALTH
+# ============================================
+
+def admin_health(request):
+    """List all Health articles"""
+    from apps.articles.models import Article
+    
+    articles = Article.objects.filter(
+        category__name__icontains='health'
+    ).select_related('author', 'category').order_by('-created_at')
+    
+    context = {
+        'articles': articles,
+        'section': 'Health',
+        'section_slug': 'health',
+        'page_title': 'Health - Dashboard',
+    }
+    return render(request, 'articles/article_list.html', context)
+
+
+def admin_health_edit(request, article_id):
+    """Edit Health article"""
+    from apps.articles.models import Article
+    from apps.articles.forms import ArticleForm
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.updated_at = timezone.now()
+            article.save()
+            form.save_m2m()
+            messages.success(request, f'Article "{article.title}" updated successfully!')
+            return redirect('dashboard:health_list')
+    else:
+        form = ArticleForm(instance=article)
+    
+    context = {
+        'form': form,
+        'article': article,
+        'section': 'Health',
+        'section_slug': 'health',
+        'action': 'edit',
+        'page_title': f'Edit {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_create.html', context)
+
+
+def admin_health_delete(request, article_id):
+    """Delete Health article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        title = article.title
+        article.delete()
+        messages.success(request, f'Article "{title}" deleted successfully!')
+        return redirect('dashboard:health_list')
+    
+    context = {
+        'article': article,
+        'section': 'Health',
+        'page_title': f'Delete {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_delete.html', context)
+
+
+def admin_health_publish(request, article_id):
+    """Publish Health article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.status = 'published'
+    article.published_at = timezone.now()
+    article.save()
+    messages.success(request, f'Article "{article.title}" published successfully!')
+    return redirect('dashboard:health_list')
+
+
+def admin_health_feature(request, article_id):
+    """Feature/Unfeature Health article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.is_featured = not article.is_featured
+    article.save()
+    status = 'featured' if article.is_featured else 'unfeatured'
+    messages.success(request, f'Article "{article.title}" {status} successfully!')
+    return redirect('dashboard:health_list')
+
+
+# ============================================
+# ADMIN - AGRICULTURE
+# ============================================
+
+def admin_agriculture(request):
+    """List all Agriculture articles"""
+    from apps.articles.models import Article
+    from django.db.models import Q
+    
+    articles = Article.objects.filter(
+        Q(category__name__icontains='agriculture') | 
+        Q(category__name__icontains='farming')
+    ).select_related('author', 'category').order_by('-created_at')
+    
+    context = {
+        'articles': articles,
+        'section': 'Agriculture',
+        'section_slug': 'agriculture',
+        'page_title': 'Agriculture - Dashboard',
+    }
+    return render(request, 'articles/article_list.html', context)
+
+
+def admin_agriculture_edit(request, article_id):
+    """Edit Agriculture article"""
+    from apps.articles.models import Article
+    from apps.articles.forms import ArticleForm
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.updated_at = timezone.now()
+            article.save()
+            form.save_m2m()
+            messages.success(request, f'Article "{article.title}" updated successfully!')
+            return redirect('dashboard:agriculture_list')
+    else:
+        form = ArticleForm(instance=article)
+    
+    context = {
+        'form': form,
+        'article': article,
+        'section': 'Agriculture',
+        'section_slug': 'agriculture',
+        'action': 'edit',
+        'page_title': f'Edit {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_create.html', context)
+
+
+def admin_agriculture_delete(request, article_id):
+    """Delete Agriculture article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        title = article.title
+        article.delete()
+        messages.success(request, f'Article "{title}" deleted successfully!')
+        return redirect('dashboard:agriculture_list')
+    
+    context = {
+        'article': article,
+        'section': 'Agriculture',
+        'page_title': f'Delete {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_delete.html', context)
+
+
+def admin_agriculture_publish(request, article_id):
+    """Publish Agriculture article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.status = 'published'
+    article.published_at = timezone.now()
+    article.save()
+    messages.success(request, f'Article "{article.title}" published successfully!')
+    return redirect('dashboard:agriculture_list')
+
+
+def admin_agriculture_feature(request, article_id):
+    """Feature/Unfeature Agriculture article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.is_featured = not article.is_featured
+    article.save()
+    status = 'featured' if article.is_featured else 'unfeatured'
+    messages.success(request, f'Article "{article.title}" {status} successfully!')
+    return redirect('dashboard:agriculture_list')
+
+
+# ============================================
+# ADMIN - CAREERS
+# ============================================
+
+def admin_careers(request):
+    """List all Careers articles"""
+    from apps.articles.models import Article
+    from django.db.models import Q
+    
+    articles = Article.objects.filter(
+        Q(category__name__icontains='career') | 
+        Q(category__name__icontains='jobs') |
+        Q(category__name__icontains='employment')
+    ).select_related('author', 'category').order_by('-created_at')
+    
+    context = {
+        'articles': articles,
+        'section': 'Careers',
+        'section_slug': 'careers',
+        'page_title': 'Careers - Dashboard',
+    }
+    return render(request, 'articles/article_list.html', context)
+
+
+def admin_careers_edit(request, article_id):
+    """Edit Careers article"""
+    from apps.articles.models import Article
+    from apps.articles.forms import ArticleForm
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.updated_at = timezone.now()
+            article.save()
+            form.save_m2m()
+            messages.success(request, f'Article "{article.title}" updated successfully!')
+            return redirect('dashboard:careers_list')
+    else:
+        form = ArticleForm(instance=article)
+    
+    context = {
+        'form': form,
+        'article': article,
+        'section': 'Careers',
+        'section_slug': 'careers',
+        'action': 'edit',
+        'page_title': f'Edit {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_create.html', context)
+
+
+def admin_careers_delete(request, article_id):
+    """Delete Careers article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        title = article.title
+        article.delete()
+        messages.success(request, f'Article "{title}" deleted successfully!')
+        return redirect('dashboard:careers_list')
+    
+    context = {
+        'article': article,
+        'section': 'Careers',
+        'page_title': f'Delete {article.title} - Dashboard',
+    }
+    return render(request, 'articles/article_delete.html', context)
+
+
+def admin_careers_publish(request, article_id):
+    """Publish Careers article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.status = 'published'
+    article.published_at = timezone.now()
+    article.save()
+    messages.success(request, f'Article "{article.title}" published successfully!')
+    return redirect('dashboard:careers_list')
+
+
+def admin_careers_feature(request, article_id):
+    """Feature/Unfeature Careers article"""
+    from apps.articles.models import Article
+    from django.contrib import messages
+    
+    article = get_object_or_404(Article, id=article_id)
+    article.is_featured = not article.is_featured
+    article.save()
+    status = 'featured' if article.is_featured else 'unfeatured'
+    messages.success(request, f'Article "{article.title}" {status} successfully!')
+    return redirect('dashboard:careers_list')

@@ -1,7 +1,7 @@
 from django.urls import path, reverse
 from django.shortcuts import redirect
 from . import views
-from apps.articles import views as article_views  # Add this import
+from apps.articles import views as article_views
 
 app_name = 'dashboard'
 
@@ -13,7 +13,7 @@ urlpatterns = [
     path('admin/', views.admin_dashboard, name='admin_dashboard'),
     
     # ============================================
-    # ADMIN - ARTICLES
+    # ADMIN - ARTICLES (General)
     # ============================================
     path('admin/articles/', views.admin_articles, name='article_list'),
     path('admin/articles/create/', views.admin_article_create, name='article_create'),
@@ -25,10 +25,87 @@ urlpatterns = [
     
     # ============================================
     # ADMIN - ARTICLE MODERATION (Approve/Reject)
-    # Using article_views from articles app
     # ============================================
     path('admin/articles/<int:article_id>/approve/', article_views.approve_article, name='article_approve'),
     path('admin/articles/<int:article_id>/reject/', article_views.reject_article, name='article_reject'),
+    
+    # ============================================
+    # ADMIN - EDUCATION & RESEARCH
+    # ============================================
+    path('admin/education-research/', views.admin_education_research, name='education_research_list'),
+    path('admin/education-research/<int:article_id>/edit/', views.admin_education_research_edit, name='education_research_edit'),
+    path('admin/education-research/<int:article_id>/delete/', views.admin_education_research_delete, name='education_research_delete'),
+    path('admin/education-research/<int:article_id>/publish/', views.admin_education_research_publish, name='education_research_publish'),
+    path('admin/education-research/<int:article_id>/feature/', views.admin_education_research_feature, name='education_research_feature'),
+    
+    # ============================================
+    # ADMIN - TECHNOLOGY
+    # ============================================
+    path('admin/technology/', views.admin_technology, name='technology_list'),
+    path('admin/technology/<int:article_id>/edit/', views.admin_technology_edit, name='technology_edit'),
+    path('admin/technology/<int:article_id>/delete/', views.admin_technology_delete, name='technology_delete'),
+    path('admin/technology/<int:article_id>/publish/', views.admin_technology_publish, name='technology_publish'),
+    path('admin/technology/<int:article_id>/feature/', views.admin_technology_feature, name='technology_feature'),
+    
+    # ============================================
+    # ADMIN - BUSINESS & DIRECTORY
+    # ============================================
+    path('admin/business/', views.admin_business, name='business_list'),
+    path('admin/business/<int:article_id>/edit/', views.admin_business_edit, name='business_edit'),
+    path('admin/business/<int:article_id>/delete/', views.admin_business_delete, name='business_delete'),
+    path('admin/business/<int:article_id>/publish/', views.admin_business_publish, name='business_publish'),
+    path('admin/business/<int:article_id>/feature/', views.admin_business_feature, name='business_feature'),
+    
+    # ============================================
+    # ADMIN - HEALTH
+    # ============================================
+    path('admin/health/', views.admin_health, name='health_list'),
+    path('admin/health/<int:article_id>/edit/', views.admin_health_edit, name='health_edit'),
+    path('admin/health/<int:article_id>/delete/', views.admin_health_delete, name='health_delete'),
+    path('admin/health/<int:article_id>/publish/', views.admin_health_publish, name='health_publish'),
+    path('admin/health/<int:article_id>/feature/', views.admin_health_feature, name='health_feature'),
+    
+    # ============================================
+    # ADMIN - AGRICULTURE
+    # ============================================
+    path('admin/agriculture/', views.admin_agriculture, name='agriculture_list'),
+    path('admin/agriculture/<int:article_id>/edit/', views.admin_agriculture_edit, name='agriculture_edit'),
+    path('admin/agriculture/<int:article_id>/delete/', views.admin_agriculture_delete, name='agriculture_delete'),
+    path('admin/agriculture/<int:article_id>/publish/', views.admin_agriculture_publish, name='agriculture_publish'),
+    path('admin/agriculture/<int:article_id>/feature/', views.admin_agriculture_feature, name='agriculture_feature'),
+    
+    # ============================================
+    # ADMIN - CAREERS
+    # ============================================
+    path('admin/careers/', views.admin_careers, name='careers_list'),
+    path('admin/careers/<int:article_id>/edit/', views.admin_careers_edit, name='careers_edit'),
+    path('admin/careers/<int:article_id>/delete/', views.admin_careers_delete, name='careers_delete'),
+    path('admin/careers/<int:article_id>/publish/', views.admin_careers_publish, name='careers_publish'),
+    path('admin/careers/<int:article_id>/feature/', views.admin_careers_feature, name='careers_feature'),
+    
+    # ============================================
+    # ADMIN - OPINION
+    # ============================================
+    path('admin/opinion/', views.admin_opinion, name='opinion_list'),
+    path('admin/opinion/<int:article_id>/edit/', views.admin_opinion_edit, name='opinion_edit'),
+    path('admin/opinion/<int:article_id>/delete/', views.admin_opinion_delete, name='opinion_delete'),
+    path('admin/opinion/<int:article_id>/publish/', views.admin_opinion_publish, name='opinion_publish'),
+    
+    # ============================================
+    # ADMIN - ENVIRONMENT
+    # ============================================
+    path('admin/environment/', views.admin_environment, name='environment_list'),
+    path('admin/environment/<int:article_id>/edit/', views.admin_environment_edit, name='environment_edit'),
+    path('admin/environment/<int:article_id>/delete/', views.admin_environment_delete, name='environment_delete'),
+    path('admin/environment/<int:article_id>/publish/', views.admin_environment_publish, name='environment_publish'),
+    
+    # ============================================
+    # ADMIN - SOCIETY
+    # ============================================
+    path('admin/society/', views.admin_society, name='society_list'),
+    path('admin/society/<int:article_id>/edit/', views.admin_society_edit, name='society_edit'),
+    path('admin/society/<int:article_id>/delete/', views.admin_society_delete, name='society_delete'),
+    path('admin/society/<int:article_id>/publish/', views.admin_society_publish, name='society_publish'),
     
     # ============================================
     # ADMIN - CATEGORIES
@@ -70,7 +147,7 @@ urlpatterns = [
     path('admin/comments/export/', views.admin_comment_export, name='comment_export'),
     
     # ============================================
-    # ADMIN - ADVERTISEMENTS (COMPLETE ADSBOARD)
+    # ADMIN - ADVERTISEMENTS (ADSBOARD)
     # ============================================
     path('admin/ads/', views.admin_ads, name='ad_list'),
     path('admin/ads/create/', views.admin_ad_create, name='ad_create'),
@@ -92,6 +169,22 @@ urlpatterns = [
     path('admin/ads/schedule/', views.admin_ad_schedule, name='ad_schedule'),
     path('admin/ads/approvals/', views.admin_ad_approvals, name='ad_approvals'),
     path('admin/ads/reports/', views.admin_ad_reports, name='ad_reports'),
+    
+    # ============================================
+    # ADMIN - PHOTOS
+    # ============================================
+    path('admin/photos/', views.admin_photos, name='photos_list'),
+    path('admin/photos/<int:photo_id>/edit/', views.admin_photos_edit, name='photos_edit'),
+    path('admin/photos/<int:photo_id>/delete/', views.admin_photos_delete, name='photos_delete'),
+    path('admin/photos/<int:photo_id>/feature/', views.admin_photos_feature, name='photos_feature'),
+    
+    # ============================================
+    # ADMIN - VIDEOS
+    # ============================================
+    path('admin/videos/', views.admin_videos, name='video_list'),
+    path('admin/videos/<int:video_id>/edit/', views.admin_video_edit, name='video_edit'),
+    path('admin/videos/<int:video_id>/delete/', views.admin_video_delete, name='video_delete'),
+    path('admin/videos/<int:video_id>/feature/', views.admin_video_feature, name='video_feature'),
     
     # ============================================
     # ADMIN - CONTACTS
@@ -140,50 +233,6 @@ urlpatterns = [
     path('admin/settings/', views.admin_settings, name='settings'),
     path('admin/settings/update/', views.admin_settings_update, name='settings_update'),
     path('admin/settings/ajax/', views.admin_settings_ajax, name='settings_ajax'),
-    
-    # ============================================
-    # ADMIN - OPINION (Dashboard consolidated view)
-    # ============================================
-    path('admin/opinion/', views.admin_opinion, name='opinion_list'),
-    path('admin/opinion/<int:article_id>/edit/', views.admin_opinion_edit, name='opinion_edit'),
-    path('admin/opinion/<int:article_id>/delete/', views.admin_opinion_delete, name='opinion_delete'),
-    path('admin/opinion/<int:article_id>/publish/', views.admin_opinion_publish, name='opinion_publish'),
-    
-    # ============================================
-    # ADMIN - ENVIRONMENT (Dashboard consolidated view)
-    # ============================================
-    path('admin/environment/', views.admin_environment, name='environment_list'),
-    path('admin/environment/<int:article_id>/edit/', views.admin_environment_edit, name='environment_edit'),
-    path('admin/environment/<int:article_id>/delete/', views.admin_environment_delete, name='environment_delete'),
-    path('admin/environment/<int:article_id>/publish/', views.admin_environment_publish, name='environment_publish'),
-    
-    # ============================================
-    # ADMIN - SOCIETY (Dashboard consolidated view)
-    # ============================================
-    path('admin/society/', views.admin_society, name='society_list'),
-    path('admin/society/<int:article_id>/edit/', views.admin_society_edit, name='society_edit'),
-    path('admin/society/<int:article_id>/delete/', views.admin_society_delete, name='society_delete'),
-    path('admin/society/<int:article_id>/publish/', views.admin_society_publish, name='society_publish'),
-    
-    # ============================================
-    # ADMIN - PHOTOS (Dashboard consolidated view)
-    # ============================================
-    path('admin/photos/', views.admin_photos, name='photos_list'),
-    path('admin/photos/<int:photo_id>/edit/', views.admin_photos_edit, name='photos_edit'),
-    path('admin/photos/<int:photo_id>/delete/', views.admin_photos_delete, name='photos_delete'),
-    path('admin/photos/<int:photo_id>/feature/', views.admin_photos_feature, name='photos_feature'),
-
-    # ============================================
-    # ADMIN - VIDEOS
-    # ============================================
-    path('admin/videos/', views.admin_videos, name='video_list'),
-    path('admin/videos/upload/', views.admin_video_upload, name='video_upload'),
-    path('admin/videos/<int:video_id>/edit/', views.admin_video_edit, name='video_edit'),
-    path('admin/videos/<int:video_id>/delete/', views.admin_video_delete, name='video_delete'),
-    path('admin/videos/<int:video_id>/feature/', views.admin_video_feature, name='video_feature'),
-    path('admin/videos/bulk-upload/', views.admin_video_bulk_upload, name='video_bulk_upload'),
-    path('admin/videos/bulk-delete/', views.admin_video_bulk_delete, name='video_bulk_delete'),
-    path('admin/videos/gallery/', views.admin_video_gallery, name='video_gallery'),
     
     # ============================================
     # ADMIN - ANALYTICS & REPORTS

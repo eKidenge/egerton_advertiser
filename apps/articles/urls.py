@@ -27,10 +27,36 @@ urlpatterns = [
     # Category view - MUST come before detail view to avoid conflict
     path('category/<slug:slug>/', views.category_view, name='category'),
     
-    # Dedicated section views (using categories template)
-    path('opinion/', views.opinion_view, name='opinion'),
-    path('environment/', views.environment_view, name='environment'),
-    path('society/', views.society_view, name='society'),
+    # ============================================================
+    # MAIN NAVIGATION SECTION VIEWS (All in one place)
+    # ============================================================
+    
+    # EDUCATION & RESEARCH
+    path('education-research/', views.education_research, name='education_research'),
+    
+    # TECHNOLOGY
+    path('technology/', views.technology, name='technology'),
+    
+    # BUSINESS & DIRECTORY
+    path('business-directory/', views.business_directory, name='business_directory'),
+    
+    # HEALTH
+    path('health/', views.health, name='health'),
+    
+    # AGRICULTURE
+    path('agriculture/', views.agriculture, name='agriculture'),
+    
+    # ENVIRONMENT
+    path('environment/', views.environment, name='environment'),
+    
+    # CAREERS
+    path('careers/', views.careers, name='careers'),
+    
+    # OPINION
+    path('opinion/', views.opinion, name='opinion'),
+    
+    # SOCIETY
+    path('society/', views.society, name='society'),
     
     # ============================================================
     # PHOTOS & VIDEO

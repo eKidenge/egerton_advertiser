@@ -1,20 +1,20 @@
 {% load static %}
 <footer class="main-footer">
     <div class="container">
-        <div class="row py-5">
-            <!-- Brand & Social -->
-            <div class="col-lg-4 col-md-6">
-                <div class="footer-brand">
-                    <img src="{% static 'images/logo3.png' %}" alt="The Egerton Avenue" class="footer-logo" height="50">
-                    <h5 class="footer-title">The Egerton Advertiser</h5>
-                    <p class="footer-motto">"Preserving Nature, Building Communities"</p>
-                    <p class="footer-description">
-                        Official Publication on Environment and Society. 
-                        Dedicated to covering climate action, sustainability, 
-                        conservation, and social development in Kenya and beyond.
-                    </p>
+        <!-- Main Footer Content -->
+        <div class="footer-grid">
+            <!-- Brand & About -->
+            <div class="footer-column footer-brand-col">
+                <div class="footer-logo-wrapper">
+                    <img src="{% static 'images/logo3.png' %}" alt="The Egerton Advertiser" class="footer-logo">
                 </div>
-                <div class="footer-social mt-3">
+                <!-- Remove duplicate title since it's already in the logo -->
+                <p class="footer-description">
+                    The Egerton Advertiser is a publication of Egerton Green Movement Network (EGMN) 
+                    based in Njoro, Egerton, Nakuru County, Kenya. As a news magazine dedicated towards 
+                    uniting and educating society, and empowering business ventures at grassroots level.
+                </p>
+                <div class="footer-social">
                     <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                     <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -24,52 +24,65 @@
                 </div>
             </div>
             
-            <!-- Quick Links - Matching Navigation -->
-            <div class="col-lg-2 col-md-6">
+            <!-- Explore -->
+            <div class="footer-column">
                 <h6 class="footer-heading">Explore</h6>
                 <ul class="footer-links">
                     <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="{% url 'articles:opinion' %}">Opinion</a></li>
+                    <li><a href="{% url 'articles:category' 'politics' %}">Politics</a></li>
                     <li><a href="{% url 'articles:environment' %}">Environment</a></li>
-                    <li><a href="{% url 'articles:society' %}">Society</a></li>
-                    <li><a href="{% url 'media_library:gallery' %}">Photos</a></li>
-                    <li><a href="{% url 'media_library:gallery' %}?type=video">Video</a></li>
+                    <li><a href="{% url 'articles:health' %}">Health</a></li>
+                    <li><a href="{% url 'articles:agriculture' %}">Agriculture</a></li>
                 </ul>
             </div>
             
-            <!-- More Links -->
-            <div class="col-lg-2 col-md-6">
-                <h6 class="footer-heading">More</h6>
+            <!-- Sections -->
+            <div class="footer-column">
+                <h6 class="footer-heading">Sections</h6>
+                <ul class="footer-links">
+                    <li><a href="{% url 'articles:business_directory' %}">Business</a></li>
+                    <li><a href="{% url 'articles:education_research' %}">Education</a></li>
+                    <li><a href="{% url 'articles:technology' %}">Technology</a></li>
+                    <li><a href="{% url 'articles:society' %}">Society</a></li>
+                    <li><a href="{% url 'articles:careers' %}">Careers</a></li>
+                    <li><a href="{% url 'articles:photos' %}">Photos</a></li>
+                </ul>
+            </div>
+            
+            <!-- Information -->
+            <div class="footer-column">
+                <h6 class="footer-heading">Information</h6>
                 <ul class="footer-links">
                     <li><a href="{% url 'about' %}">About Us</a></li>
                     <li><a href="{% url 'contacts:contact' %}">Contact Us</a></li>
                     <li><a href="{% url 'advertisements:create' %}">Advertise</a></li>
-                    <li><a href="{% url 'accounts:login' %}">Login</a></li>
-                    <li><a href="{% url 'accounts:register' %}">Register</a></li>
+                    <li><a href="{% url 'media_library:library' %}">Media Library</a></li>
+                    <li><a href="{% url 'media_library:library' %}?type=image">Photo Gallery</a></li>
+                    <li><a href="{% url 'media_library:library' %}?type=video">Video Gallery</a></li>
                 </ul>
             </div>
             
             <!-- Newsletter & Contact -->
-            <div class="col-lg-4 col-md-6">
-                <h6 class="footer-heading">Subscribe to Our Newsletter</h6>
+            <div class="footer-column footer-newsletter-col">
+                <h6 class="footer-heading">Subscribe</h6>
                 <form action="{% url 'newsletter:subscribe' %}" method="post" class="footer-newsletter">
                     {% csrf_token %}
                     <div class="input-group">
                         <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
-                        <button class="btn btn-success" type="submit">
+                        <button class="btn-subscribe" type="submit">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
                 </form>
                 
-                <div class="footer-contact mt-3">
-                    <p><i class="fas fa-map-marker-alt"></i> Egerton, Kenya</p>
+                <div class="footer-contact">
+                    <p><i class="fas fa-map-marker-alt"></i> Njoro, Egerton, Nakuru, Kenya</p>
                     <p><i class="fas fa-phone"></i> +254 703 672 732</p>
-                    <p><i class="fas fa-envelope"></i> info@theegertonavenue.com</p>
+                    <p><i class="fas fa-envelope"></i> theegertonadvertiser@gmail.com</p>
                 </div>
                 
-                <!-- Weather & Time Widget -->
-                <div class="footer-weather mt-3">
+                <div class="footer-weather">
                     <div class="weather-widget">
                         <div class="weather-icon">
                             <i class="fas fa-cloud-sun"></i>
@@ -89,18 +102,14 @@
         
         <!-- Footer Bottom -->
         <div class="footer-bottom">
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="copyright">&copy; {% now "Y" %} The Egerton Avenue. All Rights Reserved.</p>
-                </div>
-                <div class="col-md-6 text-end">
-                    <ul class="footer-bottom-links">
-                        <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
-                        <li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
-                        <li><a href="{% url 'cookie_policy' %}">Cookie Policy</a></li>
-                        <li><a href="{% url 'sitemap' %}">Sitemap</a></li>
-                    </ul>
-                </div>
+            <div class="footer-bottom-inner">
+                <p class="copyright">&copy; {% now "Y" %} The Egerton Advertiser. All Rights Reserved.</p>
+                <ul class="footer-bottom-links">
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                    <li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
+                    <li><a href="{% url 'cookie_policy' %}">Cookie Policy</a></li>
+                    <li><a href="{% url 'sitemap' %}">Sitemap</a></li>
+                </ul>
             </div>
         </div>
     </div>
@@ -108,58 +117,121 @@
 
 <style>
 /* ============================================
-   FOOTER - GREEN THEME
+   FOOTER - GOVERNMENT STYLE
    ============================================ */
 .main-footer {
-    background: linear-gradient(180deg, #1a5c3a 0%, #0d3d26 100%);
+    background: #0d2a1a;
     color: #e8f5e9;
     border-top: 4px solid #8B7355;
     margin-top: 50px;
     font-family: 'Times New Roman', serif;
+    padding: 40px 0 0;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
 }
 
 /* ============================================
-   BRAND - FIXED LOGO
+   FOOTER GRID
    ============================================ */
-.footer-logo {
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+    gap: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================
+   BRAND COLUMN
+   ============================================ */
+.footer-brand-col {
+    gap: 8px;
+}
+
+.footer-logo-wrapper {
+    display: block;
     margin-bottom: 10px;
-    filter: none;
 }
 
-.footer-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #fff;
-    font-size: 20px;
-    letter-spacing: 1px;
+.footer-logo {
+    max-height: 80px;
+    width: auto;
+    display: block;
+    transition: transform 0.3s ease;
+    /* Keep original logo colors - no filters */
+    filter: none !important;
+    -webkit-filter: none !important;
+    image-rendering: auto;
 }
 
-.footer-motto {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: #a5d6a7;
-    font-size: 14px;
+.footer-logo:hover {
+    transform: scale(1.02);
 }
 
 .footer-description {
     font-family: 'Times New Roman', serif;
     font-size: 14px;
-    color: #c8e6c9;
+    color: #b8d4c0;
     line-height: 1.8;
+    margin: 5px 0 10px;
+}
+
+/* ============================================
+   SOCIAL ICONS
+   ============================================ */
+.footer-social {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.06);
+    color: #c8e6c9;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.social-link:hover {
+    background: #8B7355;
+    color: #ffffff;
+    transform: translateY(-3px);
+    border-color: #8B7355;
+    box-shadow: 0 4px 15px rgba(139, 115, 85, 0.3);
 }
 
 /* ============================================
    HEADINGS & LINKS
    ============================================ */
 .footer-heading {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Times New Roman', serif;
     color: #fff;
     font-weight: 700;
-    border-bottom: 2px solid #8B7355;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
     font-size: 16px;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #8B7355;
+    text-transform: uppercase;
 }
 
 .footer-links {
@@ -169,15 +241,16 @@
 }
 
 .footer-links li {
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .footer-links a {
-    color: #c8e6c9;
-    text-decoration: none;
     font-family: 'Times New Roman', serif;
+    color: #b8d4c0;
+    text-decoration: none;
     font-size: 14px;
     transition: all 0.3s ease;
+    display: inline-block;
 }
 
 .footer-links a:hover {
@@ -186,43 +259,28 @@
 }
 
 /* ============================================
-   SOCIAL ICONS
-   ============================================ */
-.footer-social .social-link {
-    display: inline-block;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.05);
-    color: #c8e6c9;
-    border-radius: 50%;
-    margin-right: 6px;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-.footer-social .social-link:hover {
-    background: #8B7355;
-    color: #ffffff;
-    transform: translateY(-2px);
-}
-
-/* ============================================
    NEWSLETTER
    ============================================ */
+.footer-newsletter {
+    margin-bottom: 15px;
+}
+
 .footer-newsletter .input-group {
+    display: flex;
     border-radius: 4px;
     overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .footer-newsletter .form-control {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
+    flex: 1;
+    border: none;
+    background: rgba(255,255,255,0.05);
     color: #fff;
-    padding: 10px 15px;
-    font-family: 'Times New Roman', serif;
+    padding: 12px 15px;
     font-size: 14px;
+    outline: none;
+    font-family: 'Times New Roman', serif;
 }
 
 .footer-newsletter .form-control::placeholder {
@@ -230,58 +288,69 @@
 }
 
 .footer-newsletter .form-control:focus {
-    border-color: #a5d6a7;
-    box-shadow: 0 0 0 0.2rem rgba(165, 214, 167, 0.15);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255,255,255,0.08);
 }
 
-.footer-newsletter .btn-success {
-    border-radius: 0;
+.footer-newsletter .btn-subscribe {
     background: #2e7d32;
     border: none;
     color: #fff;
-    padding: 10px 20px;
-    font-weight: 700;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
     font-family: 'Times New Roman', serif;
 }
 
-.footer-newsletter .btn-success:hover {
+.footer-newsletter .btn-subscribe:hover {
     background: #1b5e20;
 }
 
 /* ============================================
    CONTACT INFO
    ============================================ */
+.footer-contact {
+    margin: 10px 0;
+}
+
 .footer-contact p {
     font-family: 'Times New Roman', serif;
     font-size: 14px;
-    color: #c8e6c9;
-    margin-bottom: 4px;
+    color: #b8d4c0;
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
 }
 
 .footer-contact i {
     color: #8B7355;
     width: 22px;
     text-align: center;
-    margin-right: 8px;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.footer-contact p:hover {
+    color: #fff;
 }
 
 /* ============================================
    WEATHER WIDGET
    ============================================ */
 .footer-weather {
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 12px;
+    margin-top: 5px;
 }
 
 .weather-widget {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 10px 15px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255,255,255,0.03);
+    padding: 8px 15px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 .weather-widget .weather-icon {
@@ -294,7 +363,7 @@
 }
 
 .weather-widget .temp {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Times New Roman', serif;
     font-weight: 700;
     font-size: 18px;
     color: #fff;
@@ -304,7 +373,7 @@
     display: block;
     font-family: 'Times New Roman', serif;
     font-size: 12px;
-    color: #c8e6c9;
+    color: #b8d4c0;
     text-transform: capitalize;
 }
 
@@ -316,7 +385,7 @@
     display: block;
     font-family: 'Times New Roman', serif;
     font-size: 13px;
-    color: #c8e6c9;
+    color: #b8d4c0;
 }
 
 .weather-widget .weather-time span:first-child {
@@ -329,9 +398,16 @@
    FOOTER BOTTOM
    ============================================ */
 .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 15px 0;
-    margin-top: 30px;
+    padding: 20px 0;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.footer-bottom-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .copyright {
@@ -345,17 +421,19 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .footer-bottom-links li {
     display: inline-block;
-    margin-left: 20px;
 }
 
 .footer-bottom-links a {
+    font-family: 'Times New Roman', serif;
     color: #6c757d;
     text-decoration: none;
-    font-family: 'Times New Roman', serif;
     font-size: 13px;
     transition: all 0.3s ease;
 }
@@ -367,22 +445,49 @@
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 991.98px) {
-    .footer-bottom .text-end {
-        text-align: center !important;
-        margin-top: 10px;
+@media (max-width: 1024px) {
+    .footer-grid {
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+        gap: 30px;
     }
-    .footer-bottom-links li {
-        margin: 0 10px;
+    .footer-newsletter-col {
+        grid-column: span 2;
     }
 }
 
-@media (max-width: 767.98px) {
-    .main-footer .row > div {
-        margin-bottom: 30px;
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
     }
-    .main-footer .row > div:last-child {
-        margin-bottom: 0;
+    .footer-brand-col {
+        grid-column: span 2;
+    }
+    .footer-newsletter-col {
+        grid-column: span 2;
+    }
+    .footer-bottom-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-bottom-links {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .footer-brand-col {
+        grid-column: span 1;
+    }
+    .footer-newsletter-col {
+        grid-column: span 1;
+    }
+    .footer-logo {
+        max-height: 60px;
     }
     .weather-widget {
         flex-wrap: wrap;
@@ -393,30 +498,35 @@
         width: 100%;
     }
     .footer-bottom-links {
-        margin-top: 10px;
-    }
-    .footer-bottom-links li {
-        display: inline-block;
-        margin: 0 8px;
+        flex-direction: column;
+        gap: 5px;
+        align-items: center;
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 380px) {
     .footer-logo {
-        height: 35px;
-    }
-    .footer-title {
-        font-size: 18px;
+        max-height: 50px;
     }
     .footer-description {
-        font-size: 13px;
-    }
-    .footer-heading {
-        font-size: 15px;
+        font-size: 12px;
     }
     .footer-newsletter .form-control {
-        font-size: 13px;
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+    .footer-newsletter .btn-subscribe {
         padding: 8px 12px;
+        font-size: 12px;
+    }
+    .footer-contact p {
+        font-size: 12px;
+    }
+    .copyright {
+        font-size: 11px;
+    }
+    .footer-bottom-links a {
+        font-size: 11px;
     }
     .weather-widget .temp {
         font-size: 16px;
@@ -424,5 +534,37 @@
     .weather-widget .weather-icon {
         font-size: 22px;
     }
+    .social-link {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
 }
 </style>
+
+<!-- Weather and Time Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false
+            });
+            const dateStr = now.toLocaleDateString('en-US', { 
+                month: '2-digit', 
+                day: '2-digit', 
+                year: 'numeric' 
+            });
+            
+            const timeEl = document.getElementById('footerTime');
+            const dateEl = document.getElementById('footerDate');
+            if (timeEl) timeEl.textContent = timeStr;
+            if (dateEl) dateEl.textContent = dateStr;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 1000);
+    });
+</script>
