@@ -1,188 +1,729 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Articles by {{ author.get_full_name|default:author.username }} - The Egerton Advertiser{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ============================================
+   AUTHOR ARTICLES - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --gov-primary: #0a1a2a;
+    --gov-secondary: #1a3c5e;
+    --gov-gold: #c9a84c;
+    --gov-cream: #f5f0e8;
+    --gov-border: #d4cdc0;
+}
+
+.author-page-wrapper {
+    background: var(--gov-cream);
+    min-height: calc(100vh - 200px);
+    padding: 40px 0;
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   AUTHOR HEADER - OFFICIAL STYLE
+   ============================================ */
+.author-header {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    border-bottom: 4px solid var(--gov-gold);
+    padding: 35px 40px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.author-header::before {
+    content: 'EGERTON ADVERTISER';
+    position: absolute;
+    right: -30px;
+    top: -10px;
+    font-size: 70px;
+    font-weight: 900;
+    color: rgba(10,26,42,0.02);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 15px;
+    pointer-events: none;
+}
+
+.author-avatar-large {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--gov-gold);
+    background: #fff;
+    padding: 3px;
+}
+
+.author-avatar-placeholder-large {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: var(--gov-cream);
+    border: 4px solid var(--gov-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    color: var(--gov-secondary);
+}
+
+.author-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: var(--gov-primary);
+    font-size: 34px;
+    margin: 0 0 5px 0;
+    letter-spacing: 0.5px;
+}
+
+.author-role {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    color: var(--gov-gold);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.author-department {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+    margin: 5px 0 10px 0;
+}
+
+.author-department i {
+    color: var(--gov-gold);
+    margin-right: 8px;
+}
+
+.author-bio {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    color: #5a5a5a;
+    line-height: 1.6;
+    margin: 10px 0 15px 0;
+    padding-right: 20px;
+    font-style: italic;
+    border-left: 3px solid var(--gov-gold);
+    padding-left: 18px;
+}
+
+/* ============================================
+   AUTHOR STATS - OFFICIAL STYLE
+   ============================================ */
+.author-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    font-family: 'Times New Roman', serif;
+    margin: 12px 0 15px 0;
+}
+
+.author-stats .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.author-stats .stat-item i {
+    color: var(--gov-gold);
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.author-stats .stat-item .stat-number {
+    font-weight: 700;
+    color: var(--gov-primary);
+    font-size: 16px;
+}
+
+/* ============================================
+   AUTHOR SOCIAL - OFFICIAL STYLE
+   ============================================ */
+.author-social {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.author-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--gov-border);
+    color: var(--gov-secondary);
+    transition: all 0.3s;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.author-social a:hover {
+    background: var(--gov-gold);
+    border-color: var(--gov-gold);
+    color: var(--gov-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* ============================================
+   SECTION HEADER - OFFICIAL STYLE
+   ============================================ */
+.section-header {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gov-primary);
+    border-bottom: 3px solid var(--gov-gold);
+    padding-bottom: 12px;
+    margin-bottom: 25px;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.section-header i {
+    color: var(--gov-gold);
+    margin-right: 10px;
+}
+
+.section-header .count-badge {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--gov-secondary);
+    padding: 4px 16px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   ARTICLES LIST - OFFICIAL STYLE
+   ============================================ */
+.articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.article-item {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 20px 25px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.article-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--gov-gold);
+}
+
+.article-item:hover {
+    border-color: var(--gov-gold);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.article-item .article-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--gov-gold);
+    margin-right: 15px;
+    min-width: 30px;
+}
+
+.article-item h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0 0 5px 0;
+}
+
+.article-item h5 a {
+    color: var(--gov-primary);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.article-item h5 a:hover {
+    color: var(--gov-gold);
+}
+
+.article-item .excerpt-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    color: #6c757d;
+    margin: 5px 0 10px 0;
+    line-height: 1.5;
+}
+
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.article-meta i {
+    color: var(--gov-gold);
+    margin-right: 5px;
+    width: 14px;
+    text-align: center;
+}
+
+.article-meta span {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* ============================================
+   ARTICLE THUMBNAIL - OFFICIAL STYLE
+   ============================================ */
+.article-thumb-wrap {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--gov-border);
+}
+
+.article-thumb {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.article-item:hover .article-thumb {
+    transform: scale(1.03);
+}
+
+.article-thumb-placeholder {
+    width: 100%;
+    height: 110px;
+    background: var(--gov-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gov-border);
+    font-size: 30px;
+}
+
+/* ============================================
+   EMPTY STATE - OFFICIAL STYLE
+   ============================================ */
+.empty-state {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 60px 30px;
+    text-align: center;
+}
+
+.empty-state i {
+    color: var(--gov-gold);
+    opacity: 0.3;
+    font-size: 64px;
+}
+
+.empty-state h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gov-primary);
+    margin-top: 20px;
+    font-size: 24px;
+}
+
+.empty-state p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* ============================================
+   PAGINATION - OFFICIAL STYLE
+   ============================================ */
+.pagination-wrap {
+    margin-top: 30px;
+}
+
+.pagination-wrap .pagination {
+    gap: 5px;
+}
+
+.pagination-wrap .page-link {
+    font-family: 'Times New Roman', serif;
+    color: var(--gov-primary);
+    border: 1px solid var(--gov-border);
+    border-radius: 2px;
+    padding: 10px 18px;
+    background: #fff;
+}
+
+.pagination-wrap .page-link:hover {
+    background: var(--gov-gold);
+    border-color: var(--gov-gold);
+    color: var(--gov-primary);
+}
+
+.pagination-wrap .page-item.active .page-link {
+    background: var(--gov-secondary);
+    border-color: var(--gov-secondary);
+    color: #fff;
+}
+
+.pagination-wrap .page-item.disabled .page-link {
+    color: #b0a8a0;
+}
+
+.pagination-info {
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #6c757d;
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .author-header {
+        padding: 25px 20px;
+    }
+    .author-header::before {
+        font-size: 35px;
+        right: -15px;
+        top: -5px;
+        letter-spacing: 8px;
+    }
+    .author-avatar-large {
+        width: 100px;
+        height: 100px;
+    }
+    .author-avatar-placeholder-large {
+        width: 100px;
+        height: 100px;
+        font-size: 45px;
+    }
+    .author-header h1 {
+        font-size: 26px;
+        margin-top: 10px;
+    }
+    .author-bio {
+        font-size: 14px;
+        padding-left: 12px;
+    }
+    .author-stats {
+        gap: 15px;
+        font-size: 13px;
+    }
+    .article-item {
+        padding: 15px 18px;
+    }
+    .article-item .row {
+        flex-direction: column;
+    }
+    .article-item .col-md-3 {
+        margin-top: 12px;
+    }
+    .article-thumb {
+        height: 80px;
+    }
+    .article-thumb-placeholder {
+        height: 80px;
+    }
+    .article-meta {
+        gap: 10px;
+        font-size: 12px;
+    }
+    .section-header {
+        font-size: 18px;
+    }
+    .section-header .count-badge {
+        font-size: 11px;
+        padding: 3px 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .author-header {
+        padding: 20px 15px;
+        text-align: center;
+    }
+    .author-header .text-md-start {
+        text-align: center !important;
+    }
+    .author-avatar-large {
+        width: 80px;
+        height: 80px;
+    }
+    .author-avatar-placeholder-large {
+        width: 80px;
+        height: 80px;
+        font-size: 35px;
+        margin: 0 auto;
+    }
+    .author-header h1 {
+        font-size: 22px;
+    }
+    .author-bio {
+        font-size: 13px;
+        padding-left: 10px;
+        border-left-width: 2px;
+    }
+    .author-stats {
+        justify-content: center;
+        gap: 12px;
+        font-size: 12px;
+    }
+    .author-social {
+        justify-content: center;
+    }
+    .article-item h5 {
+        font-size: 16px;
+    }
+    .article-item .excerpt-text {
+        font-size: 14px;
+    }
+    .article-meta {
+        gap: 8px;
+        font-size: 11px;
+    }
+    .article-thumb {
+        height: 60px;
+    }
+    .article-thumb-placeholder {
+        height: 60px;
+        font-size: 20px;
+    }
+    .section-header {
+        font-size: 16px;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="author-articles-page">
+<div class="author-page-wrapper">
+    <div class="container">
+        <!-- ============================================
+        AUTHOR HEADER - OFFICIAL STYLE
+        ============================================ -->
         <div class="author-header">
             <div class="row align-items-center">
-                <div class="col-md-2">
+                <div class="col-md-2 text-center text-md-start">
                     {% if author.profile_picture %}
                     <img src="{{ author.profile_picture.url }}" alt="{{ author.get_full_name }}" class="author-avatar-large">
                     {% else %}
-                    <div class="author-avatar-placeholder-large">
+                    <div class="author-avatar-placeholder-large mx-auto mx-md-0">
                         <i class="fas fa-user-circle"></i>
                     </div>
                     {% endif %}
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-10 text-center text-md-start">
                     <h1>{{ author.get_full_name|default:author.username }}</h1>
                     <p class="author-role">{{ author.get_role_display }}</p>
                     {% if author.department %}
-                    <p><i class="fas fa-building"></i> {{ author.get_department_display }}</p>
+                    <p class="author-department">
+                        <i class="fas fa-building"></i> {{ author.get_department_display }}
+                    </p>
                     {% endif %}
-                    <p class="author-bio">{{ author.bio|default:"Journalist at The Egerton Advertiser" }}</p>
+                    {% if author.bio %}
+                    <p class="author-bio">{{ author.bio }}</p>
+                    {% endif %}
+                    
                     <div class="author-stats">
-                        <span><i class="fas fa-newspaper"></i> {{ article_count }} Articles</span>
-                        <span><i class="fas fa-eye"></i> {{ total_views }} Total Views</span>
+                        <span class="stat-item">
+                            <i class="fas fa-newspaper"></i>
+                            <span class="stat-number">{{ article_count }}</span> Articles
+                        </span>
+                        <span class="stat-item">
+                            <i class="fas fa-eye"></i>
+                            <span class="stat-number">{{ total_views }}</span> Total Views
+                        </span>
+                        <span class="stat-item">
+                            <i class="fas fa-comments"></i>
+                            <span class="stat-number">{{ total_comments|default:0 }}</span> Comments
+                        </span>
+                        <span class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="stat-number">{{ author.date_joined|date:"Y" }}</span> Member Since
+                        </span>
                     </div>
+                    
                     <div class="author-social">
                         {% if author.website %}
-                        <a href="{{ author.website }}" target="_blank"><i class="fas fa-globe"></i></a>
+                        <a href="{{ author.website }}" target="_blank" title="Website">
+                            <i class="fas fa-globe"></i>
+                        </a>
                         {% endif %}
                         {% if author.social_links.twitter %}
-                        <a href="{{ author.social_links.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="{{ author.social_links.twitter }}" target="_blank" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
                         {% endif %}
                         {% if author.social_links.facebook %}
-                        <a href="{{ author.social_links.facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="{{ author.social_links.facebook }}" target="_blank" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
                         {% endif %}
                         {% if author.social_links.linkedin %}
-                        <a href="{{ author.social_links.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="{{ author.social_links.linkedin }}" target="_blank" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        {% endif %}
+                        {% if author.social_links.instagram %}
+                        <a href="{{ author.social_links.instagram }}" target="_blank" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- ============================================
+        ARTICLES SECTION - OFFICIAL STYLE
+        ============================================ -->
+        <div class="section-header">
+            <span>
+                <i class="fas fa-newspaper"></i> Articles by {{ author.get_full_name|default:author.username }}
+            </span>
+            <span class="count-badge">{{ article_count }} Articles</span>
+        </div>
+
         <div class="articles-list">
-            <h4><i class="fas fa-newspaper"></i> Articles by {{ author.get_full_name|default:author.username }}</h4>
-            
             {% for article in articles %}
             <div class="article-item">
-                <div class="row">
-                    <div class="col-md-9">
-                        <h5><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h5>
-                        <p>{{ article.excerpt|truncatewords:20 }}</p>
-                        <div class="article-meta">
-                            <span><i class="fas fa-calendar-alt"></i> {{ article.published_at|date:"M d, Y" }}</span>
-                            <span><i class="fas fa-folder"></i> {{ article.category.name }}</span>
-                            <span><i class="fas fa-eye"></i> {{ article.views_count }}</span>
-                            <span><i class="fas fa-comments"></i> {{ article.comments.count }}</span>
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-start">
+                            <span class="article-number">#{{ forloop.counter }}</span>
+                            <div>
+                                <h5>
+                                    <a href="{{ article.get_absolute_url }}">
+                                        {{ article.title }}
+                                    </a>
+                                </h5>
+                                {% if article.excerpt %}
+                                <p class="excerpt-text">{{ article.excerpt|truncatewords:20 }}</p>
+                                {% endif %}
+                                <div class="article-meta">
+                                    <span>
+                                        <i class="fas fa-calendar-alt"></i> 
+                                        {{ article.published_at|date:"F d, Y" }}
+                                    </span>
+                                    <span>
+                                        <i class="fas fa-folder"></i> 
+                                        {{ article.category.name|default:"Uncategorized" }}
+                                    </span>
+                                    <span>
+                                        <i class="fas fa-eye"></i> 
+                                        {{ article.views_count }} views
+                                    </span>
+                                    <span>
+                                        <i class="fas fa-comments"></i> 
+                                        {{ article.comments.count }} comments
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         {% if article.featured_image %}
-                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid article-thumb">
+                        <div class="article-thumb-wrap">
+                            <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="article-thumb">
+                        </div>
+                        {% else %}
+                        <div class="article-thumb-placeholder">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="empty-state text-center py-5">
-                <i class="fas fa-newspaper fa-4x text-muted"></i>
-                <h4 class="mt-3">No Articles Found</h4>
-                <p class="text-muted">This author hasn't published any articles yet</p>
+            <div class="empty-state">
+                <i class="fas fa-newspaper"></i>
+                <h4>No Articles Found</h4>
+                <p>{{ author.get_full_name|default:author.username }} hasn't published any articles yet.</p>
             </div>
             {% endfor %}
         </div>
 
-        {% include 'pagination.html' %}
+        <!-- ============================================
+        PAGINATION
+        ============================================ -->
+        {% if articles.has_other_pages %}
+        <div class="pagination-wrap">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if articles.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ articles.previous_page_number }}">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="fas fa-chevron-left"></i> Previous</span>
+                    </li>
+                    {% endif %}
+
+                    {% for num in articles.paginator.page_range %}
+                        {% if articles.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > articles.number|add:'-3' and num < articles.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if articles.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ articles.next_page_number }}">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next <i class="fas fa-chevron-right"></i></span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <p class="pagination-info">
+                Showing {{ articles.start_index }} to {{ articles.end_index }} of {{ articles.paginator.count }} articles
+            </p>
+        </div>
+        {% endif %}
     </div>
 </div>
-
-<style>
-.author-articles-page {
-    padding: 30px 0;
-}
-.author-header {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 30px;
-    margin-bottom: 30px;
-}
-.author-avatar-large {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #1a3c5e;
-}
-.author-avatar-placeholder-large {
-    font-size: 100px;
-    color: #6c757d;
-}
-.author-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    color: #1a3c5e;
-}
-.author-role {
-    font-family: 'Times New Roman', serif;
-    color: #6c757d;
-    font-size: 16px;
-}
-.author-bio {
-    font-family: 'Times New Roman', serif;
-    color: #495057;
-    margin: 8px 0;
-}
-.author-stats {
-    display: flex;
-    gap: 20px;
-    font-family: 'Times New Roman', serif;
-    color: #6c757d;
-    font-size: 14px;
-}
-.author-stats i {
-    margin-right: 5px;
-}
-.author-social a {
-    color: #1a3c5e;
-    margin-right: 10px;
-    font-size: 18px;
-}
-.author-social a:hover {
-    color: #c9a84c;
-}
-.articles-list h4 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-.article-item {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-.article-item h5 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-}
-.article-item h5 a {
-    color: #1a3c5e;
-    text-decoration: none;
-}
-.article-item h5 a:hover {
-    text-decoration: underline;
-}
-.article-item p {
-    font-family: 'Times New Roman', serif;
-    color: #6c757d;
-    margin: 5px 0;
-}
-.article-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-    color: #6c757d;
-}
-.article-meta i {
-    margin-right: 3px;
-}
-.article-thumb {
-    height: 100px;
-    object-fit: cover;
-    border-radius: 4px;
-    width: 100%;
-}
-</style>
 {% endblock %}
