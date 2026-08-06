@@ -4,122 +4,599 @@
 {% block title %}Edit Article - The Egerton Advertiser{% endblock %}
 
 {% block extra_css %}
-{{ form.media }}
 <style>
+/* ============================================
+   EDIT ARTICLE - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --primary-green: #0d2a1a;
+    --secondary-green: #1a5c3a;
+    --accent-gold: #8B7355;
+    --cream: #f5f0e8;
+    --light-green: #a5d6a7;
+}
+
 .article-edit-container {
-    padding: 30px 0;
+    padding: 40px 0 60px;
+    background: var(--cream);
+    min-height: calc(100vh - 200px);
 }
+
+/* ============================================
+   FORM CARD - OFFICIAL STYLE
+   ============================================ */
 .form-card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
+    background: #ffffff;
+    border: 2px solid var(--accent-gold);
     border-radius: 8px;
-    padding: 30px;
+    padding: 40px 45px;
+    box-shadow: 0 8px 50px rgba(0,0,0,0.06);
+    position: relative;
 }
+
+.form-card::before {
+    content: '◆';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--accent-gold);
+    font-size: 24px;
+    background: #fff;
+    padding: 0 15px;
+}
+
+.form-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-green), var(--accent-gold), var(--secondary-green));
+    border-radius: 8px 8px 0 0;
+}
+
+/* ============================================
+   FORM HEADER - OFFICIAL STYLE
+   ============================================ */
 .form-header {
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 15px;
+    border-bottom: 3px solid var(--accent-gold);
+    padding-bottom: 20px;
     margin-bottom: 25px;
+    position: relative;
 }
+
+.form-header::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: var(--light-green);
+}
+
 .form-header h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Times New Roman', serif;
+    font-weight: 900;
+    color: var(--primary-green);
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.form-header h2 i {
+    color: var(--accent-gold);
+    margin-right: 10px;
+}
+
+.form-header .article-status {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.form-header .article-status .status-badge {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 4px;
+    font-family: 'Times New Roman', serif;
     font-weight: 700;
-    color: #1a3c5e;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
+
+.status-badge.draft { background: #6c757d; color: #fff; }
+.status-badge.pending { background: #b8860b; color: #fff; }
+.status-badge.published { background: #1a5a3a; color: #fff; }
+.status-badge.scheduled { background: #17a2b8; color: #fff; }
+.status-badge.archived { background: #dc3545; color: #fff; }
+
+/* ============================================
+   FORM GROUPS - OFFICIAL STYLE
+   ============================================ */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
+
 .form-group label {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    color: #1a3c5e;
+    color: var(--secondary-green);
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
+
 .form-group label i {
+    color: var(--accent-gold);
     margin-right: 8px;
-    color: #c9a84c;
+    width: 20px;
 }
+
 .form-control, .form-select {
     font-family: 'Times New Roman', serif;
     border-radius: 4px;
-    border: 1px solid #ced4da;
+    border: 1px solid #d4cdc0;
     padding: 10px 15px;
+    width: 100%;
+    background: #fff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    color: #1a1a1a;
 }
+
 .form-control:focus, .form-select:focus {
-    border-color: #1a3c5e;
-    box-shadow: 0 0 0 0.2rem rgba(26,60,94,0.15);
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+    outline: none;
 }
+
+.form-control[readonly] {
+    background: #f9f6f0;
+    cursor: not-allowed;
+}
+
+/* Textarea for content */
+.textarea-content {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    line-height: 1.8;
+    min-height: 400px;
+    border: 2px solid #d4cdc0 !important;
+    padding: 20px !important;
+    background: #fcfcf9 !important;
+    resize: vertical;
+}
+
+.textarea-content:focus {
+    border-color: var(--accent-gold) !important;
+    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1) !important;
+}
+
 .help-text {
     font-family: 'Times New Roman', serif;
     font-size: 12px;
     color: #6c757d;
+    margin-top: 4px;
+    font-style: italic;
 }
+
+.text-danger {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #dc3545;
+}
+
+/* ============================================
+   TAGS - OFFICIAL STYLE
+   ============================================ */
+.tag-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 10px;
+    border: 1px solid #d4cdc0;
+    border-radius: 4px;
+    min-height: 50px;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.tag-input-container:focus-within {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+}
+
+.tag-badge {
+    background: var(--secondary-green);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.tag-badge .remove-tag {
+    cursor: pointer;
+    color: var(--accent-gold);
+    margin-left: 4px;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.tag-badge .remove-tag:hover {
+    color: #dc3545;
+}
+
+.tag-input {
+    border: none;
+    outline: none;
+    font-family: 'Times New Roman', serif;
+    padding: 4px 8px;
+    flex: 1;
+    min-width: 100px;
+    background: transparent;
+    font-size: 14px;
+    color: #1a1a1a;
+}
+
+.tag-input::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+/* ============================================
+   FEATURED TOGGLE - OFFICIAL STYLE
+   ============================================ */
+.featured-toggle {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f9f6f0;
+    border-radius: 4px;
+    flex-wrap: wrap;
+    border: 1px solid #d4cdc0;
+}
+
+.featured-toggle .form-check {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.featured-toggle .form-check-input {
+    margin-right: 8px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.featured-toggle .form-check-input:checked {
+    background-color: var(--secondary-green);
+    border-color: var(--secondary-green);
+}
+
+.featured-toggle .form-check-label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 600;
+    color: var(--primary-green);
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+/* ============================================
+   FORM ACTIONS - OFFICIAL BUTTONS
+   ============================================ */
 .form-actions {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid #d4cdc0;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
 }
+
 .form-actions .btn {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    padding: 10px 30px;
-}
-.status-badge {
-    display: inline-block;
-    padding: 4px 12px;
+    padding: 12px 30px;
     border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.btn-primary {
+    background: var(--secondary-green);
+    border-color: var(--secondary-green);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: var(--primary-green);
+    border-color: var(--primary-green);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(13, 42, 26, 0.2);
+}
+
+.btn-success {
+    background: #1a5a3a;
+    border-color: #1a5a3a;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background: #0d3d26;
+    border-color: #0d3d26;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(13, 42, 26, 0.15);
+}
+
+.btn-warning {
+    background: #b8860b;
+    border-color: #b8860b;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background: #9a7009;
+    border-color: #9a7009;
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   SIDEBAR CARDS - OFFICIAL STYLE
+   ============================================ */
+.sidebar-card {
+    background: #ffffff;
+    border: 1px solid #d4cdc0;
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.sidebar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-gold);
+    border-radius: 8px 8px 0 0;
+}
+
+.sidebar-card h5 {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    font-size: 13px;
+    color: var(--secondary-green);
+    font-size: 16px;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--accent-gold);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
 }
-.status-badge.draft { background: #6c757d; color: #fff; }
-.status-badge.pending { background: #ffc107; color: #000; }
-.status-badge.published { background: #28a745; color: #fff; }
-.status-badge.scheduled { background: #17a2b8; color: #fff; }
-.status-badge.archived { background: #dc3545; color: #fff; }
+
+.sidebar-card h5 i {
+    color: var(--accent-gold);
+    margin-right: 8px;
+}
+
+/* Version History */
 .version-history {
     max-height: 300px;
     overflow-y: auto;
 }
+
+.version-history::-webkit-scrollbar {
+    width: 4px;
+}
+
+.version-history::-webkit-scrollbar-track {
+    background: #f9f6f0;
+}
+
+.version-history::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+    border-radius: 2px;
+}
+
 .version-item {
-    padding: 8px 12px;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0ebe3;
     font-family: 'Times New Roman', serif;
 }
+
 .version-item:last-child {
     border-bottom: none;
 }
+
 .version-item .version-number {
     font-weight: 700;
-    color: #1a3c5e;
+    color: var(--secondary-green);
+    font-size: 14px;
 }
+
 .version-item .version-date {
     color: #6c757d;
+    font-size: 12px;
+    float: right;
+}
+
+.version-item .version-author {
+    color: #4a4a4a;
     font-size: 13px;
+}
+
+.version-item .version-notes {
+    color: #6c757d;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* Quick Stats */
+.quick-stats .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ebe3;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #1a1a1a;
+}
+
+.quick-stats .stat-row:last-child {
+    border-bottom: none;
+}
+
+.quick-stats .stat-row .stat-value {
+    font-weight: 700;
+    color: var(--secondary-green);
+}
+
+/* Related Articles */
+.related-list .related-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ebe3;
+}
+
+.related-list .related-item:last-child {
+    border-bottom: none;
+}
+
+.related-list .related-item a {
+    font-family: 'Times New Roman', serif;
+    color: var(--secondary-green);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.related-list .related-item a:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 992px) {
+    .form-card {
+        padding: 30px 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-card {
+        padding: 20px;
+    }
+    .form-header h2 {
+        font-size: 22px;
+    }
+    .featured-toggle {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .form-actions .btn {
+        padding: 10px 20px;
+        font-size: 12px;
+        width: 100%;
+    }
+    .form-actions {
+        flex-direction: column;
+    }
+    .row {
+        flex-direction: column;
+    }
+    .col-md-4, .col-md-6, .col-md-8 {
+        width: 100%;
+        padding: 0;
+    }
+    .sidebar-card {
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-card {
+        padding: 15px;
+    }
+    .form-header h2 {
+        font-size: 18px;
+    }
+    .form-control, .form-select {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    .textarea-content {
+        min-height: 250px;
+        font-size: 14px;
+    }
+    .tag-badge {
+        font-size: 12px;
+        padding: 3px 10px;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="article-edit-container">
+<div class="article-edit-container">
+    <div class="container">
         <div class="row">
             <div class="col-lg-9">
                 <div class="form-card">
+                    <!-- ============================================
+                    FORM HEADER - OFFICIAL
+                    ============================================ -->
                     <div class="form-header">
-                        <h2><i class="fas fa-edit"></i> Edit Article: {{ article.title }}</h2>
-                        <p class="text-muted">
+                        <h2><i class="fas fa-edit"></i> Edit Article</h2>
+                        <div class="article-status">
                             Status: <span class="status-badge {{ article.status }}">{{ article.get_status_display }}</span>
                             {% if article.published_at %}
                             | Published: {{ article.published_at|date:"F d, Y H:i" }}
                             {% endif %}
                             | Views: {{ article.views_count }}
-                        </p>
+                        </div>
                     </div>
 
+                    <!-- ============================================
+                    FORM
+                    ============================================ -->
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
+                        <!-- Title & Slug -->
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="form-group">
@@ -143,6 +620,7 @@
                             </div>
                         </div>
 
+                        <!-- Excerpt -->
                         <div class="form-group">
                             <label for="id_excerpt"><i class="fas fa-align-left"></i> Excerpt</label>
                             <textarea name="excerpt" id="id_excerpt" class="form-control" rows="3">{{ form.excerpt.value|default:article.excerpt }}</textarea>
@@ -151,14 +629,18 @@
                             {% endif %}
                         </div>
 
+                        <!-- Content - Simple Textarea -->
                         <div class="form-group">
                             <label for="id_content"><i class="fas fa-file-alt"></i> Content</label>
-                            {{ form.content }}
+                            <textarea name="content" id="id_content" class="form-control textarea-content" 
+                                      rows="20">{{ form.content.value|default:article.content }}</textarea>
                             {% if form.content.errors %}
                             <small class="text-danger">{{ form.content.errors }}</small>
                             {% endif %}
+                            <small class="help-text">You can use HTML tags: &lt;b&gt;, &lt;i&gt;, &lt;ul&gt;, &lt;li&gt;, etc.</small>
                         </div>
 
+                        <!-- Category & Tags -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -183,7 +665,7 @@
                                         {% for tag in article.tags.all %}
                                         <span class="tag-badge">
                                             {{ tag.name }}
-                                            <span class="remove-tag" data-tag-id="{{ tag.id }}">&times;</span>
+                                            <span class="remove-tag" data-tag-name="{{ tag.name }}">&times;</span>
                                         </span>
                                         {% endfor %}
                                         <input type="text" class="tag-input" id="tagInput" 
@@ -195,6 +677,7 @@
                             </div>
                         </div>
 
+                        <!-- Featured Image -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -214,10 +697,14 @@
                                     <label for="id_featured_image_alt"><i class="fas fa-font"></i> Image Alt Text</label>
                                     <input type="text" name="featured_image_alt" id="id_featured_image_alt" 
                                            class="form-control" value="{{ form.featured_image_alt.value|default:article.featured_image_alt }}">
+                                    {% if form.featured_image_alt.errors %}
+                                    <small class="text-danger">{{ form.featured_image_alt.errors }}</small>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Status & Settings -->
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -271,6 +758,7 @@
                             </div>
                         </div>
 
+                        <!-- Form Actions -->
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Update Article
@@ -291,6 +779,9 @@
                 </div>
             </div>
 
+            <!-- ============================================
+            SIDEBAR - OFFICIAL STYLE
+            ============================================ -->
             <div class="col-lg-3">
                 <!-- Version History -->
                 <div class="sidebar-card">
@@ -301,16 +792,14 @@
                         <div class="version-item">
                             <span class="version-number">v{{ version.version_number }}</span>
                             <span class="version-date">{{ version.modified_at|date:"M d, Y H:i" }}</span>
-                            <br>
-                            <small class="text-muted">By {{ version.modified_by.get_full_name|default:version.modified_by.username }}</small>
+                            <div class="version-author">By {{ version.modified_by.get_full_name|default:version.modified_by.username }}</div>
                             {% if version.change_notes %}
-                            <br>
-                            <small class="text-muted"><i class="fas fa-pencil-alt"></i> {{ version.change_notes }}</small>
+                            <div class="version-notes"><i class="fas fa-pencil-alt"></i> {{ version.change_notes }}</div>
                             {% endif %}
                         </div>
                         {% endfor %}
                         {% else %}
-                        <p class="text-muted">No version history</p>
+                        <p class="text-muted" style="font-family: 'Times New Roman', serif; padding: 10px 0;">No version history</p>
                         {% endif %}
                     </div>
                 </div>
@@ -341,7 +830,7 @@
                         </div>
                         <div class="stat-row">
                             <span>Reading Time</span>
-                            <span class="stat-value">{{ article.time_to_read }} min</span>
+                            <span class="stat-value">{{ article.reading_time }} min</span>
                         </div>
                     </div>
                 </div>
@@ -352,10 +841,10 @@
                     <div class="related-list">
                         {% for related in article.related_articles.all|slice:":5" %}
                         <div class="related-item">
-                            <a href="{% url 'articles:article_edit' related.id %}">{{ related.title|truncatewords:5 }}</a>
+                            <a href="{% url 'articles:article_edit' related.id %}">{{ related.title|truncatewords:6 }}</a>
                         </div>
                         {% empty %}
-                        <p class="text-muted">No related articles</p>
+                        <p class="text-muted" style="font-family: 'Times New Roman', serif; padding: 10px 0;">No related articles</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -364,6 +853,9 @@
     </div>
 </div>
 
+<!-- ============================================
+   JAVASCRIPT - TAG HANDLING
+   ============================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Tag input handling
@@ -410,19 +902,21 @@ document.addEventListener('DOMContentLoaded', function() {
     tags = existingTags.filter(t => t);
     updateTags();
 
-    // Auto-generate slug
+    // Auto-generate slug from title
     const titleInput = document.getElementById('id_title');
     const slugInput = document.getElementById('id_slug');
     
-    titleInput.addEventListener('keyup', function() {
-        if (!slugInput.value || slugInput.value === slugInput.defaultValue) {
-            const slug = this.value
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
-            slugInput.value = slug;
-        }
-    });
+    if (titleInput && slugInput) {
+        titleInput.addEventListener('keyup', function() {
+            if (!slugInput.value || slugInput.value === slugInput.defaultValue) {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                slugInput.value = slug;
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

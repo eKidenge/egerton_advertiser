@@ -87,17 +87,20 @@
                     <div class="custom-dropdown-menu" id="moreDropdownMenu" 
                          style="background: #1a5c3a; border: 2px solid #8B7355; border-radius: 0; padding: 0; min-width: 210px; box-shadow: 0 10px 50px rgba(0,0,0,0.8); position: fixed; top: auto; left: auto; right: 20px; z-index: 9999999; max-height: 70vh; overflow-y: auto; display: none;">
                         
-                        <!-- PHOTOS -->
-                        <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTOS</a>
-                        
                         <!-- OPINION -->
                         <a class="dropdown-item" href="{% url 'articles:opinion' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">OPINION</a>
+                        
+                        <!-- SOCIETY -->
+                        <a class="dropdown-item" href="{% url 'articles:society' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">SOCIETY</a>
+                        
+                        <!-- ARTS & CULTURE -->
+                        <a class="dropdown-item" href="{% url 'articles:category' 'arts-culture' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ARTS &amp; CULTURE</a>
                         
                         <!-- TECHNOLOGY -->
                         <a class="dropdown-item" href="{% url 'articles:technology' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">TECHNOLOGY</a>
                         
-                        <!-- SOCIETY -->
-                        <a class="dropdown-item" href="{% url 'articles:society' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">SOCIETY</a>
+                        <!-- PHOTO GALLERY -->
+                        <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTO GALLERY</a>
                         
                         <!-- CAREERS -->
                         <a class="dropdown-item" href="{% url 'articles:careers' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CAREERS</a>
@@ -105,20 +108,11 @@
                         <!-- ADVERTISE -->
                         <a class="dropdown-item" href="{% url 'advertisements:create' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ADVERTISE</a>
                         
-                        <!-- ARTS & CULTURE -->
-                        <a class="dropdown-item" href="{% url 'articles:category' 'arts-culture' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ARTS &amp; CULTURE</a>
-                        
                         <!-- ABOUT US -->
                         <a class="dropdown-item" href="{% url 'about' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ABOUT US</a>
                         
                         <!-- CONTACT US -->
-                        <a class="dropdown-item" href="{% url 'contacts:contact' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CONTACT US</a>
-                        
-                        <!-- PHOTO GALLERY -->
-                        <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTO GALLERY</a>
-                        
-                        <!-- VIDEO GALLERY -->
-                        <a class="dropdown-item" href="{% url 'media_library:public_videos' %}" style="color: white; padding: 12px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">VIDEO GALLERY</a>
+                        <a class="dropdown-item" href="{% url 'contacts:contact' %}" style="color: white; padding: 12px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CONTACT US</a>
                         
                     </div>
                 </li>

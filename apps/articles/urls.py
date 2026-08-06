@@ -69,14 +69,6 @@ urlpatterns = [
     path('video/', views.video, name='video'),
     
     # ============================================================
-    # ARTICLE DETAIL - MUST come LAST to catch all slugs
-    # ============================================================
-    
-    # Article detail view - catches all remaining slugs
-    # Using re_path to allow colons, hyphens, underscores, letters and numbers
-    re_path(r'^(?P<slug>[-\w:]+)/$', views.article_detail, name='detail'),
-    
-    # ============================================================
     # AJAX ENDPOINTS
     # ============================================================
     
@@ -84,7 +76,7 @@ urlpatterns = [
     path('api/breaking-news/', views.get_breaking_news_ajax, name='breaking_news_ajax'),
     
     # ============================================================
-    # USER / AUTHOR VIEWS (require login)
+    # USER / AUTHOR VIEWS (require login) - MOVED BEFORE detail view
     # ============================================================
     
     # Article management
@@ -146,6 +138,15 @@ urlpatterns = [
     
     # Featured articles
     path('featured/', views.featured_articles, name='featured'),
+    
     # ARTS & CULTURE
     path('arts-culture/', views.arts_culture, name='arts_culture'),
+    
+    # ============================================================
+    # ARTICLE DETAIL - MUST come LAST to catch all slugs
+    # ============================================================
+    
+    # Article detail view - catches all remaining slugs
+    # Using re_path to allow colons, hyphens, underscores, letters and numbers
+    re_path(r'^(?P<slug>[-\w:]+)/$', views.article_detail, name='detail'),
 ]

@@ -405,6 +405,10 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
+
+# Add the CKEDITOR_BASEPATH setting
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
@@ -429,15 +433,16 @@ CKEDITOR_CONFIGS = {
             ['Maximize', 'ShowBlocks'],
         ],
         'removePlugins': 'stylesheetparser',
-        'filebrowserUploadUrl': '/media/ckeditor/upload/',
-        'filebrowserBrowseUrl': '/media/ckeditor/browse/',
-        'filebrowserImageUploadUrl': '/media/ckeditor/upload/',
-        'filebrowserImageBrowseUrl': '/media/ckeditor/browse/',
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserBrowseUrl': '/ckeditor/browse/',
+        'filebrowserImageUploadUrl': '/ckeditor/upload/',
+        'filebrowserImageBrowseUrl': '/ckeditor/browse/',
         'language': 'en',
         'allowedContent': True,
         'autoGrow_minHeight': 200,
         'autoGrow_maxHeight': 800,
         'resize_enabled': True,
+        'uploadUrl': '/ckeditor/upload/',
     },
     'basic': {
         'toolbar': 'Basic',
@@ -450,8 +455,9 @@ CKEDITOR_CONFIGS = {
             ['Image'],
         ],
         'removePlugins': 'stylesheetparser',
-        'filebrowserUploadUrl': '/media/ckeditor/upload/',
-        'filebrowserBrowseUrl': '/media/ckeditor/browse/',
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserBrowseUrl': '/ckeditor/browse/',
+        'uploadUrl': '/ckeditor/upload/',
     },
 }
 
