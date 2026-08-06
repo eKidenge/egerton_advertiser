@@ -1,38 +1,38 @@
 {% load static %}
-<nav class="main-navigation navbar navbar-expand-lg navbar-dark" style="background: #1a5c3a; border-bottom: 3px solid #8B7355; font-family: 'Times New Roman', serif; padding: 0; min-height: 55px; position: sticky; top: 0; z-index: 9999; box-shadow: 0 2px 15px rgba(0,0,0,0.3);">
-    <div class="container-fluid" style="padding: 0 10px; max-width: 100%; position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
+<nav class="main-navigation navbar navbar-expand-lg navbar-dark" style="background: #1a5c3a; border-bottom: 3px solid #8B7355; font-family: 'Times New Roman', serif; padding: 0; min-height: 50px; position: sticky; top: 0; z-index: 9999; box-shadow: 0 2px 15px rgba(0,0,0,0.3);">
+    <div class="container-fluid" style="padding: 0 8px; max-width: 100%; position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
         
         <!-- Navbar Toggler - Always on the RIGHT -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" 
                 aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" 
-                style="border-color: rgba(255,255,255,0.4); margin: 6px 0; padding: 8px 12px; order: 2; margin-left: auto; flex-shrink: 0;">
-            <span class="navbar-toggler-icon" style="width: 28px; height: 28px;"></span>
+                style="border-color: rgba(255,255,255,0.4); margin: 4px 0; padding: 6px 10px; order: 2; margin-left: auto; flex-shrink: 0;">
+            <span class="navbar-toggler-icon" style="width: 24px; height: 24px;"></span>
         </button>
         
         <!-- Collapsible Menu -->
         <div class="collapse navbar-collapse" id="mainNavbar" style="background: #1a5c3a; z-index: 99999; order: 1; width: 100%;">
-            <ul class="navbar-nav" style="display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; gap: 0; padding: 5px 0; align-items: center; justify-content: flex-start; padding-left: 0px; width: 100%;">
+            <ul class="navbar-nav" style="display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; gap: 0; padding: 3px 0; align-items: center; justify-content: flex-start; padding-left: 0px; width: 100%;">
                 
                 <!-- HOME -->
                 <li class="nav-item" style="flex-shrink: 0;">
                     <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}" 
-                       style="color: white; font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                       style="color: white; font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; padding: 8px 10px; white-space: nowrap; text-decoration: none; display: block;">
                         HOME
                     </a>
                 </li>
                 
-                <!-- POLITICS -->
+                <!-- COMMUNITY & NATIONAL NEWS -->
                 <li class="nav-item" style="flex-shrink: 0;">
-                    <a class="nav-link {% if 'politics' in request.path %}active{% endif %}" href="{% url 'articles:category' 'politics' %}" 
-                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
-                        POLITICS
+                    <a class="nav-link {% if 'community' in request.path or 'national' in request.path %}active{% endif %}" href="{% url 'articles:category' 'community-national' %}" 
+                       style="color: white; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 8px 8px; white-space: nowrap; text-decoration: none; display: block;">
+                        COMMUNITY &amp; NATIONAL NEWS
                     </a>
                 </li>
                 
                 <!-- ENVIRONMENT -->
                 <li class="nav-item" style="flex-shrink: 0;">
                     <a class="nav-link {% if 'environment' in request.path %}active{% endif %}" href="{% url 'articles:environment' %}" 
-                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                       style="color: white; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 8px 8px; white-space: nowrap; text-decoration: none; display: block;">
                         ENVIRONMENT
                     </a>
                 </li>
@@ -40,15 +40,15 @@
                 <!-- EDUCATION & RESEARCH -->
                 <li class="nav-item" style="flex-shrink: 0;">
                     <a class="nav-link {% if 'education' in request.path or 'research' in request.path %}active{% endif %}" href="{% url 'articles:education_research' %}" 
-                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
-                        EDUCATION & RESEARCH
+                       style="color: white; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 8px 8px; white-space: nowrap; text-decoration: none; display: block;">
+                        EDUCATION &amp; RESEARCH
                     </a>
                 </li>
                 
                 <!-- AGRICULTURE -->
                 <li class="nav-item" style="flex-shrink: 0;">
                     <a class="nav-link {% if 'agriculture' in request.path %}active{% endif %}" href="{% url 'articles:agriculture' %}" 
-                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                       style="color: white; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 8px 8px; white-space: nowrap; text-decoration: none; display: block;">
                         AGRICULTURE
                     </a>
                 </li>
@@ -56,7 +56,7 @@
                 <!-- HEALTH -->
                 <li class="nav-item" style="flex-shrink: 0;">
                     <a class="nav-link {% if 'health' in request.path %}active{% endif %}" href="{% url 'articles:health' %}" 
-                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                       style="color: white; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 8px 8px; white-space: nowrap; text-decoration: none; display: block;">
                         HEALTH
                     </a>
                 </li>
@@ -64,7 +64,7 @@
                 <!-- BUSINESS DIRECTORY -->
                 <li class="nav-item" style="flex-shrink: 0;">
                     <a class="nav-link {% if 'business' in request.path %}active{% endif %}" href="{% url 'articles:business_directory' %}" 
-                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                       style="color: white; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 8px 8px; white-space: nowrap; text-decoration: none; display: block;">
                         BUSINESS DIRECTORY
                     </a>
                 </li>
@@ -72,7 +72,7 @@
                 <!-- VIDEOS -->
                 <li class="nav-item" style="flex-shrink: 0;">
                     <a class="nav-link {% if 'videos' in request.path %}active{% endif %}" href="{% url 'media_library:public_videos' %}" 
-                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; text-decoration: none; display: block;">
+                       style="color: white; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 8px 8px; white-space: nowrap; text-decoration: none; display: block;">
                         VIDEOS
                     </a>
                 </li>
@@ -80,45 +80,45 @@
                 <!-- MORE DROPDOWN -->
                 <li class="nav-item dropdown" style="flex-shrink: 0; position: relative;">
                     <a class="nav-link dropdown-toggle more-toggle" href="#" id="moreDropdown" role="button" aria-expanded="false" 
-                       style="color: white; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; white-space: nowrap; cursor: pointer;">
+                       style="color: white; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 8px 8px; white-space: nowrap; cursor: pointer;">
                         MORE
                     </a>
                     <!-- Custom dropdown menu -->
                     <div class="custom-dropdown-menu" id="moreDropdownMenu" 
-                         style="background: #1a5c3a; border: 2px solid #8B7355; border-radius: 0; padding: 0; min-width: 220px; box-shadow: 0 10px 50px rgba(0,0,0,0.8); position: fixed; top: auto; left: auto; right: 20px; z-index: 9999999; max-height: 70vh; overflow-y: auto; display: none;">
+                         style="background: #1a5c3a; border: 2px solid #8B7355; border-radius: 0; padding: 0; min-width: 210px; box-shadow: 0 10px 50px rgba(0,0,0,0.8); position: fixed; top: auto; left: auto; right: 20px; z-index: 9999999; max-height: 70vh; overflow-y: auto; display: none;">
                         
                         <!-- PHOTOS -->
-                        <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTOS</a>
+                        <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTOS</a>
                         
                         <!-- OPINION -->
-                        <a class="dropdown-item" href="{% url 'articles:opinion' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">OPINION</a>
+                        <a class="dropdown-item" href="{% url 'articles:opinion' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">OPINION</a>
                         
                         <!-- TECHNOLOGY -->
-                        <a class="dropdown-item" href="{% url 'articles:technology' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">TECHNOLOGY</a>
+                        <a class="dropdown-item" href="{% url 'articles:technology' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">TECHNOLOGY</a>
                         
                         <!-- SOCIETY -->
-                        <a class="dropdown-item" href="{% url 'articles:society' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">SOCIETY</a>
+                        <a class="dropdown-item" href="{% url 'articles:society' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">SOCIETY</a>
                         
                         <!-- CAREERS -->
-                        <a class="dropdown-item" href="{% url 'articles:careers' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CAREERS</a>
+                        <a class="dropdown-item" href="{% url 'articles:careers' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CAREERS</a>
                         
                         <!-- ADVERTISE -->
-                        <a class="dropdown-item" href="{% url 'advertisements:create' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ADVERTISE</a>
+                        <a class="dropdown-item" href="{% url 'advertisements:create' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ADVERTISE</a>
                         
-                        <!-- ARTS & CULTURE (Replaces MEDIA LIBRARY) -->
-                        <a class="dropdown-item" href="{% url 'articles:category' 'arts-culture' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ARTS & CULTURE</a>
+                        <!-- ARTS & CULTURE -->
+                        <a class="dropdown-item" href="{% url 'articles:category' 'arts-culture' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ARTS &amp; CULTURE</a>
                         
                         <!-- ABOUT US -->
-                        <a class="dropdown-item" href="{% url 'about' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ABOUT US</a>
+                        <a class="dropdown-item" href="{% url 'about' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">ABOUT US</a>
                         
                         <!-- CONTACT US -->
-                        <a class="dropdown-item" href="{% url 'contacts:contact' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CONTACT US</a>
+                        <a class="dropdown-item" href="{% url 'contacts:contact' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">CONTACT US</a>
                         
                         <!-- PHOTO GALLERY -->
-                        <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTO GALLERY</a>
+                        <a class="dropdown-item" href="{% url 'media_library:public_photos' %}" style="color: white; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">PHOTO GALLERY</a>
                         
                         <!-- VIDEO GALLERY -->
-                        <a class="dropdown-item" href="{% url 'media_library:public_videos' %}" style="color: white; padding: 14px 22px; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">VIDEO GALLERY</a>
+                        <a class="dropdown-item" href="{% url 'media_library:public_videos' %}" style="color: white; padding: 12px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #1a5c3a; display: block; text-decoration: none;">VIDEO GALLERY</a>
                         
                     </div>
                 </li>
@@ -141,12 +141,12 @@
         z-index: 9999 !important;
         width: 100%;
         display: block;
-        min-height: 55px;
+        min-height: 50px;
         box-shadow: 0 2px 15px rgba(0,0,0,0.3);
     }
     
     .main-navigation .container-fluid {
-        padding: 0 15px !important;
+        padding: 0 8px !important;
         max-width: 100%;
         position: relative;
         display: flex;
@@ -159,8 +159,8 @@
     .main-navigation .navbar-toggler {
         order: 2;
         border-color: rgba(255,255,255,0.4);
-        padding: 8px 12px;
-        margin: 6px 0;
+        padding: 6px 10px;
+        margin: 4px 0;
         margin-left: auto !important;
         flex-shrink: 0;
         display: block !important;
@@ -177,8 +177,8 @@
     
     .main-navigation .navbar-toggler-icon {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
     }
     
     /* Collapsible menu */
@@ -197,14 +197,14 @@
         scrollbar-width: thin;
         gap: 0;
         width: 100%;
-        padding: 5px 0;
+        padding: 3px 0;
         align-items: center;
         justify-content: flex-start;
-        padding-left: 5px !important;
+        padding-left: 3px !important;
     }
     
     .main-navigation .navbar-nav::-webkit-scrollbar {
-        height: 3px;
+        height: 2px;
     }
     
     .main-navigation .navbar-nav::-webkit-scrollbar-track {
@@ -225,11 +225,11 @@
     
     .main-navigation .nav-link {
         color: white !important;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        padding: 10px 12px !important;
+        letter-spacing: 0.3px;
+        padding: 8px 8px !important;
         transition: all 0.3s ease;
         position: relative;
         display: block;
@@ -252,7 +252,7 @@
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
-        width: 50%;
+        width: 40%;
         height: 3px;
         background: #a5d6a7;
     }
@@ -271,12 +271,12 @@
     
     .main-navigation .dropdown-toggle::after {
         display: inline-block;
-        margin-left: 6px;
+        margin-left: 4px;
         vertical-align: middle;
         content: "";
-        border-top: 5px solid #a5d6a7;
-        border-right: 5px solid transparent;
-        border-left: 5px solid transparent;
+        border-top: 4px solid #a5d6a7;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
     }
     
     .main-navigation .dropdown-toggle:hover::after {
@@ -296,7 +296,7 @@
         border: 2px solid #8B7355 !important;
         border-radius: 0 !important;
         padding: 0 !important;
-        min-width: 220px !important;
+        min-width: 210px !important;
         max-height: 70vh !important;
         overflow-y: auto !important;
         box-shadow: 0 10px 50px rgba(0,0,0,0.8) !important;
@@ -309,9 +309,9 @@
     
     .custom-dropdown-menu .dropdown-item {
         color: white !important;
-        padding: 14px 22px !important;
+        padding: 12px 20px !important;
         border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-        font-size: 15px !important;
+        font-size: 14px !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.5px !important;
@@ -353,9 +353,9 @@
        ============================================ */
     @media (min-width: 992px) and (max-width: 1199.98px) {
         .main-navigation .nav-link {
-            font-size: 14px !important;
-            padding: 10px 10px !important;
-            letter-spacing: 0.3px;
+            font-size: 13px !important;
+            padding: 7px 6px !important;
+            letter-spacing: 0.2px;
         }
     }
     
@@ -365,6 +365,7 @@
     @media (max-width: 991.98px) {
         .main-navigation .container-fluid {
             justify-content: space-between;
+            padding: 0 5px !important;
         }
         
         /* Toggler shows on right */
@@ -413,8 +414,8 @@
         }
         
         .main-navigation .nav-link {
-            padding: 14px 20px !important;
-            font-size: 18px !important;
+            padding: 12px 18px !important;
+            font-size: 16px !important;
             text-align: left;
             white-space: normal;
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -447,34 +448,34 @@
         
         .custom-dropdown-menu .dropdown-item {
             background: transparent !important;
-            padding: 12px 20px !important;
-            font-size: 16px !important;
+            padding: 10px 18px !important;
+            font-size: 15px !important;
         }
         
         .main-navigation .dropdown-toggle::after {
             float: right;
-            margin-top: 8px;
+            margin-top: 6px;
         }
     }
     
     @media (max-width: 575.98px) {
         .main-navigation .container-fluid {
-            padding: 0 8px !important;
+            padding: 0 4px !important;
         }
         
         .main-navigation .nav-link {
-            font-size: 17px !important;
-            padding: 12px 16px !important;
-            letter-spacing: 0.5px;
+            font-size: 15px !important;
+            padding: 10px 14px !important;
+            letter-spacing: 0.3px;
         }
         
         .main-navigation .navbar-toggler {
-            padding: 6px 10px;
+            padding: 4px 8px;
         }
         
         .main-navigation .navbar-toggler-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
         }
     }
 </style>

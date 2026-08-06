@@ -63,7 +63,7 @@ class Command(BaseCommand):
         
         categories = [
             # Main Navigation Categories
-            {'name': 'Politics', 'slug': 'politics', 'description': 'Political news, analysis, and commentary', 'is_active': True, 'icon': 'fa-gavel'},
+            {'name': 'Community & National News', 'slug': 'community-national', 'description': 'Community and national news coverage', 'is_active': True, 'icon': 'fa-newspaper'},
             {'name': 'Environment', 'slug': 'environment', 'description': 'Environmental news, climate action, and conservation', 'is_active': True, 'icon': 'fa-leaf'},
             {'name': 'Education & Research', 'slug': 'education', 'description': 'Education news, research, and academic developments', 'is_active': True, 'icon': 'fa-graduation-cap'},
             {'name': 'Agriculture', 'slug': 'agriculture', 'description': 'Agricultural news, farming, and food security', 'is_active': True, 'icon': 'fa-tractor'},
@@ -81,10 +81,14 @@ class Command(BaseCommand):
         ]
         
         for cat_data in categories:
-            Category.objects.get_or_create(
+            category, created = Category.objects.get_or_create(
                 slug=cat_data['slug'],
                 defaults=cat_data
             )
+            if created:
+                self.stdout.write(f'   ✅ Created category: {category.name}')
+            else:
+                self.stdout.write(f'   ⚠️ Category already exists: {category.name}')
         
         # ============================================
         # 3. CREATE TAGS
@@ -102,8 +106,7 @@ class Command(BaseCommand):
             {'name': 'Climate Change', 'slug': 'climate-change', 'is_active': True},
             {'name': 'Conservation', 'slug': 'conservation', 'is_active': True},
             {'name': 'Community', 'slug': 'community', 'is_active': True},
-            {'name': 'Politics', 'slug': 'politics-tag', 'is_active': True},
-            {'name': 'Elections', 'slug': 'elections', 'is_active': True},
+            {'name': 'National', 'slug': 'national', 'is_active': True},
             {'name': 'Business', 'slug': 'business-tag', 'is_active': True},
             {'name': 'Economy', 'slug': 'economy', 'is_active': True},
             {'name': 'Health', 'slug': 'health-tag', 'is_active': True},
@@ -116,6 +119,8 @@ class Command(BaseCommand):
             {'name': 'Careers', 'slug': 'careers-tag', 'is_active': True},
             {'name': 'Employment', 'slug': 'employment', 'is_active': True},
             {'name': 'Sustainability', 'slug': 'sustainability', 'is_active': True},
+            {'name': 'Politics', 'slug': 'politics-tag', 'is_active': True},
+            {'name': 'Society', 'slug': 'society-tag', 'is_active': True},
         ]
         
         for tag_data in tags:
@@ -215,6 +220,8 @@ class Command(BaseCommand):
                     'password': make_password(user_data['password'])
                 }
             )
+            if created:
+                self.stdout.write(f'   ✅ Created user: {user.username}')
         
         # Create 30 random users
         self.stdout.write('👤 Creating 30 random users...')
@@ -242,7 +249,7 @@ class Command(BaseCommand):
         authors = User.objects.filter(role__in=['admin', 'editor', 'journalist'])
         
         # Get categories for each section
-        politics_cat = Category.objects.get(slug='politics')
+        community_cat = Category.objects.get(slug='community-national')
         environment_cat = Category.objects.get(slug='environment')
         education_cat = Category.objects.get(slug='education')
         agriculture_cat = Category.objects.get(slug='agriculture')
@@ -255,30 +262,30 @@ class Command(BaseCommand):
         arts_cat = Category.objects.get(slug='arts-culture')
         
         articles_data = [
-            # Politics Articles
+            # Community & National News Articles
             {
-                'title': 'New Political Alliance Formed in Kenya',
+                'title': 'Community Leaders Unite for Development',
                 'content': fake.paragraph(nb_sentences=30),
-                'excerpt': 'Major political coalition announced ahead of elections',
-                'category': politics_cat,
+                'excerpt': 'Local leaders come together for community development initiatives',
+                'category': community_cat,
                 'is_featured': True,
                 'is_breaking': True,
                 'views_count': random.randint(100, 5000),
             },
             {
-                'title': 'Parliament Passes Historic Climate Bill',
+                'title': 'National Dialogue on Economic Growth',
                 'content': fake.paragraph(nb_sentences=25),
-                'excerpt': 'Landmark climate legislation approved',
-                'category': politics_cat,
+                'excerpt': 'National stakeholders discuss economic development strategies',
+                'category': community_cat,
                 'is_featured': False,
                 'is_breaking': False,
                 'views_count': random.randint(50, 3000),
             },
             {
-                'title': 'Local Elections: What You Need to Know',
+                'title': 'Community Health Initiative Launched',
                 'content': fake.paragraph(nb_sentences=20),
-                'excerpt': 'Guide to upcoming local elections',
-                'category': politics_cat,
+                'excerpt': 'New community health program aims to improve healthcare access',
+                'category': community_cat,
                 'is_featured': False,
                 'is_breaking': False,
                 'views_count': random.randint(30, 2000),
@@ -710,3 +717,8 @@ class Command(BaseCommand):
         self.stdout.write(f'   Contact Messages: {ContactMessage.objects.count()}')
         self.stdout.write(f'   Media Files: {MediaFile.objects.count()}')
         self.stdout.write(f'   Activity Logs: {UserActivityLog.objects.count()}')
+        
+        self.stdout.write('\n📂 Categories Created:')
+        for cat in Category.objects.all().order_by('name'):
+            article_count = Article.objects.filter(category=cat).count()
+            self.stdout.write(f'   ✅ {cat.name} (slug: {cat.slug}) - {article_count} articles')
