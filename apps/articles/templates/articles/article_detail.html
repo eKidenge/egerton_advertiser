@@ -5,655 +5,1111 @@
 
 {% block meta_description %}{{ article.excerpt|truncatewords:20 }}{% endblock %}
 
-{% block content %}
-<div class="container">
-    <div class="article-detail">
-        <div class="row">
-            <div class="col-lg-8">
-                <!-- Article Header -->
-                <div class="article-header">
-                    <div class="article-category">
-                        <a href="{{ article.category.get_absolute_url }}" class="category-badge">
-                            {{ article.category.name }}
-                        </a>
-                        {% if article.is_breaking %}
-                        <span class="breaking-badge">
-                            <i class="fas fa-circle pulse"></i> BREAKING
-                        </span>
-                        {% endif %}
-                        {% if article.is_exclusive %}
-                        <span class="exclusive-badge">
-                            <i class="fas fa-star"></i> EXCLUSIVE
-                        </span>
-                        {% endif %}
-                    </div>
-                    
-                    <h1 class="article-title">{{ article.title }}</h1>
-                    
-                    {% if article.excerpt %}
-                    <p class="article-excerpt">{{ article.excerpt }}</p>
-                    {% endif %}
-                    
-                    <div class="article-meta">
-                        <div class="author-info">
-                            <img src="{% if article.author.profile_picture %}{{ article.author.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-                                 alt="{{ article.author.get_full_name }}" class="author-avatar">
-                            <div>
-                                <span class="author-name">
-                                    <a href="{% url 'articles:author_articles' article.author.id %}">
-                                        {{ article.author.get_full_name|default:article.author.username }}
-                                    </a>
-                                </span>
-                                <span class="author-role">{{ article.author.get_role_display }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="article-date">
-                            <i class="fas fa-calendar-alt"></i>
-                            {{ article.published_at|date:"F d, Y" }}
-                            <span class="mx-2">|</span>
-                            <i class="fas fa-clock"></i>
-                            {{ article.time_to_read }} min read
-                        </div>
-                        
-                        <div class="article-stats">
-                            <span><i class="fas fa-eye"></i> {{ article.views_count }}</span>
-                            <span><i class="fas fa-comments"></i> {{ article.comments.count }}</span>
-                            <span><i class="fas fa-share-alt"></i> {{ article.shares_count }}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Featured Image -->
-                {% if article.featured_image %}
-                <div class="article-featured-image">
-                    <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid">
-                    {% if article.featured_image_caption %}
-                    <p class="image-caption">{{ article.featured_image_caption }}</p>
-                    {% endif %}
-                </div>
-                {% endif %}
-                
-                <!-- Article Content -->
-                <div class="article-content">
-                    {{ article.content|safe }}
-                </div>
-                
-                <!-- Tags -->
-                {% if article.tags.all %}
-                <div class="article-tags">
-                    <span class="tags-label"><i class="fas fa-tags"></i> Tags:</span>
-                    {% for tag in article.tags.all %}
-                    <a href="{% url 'tags:detail' tag.slug %}" class="tag-link">#{{ tag.name }}</a>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                
-                <!-- Share Buttons -->
-                <div class="article-share">
-                    <span class="share-label">Share this article:</span>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
-                       target="_blank" class="share-btn facebook" title="Share on Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ article.title }}" 
-                       target="_blank" class="share-btn twitter" title="Share on Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
-                       target="_blank" class="share-btn linkedin" title="Share on LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://wa.me/?text={{ article.title }}%20{{ request.build_absolute_uri }}" 
-                       target="_blank" class="share-btn whatsapp" title="Share on WhatsApp">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-                    <a href="mailto:?subject={{ article.title }}&body={{ request.build_absolute_uri }}" 
-                       class="share-btn email" title="Share via Email">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
-                
-                <!-- Author Bio -->
-                <div class="author-bio">
-                    <img src="{% if article.author.profile_picture %}{{ article.author.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-                         alt="{{ article.author.get_full_name }}" class="author-bio-avatar">
-                    <div>
-                        <h5>{{ article.author.get_full_name|default:article.author.username }}</h5>
-                        <p class="author-bio-text">{{ article.author.bio|default:"Journalist at The Egerton Advertiser" }}</p>
-                        <div class="author-social">
-                            {% if article.author.website %}
-                            <a href="{{ article.author.website }}" target="_blank"><i class="fas fa-globe"></i></a>
-                            {% endif %}
-                            {% if article.author.social_links.twitter %}
-                            <a href="{{ article.author.social_links.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
-                            {% endif %}
-                            {% if article.author.social_links.facebook %}
-                            <a href="{{ article.author.social_links.facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
-                            {% endif %}
-                            {% if article.author.social_links.linkedin %}
-                            <a href="{{ article.author.social_links.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Related Articles -->
-                {% if related_articles %}
-                <div class="related-articles">
-                    <h4><i class="fas fa-newspaper"></i> Related Articles</h4>
-                    <div class="row">
-                        {% for related in related_articles %}
-                        <div class="col-md-4">
-                            <div class="related-item">
-                                {% if related.featured_image %}
-                                <img src="{{ related.featured_image.url }}" alt="{{ related.title }}" class="img-fluid">
-                                {% endif %}
-                                <h6><a href="{{ related.get_absolute_url }}">{{ related.title|truncatewords:8 }}</a></h6>
-                                <small class="text-muted">{{ related.published_at|date:"M d, Y" }}</small>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-                
-                <!-- Comments -->
-                <div class="comments-section">
-                    <h4><i class="fas fa-comments"></i> Comments ({{ comments.count }})</h4>
-                    
-                    <!-- Comment Form -->
-                    {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'comments:add' article.id %}" class="comment-form">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <textarea name="content" class="form-control" rows="4" 
-                                      placeholder="Join the discussion..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Post Comment
-                        </button>
-                    </form>
-                    {% else %}
-                    <div class="comment-login-prompt">
-                        <p><a href="{% url 'accounts:login' %}?next={{ request.path }}">Login</a> to leave a comment</p>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Comments List -->
-                    {% if comments %}
-                    <div class="comments-list">
-                        {% for comment in comments %}
-                        <div class="comment-item" id="comment-{{ comment.id }}">
-                            <div class="comment-header">
-                                <img src="{% if comment.user.profile_picture %}{{ comment.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-                                     alt="{{ comment.user.get_full_name }}" class="comment-avatar">
-                                <div>
-                                    <strong>{{ comment.user.get_full_name|default:comment.user.username }}</strong>
-                                    <span class="comment-date">{{ comment.created_at|timesince }} ago</span>
-                                </div>
-                            </div>
-                            <div class="comment-body">{{ comment.content }}</div>
-                            <div class="comment-actions">
-                                <button class="btn btn-sm btn-outline-primary reply-btn" data-comment-id="{{ comment.id }}">
-                                    <i class="fas fa-reply"></i> Reply
-                                </button>
-                                {% if user == comment.user or user.can_moderate_comments %}
-                                <a href="{% url 'comments:delete' comment.id %}" class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-trash"></i> Delete
-                                </a>
-                                {% endif %}
-                            </div>
-                            
-                            <!-- Replies -->
-                            {% if comment.replies.all %}
-                            <div class="replies">
-                                {% for reply in comment.replies.all %}
-                                <div class="reply-item">
-                                    <div class="comment-header">
-                                        <img src="{% if reply.user.profile_picture %}{{ reply.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-                                             alt="{{ reply.user.get_full_name }}" class="comment-avatar">
-                                        <div>
-                                            <strong>{{ reply.user.get_full_name|default:reply.user.username }}</strong>
-                                            <span class="comment-date">{{ reply.created_at|timesince }} ago</span>
-                                        </div>
-                                    </div>
-                                    <div class="comment-body">{{ reply.content }}</div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <p class="text-muted">No comments yet. Be the first to comment!</p>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <!-- Author's Other Articles -->
-                <div class="sidebar-widget">
-                    <div class="widget-title">
-                        <i class="fas fa-pen"></i> More from {{ article.author.get_full_name|default:article.author.username }}
-                    </div>
-                    {% for article in author_articles %}
-                    <div class="author-article-item">
-                        <a href="{{ article.get_absolute_url }}" class="article-link">{{ article.title|truncatewords:8 }}</a>
-                        <small class="text-muted d-block">{{ article.published_at|date:"M d, Y" }}</small>
-                    </div>
-                    {% empty %}
-                    <p class="text-muted">No more articles from this author.</p>
-                    {% endfor %}
-                </div>
-                
-                <!-- Advertisement -->
-                {% include 'sidebar_ads.html' %}
-                
-                <!-- Popular Articles -->
-                <div class="sidebar-widget">
-                    <div class="widget-title">
-                        <i class="fas fa-fire"></i> Popular This Week
-                    </div>
-                    <div class="popular-articles">
-                        <!-- Will be populated by view -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+{% block extra_css %}
 <style>
-.article-detail {
-    padding: 30px 0;
+/* ============================================
+   ARTICLE DETAIL - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --gov-primary: #0a1a2a;
+    --gov-secondary: #1a3c5e;
+    --gov-gold: #c9a84c;
+    --gov-cream: #f5f0e8;
+    --gov-border: #d4cdc0;
+    --gov-red: #8b1a1a;
 }
+
+.article-detail-page {
+    background: var(--gov-cream);
+    padding: 30px 0 50px;
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   MAIN CONTENT - OFFICIAL STYLE
+   ============================================ */
+.article-main {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.article-main::before {
+    content: 'THE EGERTON ADVERTISER';
+    position: absolute;
+    right: -50px;
+    top: -20px;
+    font-size: 120px;
+    font-weight: 900;
+    color: rgba(10,26,42,0.02);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 15px;
+    pointer-events: none;
+}
+
+/* ============================================
+   ARTICLE HEADER
+   ============================================ */
 .article-header {
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 20px;
-    margin-bottom: 25px;
+    border-bottom: 3px solid var(--gov-gold);
+    padding-bottom: 25px;
+    margin-bottom: 30px;
 }
+
 .article-category {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
 }
+
 .category-badge {
-    background: #1a3c5e;
+    background: var(--gov-secondary);
     color: #fff;
-    padding: 4px 12px;
+    padding: 5px 18px;
     font-family: 'Times New Roman', serif;
     font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    border-radius: 3px;
+    letter-spacing: 1.5px;
     text-decoration: none;
+    border-radius: 2px;
+    font-weight: 700;
 }
+
 .category-badge:hover {
-    background: #0e2a44;
+    background: var(--gov-primary);
     color: #fff;
     text-decoration: none;
 }
+
 .breaking-badge {
-    background: #dc3545;
+    background: var(--gov-red);
     color: #fff;
-    padding: 4px 12px;
+    padding: 5px 16px;
     font-family: 'Playfair Display', serif;
     font-weight: 900;
-    font-size: 12px;
-    letter-spacing: 1px;
-    border-radius: 3px;
-    margin-left: 5px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    border-radius: 2px;
+    animation: pulse-badge 2s infinite;
 }
+
+@keyframes pulse-badge {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
 .exclusive-badge {
-    background: #c9a84c;
-    color: #0a1a2a;
-    padding: 4px 12px;
+    background: var(--gov-gold);
+    color: var(--gov-primary);
+    padding: 5px 16px;
     font-family: 'Playfair Display', serif;
     font-weight: 900;
-    font-size: 12px;
-    letter-spacing: 1px;
-    border-radius: 3px;
-    margin-left: 5px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    border-radius: 2px;
 }
+
 .article-title {
     font-family: 'Playfair Display', serif;
     font-weight: 900;
-    font-size: 36px;
-    color: #1a3c5e;
-    line-height: 1.2;
+    font-size: 42px;
+    color: var(--gov-primary);
+    line-height: 1.15;
+    margin: 10px 0 15px;
 }
+
 .article-excerpt {
     font-family: 'Times New Roman', serif;
-    font-size: 18px;
-    color: #6c757d;
+    font-size: 19px;
+    color: #5a5a5a;
     font-style: italic;
-    margin: 10px 0;
+    margin: 10px 0 15px;
+    border-left: 3px solid var(--gov-gold);
+    padding-left: 20px;
 }
+
+/* ============================================
+   ARTICLE META
+   ============================================ */
 .article-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
     margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--gov-border);
 }
+
 .author-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
+
 .author-avatar {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid var(--gov-gold);
 }
+
 .author-name a {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    color: #1a3c5e;
+    font-size: 16px;
+    color: var(--gov-primary);
     text-decoration: none;
 }
+
 .author-name a:hover {
+    color: var(--gov-gold);
     text-decoration: underline;
 }
+
 .author-role {
     display: block;
     font-size: 12px;
     color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
+
 .article-date {
     font-family: 'Times New Roman', serif;
     color: #6c757d;
     font-size: 14px;
 }
+
+.article-date i {
+    color: var(--gov-gold);
+    margin-right: 5px;
+}
+
 .article-stats {
     display: flex;
-    gap: 15px;
+    gap: 18px;
     font-family: 'Times New Roman', serif;
     color: #6c757d;
     font-size: 14px;
 }
+
 .article-stats i {
+    color: var(--gov-gold);
     margin-right: 5px;
 }
+
+/* ============================================
+   FEATURED IMAGE - PROFESSIONAL
+   ============================================ */
 .article-featured-image {
-    margin: 20px 0;
+    margin: 25px 0 30px;
+    position: relative;
+    background: #f8f5f0;
+    padding: 8px;
+    border: 1px solid var(--gov-border);
 }
+
 .article-featured-image img {
-    border-radius: 8px;
+    width: 100%;
+    height: auto;
+    display: block;
 }
-.image-caption {
+
+.article-featured-image .image-caption {
     font-family: 'Times New Roman', serif;
     font-size: 13px;
     color: #6c757d;
     text-align: center;
-    margin-top: 5px;
+    padding: 10px 15px 5px;
     font-style: italic;
+    background: #faf8f5;
+    border-top: 1px solid var(--gov-border);
 }
+
+.image-credit {
+    font-family: 'Times New Roman', serif;
+    font-size: 11px;
+    color: #999;
+    text-align: right;
+    padding: 3px 15px 8px;
+    background: #faf8f5;
+}
+
+/* ============================================
+   ARTICLE CONTENT
+   ============================================ */
 .article-content {
     font-family: 'Times New Roman', serif;
     font-size: 18px;
     line-height: 1.9;
     color: #1a1a1a;
 }
-.article-content h2, .article-content h3 {
+
+.article-content h2 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    color: #1a3c5e;
+    color: var(--gov-primary);
+    margin-top: 35px;
+    font-size: 28px;
+    border-bottom: 2px solid var(--gov-gold);
+    padding-bottom: 8px;
 }
+
+.article-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gov-secondary);
+    margin-top: 25px;
+    font-size: 22px;
+}
+
+.article-content h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: var(--gov-secondary);
+    margin-top: 20px;
+    font-size: 19px;
+}
+
+.article-content p {
+    margin-bottom: 20px;
+}
+
 .article-content img {
     max-width: 100%;
     height: auto;
-    border-radius: 4px;
+    border: 1px solid var(--gov-border);
+    padding: 5px;
+    background: #fff;
+    margin: 15px 0;
 }
+
 .article-content blockquote {
-    border-left: 4px solid #c9a84c;
-    padding: 15px 25px;
-    margin: 20px 0;
-    background: #f5f0e8;
-    font-style: italic;
-}
-.article-tags {
+    border-left: 4px solid var(--gov-gold);
+    padding: 20px 30px;
     margin: 25px 0;
-    padding: 15px 0;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
+    background: var(--gov-cream);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--gov-primary);
 }
+
+.article-content blockquote footer {
+    font-style: normal;
+    font-size: 15px;
+    color: #6c757d;
+    margin-top: 10px;
+}
+
+.article-content ul, .article-content ol {
+    margin: 15px 0 20px 25px;
+}
+
+.article-content li {
+    margin-bottom: 8px;
+}
+
+.article-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.article-content table th {
+    background: var(--gov-primary);
+    color: #fff;
+    padding: 10px 15px;
+    text-align: left;
+}
+
+.article-content table td {
+    padding: 10px 15px;
+    border: 1px solid var(--gov-border);
+}
+
+.article-content table tr:nth-child(even) {
+    background: var(--gov-cream);
+}
+
+/* ============================================
+   TAGS
+   ============================================ */
+.article-tags {
+    margin: 30px 0;
+    padding: 18px 0;
+    border-top: 2px solid var(--gov-border);
+    border-bottom: 2px solid var(--gov-border);
+}
+
 .tags-label {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    color: #1a3c5e;
-    margin-right: 10px;
+    color: var(--gov-primary);
+    margin-right: 12px;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
 }
+
 .tag-link {
     display: inline-block;
-    background: #f5f0e8;
-    padding: 3px 12px;
-    margin: 3px;
+    background: var(--gov-cream);
+    padding: 4px 16px;
+    margin: 3px 4px;
     font-family: 'Times New Roman', serif;
     font-size: 13px;
-    color: #1a3c5e;
+    color: var(--gov-primary);
     text-decoration: none;
-    border-radius: 3px;
+    border: 1px solid var(--gov-border);
+    transition: all 0.3s;
 }
+
 .tag-link:hover {
-    background: #1a3c5e;
-    color: #fff;
+    background: var(--gov-gold);
+    border-color: var(--gov-gold);
+    color: var(--gov-primary);
     text-decoration: none;
 }
+
+/* ============================================
+   SHARE BUTTONS
+   ============================================ */
 .article-share {
-    margin: 20px 0;
-    padding: 15px 0;
+    margin: 25px 0 30px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--gov-border);
 }
+
 .share-label {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    color: #1a3c5e;
+    color: var(--gov-primary);
     margin-right: 15px;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
 }
+
 .share-btn {
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
     text-align: center;
-    border-radius: 50%;
-    margin: 0 5px;
+    border-radius: 2px;
+    margin: 0 4px;
     color: #fff;
     transition: all 0.3s;
+    font-size: 16px;
 }
+
 .share-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    color: #fff;
+    text-decoration: none;
 }
+
 .share-btn.facebook { background: #3b5998; }
 .share-btn.twitter { background: #1da1f2; }
 .share-btn.linkedin { background: #0077b5; }
 .share-btn.whatsapp { background: #25d366; }
 .share-btn.email { background: #6c757d; }
+
+/* ============================================
+   AUTHOR BIO
+   ============================================ */
 .author-bio {
     display: flex;
-    gap: 20px;
-    padding: 20px;
-    background: #f5f0e8;
-    border-radius: 8px;
-    margin: 25px 0;
-    border-left: 4px solid #c9a84c;
+    gap: 25px;
+    padding: 25px 30px;
+    background: var(--gov-cream);
+    border-left: 4px solid var(--gov-gold);
+    margin: 30px 0;
+    align-items: flex-start;
 }
+
 .author-bio-avatar {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #fff;
+    flex-shrink: 0;
 }
+
 .author-bio h5 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    color: #1a3c5e;
+    color: var(--gov-primary);
+    font-size: 20px;
+    margin: 0 0 5px;
 }
+
 .author-bio-text {
     font-family: 'Times New Roman', serif;
-    color: #6c757d;
+    color: #5a5a5a;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 5px 0 10px;
 }
+
 .author-social a {
-    color: #1a3c5e;
-    margin-right: 10px;
-    font-size: 16px;
+    display: inline-block;
+    color: var(--gov-secondary);
+    margin-right: 12px;
+    font-size: 17px;
+    transition: color 0.3s;
 }
+
 .author-social a:hover {
-    color: #c9a84c;
+    color: var(--gov-gold);
 }
+
+/* ============================================
+   RELATED ARTICLES
+   ============================================ */
 .related-articles {
-    margin: 30px 0;
+    margin: 35px 0 40px;
 }
+
 .related-articles h4 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    color: #1a3c5e;
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    color: var(--gov-primary);
+    border-bottom: 3px solid var(--gov-gold);
+    padding-bottom: 12px;
+    margin-bottom: 25px;
+    font-size: 22px;
 }
+
+.related-articles h4 i {
+    color: var(--gov-gold);
+    margin-right: 10px;
+}
+
 .related-item {
     background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 15px;
+    border: 1px solid var(--gov-border);
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    height: 100%;
 }
+
+.related-item:hover {
+    border-color: var(--gov-gold);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
 .related-item img {
-    border-radius: 4px;
-    margin-bottom: 8px;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    margin-bottom: 12px;
+    border: 1px solid var(--gov-border);
 }
+
 .related-item h6 {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
+    font-size: 15px;
+    margin: 5px 0 8px;
 }
+
 .related-item h6 a {
-    color: #1a3c5e;
+    color: var(--gov-primary);
     text-decoration: none;
 }
+
 .related-item h6 a:hover {
+    color: var(--gov-gold);
     text-decoration: underline;
 }
-.comments-section {
-    margin: 30px 0;
+
+.related-item .related-date {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
 }
+
+/* ============================================
+   COMMENTS
+   ============================================ */
+.comments-section {
+    margin: 35px 0;
+}
+
 .comments-section h4 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    color: #1a3c5e;
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-.comment-form {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
+    color: var(--gov-primary);
+    border-bottom: 3px solid var(--gov-gold);
+    padding-bottom: 12px;
     margin-bottom: 25px;
+    font-size: 22px;
 }
+
+.comments-section h4 i {
+    color: var(--gov-gold);
+    margin-right: 10px;
+}
+
+.comment-form {
+    background: var(--gov-cream);
+    padding: 25px;
+    border: 1px solid var(--gov-border);
+    margin-bottom: 30px;
+}
+
 .comment-form textarea {
     font-family: 'Times New Roman', serif;
+    border-radius: 2px;
+    border: 1px solid var(--gov-border);
+    padding: 12px 15px;
+    font-size: 15px;
 }
+
+.comment-form textarea:focus {
+    border-color: var(--gov-gold);
+    box-shadow: 0 0 0 0.2rem rgba(201,168,76,0.2);
+}
+
+.comment-form .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+    background: var(--gov-gold);
+    border-color: var(--gov-gold);
+    color: var(--gov-primary);
+}
+
+.comment-form .btn:hover {
+    background: #d4b85c;
+    border-color: #d4b85c;
+}
+
 .comment-login-prompt {
     text-align: center;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    margin-bottom: 25px;
+    padding: 25px;
+    background: var(--gov-cream);
+    border: 1px solid var(--gov-border);
+    margin-bottom: 30px;
     font-family: 'Times New Roman', serif;
 }
-.comment-item {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 15px 0;
+
+.comment-login-prompt a {
+    color: var(--gov-gold);
+    font-weight: 700;
 }
+
+.comment-item {
+    border-bottom: 1px solid var(--gov-border);
+    padding: 18px 0;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
 .comment-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
+    gap: 12px;
+    margin-bottom: 8px;
 }
+
 .comment-avatar {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
 }
+
+.comment-header strong {
+    font-family: 'Times New Roman', serif;
+    color: var(--gov-primary);
+}
+
 .comment-date {
     font-size: 12px;
     color: #6c757d;
 }
+
 .comment-body {
     font-family: 'Times New Roman', serif;
     font-size: 15px;
-    margin: 5px 0 10px 45px;
+    line-height: 1.6;
+    margin: 5px 0 10px 52px;
 }
+
 .comment-actions {
-    margin-left: 45px;
+    margin-left: 52px;
 }
+
+.comment-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    border-radius: 2px;
+    padding: 4px 15px;
+}
+
 .replies {
-    margin-left: 45px;
+    margin-left: 52px;
     padding-left: 20px;
-    border-left: 2px solid #e0e0e0;
+    border-left: 2px solid var(--gov-gold);
 }
+
 .reply-item {
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #f0f0f0;
 }
+
 .reply-item:last-child {
     border-bottom: none;
 }
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
 .sidebar-widget {
     background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    border: 1px solid #e0e0e0;
-    margin-bottom: 20px;
+    border: 1px solid var(--gov-border);
+    padding: 25px;
+    margin-bottom: 25px;
 }
+
 .widget-title {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    color: #1a3c5e;
+    color: var(--gov-primary);
     font-size: 18px;
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+    border-bottom: 2px solid var(--gov-gold);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
 }
+
 .widget-title i {
+    color: var(--gov-gold);
     margin-right: 8px;
-    color: #c9a84c;
 }
+
 .author-article-item {
-    padding: 8px 0;
+    padding: 10px 0;
     border-bottom: 1px solid #f0f0f0;
 }
+
 .author-article-item:last-child {
     border-bottom: none;
 }
+
 .author-article-item .article-link {
     font-family: 'Times New Roman', serif;
-    color: #1a3c5e;
+    font-weight: 600;
+    color: var(--gov-primary);
     text-decoration: none;
 }
+
 .author-article-item .article-link:hover {
+    color: var(--gov-gold);
     text-decoration: underline;
 }
+
+.author-article-item small {
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 992px) {
+    .article-main {
+        padding: 25px;
+    }
+    .article-title {
+        font-size: 32px;
+    }
+}
+
 @media (max-width: 768px) {
+    .article-main {
+        padding: 20px;
+    }
+    .article-main::before {
+        font-size: 60px;
+        right: -20px;
+        top: -10px;
+    }
     .article-title {
         font-size: 26px;
+    }
+    .article-excerpt {
+        font-size: 16px;
+        padding-left: 15px;
     }
     .article-meta {
         flex-direction: column;
         align-items: flex-start;
+        gap: 12px;
+    }
+    .article-stats {
+        flex-wrap: wrap;
     }
     .author-bio {
         flex-direction: column;
         align-items: center;
         text-align: center;
+        padding: 20px;
+    }
+    .author-social a {
+        margin: 0 6px;
+    }
+    .related-item img {
+        height: 120px;
+    }
+    .comment-header {
+        flex-wrap: wrap;
+    }
+    .comment-body {
+        margin-left: 0;
+    }
+    .comment-actions {
+        margin-left: 0;
+    }
+    .replies {
+        margin-left: 0;
+        padding-left: 10px;
+    }
+    .article-featured-image {
+        padding: 4px;
+    }
+}
+
+@media (max-width: 576px) {
+    .article-title {
+        font-size: 22px;
+    }
+    .article-content {
+        font-size: 16px;
+    }
+    .article-main {
+        padding: 15px;
+    }
+    .article-share {
+        text-align: center;
+    }
+    .share-btn {
+        width: 38px;
+        height: 38px;
+        line-height: 38px;
+        font-size: 14px;
+        margin: 0 2px;
+    }
+    .sidebar-widget {
+        padding: 15px;
     }
 }
 </style>
+{% endblock %}
+
+{% block content %}
+<div class="article-detail-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="article-main">
+                    <!-- ============================================
+                    ARTICLE HEADER
+                    ============================================ -->
+                    <div class="article-header">
+                        <div class="article-category">
+                            <a href="{{ article.category.get_absolute_url }}" class="category-badge">
+                                {{ article.category.name }}
+                            </a>
+                            {% if article.is_breaking %}
+                            <span class="breaking-badge">
+                                <i class="fas fa-circle pulse"></i> BREAKING
+                            </span>
+                            {% endif %}
+                            {% if article.is_exclusive %}
+                            <span class="exclusive-badge">
+                                <i class="fas fa-star"></i> EXCLUSIVE
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <h1 class="article-title">{{ article.title }}</h1>
+                        
+                        {% if article.excerpt %}
+                        <p class="article-excerpt">{{ article.excerpt }}</p>
+                        {% endif %}
+                        
+                        <div class="article-meta">
+                            <div class="author-info">
+                                <img src="{% if article.author.profile_picture %}{{ article.author.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                     alt="{{ article.author.get_full_name }}" class="author-avatar">
+                                <div>
+                                    <span class="author-name">
+                                        <a href="{% url 'articles:author_articles' article.author.id %}">
+                                            {{ article.author.get_full_name|default:article.author.username }}
+                                        </a>
+                                    </span>
+                                    <span class="author-role">{{ article.author.get_role_display }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="article-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                {{ article.published_at|date:"F d, Y" }}
+                                <span class="mx-2">|</span>
+                                <i class="fas fa-clock"></i>
+                                {{ article.time_to_read }} min read
+                            </div>
+                            
+                            <div class="article-stats">
+                                <span><i class="fas fa-eye"></i> {{ article.views_count }}</span>
+                                <span><i class="fas fa-comments"></i> {{ article.comments.count }}</span>
+                                <span><i class="fas fa-share-alt"></i> {{ article.shares_count }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ============================================
+                    FEATURED IMAGE - PROFESSIONAL
+                    ============================================ -->
+                    {% if article.featured_image %}
+                    <div class="article-featured-image">
+                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid">
+                        {% if article.featured_image_caption %}
+                        <div class="image-caption">{{ article.featured_image_caption }}</div>
+                        {% endif %}
+                        {% if article.featured_image_credit %}
+                        <div class="image-credit">Photo: {{ article.featured_image_credit }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- ============================================
+                    ARTICLE CONTENT
+                    ============================================ -->
+                    <div class="article-content">
+                        {{ article.content|safe }}
+                    </div>
+                    
+                    <!-- ============================================
+                    TAGS
+                    ============================================ -->
+                    {% if article.tags.all %}
+                    <div class="article-tags">
+                        <span class="tags-label"><i class="fas fa-tags"></i> Tags:</span>
+                        {% for tag in article.tags.all %}
+                        <a href="{% url 'tags:detail' tag.slug %}" class="tag-link">#{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- ============================================
+                    SHARE BUTTONS
+                    ============================================ -->
+                    <div class="article-share">
+                        <span class="share-label"><i class="fas fa-share-alt"></i> Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                           target="_blank" class="share-btn facebook" title="Share on Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ article.title|urlencode }}" 
+                           target="_blank" class="share-btn twitter" title="Share on Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+                           target="_blank" class="share-btn linkedin" title="Share on LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://wa.me/?text={{ article.title|urlencode }}%20{{ request.build_absolute_uri|urlencode }}" 
+                           target="_blank" class="share-btn whatsapp" title="Share on WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="mailto:?subject={{ article.title|urlencode }}&body={{ request.build_absolute_uri|urlencode }}" 
+                           class="share-btn email" title="Share via Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- ============================================
+                    AUTHOR BIO
+                    ============================================ -->
+                    <div class="author-bio">
+                        <img src="{% if article.author.profile_picture %}{{ article.author.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                             alt="{{ article.author.get_full_name }}" class="author-bio-avatar">
+                        <div>
+                            <h5>{{ article.author.get_full_name|default:article.author.username }}</h5>
+                            <p class="author-bio-text">{{ article.author.bio|default:"Journalist at The Egerton Advertiser" }}</p>
+                            <div class="author-social">
+                                {% if article.author.website %}
+                                <a href="{{ article.author.website }}" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+                                {% endif %}
+                                {% if article.author.social_links.twitter %}
+                                <a href="{{ article.author.social_links.twitter }}" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                                {% endif %}
+                                {% if article.author.social_links.facebook %}
+                                <a href="{{ article.author.social_links.facebook }}" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+                                {% endif %}
+                                {% if article.author.social_links.linkedin %}
+                                <a href="{{ article.author.social_links.linkedin }}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ============================================
+                    RELATED ARTICLES
+                    ============================================ -->
+                    {% if related_articles %}
+                    <div class="related-articles">
+                        <h4><i class="fas fa-newspaper"></i> Related Articles</h4>
+                        <div class="row">
+                            {% for related in related_articles %}
+                            <div class="col-md-4">
+                                <div class="related-item">
+                                    {% if related.featured_image %}
+                                    <img src="{{ related.featured_image.url }}" alt="{{ related.title }}">
+                                    {% else %}
+                                    <img src="{% static 'images/default-article.jpg' %}" alt="Default image">
+                                    {% endif %}
+                                    <h6><a href="{{ related.get_absolute_url }}">{{ related.title|truncatewords:8 }}</a></h6>
+                                    <span class="related-date"><i class="fas fa-calendar-alt"></i> {{ related.published_at|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- ============================================
+                    COMMENTS
+                    ============================================ -->
+                    <div class="comments-section">
+                        <h4><i class="fas fa-comments"></i> Comments ({{ comments.count }})</h4>
+                        
+                        {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'comments:add' article.id %}" class="comment-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <textarea name="content" class="form-control" rows="4" 
+                                          placeholder="Join the discussion..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn">
+                                <i class="fas fa-paper-plane"></i> Post Comment
+                            </button>
+                        </form>
+                        {% else %}
+                        <div class="comment-login-prompt">
+                            <p><a href="{% url 'accounts:login' %}?next={{ request.path }}">Login</a> to leave a comment</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if comments %}
+                        <div class="comments-list">
+                            {% for comment in comments %}
+                            <div class="comment-item" id="comment-{{ comment.id }}">
+                                <div class="comment-header">
+                                    <img src="{% if comment.user.profile_picture %}{{ comment.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                         alt="{{ comment.user.get_full_name }}" class="comment-avatar">
+                                    <div>
+                                        <strong>{{ comment.user.get_full_name|default:comment.user.username }}</strong>
+                                        <span class="comment-date">{{ comment.created_at|timesince }} ago</span>
+                                    </div>
+                                </div>
+                                <div class="comment-body">{{ comment.content }}</div>
+                                <div class="comment-actions">
+                                    <button class="btn btn-sm btn-outline-primary reply-btn" data-comment-id="{{ comment.id }}">
+                                        <i class="fas fa-reply"></i> Reply
+                                    </button>
+                                    {% if user == comment.user or user.can_moderate_comments %}
+                                    <a href="{% url 'comments:delete' comment.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this comment?')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if comment.replies.all %}
+                                <div class="replies">
+                                    {% for reply in comment.replies.all %}
+                                    <div class="reply-item">
+                                        <div class="comment-header">
+                                            <img src="{% if reply.user.profile_picture %}{{ reply.user.profile_picture.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                                                 alt="{{ reply.user.get_full_name }}" class="comment-avatar">
+                                            <div>
+                                                <strong>{{ reply.user.get_full_name|default:reply.user.username }}</strong>
+                                                <span class="comment-date">{{ reply.created_at|timesince }} ago</span>
+                                            </div>
+                                        </div>
+                                        <div class="comment-body">{{ reply.content }}</div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted" style="font-family: 'Times New Roman', serif; font-style: italic;">No comments yet. Be the first to comment!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ============================================
+            SIDEBAR
+            ============================================ -->
+            <div class="col-lg-4">
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-pen"></i> More from {{ article.author.get_full_name|default:article.author.username }}
+                    </div>
+                    {% for author_article in author_articles %}
+                    <div class="author-article-item">
+                        <a href="{{ author_article.get_absolute_url }}" class="article-link">{{ author_article.title|truncatewords:8 }}</a>
+                        <small class="text-muted d-block">{{ author_article.published_at|date:"M d, Y" }}</small>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted" style="font-family: 'Times New Roman', serif; font-style: italic;">No more articles from this author.</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="sidebar-widget" style="background: var(--gov-cream); border: 2px solid var(--gov-gold);">
+                    <div class="widget-title" style="border-bottom-color: var(--gov-gold);">
+                        <i class="fas fa-bullhorn"></i> Advertise Here
+                    </div>
+                    <p style="font-family: 'Times New Roman', serif; font-size: 14px; color: #5a5a5a;">
+                        Reach thousands of readers in the Egerton community.
+                    </p>
+                    <a href="{% url 'advertising:contact' %}" class="btn" style="background: var(--gov-gold); color: var(--gov-primary); font-family: 'Times New Roman', serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 2px; width: 100%; padding: 10px;">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </a>
+                </div>
+                
+                <div class="sidebar-widget">
+                    <div class="widget-title">
+                        <i class="fas fa-fire"></i> Popular This Week
+                    </div>
+                    <div class="author-article-item">
+                        <p class="text-muted" style="font-family: 'Times New Roman', serif; font-style: italic;">Loading popular articles...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -270,67 +270,86 @@ def admin_media_library(request):
 # ============================================================
 # MEDIA UPLOAD
 # ============================================================
-
 @login_required
 def media_upload(request):
     """Upload media files - supports both GET and POST"""
+    
+    categories = MediaCategory.objects.all().order_by('name')
+    tags = MediaTag.objects.all().order_by('name')
+    
     if request.method == 'POST':
         form = MediaFileForm(request.POST, request.FILES)
+        
         if form.is_valid():
-            media_file = form.save(commit=False)
-            media_file.uploaded_by = request.user
-            media_file.status = 'processing'
-            media_file.save()
-            
-            # Process image for thumbnails
-            if media_file.file_type == 'image':
-                try:
-                    process_image_thumbnails(media_file)
-                except Exception as e:
-                    print(f"Error processing thumbnails: {e}")
-            
-            media_file.status = 'available'
-            media_file.save()
-            
-            # Save tags and categories
-            if form.cleaned_data.get('tag_names'):
-                tag_names = form.cleaned_data['tag_names'].split(',')
-                for tag_name in tag_names:
-                    tag_name = tag_name.strip()
-                    if tag_name:
-                        tag, _ = MediaTag.objects.get_or_create(name=tag_name)
-                        MediaFileTag.objects.get_or_create(media_file=media_file, tag=tag)
-            
-            if form.cleaned_data.get('category_id'):
-                category = MediaCategory.objects.get(id=form.cleaned_data['category_id'])
-                MediaFileCategory.objects.get_or_create(media_file=media_file, category=category)
-            
-            UserActivityLog.objects.create(
-                user=request.user,
-                action='create',
-                model_name='MediaFile',
-                object_id=media_file.id,
-                description=f'Uploaded media file: {media_file.title}',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
-            
-            messages.success(request, f'Media file "{media_file.title}" uploaded successfully!')
-            
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'media_id': media_file.id,
-                    'url': media_file.get_file_url()
+            try:
+                media_file = form.save(commit=False)
+                media_file.uploaded_by = request.user
+                media_file.status = 'processing'
+                media_file.save()
+                
+                # Process image thumbnails
+                if media_file.file_type == 'image':
+                    try:
+                        process_image_thumbnails(media_file)
+                    except Exception as e:
+                        print(f"Thumbnail error: {e}")
+                
+                media_file.status = 'available'
+                media_file.save()
+                
+                # ✅ FIX: Handle tags properly with both name and slug
+                from django.utils.text import slugify
+                tag_names = form.cleaned_data.get('tag_names')
+                if tag_names:
+                    if isinstance(tag_names, list):
+                        tag_names = ', '.join(tag_names)
+                    for tag_name in tag_names.split(','):
+                        tag_name = tag_name.strip()
+                        if tag_name:
+                            # Check if tag exists by name first
+                            tag, created = MediaTag.objects.get_or_create(
+                                name=tag_name,
+                                defaults={'slug': slugify(tag_name)}
+                            )
+                            # If tag exists but slug is different, update slug
+                            if not created and tag.slug != slugify(tag_name):
+                                tag.slug = slugify(tag_name)
+                                tag.save()
+                            
+                            MediaFileTag.objects.get_or_create(
+                                media_file=media_file,
+                                tag=tag
+                            )
+                
+                # Save category
+                category_id = request.POST.get('category')
+                if category_id and category_id.isdigit():
+                    try:
+                        category = MediaCategory.objects.get(id=category_id)
+                        MediaFileCategory.objects.get_or_create(
+                            media_file=media_file,
+                            category=category
+                        )
+                    except MediaCategory.DoesNotExist:
+                        pass
+                
+                messages.success(request, f'✅ Media file "{media_file.title}" uploaded successfully!')
+                return redirect('media_library:library')
+                
+            except Exception as e:
+                messages.error(request, f'❌ Error: {str(e)}')
+                # Return to form with error
+                return render(request, 'media_library/media_upload.html', {
+                    'form': form,
+                    'tags': tags,
+                    'categories': categories,
                 })
-            return redirect('media_library:library')
         else:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': False, 'errors': form.errors})
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = MediaFileForm()
-    
-    tags = MediaTag.objects.all().order_by('name')
-    categories = MediaCategory.objects.all().order_by('name')
     
     context = {
         'form': form,

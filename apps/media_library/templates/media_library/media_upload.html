@@ -48,6 +48,73 @@
 }
 
 /* ============================================
+   MESSAGES - OFFICIAL STYLE
+   ============================================ */
+.messages-container {
+    margin-bottom: 25px;
+}
+
+.alert {
+    padding: 15px 20px;
+    border-radius: 4px;
+    border-left: 4px solid;
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.alert i {
+    font-size: 20px;
+}
+
+.alert-success {
+    background: #f0f7f0;
+    border-left-color: #1a5a3a;
+    color: #1a5a3a;
+}
+
+.alert-success i {
+    color: #1a5a3a;
+}
+
+.alert-error {
+    background: #fdf0f0;
+    border-left-color: #8b1a1a;
+    color: #8b1a1a;
+}
+
+.alert-error i {
+    color: #8b1a1a;
+}
+
+.alert-warning {
+    background: #fdf8f0;
+    border-left-color: #c9a84c;
+    color: #8b7a3a;
+}
+
+.alert-warning i {
+    color: #c9a84c;
+}
+
+.alert-info {
+    background: #f0f4f8;
+    border-left-color: #1a3c5e;
+    color: #1a3c5e;
+}
+
+.alert-info i {
+    color: #1a3c5e;
+}
+
+.alert ul {
+    margin: 5px 0 0 0;
+    padding-left: 20px;
+}
+
+/* ============================================
    UPLOAD HEADER - OFFICIAL STYLE
    ============================================ */
 .upload-header {
@@ -175,6 +242,10 @@
     font-style: italic;
 }
 
+.form-control.is-invalid {
+    border-color: #8b1a1a;
+}
+
 .help-text {
     font-family: 'Times New Roman', serif;
     font-size: 12px;
@@ -187,6 +258,28 @@
     color: #8b1a1a !important;
     font-family: 'Times New Roman', serif;
     font-size: 13px;
+}
+
+/* Alt text counter */
+.char-counter {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.char-counter .count {
+    font-weight: 700;
+}
+
+.char-counter .count.warning {
+    color: #8b1a1a;
+}
+
+.char-counter .count.good {
+    color: #1a5a3a;
 }
 
 /* ============================================
@@ -388,6 +481,49 @@
                     </div>
 
                     <!-- ============================================
+                    MESSAGES - SUCCESS & ERROR
+                    ============================================ -->
+                    {% if messages %}
+                    <div class="messages-container">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i class="fas fa-exclamation-triangle"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- ============================================
+                    FORM ERRORS
+                    ============================================ -->
+                    {% if form.errors %}
+                    <div class="messages-container">
+                        <div class="alert alert-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div>
+                                <strong>Please fix the following errors:</strong>
+                                <ul>
+                                    {% for field, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- ============================================
                     DROP ZONE - OFFICIAL STYLE
                     ============================================ -->
                     <div class="upload-area" id="dropZone">
@@ -405,12 +541,12 @@
                     <!-- ============================================
                     UPLOAD FORM - OFFICIAL STYLE
                     ============================================ -->
-                    <form method="post" enctype="multipart/form-data" id="uploadForm">
+                    <form method="post" enctype="multipart/form-data" id="uploadForm" novalidate>
                         {% csrf_token %}
                         
                         <div class="form-group">
                             <label for="id_file"><i class="fas fa-file"></i> Select File</label>
-                            <input type="file" name="file" id="id_file" class="form-control" required>
+                            <input type="file" name="file" id="id_file" class="form-control {% if form.file.errors %}is-invalid{% endif %}" required>
                             {% if form.file.errors %}
                             <small class="text-danger">{{ form.file.errors }}</small>
                             {% endif %}
@@ -418,7 +554,7 @@
 
                         <div class="form-group">
                             <label for="id_title"><i class="fas fa-heading"></i> Title</label>
-                            <input type="text" name="title" id="id_title" class="form-control" 
+                            <input type="text" name="title" id="id_title" class="form-control {% if form.title.errors %}is-invalid{% endif %}" 
                                    placeholder="Enter file title" required
                                    value="{{ form.title.value|default:'' }}">
                             {% if form.title.errors %}
@@ -434,10 +570,16 @@
 
                         <div class="form-group">
                             <label for="id_alt_text"><i class="fas fa-font"></i> Alt Text</label>
-                            <input type="text" name="alt_text" id="id_alt_text" class="form-control" 
+                            <input type="text" name="alt_text" id="id_alt_text" class="form-control {% if form.alt_text.errors %}is-invalid{% endif %}" 
                                    placeholder="Alternative text for accessibility (screen readers)"
                                    value="{{ form.alt_text.value|default:'' }}">
-                            <small class="help-text">Describe the image for visually impaired users</small>
+                            <div class="char-counter">
+                                <small class="help-text">Describe the image for visually impaired users</small>
+                                <small class="count" id="altTextCounter">0 / 500</small>
+                            </div>
+                            {% if form.alt_text.errors %}
+                            <small class="text-danger">{{ form.alt_text.errors }}</small>
+                            {% endif %}
                         </div>
 
                         <div class="row">
@@ -456,7 +598,9 @@
                                     <select name="category" id="id_category" class="form-select">
                                         <option value="">Select Category</option>
                                         {% for category in categories %}
-                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                        <option value="{{ category.id }}" {% if category.id|stringformat:"s" == request.POST.category %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -464,7 +608,7 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
                                 <i class="fas fa-upload"></i> Upload File
                             </button>
                             <a href="{% url 'media_library:library' %}" class="btn btn-outline-secondary">
@@ -508,6 +652,35 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // ============================================
+    // ALT TEXT CHARACTER COUNTER
+    // ============================================
+    const altTextInput = document.getElementById('id_alt_text');
+    const altTextCounter = document.getElementById('altTextCounter');
+    const MAX_ALT_LENGTH = 500;
+    
+    if (altTextInput && altTextCounter) {
+        function updateAltCounter() {
+            const len = altTextInput.value.length;
+            altTextCounter.textContent = len + ' / ' + MAX_ALT_LENGTH;
+            
+            // Change color based on length
+            if (len > MAX_ALT_LENGTH) {
+                altTextCounter.style.color = '#8b1a1a';
+                altTextCounter.style.fontWeight = 'bold';
+            } else if (len > MAX_ALT_LENGTH * 0.8) {
+                altTextCounter.style.color = '#c9a84c';
+                altTextCounter.style.fontWeight = 'bold';
+            } else {
+                altTextCounter.style.color = '#1a5a3a';
+                altTextCounter.style.fontWeight = 'normal';
+            }
+        }
+        
+        altTextInput.addEventListener('input', updateAltCounter);
+        updateAltCounter();
+    }
+
+    // ============================================
     // DRAG AND DROP
     // ============================================
     const dropZone = document.getElementById('dropZone');
@@ -549,6 +722,35 @@ document.addEventListener('DOMContentLoaded', function() {
             titleInput.dispatchEvent(new Event('input'));
         }
     });
+
+    // ============================================
+    // FORM SUBMIT - Disable button to prevent double submission
+    // ============================================
+    const form = document.getElementById('uploadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+            // Check alt text length
+            const altText = document.getElementById('id_alt_text');
+            if (altText && altText.value.length > 500) {
+                e.preventDefault();
+                alert('Alt text must be under 500 characters. Current: ' + altText.value.length);
+                altText.focus();
+                return false;
+            }
+            
+            // Disable button to prevent double submission
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            
+            // Re-enable after 10 seconds (in case of error)
+            setTimeout(function() {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload File';
+            }, 10000);
+        });
+    }
 
     // ============================================
     // BULK UPLOAD

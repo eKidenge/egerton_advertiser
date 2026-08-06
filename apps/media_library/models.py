@@ -26,7 +26,11 @@ class MediaFile(models.Model):
     # Basic information
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    alt_text = models.CharField(max_length=200, blank=True)
+    alt_text = models.CharField(
+        max_length=500,  # ✅ Changed from 200 to 500
+        blank=True,
+        help_text="Alternative text for accessibility (screen readers)"
+    )
     
     # File information
     file = models.FileField(
