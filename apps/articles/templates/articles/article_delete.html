@@ -1,34 +1,418 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Delete Article - The Egerton Advertiser{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ============================================
+   DELETE ARTICLE - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --gov-primary: #0a1a2a;
+    --gov-secondary: #1a3c5e;
+    --gov-gold: #c9a84c;
+    --gov-cream: #f5f0e8;
+    --gov-border: #d4cdc0;
+    --gov-red: #8b1a1a;
+    --gov-dark-red: #6b1414;
+}
+
+.delete-page {
+    background: var(--gov-cream);
+    min-height: calc(100vh - 200px);
+    padding: 60px 0;
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   DELETE CARD - OFFICIAL STYLE
+   ============================================ */
+.delete-card {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 45px 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.delete-card::before {
+    content: 'OFFICIAL';
+    position: absolute;
+    right: -30px;
+    top: -20px;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(139,26,26,0.03);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 10px;
+    pointer-events: none;
+}
+
+.delete-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gov-red);
+}
+
+/* ============================================
+   DELETE ICON
+   ============================================ */
+.delete-icon {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.delete-icon .icon-circle {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    border-radius: 50%;
+    background: #fdf0f0;
+    border: 2px solid var(--gov-red);
+    font-size: 40px;
+    color: var(--gov-red);
+}
+
+.delete-icon .icon-circle i {
+    line-height: 90px;
+}
+
+/* ============================================
+   HEADER - OFFICIAL STYLE
+   ============================================ */
+.delete-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: var(--gov-primary);
+    font-size: 28px;
+    text-align: center;
+    margin: 10px 0 5px;
+    letter-spacing: 0.5px;
+}
+
+.delete-card .subtitle {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    color: #6c757d;
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 25px;
+}
+
+.delete-card .subtitle strong {
+    color: var(--gov-red);
+    font-weight: 700;
+}
+
+/* ============================================
+   ARTICLE INFO - OFFICIAL STYLE
+   ============================================ */
+.article-info-box {
+    background: var(--gov-cream);
+    border: 1px solid var(--gov-border);
+    padding: 20px 25px;
+    margin: 20px 0;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-family: 'Times New Roman', serif;
+    border-bottom: 1px solid var(--gov-border);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row .label {
+    color: #6c757d;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+}
+
+.info-row .value {
+    font-weight: 700;
+    color: var(--gov-primary);
+    font-size: 14px;
+}
+
+.info-row .value .badge {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.info-row .value .badge.bg-success {
+    background: #1a5a3a !important;
+    color: #fff;
+}
+
+.info-row .value .badge.bg-warning {
+    background: var(--gov-gold) !important;
+    color: var(--gov-primary);
+}
+
+.info-row .value .badge.bg-secondary {
+    background: #6c757d !important;
+    color: #fff;
+}
+
+.info-row .value .badge.bg-danger {
+    background: var(--gov-red) !important;
+    color: #fff;
+}
+
+/* ============================================
+   ALERT - OFFICIAL STYLE
+   ============================================ */
+.alert-danger-official {
+    background: #fdf0f0;
+    border-left: 4px solid var(--gov-red);
+    padding: 15px 20px;
+    margin: 20px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-family: 'Times New Roman', serif;
+    border: 1px solid #f5d6d6;
+}
+
+.alert-danger-official i {
+    color: var(--gov-red);
+    font-size: 20px;
+    margin-top: 2px;
+}
+
+.alert-danger-official .alert-content {
+    flex: 1;
+}
+
+.alert-danger-official .alert-content strong {
+    color: var(--gov-red);
+    display: block;
+    font-size: 15px;
+}
+
+.alert-danger-official .alert-content span {
+    color: #5a5a5a;
+    font-size: 14px;
+}
+
+.alert-danger-official .alert-content ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+}
+
+.alert-danger-official .alert-content ul li {
+    color: #5a5a5a;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+/* ============================================
+   DELETE ACTIONS - OFFICIAL STYLE
+   ============================================ */
+.delete-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.delete-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 12px 35px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    min-width: 180px;
+}
+
+.delete-actions .btn-danger {
+    background: var(--gov-red);
+    border-color: var(--gov-red);
+    color: #fff;
+}
+
+.delete-actions .btn-danger:hover {
+    background: var(--gov-dark-red);
+    border-color: var(--gov-dark-red);
+}
+
+.delete-actions .btn-danger i {
+    margin-right: 8px;
+}
+
+.delete-actions .btn-outline-secondary {
+    border: 1px solid var(--gov-border);
+    color: var(--gov-primary);
+    background: transparent;
+}
+
+.delete-actions .btn-outline-secondary:hover {
+    background: var(--gov-primary);
+    border-color: var(--gov-primary);
+    color: #fff;
+}
+
+.delete-actions .btn-outline-secondary i {
+    margin-right: 8px;
+}
+
+/* ============================================
+   SECURITY NOTE
+   ============================================ */
+.security-note {
+    text-align: center;
+    margin-top: 15px;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.security-note i {
+    margin-right: 5px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .delete-card {
+        padding: 30px 20px;
+    }
+    .delete-card::before {
+        font-size: 40px;
+        right: -15px;
+        top: -10px;
+    }
+    .delete-icon .icon-circle {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        font-size: 30px;
+    }
+    .delete-icon .icon-circle i {
+        line-height: 70px;
+    }
+    .delete-card h3 {
+        font-size: 22px;
+    }
+    .info-row {
+        flex-direction: column;
+        gap: 2px;
+    }
+    .info-row .value {
+        font-size: 13px;
+    }
+    .alert-danger-official {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .delete-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    .delete-actions .btn {
+        width: 100%;
+        min-width: unset;
+        justify-content: center;
+        text-align: center;
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+    .delete-card .subtitle {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .delete-card {
+        padding: 20px 15px;
+    }
+    .delete-card h3 {
+        font-size: 20px;
+    }
+    .delete-icon .icon-circle {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        font-size: 26px;
+    }
+    .delete-icon .icon-circle i {
+        line-height: 60px;
+    }
+    .article-info-box {
+        padding: 15px;
+    }
+    .alert-danger-official .alert-content strong {
+        font-size: 14px;
+    }
+    .alert-danger-official .alert-content span {
+        font-size: 13px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="delete-page">
+<div class="delete-page">
+    <div class="container">
         <div class="row">
-            <div class="col-md-8 mx-auto">
+            <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="delete-card">
+                    <!-- ============================================
+                    DELETE ICON
+                    ============================================ -->
                     <div class="delete-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="icon-circle">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
                     </div>
+
+                    <!-- ============================================
+                    HEADER
+                    ============================================ -->
                     <h3>Delete Article</h3>
-                    <p class="text-muted">Are you sure you want to delete <strong>"{{ article.title }}"</strong>?</p>
-                    
+                    <p class="subtitle">
+                        You are about to permanently delete <strong>"{{ article.title }}"</strong>
+                    </p>
+
+                    <!-- ============================================
+                    ARTICLE INFORMATION
+                    ============================================ -->
                     <div class="article-info-box">
                         <div class="info-row">
-                            <span class="label">Title:</span>
+                            <span class="label"><i class="fas fa-heading"></i> Title</span>
                             <span class="value">{{ article.title }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="label">Author:</span>
+                            <span class="label"><i class="fas fa-user"></i> Author</span>
                             <span class="value">{{ article.author.get_full_name|default:article.author.username }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="label">Category:</span>
+                            <span class="label"><i class="fas fa-folder"></i> Category</span>
                             <span class="value">{{ article.category.name|default:"Uncategorized" }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="label">Status:</span>
+                            <span class="label"><i class="fas fa-flag"></i> Status</span>
                             <span class="value">
                                 <span class="badge bg-{% if article.status == 'published' %}success{% elif article.status == 'draft' %}secondary{% elif article.status == 'pending' %}warning{% else %}danger{% endif %}">
                                     {{ article.get_status_display }}
@@ -36,29 +420,51 @@
                             </span>
                         </div>
                         <div class="info-row">
-                            <span class="label">Published:</span>
+                            <span class="label"><i class="fas fa-calendar-alt"></i> Published</span>
                             <span class="value">{{ article.published_at|date:"F d, Y"|default:"Not published" }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="label">Views:</span>
+                            <span class="label"><i class="fas fa-eye"></i> Views</span>
                             <span class="value">{{ article.views_count }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label"><i class="fas fa-comments"></i> Comments</span>
+                            <span class="value">{{ article.comments.count }}</span>
                         </div>
                     </div>
 
-                    <div class="alert alert-danger">
+                    <!-- ============================================
+                    WARNING ALERT
+                    ============================================ -->
+                    <div class="alert-danger-official">
                         <i class="fas fa-info-circle"></i>
-                        <strong>Warning:</strong> This action cannot be undone. All comments and related data will also be deleted.
+                        <div class="alert-content">
+                            <strong>⚠️ Warning: This Action Cannot Be Undone</strong>
+                            <span>Deleting this article will permanently remove:</span>
+                            <ul>
+                                <li>The article and all its content</li>
+                                <li>All comments and replies</li>
+                                <li>All associated tags and metadata</li>
+                                <li>This action is irreversible</li>
+                            </ul>
+                        </div>
                     </div>
 
+                    <!-- ============================================
+                    DELETE ACTIONS
+                    ============================================ -->
                     <form method="post">
                         {% csrf_token %}
                         <div class="delete-actions">
                             <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash"></i> Yes, Delete Article
+                                <i class="fas fa-trash-alt"></i> Yes, Delete Article
                             </button>
                             <a href="{% url 'articles:article_list' %}" class="btn btn-outline-secondary">
                                 <i class="fas fa-times"></i> Cancel
                             </a>
+                        </div>
+                        <div class="security-note">
+                            <i class="fas fa-lock"></i> This action requires administrator privileges
                         </div>
                     </form>
                 </div>
@@ -66,71 +472,4 @@
         </div>
     </div>
 </div>
-
-<style>
-.delete-page {
-    padding: 60px 0;
-}
-.delete-card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 40px;
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-.delete-icon {
-    font-size: 64px;
-    color: #dc3545;
-    margin-bottom: 20px;
-}
-.delete-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-}
-.delete-card p {
-    font-family: 'Times New Roman', serif;
-    font-size: 16px;
-}
-.article-info-box {
-    text-align: left;
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px 20px;
-    margin: 20px 0;
-}
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    font-family: 'Times New Roman', serif;
-    border-bottom: 1px solid #e0e0e0;
-}
-.info-row:last-child {
-    border-bottom: none;
-}
-.info-row .label {
-    color: #6c757d;
-}
-.info-row .value {
-    font-weight: 600;
-}
-.alert {
-    font-family: 'Times New Roman', serif;
-    border-radius: 4px;
-}
-.delete-actions {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-.delete-actions .btn {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    padding: 10px 30px;
-    border-radius: 4px;
-}
-</style>
 {% endblock %}
