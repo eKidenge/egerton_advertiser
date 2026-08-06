@@ -1,22 +1,564 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Breaking News - The Egerton Advertiser{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ============================================
+   BREAKING NEWS - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --gov-primary: #0a1a2a;
+    --gov-secondary: #1a3c5e;
+    --gov-gold: #c9a84c;
+    --gov-cream: #f5f0e8;
+    --gov-border: #d4cdc0;
+    --gov-red: #8b1a1a;
+    --breaking-red: #b71c1c;
+    --breaking-light: #fdf0f0;
+}
+
+.breaking-page-wrapper {
+    background: var(--gov-cream);
+    min-height: calc(100vh - 200px);
+    padding: 40px 0;
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   PAGE HEADER - OFFICIAL STYLE
+   ============================================ */
+.page-header {
+    background: #fff;
+    padding: 30px 35px;
+    border: 1px solid var(--gov-border);
+    border-bottom: 4px solid var(--breaking-red);
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: 'URGENT';
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 60px;
+    font-weight: 900;
+    color: rgba(183,28,28,0.04);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 8px;
+    pointer-events: none;
+}
+
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: var(--gov-primary);
+    font-size: 32px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.page-header h1 i {
+    color: var(--breaking-red);
+    margin-right: 12px;
+}
+
+.page-header p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: #6c757d;
+    margin: 5px 0 0 0;
+}
+
+.page-header .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 20px;
+    background: var(--breaking-red);
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 2px;
+}
+
+.page-header .live-badge .live-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.8); }
+}
+
+/* ============================================
+   STATS BAR - OFFICIAL STYLE
+   ============================================ */
+.stats-bar {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 15px 25px;
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+    position: relative;
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--breaking-red);
+}
+
+.stat-card .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gov-primary);
+    display: block;
+}
+
+.stat-card .stat-label {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6c757d;
+}
+
+.stat-card .stat-icon {
+    color: var(--breaking-red);
+    font-size: 20px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* ============================================
+   BREAKING NEWS ITEMS - OFFICIAL STYLE
+   ============================================ */
+.breaking-news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.breaking-news-item-large {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    border-left: 5px solid var(--breaking-red);
+    padding: 25px 30px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.breaking-news-item-large::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, transparent 50%, rgba(183,28,28,0.03) 50%);
+    pointer-events: none;
+}
+
+.breaking-news-item-large:hover {
+    border-color: var(--breaking-red);
+    box-shadow: 0 4px 20px rgba(183,28,28,0.08);
+}
+
+.breaking-news-item-large .breaking-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--breaking-red);
+    opacity: 0.15;
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+}
+
+/* ============================================
+   BREAKING THUMBNAIL
+   ============================================ */
+.breaking-thumb-wrap {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--gov-border);
+}
+
+.breaking-thumb {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.breaking-news-item-large:hover .breaking-thumb {
+    transform: scale(1.03);
+}
+
+.breaking-thumb-placeholder {
+    height: 160px;
+    background: var(--breaking-light);
+    border: 1px solid var(--gov-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--breaking-red);
+    font-size: 50px;
+}
+
+/* ============================================
+   BREAKING BADGE - OFFICIAL STYLE
+   ============================================ */
+.breaking-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--breaking-red);
+    color: #fff;
+    padding: 4px 16px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.breaking-badge .pulse-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   BREAKING CONTENT
+   ============================================ */
+.breaking-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0 0 8px 0;
+}
+
+.breaking-content h3 a {
+    color: var(--gov-primary);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.breaking-content h3 a:hover {
+    color: var(--breaking-red);
+}
+
+.breaking-content .excerpt-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    color: #5a5a5a;
+    line-height: 1.6;
+    margin: 8px 0 12px 0;
+}
+
+.breaking-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.breaking-meta i {
+    color: var(--breaking-red);
+    margin-right: 5px;
+    width: 14px;
+    text-align: center;
+}
+
+.breaking-meta span {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* ============================================
+   TIMESTAMP - OFFICIAL STYLE
+   ============================================ */
+.timestamp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    background: var(--gov-cream);
+    padding: 2px 12px;
+    border: 1px solid var(--gov-border);
+}
+
+.timestamp-badge i {
+    color: var(--breaking-red);
+}
+
+/* ============================================
+   EMPTY STATE - OFFICIAL STYLE
+   ============================================ */
+.empty-state {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 60px 30px;
+    text-align: center;
+}
+
+.empty-state i {
+    color: var(--breaking-red);
+    opacity: 0.2;
+    font-size: 64px;
+}
+
+.empty-state h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gov-primary);
+    margin-top: 20px;
+    font-size: 24px;
+}
+
+.empty-state p {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* ============================================
+   PAGINATION - OFFICIAL STYLE
+   ============================================ */
+.pagination-wrap {
+    margin-top: 30px;
+}
+
+.pagination-wrap .pagination {
+    gap: 5px;
+}
+
+.pagination-wrap .page-link {
+    font-family: 'Times New Roman', serif;
+    color: var(--gov-primary);
+    border: 1px solid var(--gov-border);
+    border-radius: 2px;
+    padding: 10px 18px;
+    background: #fff;
+}
+
+.pagination-wrap .page-link:hover {
+    background: var(--breaking-red);
+    border-color: var(--breaking-red);
+    color: #fff;
+}
+
+.pagination-wrap .page-item.active .page-link {
+    background: var(--breaking-red);
+    border-color: var(--breaking-red);
+    color: #fff;
+}
+
+.pagination-wrap .page-item.disabled .page-link {
+    color: #b0a8a0;
+}
+
+.pagination-info {
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #6c757d;
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 20px;
+    }
+    .page-header h1 {
+        font-size: 24px;
+    }
+    .page-header::before {
+        font-size: 30px;
+        right: 10px;
+        top: 5px;
+    }
+    .page-header .live-badge {
+        font-size: 11px;
+        padding: 5px 14px;
+        margin-top: 10px;
+    }
+    .breaking-news-item-large {
+        padding: 18px 20px;
+    }
+    .breaking-news-item-large .row {
+        flex-direction: column;
+    }
+    .breaking-news-item-large .col-md-3 {
+        margin-bottom: 12px;
+    }
+    .breaking-thumb {
+        height: 120px;
+    }
+    .breaking-thumb-placeholder {
+        height: 120px;
+        font-size: 35px;
+    }
+    .breaking-content h3 {
+        font-size: 19px;
+    }
+    .breaking-content .excerpt-text {
+        font-size: 14px;
+    }
+    .breaking-meta {
+        gap: 10px;
+        font-size: 12px;
+    }
+    .stats-bar {
+        gap: 10px;
+    }
+    .stat-card {
+        padding: 12px 15px;
+        min-width: 120px;
+    }
+    .stat-card .stat-number {
+        font-size: 22px;
+    }
+    .breaking-news-item-large .breaking-number {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .page-header h1 {
+        font-size: 20px;
+    }
+    .stat-card .stat-number {
+        font-size: 18px;
+    }
+    .stat-card .stat-label {
+        font-size: 11px;
+    }
+    .breaking-content h3 {
+        font-size: 17px;
+    }
+    .breaking-content .excerpt-text {
+        font-size: 13px;
+    }
+    .breaking-meta {
+        gap: 8px;
+        font-size: 11px;
+        flex-wrap: wrap;
+    }
+    .breaking-thumb {
+        height: 90px;
+    }
+    .breaking-thumb-placeholder {
+        height: 90px;
+        font-size: 28px;
+    }
+    .page-header .live-badge {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="breaking-news-page">
+<div class="breaking-page-wrapper">
+    <div class="container">
+        <!-- ============================================
+        PAGE HEADER - OFFICIAL STYLE
+        ============================================ -->
         <div class="page-header">
-            <h1><i class="fas fa-bolt" style="color: #dc3545;"></i> Breaking News</h1>
-            <p class="text-muted">Latest updates as they happen</p>
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-bolt"></i> Breaking News</h1>
+                    <p>Official publication — Latest updates as they happen</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <span class="live-badge">
+                        <span class="live-dot"></span> LIVE
+                    </span>
+                </div>
+            </div>
         </div>
 
+        <!-- ============================================
+        STATS BAR - OFFICIAL STYLE
+        ============================================ -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <span class="stat-icon"><i class="fas fa-bolt"></i></span>
+                <span class="stat-number">{{ articles.paginator.count }}</span>
+                <span class="stat-label">Breaking Stories</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon"><i class="fas fa-clock"></i></span>
+                <span class="stat-number">{{ latest_hour|default:0 }}</span>
+                <span class="stat-label">Last Hour</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon"><i class="fas fa-user"></i></span>
+                <span class="stat-number">{{ contributors_count|default:0 }}</span>
+                <span class="stat-label">Contributors</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon"><i class="fas fa-eye"></i></span>
+                <span class="stat-number">{{ total_views|default:0 }}</span>
+                <span class="stat-label">Total Views</span>
+            </div>
+        </div>
+
+        <!-- ============================================
+        BREAKING NEWS LIST
+        ============================================ -->
         <div class="breaking-news-list">
             {% for article in articles %}
             <div class="breaking-news-item-large">
-                <div class="row">
+                <span class="breaking-number">#{{ forloop.counter }}</span>
+                <div class="row align-items-center">
                     <div class="col-md-3">
                         {% if article.featured_image %}
-                        <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="img-fluid breaking-thumb">
+                        <div class="breaking-thumb-wrap">
+                            <img src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="breaking-thumb">
+                        </div>
                         {% else %}
                         <div class="breaking-thumb-placeholder">
                             <i class="fas fa-bolt"></i>
@@ -26,119 +568,94 @@
                     <div class="col-md-9">
                         <div class="breaking-content">
                             <span class="breaking-badge">
-                                <i class="fas fa-circle pulse"></i> BREAKING
+                                <span class="pulse-dot"></span> Breaking News
                             </span>
-                            <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
-                            <p>{{ article.excerpt|truncatewords:25 }}</p>
+                            <h3>
+                                <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                            </h3>
+                            {% if article.excerpt %}
+                            <p class="excerpt-text">{{ article.excerpt|truncatewords:25 }}</p>
+                            {% endif %}
                             <div class="breaking-meta">
-                                <span><i class="fas fa-clock"></i> {{ article.published_at|date:"F d, Y H:i" }}</span>
-                                <span><i class="fas fa-user"></i> {{ article.author.get_full_name|default:article.author.username }}</span>
-                                <span><i class="fas fa-folder"></i> {{ article.category.name }}</span>
+                                <span>
+                                    <i class="fas fa-clock"></i> 
+                                    {{ article.published_at|date:"F d, Y H:i" }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-user"></i> 
+                                    {{ article.author.get_full_name|default:article.author.username }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-folder"></i> 
+                                    {{ article.category.name|default:"Uncategorized" }}
+                                </span>
+                                <span class="timestamp-badge">
+                                    <i class="fas fa-history"></i> 
+                                    {{ article.published_at|timesince }} ago
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="empty-state text-center py-5">
-                <i class="fas fa-bolt fa-4x text-muted"></i>
-                <h4 class="mt-3">No Breaking News</h4>
-                <p class="text-muted">There are no breaking news items at the moment</p>
+            <div class="empty-state">
+                <i class="fas fa-bolt"></i>
+                <h4>No Breaking News</h4>
+                <p>There are no breaking news items at the moment. Check back later for updates.</p>
             </div>
             {% endfor %}
         </div>
 
-        {% include 'pagination.html' %}
+        <!-- ============================================
+        PAGINATION
+        ============================================ -->
+        {% if articles.has_other_pages %}
+        <div class="pagination-wrap">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if articles.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ articles.previous_page_number }}">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="fas fa-chevron-left"></i> Previous</span>
+                    </li>
+                    {% endif %}
+
+                    {% for num in articles.paginator.page_range %}
+                        {% if articles.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > articles.number|add:'-3' and num < articles.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if articles.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ articles.next_page_number }}">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next <i class="fas fa-chevron-right"></i></span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <p class="pagination-info">
+                Showing {{ articles.start_index }} to {{ articles.end_index }} of {{ articles.paginator.count }} breaking news articles
+            </p>
+        </div>
+        {% endif %}
     </div>
 </div>
-
-<style>
-.breaking-news-page {
-    padding: 30px 0;
-}
-.page-header {
-    border-bottom: 2px solid #dc3545;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-}
-.page-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    color: #1a3c5e;
-}
-.breaking-news-item-large {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-left: 4px solid #dc3545;
-    transition: all 0.3s;
-}
-.breaking-news-item-large:hover {
-    box-shadow: 0 4px 15px rgba(220,53,69,0.1);
-}
-.breaking-thumb {
-    height: 150px;
-    object-fit: cover;
-    border-radius: 4px;
-    width: 100%;
-}
-.breaking-thumb-placeholder {
-    height: 150px;
-    background: #fff3cd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    color: #dc3545;
-    font-size: 48px;
-}
-.breaking-badge {
-    display: inline-block;
-    background: #dc3545;
-    color: #fff;
-    padding: 2px 12px;
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    font-size: 12px;
-    letter-spacing: 1px;
-    border-radius: 3px;
-    margin-bottom: 8px;
-}
-.breaking-content h3 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-}
-.breaking-content h3 a {
-    color: #1a3c5e;
-    text-decoration: none;
-}
-.breaking-content h3 a:hover {
-    text-decoration: underline;
-}
-.breaking-content p {
-    font-family: 'Times New Roman', serif;
-    color: #6c757d;
-    margin: 8px 0;
-}
-.breaking-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-    color: #6c757d;
-}
-.breaking-meta i {
-    margin-right: 3px;
-}
-.pulse {
-    animation: pulse 1.5s ease-in-out infinite;
-}
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
-</style>
 {% endblock %}
