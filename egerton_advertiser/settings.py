@@ -147,21 +147,38 @@ TEMPLATES = [
 WSGI_APPLICATION = 'egerton_advertiser.wsgi.application'
 
 # ============================================
-# DATABASE CONFIGURATION
+# DATABASE CONFIGURATION - SUPABASE POSTGRESQL
 # ============================================
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=600,
-        ssl_require=False
-    )
-}
+# Use DATABASE_URL from environment (Supabase on Render)
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:
+    # Production: Use Supabase PostgreSQL
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True
+        )
+    }
+else:
+    # Development: Use SQLite (fallback)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Additional database configuration for production
 if not DEBUG:
+    DATABASES['default']['CONN_MAX_AGE'] = 600
+    DATABASES['default']['CONN_HEALTH_CHECKS'] = True
     DATABASES['default']['OPTIONS'] = {
         'connect_timeout': 10,
+        'sslmode': 'require',
         'options': '-c statement_timeout=30000',
     }
 
