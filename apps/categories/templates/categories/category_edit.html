@@ -1,21 +1,413 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Edit Category - The Egerton Advertiser{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ============================================
+   EDIT CATEGORY - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --gov-primary: #0a1a2a;
+    --gov-secondary: #1a3c5e;
+    --gov-gold: #c9a84c;
+    --gov-cream: #f5f0e8;
+    --gov-border: #d4cdc0;
+    --gov-red: #8b1a1a;
+}
+
+.category-form-page {
+    background: var(--gov-cream);
+    min-height: calc(100vh - 200px);
+    padding: 40px 0;
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   FORM CARD - OFFICIAL STYLE
+   ============================================ */
+.form-card {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.form-card::before {
+    content: 'OFFICIAL';
+    position: absolute;
+    right: -30px;
+    top: -20px;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(201,168,76,0.03);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 10px;
+    pointer-events: none;
+}
+
+.form-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gov-gold);
+}
+
+/* ============================================
+   FORM HEADER - OFFICIAL STYLE
+   ============================================ */
+.form-header {
+    border-bottom: 3px solid var(--gov-gold);
+    padding-bottom: 18px;
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: var(--gov-primary);
+    font-size: 28px;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.form-header h2 i {
+    color: var(--gov-gold);
+    margin-right: 12px;
+}
+
+.form-header .category-name-display {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: var(--gov-gold);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-header p {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #6c757d;
+    margin: 5px 0 0 0;
+}
+
+/* ============================================
+   FORM GROUPS - OFFICIAL STYLE
+   ============================================ */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--gov-primary);
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.form-group label i {
+    color: var(--gov-gold);
+    margin-right: 8px;
+    width: 18px;
+}
+
+.form-group .form-control,
+.form-group .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 2px;
+    border: 1px solid var(--gov-border);
+    padding: 10px 15px;
+    font-size: 15px;
+    background: #fff;
+    transition: all 0.3s;
+}
+
+.form-group .form-control:focus,
+.form-group .form-select:focus {
+    border-color: var(--gov-gold);
+    box-shadow: 0 0 0 0.2rem rgba(201,168,76,0.15);
+    outline: none;
+}
+
+.form-group .form-control::placeholder {
+    color: #b0a8a0;
+    font-style: italic;
+}
+
+.form-group .form-control[type="color"] {
+    padding: 3px;
+    height: 45px;
+    cursor: pointer;
+}
+
+.form-group .help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-group .text-danger {
+    color: var(--gov-red) !important;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    display: block;
+    margin-top: 4px;
+}
+
+/* ============================================
+   CHECKBOXES - OFFICIAL STYLE
+   ============================================ */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--gov-border);
+    border-radius: 2px;
+    cursor: pointer;
+    accent-color: var(--gov-gold);
+}
+
+.form-check-input:checked {
+    background-color: var(--gov-gold);
+    border-color: var(--gov-gold);
+}
+
+.form-check-label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 600;
+    color: var(--gov-primary);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.form-check-label i {
+    color: var(--gov-gold);
+    margin-right: 6px;
+}
+
+/* ============================================
+   ROW WITH TWO COLUMNS
+   ============================================ */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+/* ============================================
+   CURRENT IMAGE PREVIEW - OFFICIAL STYLE
+   ============================================ */
+.current-image {
+    margin-top: 8px;
+    padding: 12px 15px;
+    background: var(--gov-cream);
+    border: 1px solid var(--gov-border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.current-image img {
+    max-height: 60px;
+    max-width: 100px;
+    border: 1px solid var(--gov-border);
+    padding: 3px;
+    background: #fff;
+}
+
+.current-image .file-name {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* ============================================
+   FORM ACTIONS - OFFICIAL STYLE
+   ============================================ */
+.form-actions {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid var(--gov-border);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 12px 35px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+    min-width: 140px;
+}
+
+.form-actions .btn-primary {
+    background: var(--gov-gold);
+    border: 2px solid var(--gov-gold);
+    color: var(--gov-primary);
+}
+
+.form-actions .btn-primary:hover {
+    background: #d4b85c;
+    border-color: #d4b85c;
+}
+
+.form-actions .btn-primary i {
+    margin-right: 8px;
+}
+
+.form-actions .btn-outline-secondary {
+    border: 2px solid var(--gov-border);
+    color: var(--gov-primary);
+    background: transparent;
+}
+
+.form-actions .btn-outline-secondary:hover {
+    background: var(--gov-secondary);
+    border-color: var(--gov-secondary);
+    color: #fff;
+}
+
+.form-actions .btn-outline-secondary i {
+    margin-right: 8px;
+}
+
+.form-actions .btn-outline-danger {
+    border: 2px solid var(--gov-red);
+    color: var(--gov-red);
+    background: transparent;
+}
+
+.form-actions .btn-outline-danger:hover {
+    background: var(--gov-red);
+    border-color: var(--gov-red);
+    color: #fff;
+}
+
+.form-actions .btn-outline-danger i {
+    margin-right: 8px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .form-card {
+        padding: 25px 20px;
+    }
+    .form-card::before {
+        font-size: 40px;
+        right: -15px;
+        top: -10px;
+    }
+    .form-header h2 {
+        font-size: 22px;
+    }
+    .form-actions {
+        flex-direction: column;
+    }
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        min-width: unset;
+    }
+    .form-group label {
+        font-size: 13px;
+    }
+    .form-group .form-control,
+    .form-group .form-select {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    .current-image {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .current-image img {
+        max-height: 50px;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-card {
+        padding: 18px 15px;
+    }
+    .form-header h2 {
+        font-size: 19px;
+    }
+    .form-header p {
+        font-size: 13px;
+    }
+    .form-group {
+        margin-bottom: 16px;
+    }
+    .form-actions .btn {
+        font-size: 12px;
+        padding: 10px 20px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="category-form-page">
+<div class="category-form-page">
+    <div class="container">
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <div class="form-card">
+                    <!-- ============================================
+                    FORM HEADER - OFFICIAL STYLE
+                    ============================================ -->
                     <div class="form-header">
-                        <h2><i class="fas fa-folder-edit"></i> Edit Category: {{ category.name }}</h2>
-                        <p class="text-muted">Update category information</p>
+                        <h2>
+                            <i class="fas fa-folder-edit"></i> Edit Category
+                        </h2>
+                        <span class="category-name-display">
+                            <i class="fas fa-folder"></i> {{ category.name }}
+                        </span>
+                        <p>Official registration — Update category information</p>
                     </div>
 
+                    <!-- ============================================
+                    FORM - OFFICIAL STYLE
+                    ============================================ -->
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
+                        <!-- Category Name -->
                         <div class="form-group">
                             <label for="id_name"><i class="fas fa-heading"></i> Category Name</label>
                             <input type="text" name="name" id="id_name" class="form-control" 
@@ -25,13 +417,18 @@
                             {% endif %}
                         </div>
 
+                        <!-- URL Slug -->
                         <div class="form-group">
                             <label for="id_slug"><i class="fas fa-link"></i> URL Slug</label>
                             <input type="text" name="slug" id="id_slug" class="form-control" 
                                    value="{{ form.slug.value|default:category.slug }}" required>
                             <small class="help-text">URL-friendly version of the category name</small>
+                            {% if form.slug.errors %}
+                            <small class="text-danger">{{ form.slug.errors }}</small>
+                            {% endif %}
                         </div>
 
+                        <!-- Description -->
                         <div class="form-group">
                             <label for="id_description"><i class="fas fa-align-left"></i> Description</label>
                             <textarea name="description" id="id_description" class="form-control" rows="3">{{ form.description.value|default:category.description }}</textarea>
@@ -40,76 +437,79 @@
                             {% endif %}
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="id_icon"><i class="fas fa-icon"></i> Icon</label>
-                                    <input type="text" name="icon" id="id_icon" class="form-control" 
-                                           value="{{ form.icon.value|default:category.icon }}">
-                                    <small class="help-text">FontAwesome icon class (e.g., fa-gavel)</small>
+                        <!-- Icon & Color Row -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="id_icon"><i class="fas fa-icon"></i> Icon</label>
+                                <input type="text" name="icon" id="id_icon" class="form-control" 
+                                       value="{{ form.icon.value|default:category.icon }}">
+                                <small class="help-text">FontAwesome icon class (e.g., fa-gavel)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_color"><i class="fas fa-palette"></i> Color</label>
+                                <input type="color" name="color" id="id_color" class="form-control" 
+                                       value="{{ form.color.value|default:category.color|default:'#1a3c5e' }}">
+                            </div>
+                        </div>
+
+                        <!-- Parent & Order Row -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="id_parent"><i class="fas fa-folder"></i> Parent Category</label>
+                                <select name="parent" id="id_parent" class="form-select">
+                                    <option value="">None (Top Level)</option>
+                                    {% for cat in categories %}
+                                    <option value="{{ cat.id }}" 
+                                        {% if form.parent.value|add:"0" == cat.id or category.parent.id == cat.id %}selected{% endif %}>
+                                        {{ cat.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_order"><i class="fas fa-sort-numeric-down"></i> Order</label>
+                                <input type="number" name="order" id="id_order" class="form-control" 
+                                       value="{{ form.order.value|default:category.order }}" min="0">
+                                <small class="help-text">Lower numbers appear first</small>
+                            </div>
+                        </div>
+
+                        <!-- Checkboxes Row -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" name="is_active" id="id_is_active" 
+                                           class="form-check-input" {% if category.is_active %}checked{% endif %}>
+                                    <label for="id_is_active" class="form-check-label">
+                                        <i class="fas fa-check-circle"></i> Active
+                                    </label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="id_color"><i class="fas fa-palette"></i> Color</label>
-                                    <input type="color" name="color" id="id_color" class="form-control" 
-                                           value="{{ form.color.value|default:category.color|default:'#1a3c5e' }}">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" name="is_featured" id="id_is_featured" 
+                                           class="form-check-input" {% if category.is_featured %}checked{% endif %}>
+                                    <label for="id_is_featured" class="form-check-label">
+                                        <i class="fas fa-star"></i> Featured
+                                    </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="id_parent"><i class="fas fa-folder"></i> Parent Category</label>
-                                    <select name="parent" id="id_parent" class="form-select">
-                                        <option value="">None (Top Level)</option>
-                                        {% for cat in categories %}
-                                        <option value="{{ cat.id }}" {% if form.parent.value|add:"0" == cat.id or category.parent.id == cat.id %}selected{% endif %}>
-                                            {{ cat.name }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="id_order"><i class="fas fa-sort-numeric-down"></i> Order</label>
-                                    <input type="number" name="order" id="id_order" class="form-control" 
-                                           value="{{ form.order.value|default:category.order }}" min="0">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="is_active" id="id_is_active" 
-                                               class="form-check-input" {% if category.is_active %}checked{% endif %}>
-                                        <label for="id_is_active" class="form-check-label">Active</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="is_featured" id="id_is_featured" 
-                                               class="form-check-input" {% if category.is_featured %}checked{% endif %}>
-                                        <label for="id_is_featured" class="form-check-label">Featured</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        <!-- Category Image -->
                         <div class="form-group">
                             <label for="id_image"><i class="fas fa-image"></i> Category Image</label>
                             <input type="file" name="image" id="id_image" class="form-control" accept="image/*">
                             {% if category.image %}
-                            <small class="help-text">Current: {{ category.image.name }}</small>
+                            <div class="current-image">
+                                <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                                <span class="file-name">Current: {{ category.image.name }}</span>
+                            </div>
                             {% endif %}
+                            <small class="help-text">Upload a new image to replace the current one (Recommended: 1200 x 630 pixels)</small>
                         </div>
 
+                        <!-- Form Actions -->
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Update Category
@@ -117,7 +517,8 @@
                             <a href="{% url 'categories:detail' category.slug %}" class="btn btn-outline-secondary">
                                 <i class="fas fa-times"></i> Cancel
                             </a>
-                            <a href="{% url 'categories:delete' category.id %}" class="btn btn-outline-danger" onclick="return confirm('Delete this category?')">
+                            <a href="{% url 'categories:delete' category.id %}" class="btn btn-outline-danger" 
+                               onclick="return confirm('⚠️ Delete this category? All articles will be moved to Uncategorized.')">
                                 <i class="fas fa-trash"></i> Delete
                             </a>
                         </div>
