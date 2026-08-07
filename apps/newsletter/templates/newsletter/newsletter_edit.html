@@ -5,43 +5,431 @@
 
 {% block extra_css %}
 {{ form.media }}
+<style>
+/* ============================================
+   EDIT NEWSLETTER - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --gov-primary: #0a1a2a;
+    --gov-secondary: #1a3c5e;
+    --gov-gold: #c9a84c;
+    --gov-cream: #f5f0e8;
+    --gov-border: #d4cdc0;
+    --gov-red: #8b1a1a;
+    --gov-green: #1a5a3a;
+}
+
+.newsletter-form-container {
+    padding: 40px 0;
+    background: var(--gov-cream);
+    min-height: calc(100vh - 200px);
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   FORM CARD - OFFICIAL STYLE
+   ============================================ */
+.form-card {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.form-card::before {
+    content: 'OFFICIAL';
+    position: absolute;
+    right: -30px;
+    top: -20px;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(201,168,76,0.03);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 10px;
+    pointer-events: none;
+}
+
+.form-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gov-gold);
+}
+
+/* ============================================
+   FORM HEADER - OFFICIAL STYLE
+   ============================================ */
+.form-header {
+    border-bottom: 3px solid var(--gov-gold);
+    padding-bottom: 18px;
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: var(--gov-primary);
+    font-size: 28px;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.form-header h2 i {
+    color: var(--gov-gold);
+    margin-right: 12px;
+}
+
+.form-header .newsletter-status {
+    display: inline-block;
+    padding: 3px 16px;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 2px;
+}
+
+.form-header .newsletter-status.draft {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+.form-header .newsletter-status.scheduled {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.form-header .newsletter-status.sent {
+    background: #d4edda;
+    color: #155724;
+}
+
+.form-header p {
+    font-family: 'Times New Roman', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #6c757d;
+    margin: 5px 0 0 0;
+}
+
+/* ============================================
+   STATUS BAR - OFFICIAL STYLE
+   ============================================ */
+.status-bar {
+    background: var(--gov-cream);
+    border: 1px solid var(--gov-border);
+    padding: 12px 20px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.status-bar .status-item {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.status-bar .status-item strong {
+    color: var(--gov-primary);
+}
+
+.status-bar .status-item i {
+    color: var(--gov-gold);
+    margin-right: 5px;
+}
+
+/* ============================================
+   FORM GROUPS - OFFICIAL STYLE
+   ============================================ */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--gov-primary);
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.form-group label i {
+    color: var(--gov-gold);
+    margin-right: 8px;
+    width: 18px;
+}
+
+.form-group .form-control,
+.form-group .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 2px;
+    border: 1px solid var(--gov-border);
+    padding: 10px 15px;
+    font-size: 15px;
+    background: #fff;
+    transition: all 0.3s;
+}
+
+.form-group .form-control:focus,
+.form-group .form-select:focus {
+    border-color: var(--gov-gold);
+    box-shadow: 0 0 0 0.2rem rgba(201,168,76,0.15);
+    outline: none;
+}
+
+.form-group .form-control::placeholder {
+    color: #b0a8a0;
+    font-style: italic;
+}
+
+.form-group .help-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 4px;
+    display: block;
+}
+
+/* ============================================
+   FORM ACTIONS - OFFICIAL STYLE
+   ============================================ */
+.form-actions {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid var(--gov-border);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.form-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 12px 35px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+    min-width: 160px;
+}
+
+.form-actions .btn-primary {
+    background: var(--gov-gold);
+    border: 2px solid var(--gov-gold);
+    color: var(--gov-primary);
+}
+
+.form-actions .btn-primary:hover {
+    background: #d4b85c;
+    border-color: #d4b85c;
+}
+
+.form-actions .btn-primary i {
+    margin-right: 8px;
+}
+
+.form-actions .btn-outline-info {
+    border: 2px solid var(--gov-secondary);
+    color: var(--gov-secondary);
+    background: transparent;
+}
+
+.form-actions .btn-outline-info:hover {
+    background: var(--gov-secondary);
+    border-color: var(--gov-secondary);
+    color: #fff;
+}
+
+.form-actions .btn-outline-info i {
+    margin-right: 8px;
+}
+
+.form-actions .btn-success {
+    background: var(--gov-green);
+    border: 2px solid var(--gov-green);
+    color: #fff;
+}
+
+.form-actions .btn-success:hover {
+    background: #0e4a2e;
+    border-color: #0e4a2e;
+}
+
+.form-actions .btn-success i {
+    margin-right: 8px;
+}
+
+.form-actions .btn-outline-secondary {
+    border: 2px solid var(--gov-border);
+    color: var(--gov-primary);
+    background: transparent;
+}
+
+.form-actions .btn-outline-secondary:hover {
+    background: var(--gov-secondary);
+    border-color: var(--gov-secondary);
+    color: #fff;
+}
+
+.form-actions .btn-outline-secondary i {
+    margin-right: 8px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .form-card {
+        padding: 25px 20px;
+    }
+    .form-card::before {
+        font-size: 40px;
+        right: -15px;
+        top: -10px;
+    }
+    .form-header h2 {
+        font-size: 22px;
+    }
+    .form-actions {
+        flex-direction: column;
+    }
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        min-width: unset;
+    }
+    .form-group label {
+        font-size: 13px;
+    }
+    .form-group .form-control,
+    .form-group .form-select {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    .status-bar {
+        flex-direction: column;
+        gap: 5px;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-card {
+        padding: 18px 15px;
+    }
+    .form-header h2 {
+        font-size: 19px;
+    }
+    .form-header p {
+        font-size: 13px;
+    }
+    .form-group {
+        margin-bottom: 16px;
+    }
+    .form-actions .btn {
+        font-size: 12px;
+        padding: 10px 20px;
+    }
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="newsletter-form-container">
+<div class="newsletter-form-container">
+    <div class="container">
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="form-card">
+                    <!-- ============================================
+                    FORM HEADER - OFFICIAL STYLE
+                    ============================================ -->
                     <div class="form-header">
-                        <h2><i class="fas fa-envelope-open-text"></i> Edit Newsletter</h2>
-                        <p class="text-muted">Update your newsletter content and settings</p>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h2><i class="fas fa-envelope-open-text"></i> Edit Newsletter</h2>
+                                <p>Official publication — Update your newsletter content and settings</p>
+                            </div>
+                            <div>
+                                <span class="newsletter-status {{ newsletter.status }}">
+                                    <i class="fas fa-{% if newsletter.status == 'draft' %}pencil-alt{% elif newsletter.status == 'scheduled' %}clock{% elif newsletter.status == 'sent' %}check-circle{% endif %}"></i>
+                                    {{ newsletter.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
+                    <!-- ============================================
+                    STATUS BAR - OFFICIAL STYLE
+                    ============================================ -->
+                    <div class="status-bar">
+                        <span class="status-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <strong>Created:</strong> {{ newsletter.created_at|date:"F d, Y H:i" }}
+                        </span>
+                        <span class="status-item">
+                            <i class="fas fa-edit"></i>
+                            <strong>Last Updated:</strong> {{ newsletter.updated_at|date:"F d, Y H:i" }}
+                        </span>
+                        <span class="status-item">
+                            <i class="fas fa-users"></i>
+                            <strong>Subscribers:</strong> {{ newsletter.subscribers_count|default:0 }}
+                        </span>
+                    </div>
+
+                    <!-- ============================================
+                    FORM - OFFICIAL STYLE
+                    ============================================ -->
                     <form method="post">
                         {% csrf_token %}
                         
+                        <!-- Subject Line -->
                         <div class="form-group">
-                            <label for="id_subject">Subject Line</label>
+                            <label for="id_subject"><i class="fas fa-heading"></i> Subject Line</label>
                             <input type="text" name="subject" id="id_subject" class="form-control" 
                                    value="{{ form.subject.value|default:newsletter.subject }}" required>
+                            {% if form.subject.errors %}
+                            <small class="text-danger">{{ form.subject.errors }}</small>
+                            {% endif %}
+                            <small class="help-text">A compelling subject line increases open rates</small>
                         </div>
 
+                        <!-- Preview Text -->
                         <div class="form-group">
-                            <label for="id_preview_text">Preview Text</label>
+                            <label for="id_preview_text"><i class="fas fa-align-left"></i> Preview Text</label>
                             <input type="text" name="preview_text" id="id_preview_text" class="form-control" 
                                    value="{{ form.preview_text.value|default:newsletter.preview_text }}">
+                            <small class="help-text">Short preview text displayed next to the subject line</small>
                         </div>
 
+                        <!-- Content -->
                         <div class="form-group">
-                            <label for="id_content">Content</label>
+                            <label for="id_content"><i class="fas fa-file-alt"></i> Content</label>
                             {{ form.content }}
+                            {% if form.content.errors %}
+                            <small class="text-danger">{{ form.content.errors }}</small>
+                            {% endif %}
+                            <small class="help-text">Use the editor to create your newsletter content</small>
                         </div>
 
+                        <!-- Template & Status Row -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="id_template">Template</label>
+                                    <label for="id_template"><i class="fas fa-palette"></i> Template</label>
                                     <select name="template" id="id_template" class="form-select">
                                         <option value="default" {% if newsletter.template == 'default' %}selected{% endif %}>Default</option>
                                         <option value="minimal" {% if newsletter.template == 'minimal' %}selected{% endif %}>Minimal</option>
@@ -49,30 +437,38 @@
                                         <option value="digest" {% if newsletter.template == 'digest' %}selected{% endif %}>Digest</option>
                                         <option value="custom" {% if newsletter.template == 'custom' %}selected{% endif %}>Custom</option>
                                     </select>
+                                    {% if form.template.errors %}
+                                    <small class="text-danger">{{ form.template.errors }}</small>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="id_status">Status</label>
+                                    <label for="id_status"><i class="fas fa-flag"></i> Status</label>
                                     <select name="status" id="id_status" class="form-select">
                                         <option value="draft" {% if newsletter.status == 'draft' %}selected{% endif %}>Draft</option>
                                         <option value="scheduled" {% if newsletter.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
                                     </select>
+                                    {% if form.status.errors %}
+                                    <small class="text-danger">{{ form.status.errors }}</small>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Schedule & Frequency Row -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="id_scheduled_for">Schedule Date</label>
+                                    <label for="id_scheduled_for"><i class="fas fa-calendar-plus"></i> Schedule Date</label>
                                     <input type="datetime-local" name="scheduled_for" id="id_scheduled_for" 
                                            class="form-control" value="{{ newsletter.scheduled_for|date:'Y-m-d\TH:i'|default:'' }}">
+                                    <small class="help-text">Leave blank to save as draft</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="id_frequency">Frequency</label>
+                                    <label for="id_frequency"><i class="fas fa-clock"></i> Frequency</label>
                                     <select name="frequency" id="id_frequency" class="form-select">
                                         <option value="daily" {% if newsletter.frequency == 'daily' %}selected{% endif %}>Daily</option>
                                         <option value="weekly" {% if newsletter.frequency == 'weekly' %}selected{% endif %}>Weekly</option>
@@ -83,6 +479,7 @@
                             </div>
                         </div>
 
+                        <!-- Form Actions -->
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Update Newsletter

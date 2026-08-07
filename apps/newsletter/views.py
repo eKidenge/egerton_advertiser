@@ -4,13 +4,16 @@ from django.contrib import messages
 from django.db.models import Q, Count, Sum
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
 from .models import Subscriber, Newsletter, NewsletterTracking
 from .forms import SubscriberForm, NewsletterForm, NewsletterFilterForm
 from apps.accounts.models import UserActivityLog
 
-# apps/newsletter/views.py
+
+# ============================================
+# PUBLIC SUBSCRIBE VIEWS
+# ============================================
 
 def subscribe(request):
     """Subscribe to newsletter"""
@@ -56,10 +59,20 @@ def subscribe(request):
             status='active'
         )
         
-        # Save categories if any
+        # ✅ FIX: Properly handle category IDs
         if selected_categories:
-            categories_to_add = Category.objects.filter(id__in=selected_categories)
-            subscriber.categories.add(*categories_to_add)
+            # Convert to integers and filter out invalid ones
+            category_ids = []
+            for cat in selected_categories:
+                try:
+                    category_ids.append(int(cat))
+                except (ValueError, TypeError):
+                    # Skip non-numeric values
+                    continue
+            
+            if category_ids:
+                categories_to_add = Category.objects.filter(id__in=category_ids)
+                subscriber.categories.add(*categories_to_add)
         
         # Log activity
         UserActivityLog.objects.create(
@@ -76,9 +89,113 @@ def subscribe(request):
     
     return render(request, 'newsletter/subscribe.html', {'categories': categories})
 
+
+def unsubscribe(request, email=None):
+    """Unsubscribe from newsletter"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+    
+    if email:
+        subscriber = Subscriber.objects.filter(email=email).first()
+        if subscriber:
+            subscriber.unsubscribe()
+            
+            # Record unsubscribe
+            NewsletterTracking.objects.create(
+                newsletter=None,
+                subscriber=subscriber,
+                action='unsubscribe',
+                ip_address=request.META.get('REMOTE_ADDR'),
+                user_agent=request.META.get('HTTP_USER_AGENT', ''),
+                referer=request.META.get('HTTP_REFERER', '')
+            )
+            
+            messages.success(request, 'You have been unsubscribed successfully.')
+            return redirect('home')
+        else:
+            messages.error(request, 'Subscriber not found.')
+    
+    return render(request, 'newsletter/unsubscribe.html')
+
+
+# ============================================
+# TRACKING VIEWS
+# ============================================
+
+@require_http_methods(["GET"])
+def track_open(request, newsletter_id, subscriber_id):
+    """Track email opens via a tracking pixel"""
+    try:
+        newsletter = Newsletter.objects.get(id=newsletter_id)
+        subscriber = Subscriber.objects.get(id=subscriber_id)
+        
+        # Record open
+        NewsletterTracking.objects.create(
+            newsletter=newsletter,
+            subscriber=subscriber,
+            action='open',
+            ip_address=request.META.get('REMOTE_ADDR'),
+            user_agent=request.META.get('HTTP_USER_AGENT', ''),
+            referer=request.META.get('HTTP_REFERER', '')
+        )
+        
+        # Update subscriber stats
+        subscriber.record_open()
+        
+        # Update newsletter stats
+        newsletter.opens_count += 1
+        newsletter.save(update_fields=['opens_count'])
+        
+        # Return a 1x1 transparent pixel
+        response = HttpResponse(content_type='image/gif')
+        response.write(b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b')
+        return response
+    except Exception as e:
+        print(f"Error tracking open: {e}")
+        return HttpResponse(status=404)
+
+
+@require_http_methods(["GET"])
+def track_click(request, newsletter_id, subscriber_id):
+    """Track email clicks"""
+    try:
+        newsletter = Newsletter.objects.get(id=newsletter_id)
+        subscriber = Subscriber.objects.get(id=subscriber_id)
+        link = request.GET.get('link', '')
+        
+        # Record click
+        NewsletterTracking.objects.create(
+            newsletter=newsletter,
+            subscriber=subscriber,
+            action='click',
+            link=link,
+            ip_address=request.META.get('REMOTE_ADDR'),
+            user_agent=request.META.get('HTTP_USER_AGENT', ''),
+            referer=request.META.get('HTTP_REFERER', '')
+        )
+        
+        # Update subscriber stats
+        subscriber.record_click()
+        
+        # Update newsletter stats
+        newsletter.clicks_count += 1
+        newsletter.save(update_fields=['clicks_count'])
+        
+        # Redirect to the link
+        return redirect(link)
+    except Exception as e:
+        print(f"Error tracking click: {e}")
+        return redirect('home')
+
+
+# ============================================
+# ADMIN - SUBSCRIBER MANAGEMENT
+# ============================================
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def subscriber_list(request):
+    """List all subscribers"""
     subscribers = Subscriber.objects.all().order_by('-created_at')
     
     # Filtering
@@ -118,9 +235,11 @@ def subscriber_list(request):
     }
     return render(request, 'newsletter/subscriber_list.html', context)
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def subscriber_detail(request, subscriber_id):
+    """View subscriber details"""
     subscriber = get_object_or_404(Subscriber, id=subscriber_id)
     
     # Get tracking data
@@ -132,9 +251,15 @@ def subscriber_detail(request, subscriber_id):
     }
     return render(request, 'newsletter/subscriber_detail.html', context)
 
+
+# ============================================
+# ADMIN - NEWSLETTER MANAGEMENT
+# ============================================
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def newsletter_list(request):
+    """List all newsletters"""
     newsletters = Newsletter.objects.all().order_by('-created_at')
     
     # Filtering
@@ -162,9 +287,11 @@ def newsletter_list(request):
     }
     return render(request, 'newsletter/newsletter_list.html', context)
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def newsletter_create(request):
+    """Create a new newsletter"""
     if request.method == 'POST':
         form = NewsletterForm(request.POST)
         if form.is_valid():
@@ -189,9 +316,11 @@ def newsletter_create(request):
     
     return render(request, 'newsletter/newsletter_create.html', {'form': form})
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def newsletter_edit(request, newsletter_id):
+    """Edit an existing newsletter"""
     newsletter = get_object_or_404(Newsletter, id=newsletter_id)
     
     if newsletter.status in ['sent', 'sending']:
@@ -223,9 +352,11 @@ def newsletter_edit(request, newsletter_id):
     }
     return render(request, 'newsletter/newsletter_edit.html', context)
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def newsletter_send(request, newsletter_id):
+    """Send a newsletter"""
     newsletter = get_object_or_404(Newsletter, id=newsletter_id)
     
     if request.method == 'POST':
@@ -252,9 +383,11 @@ def newsletter_send(request, newsletter_id):
     }
     return render(request, 'newsletter/newsletter_send.html', context)
 
+
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
 def newsletter_history(request, newsletter_id):
+    """View newsletter history and statistics"""
     newsletter = get_object_or_404(Newsletter, id=newsletter_id)
     
     tracking = NewsletterTracking.objects.filter(newsletter=newsletter).order_by('-created_at')
@@ -280,93 +413,3 @@ def newsletter_history(request, newsletter_id):
         'open_rate': round(open_rate, 2),
     }
     return render(request, 'newsletter/newsletter_history.html', context)
-
-@require_http_methods(["GET"])
-def track_open(request, newsletter_id, subscriber_id):
-    """Track email opens via a tracking pixel"""
-    try:
-        newsletter = Newsletter.objects.get(id=newsletter_id)
-        subscriber = Subscriber.objects.get(id=subscriber_id)
-        
-        # Record open
-        NewsletterTracking.objects.create(
-            newsletter=newsletter,
-            subscriber=subscriber,
-            action='open',
-            ip_address=request.META.get('REMOTE_ADDR'),
-            user_agent=request.META.get('HTTP_USER_AGENT', ''),
-            referer=request.META.get('HTTP_REFERER', '')
-        )
-        
-        # Update subscriber stats
-        subscriber.record_open()
-        
-        # Update newsletter stats
-        newsletter.opens_count += 1
-        newsletter.save(update_fields=['opens_count'])
-        
-        # Return a 1x1 transparent pixel
-        response = HttpResponse(content_type='image/gif')
-        response.write(b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b')
-        return response
-    except Exception as e:
-        print(f"Error tracking open: {e}")
-        return HttpResponse(status=404)
-
-@require_http_methods(["GET"])
-def track_click(request, newsletter_id, subscriber_id):
-    """Track email clicks"""
-    try:
-        newsletter = Newsletter.objects.get(id=newsletter_id)
-        subscriber = Subscriber.objects.get(id=subscriber_id)
-        link = request.GET.get('link', '')
-        
-        # Record click
-        NewsletterTracking.objects.create(
-            newsletter=newsletter,
-            subscriber=subscriber,
-            action='click',
-            link=link,
-            ip_address=request.META.get('REMOTE_ADDR'),
-            user_agent=request.META.get('HTTP_USER_AGENT', ''),
-            referer=request.META.get('HTTP_REFERER', '')
-        )
-        
-        # Update subscriber stats
-        subscriber.record_click()
-        
-        # Update newsletter stats
-        newsletter.clicks_count += 1
-        newsletter.save(update_fields=['clicks_count'])
-        
-        # Redirect to the link
-        return redirect(link)
-    except Exception as e:
-        print(f"Error tracking click: {e}")
-        return redirect('home')
-
-def unsubscribe(request, email=None):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-    
-    if email:
-        subscriber = Subscriber.objects.filter(email=email).first()
-        if subscriber:
-            subscriber.unsubscribe()
-            
-            # Record unsubscribe
-            NewsletterTracking.objects.create(
-                newsletter=None,
-                subscriber=subscriber,
-                action='unsubscribe',
-                ip_address=request.META.get('REMOTE_ADDR'),
-                user_agent=request.META.get('HTTP_USER_AGENT', ''),
-                referer=request.META.get('HTTP_REFERER', '')
-            )
-            
-            messages.success(request, 'You have been unsubscribed successfully.')
-            return redirect('home')
-        else:
-            messages.error(request, 'Subscriber not found.')
-    
-    return render(request, 'newsletter/unsubscribe.html')
