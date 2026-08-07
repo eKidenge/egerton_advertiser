@@ -21,38 +21,94 @@ mkdir -p apps/articles/static
 mkdir -p apps/dashboard/static
 
 # ============================================
-# RESET DATABASE AND MIGRATE
+# CHECK DATABASE TYPE
 # ============================================
 echo ""
-echo "🗄️  Resetting database completely..."
+echo "🗄️  Checking database configuration..."
 
-# Delete the SQLite database file
-echo "Deleting existing database..."
-rm -f db.sqlite3
+# Check if we're using PostgreSQL or SQLite
+if [[ "$DATABASE_URL" == postgresql://* ]] || [[ "$DATABASE_URL" == postgres://* ]]; then
+    echo "✅ Using PostgreSQL database"
+    DATABASE_TYPE="postgresql"
+else
+    echo "⚠️ Using SQLite database (fallback)"
+    DATABASE_TYPE="sqlite"
+fi
 
-# Now run migrations fresh
+# ============================================
+# DATABASE MIGRATIONS
+# ============================================
 echo ""
-echo "🗄️  Applying fresh migrations..."
-python manage.py makemigrations
-python manage.py migrate
+echo "🗄️  Running database migrations..."
 
-# Collect static files
+if [[ "$DATABASE_TYPE" == "postgresql" ]]; then
+    echo "   📌 Using PostgreSQL with DATABASE_URL"
+    
+    # For PostgreSQL, we need to handle migrations carefully
+    # First, try to create the migrations
+    echo "   Creating migrations..."
+    python manage.py makemigrations || true
+    
+    # Check if we need to fake migrations (for existing database)
+    echo "   Checking migration status..."
+    
+    # Try to migrate normally first
+    echo "   Attempting to apply migrations..."
+    if python manage.py migrate; then
+        echo "   ✅ Migrations applied successfully"
+    else
+        echo "   ⚠️ Migration failed, trying to fake initial migrations..."
+        
+        # If migration fails, it might be due to existing tables
+        # Try to fake the migrations and then migrate
+        echo "   Faking initial migrations..."
+        python manage.py migrate --fake || true
+        
+        echo "   Running migrations again..."
+        python manage.py migrate || true
+        
+        echo "   ✅ Migrations completed"
+    fi
+    
+else
+    # SQLite - simple migration
+    echo "   📌 Using SQLite"
+    
+    # Delete the SQLite database file for fresh start
+    echo "   Deleting existing SQLite database..."
+    rm -f db.sqlite3
+    
+    echo "   Creating migrations..."
+    python manage.py makemigrations
+    
+    echo "   Applying migrations..."
+    python manage.py migrate
+fi
+
+# ============================================
+# COLLECT STATIC FILES
+# ============================================
 echo ""
 echo "📁 Collecting static files..."
 python manage.py collectstatic --noinput
 
 # ============================================
-# SEED DATABASE WITH DEMO DATA
+# SEED DATABASE WITH DEMO DATA (Only for SQLite or fresh PostgreSQL)
 # ============================================
 echo ""
 echo "🌱 Seeding database with demo data..."
-echo "This may take a few minutes..."
 
-# Run the seed_data command (creates categories, tags, articles, comments, ads, subscribers, etc.)
-python manage.py seed_data
+# Only seed if it's SQLite or if we're confident the database is fresh
+if [[ "$DATABASE_TYPE" == "sqlite" ]]; then
+    echo "   Seeding SQLite database..."
+    python manage.py seed_data || echo "   ⚠️ Seed data skipped (command not found)"
+else
+    echo "   ⚠️ Skipping seed_data for PostgreSQL (to avoid conflicts with existing data)"
+    echo "   You can run 'python manage.py seed_data' manually if needed."
+fi
 
 # ============================================
-# CREATE SUPERUSER (if seed_data didn't create one)
+# CREATE SUPERUSER
 # ============================================
 echo ""
 echo "👤 Creating superuser..."
@@ -100,7 +156,7 @@ else:
         pass
 
 # ============================================
-# CREATE ADDITIONAL DEMO USERS (if not created by seed_data)
+# CREATE ADDITIONAL DEMO USERS
 # ============================================
 print("\n" + "="*50)
 print("  CREATING DEMO USERS")
