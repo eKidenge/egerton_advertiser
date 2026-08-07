@@ -223,9 +223,6 @@ urlpatterns = [
     path('admin/newsletters/<int:newsletter_id>/edit/', views.admin_newsletter_edit, name='newsletter_edit'),
     path('admin/newsletters/<int:newsletter_id>/send/', views.admin_newsletter_send, name='newsletter_send'),
     path('admin/newsletters/<int:newsletter_id>/delete/', views.admin_newsletter_delete, name='newsletter_delete'),
-    path('admin/newsletters/<int:newsletter_id>/duplicate/', views.admin_newsletter_duplicate, name='newsletter_duplicate'),
-    path('admin/newsletters/<int:newsletter_id>/preview/', views.admin_newsletter_preview, name='newsletter_preview'),
-    path('admin/newsletters/bulk-action/', views.admin_newsletter_bulk_action, name='newsletter_bulk_action'),
     
     # ============================================
     # ADMIN - SETTINGS

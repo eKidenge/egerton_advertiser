@@ -2629,9 +2629,16 @@ def admin_subscriber_toggle(request, subscriber_id):
 # ADMIN - NEWSLETTERS (KEEP dashboard templates)
 # ============================================
 
+# ============================================
+# ADMIN - NEWSLETTERS (Using existing newsletter templates)
+# ============================================
+
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_newsletters(request):
+    """Admin dashboard - Newsletter list"""
+    from apps.newsletter.models import Newsletter
+    
     newsletters = Newsletter.objects.all().order_by('-created_at')
     
     status = request.GET.get('status')
@@ -2654,12 +2661,17 @@ def admin_newsletters(request):
         'sent_newsletters': Newsletter.objects.filter(status='sent').count(),
         'draft_newsletters': Newsletter.objects.filter(status='draft').count(),
     }
+    # ✅ Using your existing newsletter_list.html
     return render(request, 'newsletter/newsletter_list.html', context)
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_newsletter_create(request):
+    """Create a new newsletter"""
+    from apps.newsletter.forms import NewsletterForm
+    from apps.accounts.models import UserActivityLog
+    
     if request.method == 'POST':
         form = NewsletterForm(request.POST)
         if form.is_valid():
@@ -2667,61 +2679,127 @@ def admin_newsletter_create(request):
             newsletter.created_by = request.user
             newsletter.save()
             form.save_m2m()
-            messages.success(request, f'Newsletter "{newsletter.subject}" created!')
+            
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='create',
+                model_name='Newsletter',
+                object_id=newsletter.id,
+                description=f'Created newsletter: {newsletter.subject}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            messages.success(request, f'✅ Newsletter "{newsletter.subject}" created successfully!')
             return redirect('dashboard:newsletter_list')
     else:
         form = NewsletterForm()
     
-    return render(request, 'newsletter/newsletter_create.html', {'form': form, 'action': 'Create'})
+    # ✅ Using your existing newsletter_create.html
+    return render(request, 'newsletter/newsletter_create.html', {'form': form})
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_newsletter_edit(request, newsletter_id):
+    """Edit an existing newsletter"""
+    from apps.newsletter.forms import NewsletterForm
+    from apps.accounts.models import UserActivityLog
+    
     newsletter = get_object_or_404(Newsletter, id=newsletter_id)
+    
+    if newsletter.status in ['sent', 'sending']:
+        messages.error(request, 'Cannot edit a newsletter that has been sent.')
+        return redirect('dashboard:newsletter_list')
     
     if request.method == 'POST':
         form = NewsletterForm(request.POST, instance=newsletter)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Newsletter "{newsletter.subject}" updated!')
+            
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='update',
+                model_name='Newsletter',
+                object_id=newsletter.id,
+                description=f'Updated newsletter: {newsletter.subject}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            messages.success(request, f'✅ Newsletter "{newsletter.subject}" updated successfully!')
             return redirect('dashboard:newsletter_list')
     else:
         form = NewsletterForm(instance=newsletter)
     
-    return render(request, 'newsletter/newsletter_edit.html', {'form': form, 'action': 'Edit', 'newsletter': newsletter})
+    # ✅ Using your existing newsletter_edit.html
+    return render(request, 'newsletter/newsletter_edit.html', {
+        'form': form,
+        'newsletter': newsletter
+    })
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_newsletter_send(request, newsletter_id):
+    """Send a newsletter"""
+    from apps.accounts.models import UserActivityLog
+    
     newsletter = get_object_or_404(Newsletter, id=newsletter_id)
     
     if request.method == 'POST':
-        newsletter.send()
-        messages.success(request, f'Newsletter "{newsletter.subject}" sent!')
+        test = request.POST.get('test', False)
+        
+        if newsletter.send(test=test):
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='send',
+                model_name='Newsletter',
+                object_id=newsletter.id,
+                description=f'Sent newsletter: {newsletter.subject}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            messages.success(request, f'✅ Newsletter "{newsletter.subject}" sent successfully!')
+        else:
+            messages.error(request, f'❌ Failed to send newsletter "{newsletter.subject}".')
+        
         return redirect('dashboard:newsletter_list')
     
-    return render(request, 'dashboard/admin_newsletter_send.html', {'newsletter': newsletter})
+    context = {
+        'newsletter': newsletter,
+        'subscriber_count': newsletter.subscribers_count,
+    }
+    # ✅ Using your existing newsletter_send.html
+    return render(request, 'newsletter/newsletter_send.html', context)
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_newsletter_delete(request, newsletter_id):
+    """Delete a newsletter"""
+    from apps.accounts.models import UserActivityLog
+    
     newsletter = get_object_or_404(Newsletter, id=newsletter_id)
     
     if request.method == 'POST':
         subject = newsletter.subject
         newsletter.delete()
-        messages.success(request, f'Newsletter "{subject}" deleted!')
+        
+        UserActivityLog.objects.create(
+            user=request.user,
+            action='delete',
+            model_name='Newsletter',
+            object_id=newsletter_id,
+            description=f'Deleted newsletter: {subject}',
+            ip_address=request.META.get('REMOTE_ADDR')
+        )
+        
+        messages.success(request, f'✅ Newsletter "{subject}" deleted successfully!')
         return redirect('dashboard:newsletter_list')
     
+    # ✅ Using your existing newsletter_edit.html with delete confirmation
     return render(request, 'newsletter/newsletter_edit.html', {
-        'object': newsletter,
-        'type': 'Newsletter',
-        'back_url': 'dashboard:newsletter_list'
+        'newsletter': newsletter,
+        'delete_mode': True
     })
-
 
 # ============================================
 # ADMIN - SETTINGS (KEEP dashboard templates)
