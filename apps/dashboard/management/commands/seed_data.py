@@ -192,7 +192,7 @@ class Command(BaseCommand):
             {
                 'username': 'admin',
                 'email': 'admin@theegertonadvertiser.com',
-                'first_name': 'John',
+                'first_name': 'ERIC',
                 'last_name': 'Admin',
                 'role': 'super_admin',
                 'is_active': True,
