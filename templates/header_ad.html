@@ -7,11 +7,18 @@
                 <div class="header-ad">
                     <span class="ad-label">ADVERTISEMENT</span>
                     <div class="ad-content">
+                        {# Try the template tag first #}
                         {% get_ad_by_position 'header' as ad %}
+                        
+                        {# Debug output to see what's happening #}
                         {% if ad %}
+                            <!-- ✅ Ad found via template tag -->
                             {% if ad.image %}
-                                <a href="{{ ad.link_url }}" target="{{ ad.link_target|default:'_blank' }}">
+                                <a href="{{ ad.destination_url }}" target="{{ ad.link_target|default:'_blank' }}">
                                     <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="img-fluid">
+                                    <p style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                                        <i class="fas fa-info-circle"></i> Ad: {{ ad.title }}
+                                    </p>
                                 </a>
                             {% else %}
                                 <div class="ad-placeholder">
@@ -21,11 +28,12 @@
                                 </div>
                             {% endif %}
                         {% else %}
-                        <div class="ad-placeholder">
-                            <i class="fas fa-ad"></i>
-                            <span>Advertise Here</span>
-                            <small>Contact us for advertising opportunities</small>
-                        </div>
+                            <!-- ❌ No ad found - Show placeholder -->
+                            <div class="ad-placeholder">
+                                <i class="fas fa-ad"></i>
+                                <span>Advertise Here</span>
+                                <small>Contact us for advertising opportunities</small>
+                            </div>
                         {% endif %}
                     </div>
                 </div>

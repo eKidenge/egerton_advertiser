@@ -2654,7 +2654,7 @@ def admin_newsletters(request):
         'sent_newsletters': Newsletter.objects.filter(status='sent').count(),
         'draft_newsletters': Newsletter.objects.filter(status='draft').count(),
     }
-    return render(request, 'dashboard/admin_newsletters.html', context)
+    return render(request, 'newsletter/newsletter_list.html', context)
 
 
 @login_required
@@ -2672,7 +2672,7 @@ def admin_newsletter_create(request):
     else:
         form = NewsletterForm()
     
-    return render(request, 'dashboard/admin_newsletter_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'newsletter/newsletter_create.html', {'form': form, 'action': 'Create'})
 
 
 @login_required
@@ -2689,7 +2689,7 @@ def admin_newsletter_edit(request, newsletter_id):
     else:
         form = NewsletterForm(instance=newsletter)
     
-    return render(request, 'dashboard/admin_newsletter_form.html', {'form': form, 'action': 'Edit', 'newsletter': newsletter})
+    return render(request, 'newsletter/newsletter_edit.html', {'form': form, 'action': 'Edit', 'newsletter': newsletter})
 
 
 @login_required
@@ -2716,7 +2716,7 @@ def admin_newsletter_delete(request, newsletter_id):
         messages.success(request, f'Newsletter "{subject}" deleted!')
         return redirect('dashboard:newsletter_list')
     
-    return render(request, 'dashboard/confirm_delete.html', {
+    return render(request, 'newsletter/newsletter_edit.html', {
         'object': newsletter,
         'type': 'Newsletter',
         'back_url': 'dashboard:newsletter_list'
