@@ -14,8 +14,6 @@
     --gov-gold: #c9a84c;
     --gov-cream: #f5f0e8;
     --gov-border: #d4cdc0;
-    --gov-red: #8b1a1a;
-    --gov-green: #1a5a3a;
 }
 
 .subscribe-page-wrapper {
@@ -25,9 +23,6 @@
     font-family: 'Times New Roman', serif;
 }
 
-/* ============================================
-   SUBSCRIBE CARD - OFFICIAL STYLE
-   ============================================ */
 .subscribe-card {
     background: #fff;
     border: 1px solid var(--gov-border);
@@ -60,9 +55,6 @@
     background: var(--gov-gold);
 }
 
-/* ============================================
-   SUBSCRIBE HEADER - OFFICIAL STYLE
-   ============================================ */
 .subscribe-header {
     border-bottom: 3px solid var(--gov-gold);
     padding-bottom: 18px;
@@ -91,26 +83,42 @@
     margin: 5px 0 0 0;
 }
 
-/* ============================================
-   BENEFITS - OFFICIAL STYLE
-   ============================================ */
+/* Messages */
+.messages-container {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 12px 18px;
+    border-radius: 2px;
+    font-family: 'Times New Roman', serif;
+    border-left: 4px solid var(--gov-gold);
+}
+
+.alert-success {
+    background: #f0f7f0;
+    border-left-color: #1a5a3a;
+    color: #1a5a3a;
+}
+
+.alert-error {
+    background: #fdf0f0;
+    border-left-color: #8b1a1a;
+    color: #8b1a1a;
+}
+
+.alert-info {
+    background: #f0f4f8;
+    border-left-color: #1a3c5e;
+    color: #1a3c5e;
+}
+
+/* Benefits */
 .subscribe-benefits {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
     margin-bottom: 30px;
-}
-
-@media (max-width: 768px) {
-    .subscribe-benefits {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 576px) {
-    .subscribe-benefits {
-        grid-template-columns: 1fr 1fr;
-    }
 }
 
 .benefit-item {
@@ -145,9 +153,7 @@
     color: var(--gov-primary);
 }
 
-/* ============================================
-   FORM - OFFICIAL STYLE
-   ============================================ */
+/* Form */
 .form-group {
     margin-bottom: 22px;
 }
@@ -199,19 +205,11 @@
     display: block;
 }
 
-/* ============================================
-   INTEREST GRID - OFFICIAL STYLE
-   ============================================ */
+/* Interest Grid */
 .interest-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
-}
-
-@media (max-width: 576px) {
-    .interest-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 .interest-grid .form-check {
@@ -251,9 +249,7 @@
     cursor: pointer;
 }
 
-/* ============================================
-   TERMS CHECKBOX - OFFICIAL STYLE
-   ============================================ */
+/* Terms */
 .terms-check {
     display: flex;
     align-items: flex-start;
@@ -289,9 +285,7 @@
     color: var(--gov-gold);
 }
 
-/* ============================================
-   SUBMIT BUTTON - OFFICIAL STYLE
-   ============================================ */
+/* Submit Button */
 .btn-subscribe {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
@@ -305,6 +299,7 @@
     border: 2px solid var(--gov-gold);
     color: var(--gov-primary);
     transition: all 0.3s;
+    cursor: pointer;
 }
 
 .btn-subscribe:hover {
@@ -317,9 +312,7 @@
     margin-right: 10px;
 }
 
-/* ============================================
-   FOOTER - OFFICIAL STYLE
-   ============================================ */
+/* Footer */
 .subscribe-footer {
     margin-top: 25px;
     padding-top: 18px;
@@ -339,84 +332,28 @@
     margin-right: 8px;
 }
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+/* Responsive */
 @media (max-width: 768px) {
-    .subscribe-card {
-        padding: 30px 20px;
-    }
-    .subscribe-card::before {
-        font-size: 40px;
-        right: -15px;
-        top: -10px;
-    }
-    .subscribe-header h2 {
-        font-size: 24px;
-    }
-    .subscribe-header p {
-        font-size: 14px;
-    }
-    .benefit-item {
-        padding: 12px 8px;
-        font-size: 12px;
-    }
-    .benefit-item i {
-        font-size: 22px;
-    }
-    .form-group label {
-        font-size: 13px;
-    }
-    .form-group .form-control {
-        font-size: 14px;
-        padding: 8px 12px;
-    }
-    .interest-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-    .btn-subscribe {
-        font-size: 14px;
-        padding: 12px 25px;
-    }
+    .subscribe-card { padding: 30px 20px; }
+    .subscribe-card::before { font-size: 40px; right: -15px; top: -10px; }
+    .subscribe-header h2 { font-size: 24px; }
+    .subscribe-benefits { grid-template-columns: repeat(2, 1fr); }
+    .benefit-item { padding: 12px 8px; font-size: 12px; }
+    .benefit-item i { font-size: 22px; }
+    .interest-grid { grid-template-columns: 1fr 1fr; }
+    .btn-subscribe { font-size: 14px; padding: 12px 25px; }
 }
 
 @media (max-width: 576px) {
-    .subscribe-card {
-        padding: 20px 15px;
-    }
-    .subscribe-header h2 {
-        font-size: 20px;
-    }
-    .subscribe-header p {
-        font-size: 13px;
-    }
-    .subscribe-benefits {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-    }
-    .benefit-item {
-        padding: 10px 6px;
-        font-size: 11px;
-    }
-    .benefit-item i {
-        font-size: 18px;
-    }
-    .interest-grid {
-        grid-template-columns: 1fr;
-    }
-    .interest-grid .form-check {
-        padding: 6px 10px;
-    }
-    .terms-check .form-check-label {
-        font-size: 13px;
-    }
-    .btn-subscribe {
-        font-size: 13px;
-        padding: 10px 20px;
-    }
-    .subscribe-footer p {
-        font-size: 12px;
-    }
+    .subscribe-card { padding: 20px 15px; }
+    .subscribe-header h2 { font-size: 20px; }
+    .subscribe-benefits { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .benefit-item { padding: 10px 6px; font-size: 11px; }
+    .benefit-item i { font-size: 18px; }
+    .interest-grid { grid-template-columns: 1fr; }
+    .interest-grid .form-check { padding: 6px 10px; }
+    .terms-check .form-check-label { font-size: 13px; }
+    .btn-subscribe { font-size: 13px; padding: 10px 20px; }
 }
 </style>
 {% endblock %}
@@ -428,7 +365,7 @@
             <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="subscribe-card">
                     <!-- ============================================
-                    SUBSCRIBE HEADER - OFFICIAL STYLE
+                    HEADER
                     ============================================ -->
                     <div class="subscribe-header">
                         <h2><i class="fas fa-envelope-open-text"></i> Subscribe to Our Newsletter</h2>
@@ -436,7 +373,20 @@
                     </div>
 
                     <!-- ============================================
-                    BENEFITS - OFFICIAL STYLE
+                    MESSAGES
+                    ============================================ -->
+                    {% if messages %}
+                    <div class="messages-container">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- ============================================
+                    BENEFITS
                     ============================================ -->
                     <div class="subscribe-benefits">
                         <div class="benefit-item">
@@ -458,66 +408,43 @@
                     </div>
 
                     <!-- ============================================
-                    SUBSCRIBE FORM - OFFICIAL STYLE
+                    SUBSCRIBE FORM
                     ============================================ -->
                     <form method="post" action="{% url 'newsletter:subscribe' %}">
                         {% csrf_token %}
                         
-                        <!-- Email -->
                         <div class="form-group">
-                            <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                            <label for="email"><i class="fas fa-envelope"></i> Email Address *</label>
                             <input type="email" name="email" id="email" class="form-control" 
                                    placeholder="Enter your email address" required>
                         </div>
 
-                        <!-- Full Name -->
                         <div class="form-group">
                             <label for="name"><i class="fas fa-user"></i> Full Name</label>
                             <input type="text" name="name" id="name" class="form-control" 
                                    placeholder="Enter your full name (optional)">
                         </div>
 
-                        <!-- Interests -->
                         <div class="form-group">
                             <label><i class="fas fa-folder"></i> Your Interests</label>
                             <div class="interest-grid">
+                                {% for category in categories %}
                                 <div class="form-check">
-                                    <input type="checkbox" name="categories" value="politics" id="cat_politics" class="form-check-input">
-                                    <label for="cat_politics" class="form-check-label">Politics</label>
+                                    <input type="checkbox" name="categories" value="{{ category.id }}" 
+                                           id="cat_{{ category.id }}" class="form-check-input">
+                                    <label for="cat_{{ category.id }}" class="form-check-label">
+                                        {{ category.name }}
+                                    </label>
                                 </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="categories" value="business" id="cat_business" class="form-check-input">
-                                    <label for="cat_business" class="form-check-label">Business</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="categories" value="sports" id="cat_sports" class="form-check-input">
-                                    <label for="cat_sports" class="form-check-label">Sports</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="categories" value="entertainment" id="cat_entertainment" class="form-check-input">
-                                    <label for="cat_entertainment" class="form-check-label">Entertainment</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="categories" value="technology" id="cat_technology" class="form-check-input">
-                                    <label for="cat_technology" class="form-check-label">Technology</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="categories" value="health" id="cat_health" class="form-check-input">
-                                    <label for="cat_health" class="form-check-label">Health</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="categories" value="education" id="cat_education" class="form-check-input">
-                                    <label for="cat_education" class="form-check-label">Education</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="categories" value="environment" id="cat_environment" class="form-check-input">
-                                    <label for="cat_environment" class="form-check-label">Environment</label>
-                                </div>
+                                {% empty %}
+                                <p class="text-muted" style="font-family: 'Times New Roman', serif; font-size: 13px;">
+                                    No categories available
+                                </p>
+                                {% endfor %}
                             </div>
                             <small class="help-text">Select topics you're interested in</small>
                         </div>
 
-                        <!-- Terms -->
                         <div class="form-group">
                             <div class="terms-check">
                                 <input type="checkbox" name="terms" id="terms" class="form-check-input" required>
@@ -527,14 +454,13 @@
                             </div>
                         </div>
 
-                        <!-- Submit Button -->
                         <button type="submit" class="btn-subscribe">
                             <i class="fas fa-paper-plane"></i> Subscribe Now
                         </button>
                     </form>
 
                     <!-- ============================================
-                    FOOTER - OFFICIAL STYLE
+                    FOOTER
                     ============================================ -->
                     <div class="subscribe-footer">
                         <p>

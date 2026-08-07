@@ -10,44 +10,71 @@ from .models import Subscriber, Newsletter, NewsletterTracking
 from .forms import SubscriberForm, NewsletterForm, NewsletterFilterForm
 from apps.accounts.models import UserActivityLog
 
+# apps/newsletter/views.py
+
 def subscribe(request):
-    if request.method == 'POST':
-        form = SubscriberForm(request.POST)
-        if form.is_valid():
-            subscriber = form.save(commit=False)
-            subscriber.ip_address = request.META.get('REMOTE_ADDR')
-            subscriber.user_agent = request.META.get('HTTP_USER_AGENT', '')
-            subscriber.referer = request.META.get('HTTP_REFERER', '')
-            
-            # Check if already exists
-            existing = Subscriber.objects.filter(email=subscriber.email).first()
-            if existing:
-                if existing.status == 'unsubscribed':
-                    existing.status = 'active'
-                    existing.save()
-                    messages.success(request, 'You have been resubscribed successfully!')
-                else:
-                    messages.info(request, 'You are already subscribed.')
-                return redirect('home')
-            
-            subscriber.save()
-            form.save_m2m()  # Save many-to-many relationships
-            
-            UserActivityLog.objects.create(
-                user=request.user if request.user.is_authenticated else None,
-                action='subscribe',
-                model_name='Subscriber',
-                object_id=subscriber.id,
-                description=f'New subscriber: {subscriber.email}',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
-            
-            messages.success(request, 'Thank you for subscribing! Please check your email to confirm.')
-            return redirect('home')
-    else:
-        form = SubscriberForm()
+    """Subscribe to newsletter"""
+    from apps.categories.models import Category
+    from django.contrib import messages
     
-    return render(request, 'newsletter/subscribe.html', {'form': form})
+    categories = Category.objects.filter(is_active=True)
+    
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        name = request.POST.get('name')
+        selected_categories = request.POST.getlist('categories')
+        
+        # Validate email
+        if not email:
+            messages.error(request, '⚠️ Email address is required.')
+            return render(request, 'newsletter/subscribe.html', {
+                'categories': categories,
+                'email': email,
+                'name': name,
+            })
+        
+        # Check if already exists
+        existing = Subscriber.objects.filter(email=email).first()
+        if existing:
+            if existing.status == 'unsubscribed':
+                existing.status = 'active'
+                if name:
+                    existing.name = name
+                existing.save()
+                messages.success(request, '✅ You have been resubscribed successfully!')
+            else:
+                messages.info(request, 'ℹ️ You are already subscribed.')
+            return redirect('home')
+        
+        # Create new subscriber
+        subscriber = Subscriber.objects.create(
+            email=email,
+            name=name or '',
+            ip_address=request.META.get('REMOTE_ADDR'),
+            user_agent=request.META.get('HTTP_USER_AGENT', ''),
+            referer=request.META.get('HTTP_REFERER', ''),
+            status='active'
+        )
+        
+        # Save categories if any
+        if selected_categories:
+            categories_to_add = Category.objects.filter(id__in=selected_categories)
+            subscriber.categories.add(*categories_to_add)
+        
+        # Log activity
+        UserActivityLog.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            action='subscribe',
+            model_name='Subscriber',
+            object_id=subscriber.id,
+            description=f'New subscriber: {subscriber.email}',
+            ip_address=request.META.get('REMOTE_ADDR')
+        )
+        
+        messages.success(request, '✅ Thank you for subscribing! You will receive our latest news.')
+        return redirect('home')
+    
+    return render(request, 'newsletter/subscribe.html', {'categories': categories})
 
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
