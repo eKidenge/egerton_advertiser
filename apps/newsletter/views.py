@@ -15,6 +15,8 @@ from apps.accounts.models import UserActivityLog
 # PUBLIC SUBSCRIBE VIEWS
 # ============================================
 
+# apps/newsletter/views.py
+
 def subscribe(request):
     """Subscribe to newsletter"""
     from apps.categories.models import Category
@@ -59,30 +61,28 @@ def subscribe(request):
             status='active'
         )
         
-        # ✅ FIX: Properly handle category IDs
+        # Save categories
         if selected_categories:
-            # Convert to integers and filter out invalid ones
             category_ids = []
             for cat in selected_categories:
                 try:
                     category_ids.append(int(cat))
                 except (ValueError, TypeError):
-                    # Skip non-numeric values
                     continue
-            
             if category_ids:
                 categories_to_add = Category.objects.filter(id__in=category_ids)
                 subscriber.categories.add(*categories_to_add)
         
-        # Log activity
-        UserActivityLog.objects.create(
-            user=request.user if request.user.is_authenticated else None,
-            action='subscribe',
-            model_name='Subscriber',
-            object_id=subscriber.id,
-            description=f'New subscriber: {subscriber.email}',
-            ip_address=request.META.get('REMOTE_ADDR')
-        )
+        # ✅ Only log if user is authenticated
+        if request.user.is_authenticated:
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='subscribe',
+                model_name='Subscriber',
+                object_id=subscriber.id,
+                description=f'New subscriber: {subscriber.email}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
         
         messages.success(request, '✅ Thank you for subscribing! You will receive our latest news.')
         return redirect('home')
