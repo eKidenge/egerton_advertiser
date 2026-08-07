@@ -126,16 +126,15 @@ urlpatterns = [
     # ============================================
     # ADMIN - USERS
     # ============================================
-    path('admin/users/', views.admin_users, name='user_list'),
-    path('admin/users/create/', views.admin_user_create, name='user_create'),
-    path('admin/users/<int:user_id>/edit/', views.admin_user_edit, name='user_edit'),
-    path('admin/users/<int:user_id>/delete/', views.admin_user_delete, name='user_delete'),
-    path('admin/users/<int:user_id>/toggle/', views.admin_user_toggle_active, name='user_toggle'),
-    path('admin/users/<int:user_id>/role/', views.admin_user_change_role, name='user_change_role'),
-    path('admin/users/<int:user_id>/reset-password/', views.admin_user_reset_password, name='user_reset_password'),
-    path('admin/users/<int:user_id>/impersonate/', views.admin_user_impersonate, name='user_impersonate'),
-    path('admin/users/bulk-action/', views.admin_user_bulk_action, name='user_bulk_action'),
-    path('admin/users/export/', views.admin_user_export, name='user_export'),
+    path('admin/users/', views.admin_users, name='admin_users'),
+    path('admin/users/create/', views.admin_user_create, name='admin_user_create'),
+    path('admin/users/<int:user_id>/edit/', views.admin_user_edit, name='admin_user_edit'),
+    path('admin/users/<int:user_id>/delete/', views.admin_user_delete, name='admin_user_delete'),
+    path('admin/users/<int:user_id>/', views.admin_user_detail, name='admin_user_detail'),
+    path('admin/users/<int:user_id>/toggle-active/', views.admin_user_toggle_active, name='admin_user_toggle_active'),
+    path('admin/users/<int:user_id>/change-role/', views.admin_user_change_role, name='admin_user_change_role'),
+    path('admin/users/<int:user_id>/reset-password/', views.admin_user_reset_password, name='admin_user_reset_password'),
+    path('admin/users/<int:user_id>/impersonate/', views.admin_user_impersonate, name='admin_user_impersonate'),
     
     # ============================================
     # ADMIN - COMMENTS

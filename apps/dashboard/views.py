@@ -1714,13 +1714,15 @@ def admin_tag_delete(request, tag_id):
 
 
 # ============================================
-# ADMIN - USERS (KEEP dashboard templates - no app templates)
+# ADMIN - USERS (Using accounts app templates)
 # ============================================
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_users(request):
-    """Manage users"""
+    """Manage users - Using accounts app template"""
+    from apps.accounts.models import User
+    
     users = User.objects.all().order_by('-date_joined')
     
     role = request.GET.get('role')
@@ -1735,7 +1737,12 @@ def admin_users(request):
     
     search = request.GET.get('search')
     if search:
-        users = users.filter(Q(username__icontains=search) | Q(email__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search))
+        users = users.filter(
+            Q(username__icontains=search) | 
+            Q(email__icontains=search) | 
+            Q(first_name__icontains=search) | 
+            Q(last_name__icontains=search)
+        )
     
     paginator = Paginator(users, 25)
     page = request.GET.get('page')
@@ -1752,91 +1759,161 @@ def admin_users(request):
         'status_filter': status,
         'search': search,
         'role_choices': User.ROLE_CHOICES,
+        'total_users': User.objects.count(),
+        'active_users': User.objects.filter(is_active=True).count(),
+        'admin_users': User.objects.filter(role__in=['super_admin', 'admin']).count(),
     }
-    return render(request, 'dashboard/admin_users.html', context)
+    # ✅ Using accounts app template
+    return render(request, 'accounts/users.html', context)
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_user_create(request):
-    """Create user"""
+    """Create user - Using accounts app template"""
+    from apps.accounts.forms import UserCreateForm
+    from apps.accounts.models import UserActivityLog
+    
     if request.method == 'POST':
         form = UserCreateForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            messages.success(request, f'User "{user.username}" created!')
-            return redirect('dashboard:user_list')
+            
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='create',
+                model_name='User',
+                object_id=user.id,
+                description=f'Created user: {user.username}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            messages.success(request, f'✅ User "{user.username}" created successfully!')
+            return redirect('dashboard:admin_users')
     else:
         form = UserCreateForm()
     
-    return render(request, 'dashboard/admin_user_form.html', {'form': form, 'action': 'Create'})
+    # ✅ Using accounts app template
+    return render(request, 'accounts/user_create.html', {'form': form})
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_user_edit(request, user_id):
-    """Edit user"""
+    """Edit user - Using accounts app template"""
+    from apps.accounts.models import User
+    from apps.accounts.forms import UserEditForm
+    from apps.accounts.models import UserActivityLog
+    
     user = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST':
         form = UserEditForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            messages.success(request, f'User "{user.username}" updated!')
-            return redirect('dashboard:user_list')
+            
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='update',
+                model_name='User',
+                object_id=user.id,
+                description=f'Updated user: {user.username}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            messages.success(request, f'✅ User "{user.username}" updated successfully!')
+            return redirect('dashboard:admin_users')
     else:
         form = UserEditForm(instance=user)
     
-    return render(request, 'dashboard/admin_user_form.html', {'form': form, 'action': 'Edit', 'edit_user': user})
+    # ✅ Using accounts app template
+    return render(request, 'accounts/user_edit.html', {'form': form, 'user': user})
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_user_delete(request, user_id):
-    """Delete user"""
+    """Delete user - Using accounts app template"""
+    from apps.accounts.models import User
+    from apps.accounts.models import UserActivityLog
+    
     user = get_object_or_404(User, id=user_id)
     
     if request.user == user:
-        messages.error(request, 'You cannot delete your own account!')
-        return redirect('dashboard:user_list')
+        messages.error(request, '❌ You cannot delete your own account!')
+        return redirect('dashboard:admin_users')
     
     if request.method == 'POST':
         username = user.username
         user.delete()
-        messages.success(request, f'User "{username}" deleted!')
-        return redirect('dashboard:user_list')
+        
+        UserActivityLog.objects.create(
+            user=request.user,
+            action='delete',
+            model_name='User',
+            object_id=user_id,
+            description=f'Deleted user: {username}',
+            ip_address=request.META.get('REMOTE_ADDR')
+        )
+        
+        messages.success(request, f'✅ User "{username}" deleted successfully!')
+        return redirect('dashboard:admin_users')
     
-    return render(request, 'dashboard/confirm_delete.html', {
-        'object': user,
-        'type': 'User',
-        'back_url': 'dashboard:user_list'
-    })
+    # ✅ Using accounts app template
+    return render(request, 'accounts/user_delete.html', {'user': user})
+
+
+@login_required
+@user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
+def admin_user_detail(request, user_id):
+    """View user details - Using accounts app template"""
+    from apps.accounts.models import User
+    
+    user = get_object_or_404(User, id=user_id)
+    
+    # ✅ Using accounts app template
+    return render(request, 'accounts/user_detail.html', {'user': user})
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_user_toggle_active(request, user_id):
     """Toggle user active status"""
+    from apps.accounts.models import User
+    from apps.accounts.models import UserActivityLog
+    
     user = get_object_or_404(User, id=user_id)
     
     if request.user == user:
-        messages.error(request, 'You cannot deactivate your own account!')
-        return redirect('dashboard:user_list')
+        messages.error(request, '❌ You cannot deactivate your own account!')
+        return redirect('dashboard:admin_users')
     
     user.is_active = not user.is_active
     user.save()
     
+    UserActivityLog.objects.create(
+        user=request.user,
+        action='update',
+        model_name='User',
+        object_id=user.id,
+        description=f'{"Activated" if user.is_active else "Deactivated"} user: {user.username}',
+        ip_address=request.META.get('REMOTE_ADDR')
+    )
+    
     status = 'activated' if user.is_active else 'deactivated'
-    messages.success(request, f'User "{user.username}" {status}!')
-    return redirect('dashboard:user_list')
+    messages.success(request, f'✅ User "{user.username}" {status}!')
+    return redirect('dashboard:admin_users')
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_user_change_role(request, user_id):
-    """Change user role"""
+    """Change user role - Using accounts app template"""
+    from apps.accounts.models import User
+    from apps.accounts.models import UserActivityLog
+    
     user = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST':
@@ -1844,12 +1921,23 @@ def admin_user_change_role(request, user_id):
         if new_role in dict(User.ROLE_CHOICES):
             user.role = new_role
             user.save()
-            messages.success(request, f'User "{user.username}" role changed to {user.get_role_display()}!')
+            
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='update',
+                model_name='User',
+                object_id=user.id,
+                description=f'Changed role for {user.username} to {user.get_role_display()}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            messages.success(request, f'✅ User "{user.username}" role changed to {user.get_role_display()}!')
         else:
-            messages.error(request, 'Invalid role selected!')
-        return redirect('dashboard:user_list')
+            messages.error(request, '❌ Invalid role selected!')
+        return redirect('dashboard:admin_users')
     
-    return render(request, 'dashboard/admin_user_change_role.html', {
+    # ✅ Using accounts app template
+    return render(request, 'accounts/role_edit.html', {
         'user': user,
         'role_choices': User.ROLE_CHOICES
     })
@@ -1859,22 +1947,27 @@ def admin_user_change_role(request, user_id):
 @user_passes_test(lambda u: u.role in ['super_admin'])
 def admin_user_impersonate(request, user_id):
     """Impersonate a user (super admin only)"""
+    from apps.accounts.models import User
     from django.contrib.auth import login
+    
     user = get_object_or_404(User, id=user_id)
     
     if request.user.id == user.id:
-        messages.error(request, 'You cannot impersonate yourself!')
-        return redirect('dashboard:user_list')
+        messages.error(request, '❌ You cannot impersonate yourself!')
+        return redirect('dashboard:admin_users')
     
     login(request, user)
-    messages.success(request, f'You are now impersonating {user.username}')
+    messages.success(request, f'✅ You are now impersonating {user.get_full_name()|default:user.username}')
     return redirect('dashboard:home')
 
 
 @login_required
 @user_passes_test(lambda u: u.role in ['super_admin', 'admin'])
 def admin_user_reset_password(request, user_id):
-    """Reset user password"""
+    """Reset user password - Using accounts app template"""
+    from apps.accounts.models import User
+    from apps.accounts.models import UserActivityLog
+    
     user = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST':
@@ -1884,13 +1977,24 @@ def admin_user_reset_password(request, user_id):
         if new_password and new_password == confirm_password:
             user.set_password(new_password)
             user.save()
-            messages.success(request, f'Password for "{user.username}" has been reset!')
+            
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='update',
+                model_name='User',
+                object_id=user.id,
+                description=f'Reset password for user: {user.username}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            messages.success(request, f'✅ Password for "{user.username}" has been reset!')
         else:
-            messages.error(request, 'Passwords do not match!')
+            messages.error(request, '❌ Passwords do not match!')
         
-        return redirect('dashboard:user_list')
+        return redirect('dashboard:admin_users')
     
-    return render(request, 'dashboard/admin_user_reset_password.html', {'user': user})
+    # ✅ Using accounts app template (you may need to create this or use change_password)
+    return render(request, 'accounts/change_password.html', {'user': user})
 
 
 # ============================================
