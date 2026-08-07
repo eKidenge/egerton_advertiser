@@ -1,66 +1,535 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ subscriber.email }} - Subscriber Detail - The Egerton Advertiser{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ============================================
+   SUBSCRIBER DETAIL - GOVERNMENT STYLE
+   ============================================ */
+:root {
+    --gov-primary: #0a1a2a;
+    --gov-secondary: #1a3c5e;
+    --gov-gold: #c9a84c;
+    --gov-cream: #f5f0e8;
+    --gov-border: #d4cdc0;
+    --gov-red: #8b1a1a;
+    --gov-green: #1a5a3a;
+}
+
+.subscriber-detail-page {
+    padding: 40px 0;
+    background: var(--gov-cream);
+    min-height: calc(100vh - 200px);
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   SUBSCRIBER CARD - OFFICIAL STYLE
+   ============================================ */
+.subscriber-card {
+    background: #fff;
+    border: 1px solid var(--gov-border);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.subscriber-card::before {
+    content: 'OFFICIAL';
+    position: absolute;
+    right: -30px;
+    top: -20px;
+    font-size: 80px;
+    font-weight: 900;
+    color: rgba(201,168,76,0.03);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 10px;
+    pointer-events: none;
+}
+
+.subscriber-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gov-gold);
+}
+
+/* ============================================
+   SUBSCRIBER HEADER - OFFICIAL STYLE
+   ============================================ */
+.subscriber-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--gov-gold);
+    padding-bottom: 18px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.subscriber-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    color: var(--gov-primary);
+    font-size: 26px;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.subscriber-header h2 i {
+    color: var(--gov-gold);
+    margin-right: 12px;
+}
+
+.subscriber-header .badge-status {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 20px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.subscriber-header .badge-status.active {
+    background: var(--gov-green);
+    color: #fff;
+}
+
+.subscriber-header .badge-status.inactive {
+    background: #6c757d;
+    color: #fff;
+}
+
+.subscriber-header .badge-status.unsubscribed {
+    background: var(--gov-red);
+    color: #fff;
+}
+
+.subscriber-header .badge-status.bounced {
+    background: #b8860b;
+    color: #fff;
+}
+
+.subscriber-header .badge-status.spam {
+    background: #dc3545;
+    color: #fff;
+}
+
+/* ============================================
+   SUBSCRIBER INFO - OFFICIAL STYLE
+   ============================================ */
+.subscriber-info {
+    margin: 20px 0 25px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.info-item {
+    background: var(--gov-cream);
+    border: 1px solid var(--gov-border);
+    padding: 12px 15px;
+    transition: all 0.3s;
+}
+
+.info-item:hover {
+    border-color: var(--gov-gold);
+}
+
+.info-item .label {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-size: 11px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-item .label i {
+    color: var(--gov-gold);
+    margin-right: 5px;
+}
+
+.info-item .value {
+    display: block;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--gov-primary);
+    font-size: 15px;
+    margin-top: 2px;
+}
+
+/* ============================================
+   CATEGORIES & TAGS - OFFICIAL STYLE
+   ============================================ */
+.subscriber-categories,
+.subscriber-tags {
+    margin: 18px 0;
+    padding: 18px 20px;
+    background: var(--gov-cream);
+    border: 1px solid var(--gov-border);
+}
+
+.subscriber-categories h5,
+.subscriber-tags h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gov-primary);
+    font-size: 16px;
+    margin: 0 0 10px 0;
+}
+
+.subscriber-categories h5 i,
+.subscriber-tags h5 i {
+    color: var(--gov-gold);
+    margin-right: 8px;
+}
+
+.category-tags,
+.tag-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.category-tag {
+    background: var(--gov-secondary);
+    color: #fff;
+    padding: 4px 16px;
+    border-radius: 2px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.tag-tag {
+    background: #e8f0f8;
+    color: var(--gov-secondary);
+    padding: 4px 16px;
+    border-radius: 2px;
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #d0dce8;
+}
+
+/* ============================================
+   TRACKING HISTORY - OFFICIAL STYLE
+   ============================================ */
+.tracking-history {
+    margin: 20px 0 25px;
+}
+
+.tracking-history h5 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gov-primary);
+    border-bottom: 2px solid var(--gov-gold);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.tracking-history h5 i {
+    color: var(--gov-gold);
+    margin-right: 8px;
+}
+
+.tracking-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.tracking-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0ebe3;
+    font-family: 'Times New Roman', serif;
+    flex-wrap: wrap;
+}
+
+.tracking-item:last-child {
+    border-bottom: none;
+}
+
+.tracking-item .action-badge {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 3px 14px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.tracking-item .action-badge.open {
+    background: var(--gov-green);
+    color: #fff;
+}
+
+.tracking-item .action-badge.click {
+    background: var(--gov-secondary);
+    color: #fff;
+}
+
+.tracking-item .action-badge.unsubscribe {
+    background: var(--gov-red);
+    color: #fff;
+}
+
+.tracking-item .action-badge.bounce {
+    background: #b8860b;
+    color: #fff;
+}
+
+.tracking-item .action-badge.spam {
+    background: #dc3545;
+    color: #fff;
+}
+
+.tracking-item .time {
+    color: #6c757d;
+    font-size: 13px;
+    min-width: 80px;
+}
+
+.tracking-item .link {
+    color: var(--gov-secondary);
+    font-size: 13px;
+    word-break: break-all;
+    flex: 1;
+}
+
+.tracking-item .link a {
+    color: var(--gov-secondary);
+    text-decoration: none;
+}
+
+.tracking-item .link a:hover {
+    color: var(--gov-gold);
+    text-decoration: underline;
+}
+
+/* ============================================
+   SUBSCRIBER ACTIONS - OFFICIAL STYLE
+   ============================================ */
+.subscriber-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid var(--gov-border);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.subscriber-actions .btn {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+.subscriber-actions .btn-danger {
+    background: var(--gov-red);
+    border: 2px solid var(--gov-red);
+    color: #fff;
+}
+
+.subscriber-actions .btn-danger:hover {
+    background: #6b1414;
+    border-color: #6b1414;
+}
+
+.subscriber-actions .btn-danger i {
+    margin-right: 8px;
+}
+
+.subscriber-actions .btn-outline-secondary {
+    border: 2px solid var(--gov-border);
+    color: var(--gov-primary);
+    background: transparent;
+}
+
+.subscriber-actions .btn-outline-secondary:hover {
+    background: var(--gov-secondary);
+    border-color: var(--gov-secondary);
+    color: #fff;
+}
+
+.subscriber-actions .btn-outline-secondary i {
+    margin-right: 8px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 992px) {
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .subscriber-card {
+        padding: 25px 20px;
+    }
+    .subscriber-card::before {
+        font-size: 40px;
+        right: -15px;
+        top: -10px;
+    }
+    .subscriber-header h2 {
+        font-size: 22px;
+    }
+    .subscriber-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .info-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .info-item {
+        padding: 10px 12px;
+    }
+    .info-item .value {
+        font-size: 14px;
+    }
+    .tracking-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 12px 0;
+    }
+    .tracking-item .action-badge {
+        min-width: unset;
+    }
+    .tracking-item .time {
+        min-width: unset;
+    }
+    .subscriber-actions {
+        flex-direction: column;
+    }
+    .subscriber-actions .btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .subscriber-card {
+        padding: 18px 15px;
+    }
+    .subscriber-header h2 {
+        font-size: 19px;
+    }
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    .subscriber-categories,
+    .subscriber-tags {
+        padding: 12px 15px;
+    }
+    .category-tag,
+    .tag-tag {
+        font-size: 12px;
+        padding: 3px 12px;
+    }
+    .subscriber-actions .btn {
+        font-size: 12px;
+        padding: 8px 20px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="subscriber-detail-page">
+<div class="subscriber-detail-page">
+    <div class="container">
         <div class="row">
-            <div class="col-lg-8 mx-auto">
+            <div class="col-lg-10 mx-auto">
                 <div class="subscriber-card">
+                    <!-- ============================================
+                    SUBSCRIBER HEADER - OFFICIAL STYLE
+                    ============================================ -->
                     <div class="subscriber-header">
                         <h2><i class="fas fa-envelope"></i> Subscriber Detail</h2>
-                        <span class="badge bg-{% if subscriber.status == 'active' %}success{% elif subscriber.status == 'inactive' %}secondary{% else %}danger{% endif %}">
+                        <span class="badge-status {{ subscriber.status }}">
                             {{ subscriber.get_status_display }}
                         </span>
                     </div>
 
+                    <!-- ============================================
+                    SUBSCRIBER INFORMATION - OFFICIAL STYLE
+                    ============================================ -->
                     <div class="subscriber-info">
                         <div class="info-grid">
                             <div class="info-item">
-                                <span class="label">Email</span>
+                                <span class="label"><i class="fas fa-envelope"></i> Email</span>
                                 <span class="value">{{ subscriber.email }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="label">Name</span>
+                                <span class="label"><i class="fas fa-user"></i> Name</span>
                                 <span class="value">{{ subscriber.name|default:"Not provided" }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="label">Frequency</span>
+                                <span class="label"><i class="fas fa-clock"></i> Frequency</span>
                                 <span class="value">{{ subscriber.get_frequency_display }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="label">Status</span>
+                                <span class="label"><i class="fas fa-flag"></i> Status</span>
                                 <span class="value">
-                                    <span class="badge bg-{% if subscriber.status == 'active' %}success{% elif subscriber.status == 'inactive' %}secondary{% else %}danger{% endif %}">
+                                    <span class="badge-status {{ subscriber.status }}" style="display: inline-block; padding: 2px 14px; font-size: 12px;">
                                         {{ subscriber.get_status_display }}
                                     </span>
                                 </span>
                             </div>
                             <div class="info-item">
-                                <span class="label">Joined</span>
+                                <span class="label"><i class="fas fa-calendar-plus"></i> Joined</span>
                                 <span class="value">{{ subscriber.created_at|date:"F d, Y H:i" }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="label">Confirmed</span>
+                                <span class="label"><i class="fas fa-check-circle"></i> Confirmed</span>
                                 <span class="value">{{ subscriber.confirmed_at|date:"F d, Y"|default:"Not confirmed" }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="label">Opens</span>
+                                <span class="label"><i class="fas fa-eye"></i> Opens</span>
                                 <span class="value">{{ subscriber.opens }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="label">Clicks</span>
+                                <span class="label"><i class="fas fa-mouse-pointer"></i> Clicks</span>
                                 <span class="value">{{ subscriber.clicks }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="label">Source</span>
+                                <span class="label"><i class="fas fa-source"></i> Source</span>
                                 <span class="value">{{ subscriber.source|default:"Website" }}</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Categories -->
+                    <!-- ============================================
+                    PREFERRED CATEGORIES - OFFICIAL STYLE
+                    ============================================ -->
                     {% if subscriber.categories.all %}
                     <div class="subscriber-categories">
                         <h5><i class="fas fa-folder"></i> Preferred Categories</h5>
@@ -72,7 +541,9 @@
                     </div>
                     {% endif %}
 
-                    <!-- Tags -->
+                    <!-- ============================================
+                    PREFERRED TAGS - OFFICIAL STYLE
+                    ============================================ -->
                     {% if subscriber.tags.all %}
                     <div class="subscriber-tags">
                         <h5><i class="fas fa-tags"></i> Preferred Tags</h5>
@@ -84,28 +555,41 @@
                     </div>
                     {% endif %}
 
-                    <!-- Tracking History -->
+                    <!-- ============================================
+                    TRACKING HISTORY - OFFICIAL STYLE
+                    ============================================ -->
                     <div class="tracking-history">
                         <h5><i class="fas fa-history"></i> Tracking History</h5>
                         {% if tracking %}
                         <div class="tracking-list">
                             {% for track in tracking|slice:":20" %}
                             <div class="tracking-item">
-                                <span class="action badge bg-{% if track.action == 'open' %}success{% elif track.action == 'click' %}info{% elif track.action == 'unsubscribe' %}danger{% else %}secondary{% endif %}">
+                                <span class="action-badge {{ track.action }}">
                                     {{ track.get_action_display }}
                                 </span>
                                 <span class="time">{{ track.created_at|timesince }} ago</span>
                                 {% if track.link %}
-                                <span class="link">{{ track.link|truncatechars:30 }}</span>
+                                <span class="link">
+                                    <i class="fas fa-link"></i> 
+                                    <a href="{{ track.link }}" target="_blank">{{ track.link|truncatechars:40 }}</a>
+                                </span>
                                 {% endif %}
                             </div>
                             {% endfor %}
                         </div>
+                        {% if tracking.count > 20 %}
+                        <p class="text-muted" style="font-family: 'Times New Roman', serif; font-size: 13px; text-align: center; margin-top: 10px;">
+                            Showing last 20 of {{ tracking.count }} records
+                        </p>
+                        {% endif %}
                         {% else %}
-                        <p class="text-muted">No tracking data available</p>
+                        <p class="text-muted" style="font-family: 'Times New Roman', serif; font-style: italic;">No tracking data available</p>
                         {% endif %}
                     </div>
 
+                    <!-- ============================================
+                    SUBSCRIBER ACTIONS - OFFICIAL STYLE
+                    ============================================ -->
                     <div class="subscriber-actions">
                         {% if subscriber.status == 'active' %}
                         <a href="#" class="btn btn-danger" onclick="return confirm('Unsubscribe this subscriber?')">
@@ -121,131 +605,4 @@
         </div>
     </div>
 </div>
-
-<style>
-.subscriber-detail-page {
-    padding: 30px 0;
-}
-.subscriber-card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 30px;
-}
-.subscriber-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-}
-.subscriber-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-}
-.subscriber-info {
-    margin: 20px 0;
-}
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-}
-.info-item {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 4px;
-}
-.info-item .label {
-    display: block;
-    font-family: 'Times New Roman', serif;
-    font-size: 12px;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-.info-item .value {
-    display: block;
-    font-family: 'Times New Roman', serif;
-    font-weight: 600;
-    color: #1a3c5e;
-    font-size: 14px;
-}
-.subscriber-categories,
-.subscriber-tags {
-    margin: 15px 0;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-.subscriber-categories h5,
-.subscriber-tags h5 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-}
-.category-tags,
-.tag-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 5px;
-}
-.category-tag {
-    background: #1a3c5e;
-    color: #fff;
-    padding: 3px 12px;
-    border-radius: 20px;
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-}
-.tag-tag {
-    background: #e8f0f8;
-    color: #1a3c5e;
-    padding: 3px 12px;
-    border-radius: 20px;
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-}
-.tracking-history {
-    margin: 20px 0;
-}
-.tracking-history h5 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #1a3c5e;
-    border-bottom: 2px solid #1a3c5e;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-}
-.tracking-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-    font-family: 'Times New Roman', serif;
-}
-.tracking-item .time {
-    color: #6c757d;
-    font-size: 13px;
-}
-.tracking-item .link {
-    color: #1a3c5e;
-    font-size: 13px;
-}
-.subscriber-actions {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-    display: flex;
-    gap: 10px;
-}
-.subscriber-actions .btn {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-}
-</style>
 {% endblock %}
