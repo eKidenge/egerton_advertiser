@@ -1088,6 +1088,9 @@
                     {% endfor %}
                 </div>
                 
+                <!-- ============================================
+                ADVERTISE WIDGET - FIXED URL
+                ============================================ -->
                 <div class="sidebar-widget" style="background: var(--gov-cream); border: 2px solid var(--gov-gold);">
                     <div class="widget-title" style="border-bottom-color: var(--gov-gold);">
                         <i class="fas fa-bullhorn"></i> Advertise Here
@@ -1095,8 +1098,9 @@
                     <p style="font-family: 'Times New Roman', serif; font-size: 14px; color: #5a5a5a;">
                         Reach thousands of readers in the Egerton community.
                     </p>
-                    <a href="{% url 'advertising:contact' %}" class="btn" style="background: var(--gov-gold); color: var(--gov-primary); font-family: 'Times New Roman', serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 2px; width: 100%; padding: 10px;">
-                        <i class="fas fa-envelope"></i> Contact Us
+                    <!-- ✅ FIXED: Changed from 'advertising:contact' to 'advertisements:list' -->
+                    <a href="{% url 'advertisements:list' %}" class="btn" style="background: var(--gov-gold); color: var(--gov-primary); font-family: 'Times New Roman', serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 2px; width: 100%; padding: 10px;">
+                        <i class="fas fa-bullhorn"></i> Advertise Here
                     </a>
                 </div>
                 
