@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Official Registration - ENVIRONMENT & SOCIETY{% endblock %}
+{% block title %}Official Registration - Informing Community · Promoting Business{% endblock %}
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Merriweather:wght@300;400;700;900&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
@@ -107,7 +107,7 @@
         font-weight: 700;
     }
     
-    /* --- Header --- */
+    /* --- Header - INFORMING COMMUNITY · PROMOTING BUSINESS --- */
     .register-header {
         text-align: center;
         border-bottom: 3px solid #8B7355;
@@ -119,10 +119,15 @@
         font-family: 'Playfair Display', 'Times New Roman', serif;
         font-weight: 900;
         color: #1a5c3a;
-        font-size: 32px;
+        font-size: 26px;
         letter-spacing: 1px;
         margin-bottom: 5px;
         text-transform: uppercase;
+        line-height: 1.3;
+    }
+    
+    .register-header h2 .gold {
+        color: #8B7355;
     }
     
     .register-header .subtitle {
@@ -136,6 +141,29 @@
     .register-header .subtitle i {
         color: #a5d6a7;
         margin: 0 5px;
+    }
+    
+    .register-header .header-line {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .register-header .header-line .line {
+        display: inline-block;
+        width: 40px;
+        height: 2px;
+        background: #c9a84c;
+    }
+    
+    .register-header .header-line .est {
+        margin: 0 12px;
+        color: #c9a84c;
+        font-size: 9px;
+        font-family: 'Times New Roman', serif;
+        letter-spacing: 3px;
+        text-transform: uppercase;
     }
     
     /* --- Alert Messages --- */
@@ -571,7 +599,7 @@
         }
         
         .register-header h2 {
-            font-size: 26px;
+            font-size: 20px;
         }
         
         .register-header .subtitle {
@@ -606,6 +634,15 @@
         .row .col-md-6 {
             margin-bottom: 0;
         }
+        
+        .register-header .header-line .line {
+            width: 20px;
+        }
+        
+        .register-header .header-line .est {
+            font-size: 7px;
+            margin: 0 8px;
+        }
     }
     
     @media (max-width: 480px) {
@@ -614,7 +651,7 @@
         }
         
         .register-header h2 {
-            font-size: 22px;
+            font-size: 16px;
         }
         
         .register-header .subtitle {
@@ -674,13 +711,23 @@
             <div class="seal-text">The Egerton Advertiser</div>
         </div>
         
-        <!-- Header - ENVIRONMENT & SOCIETY -->
+        <!-- ============================================
+        HEADER - INFORMING COMMUNITY · PROMOTING BUSINESS
+        ============================================ -->
         <div class="register-header">
-            <h2>ENVIRONMENT &amp; SOCIETY</h2>
+            <h2>
+                Informing <span class="gold">Community</span> · 
+                Promoting <span class="gold">Business</span>
+            </h2>
             <div class="subtitle">
                 <i class="fas fa-asterisk"></i> 
                 <span style="color: #8B7355; font-weight: 700;">The Egerton Advertiser</span>
                 <i class="fas fa-asterisk"></i>
+            </div>
+            <div class="header-line">
+                <span class="line"></span>
+                <span class="est">EST. 2026</span>
+                <span class="line"></span>
             </div>
         </div>
         
@@ -1183,7 +1230,7 @@
         }
         
         console.log('📝 Registration page loaded successfully');
-        console.log('🌿 ENVIRONMENT & SOCIETY - Official Registration Portal');
+        console.log('🌿 INFORMING COMMUNITY · PROMOTING BUSINESS');
         console.log('📰 The Egerton Advertiser');
         
     })();
