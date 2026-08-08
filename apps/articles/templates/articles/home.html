@@ -608,7 +608,7 @@ body {
 }
 
 /* ============================================
-   AD SPACE
+   AD SPACE - UPDATED FOR DYNAMIC ADS
    ============================================ */
 .ad-space {
     background: #f9f6f0;
@@ -644,21 +644,16 @@ body {
     justify-content: center;
 }
 
-.ad-space .ad-content i {
-    font-size: 28px;
-    color: var(--accent-gold);
-    margin-bottom: 8px;
+.ad-space .ad-content img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 4px;
 }
 
-.ad-space .ad-content p {
-    font-family: 'Times New Roman', serif;
-    color: #4a4a4a;
-    margin: 0;
-}
-
-.ad-space .ad-content small {
-    color: var(--accent-gold);
-    font-weight: 600;
+.ad-space .ad-content .ad-sponsor {
+    font-size: 11px;
+    color: #6c757d;
+    margin-top: 5px;
 }
 
 /* ============================================
@@ -1316,14 +1311,23 @@ body {
             {% endif %}
 
             <!-- ============================================
-            ADVERTISEMENT SPACE
+            ADVERTISEMENT SPACE - DYNAMIC
             ============================================ -->
+            {% load advertisements_tags %}
             <div class="ad-space">
                 <div class="ad-label">Advertisement</div>
                 <div class="ad-content">
-                    <i class="fas fa-ad"></i>
-                    <p><strong>Your Ad Here</strong></p>
-                    <small>Contact us for advertising opportunities</small>
+                    {% get_ad_by_position 'sidebar' as ad %}
+                    {% if ad %}
+                        <a href="{{ ad.link_url }}" target="_blank">
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                        </a>
+                        <span class="ad-sponsor">Sponsored</span>
+                    {% else %}
+                        <i class="fas fa-ad"></i>
+                        <p><strong>Your Ad Here</strong></p>
+                        <small>Contact us for advertising opportunities</small>
+                    {% endif %}
                 </div>
             </div>
 
@@ -1373,14 +1377,23 @@ body {
             </div>
 
             <!-- ============================================
-            ADVERTISEMENT SPACE - BOTTOM
+            ADVERTISEMENT SPACE - BOTTOM (DYNAMIC)
             ============================================ -->
+            {% load advertisements_tags %}
             <div class="ad-space">
                 <div class="ad-label">Sponsored Content</div>
                 <div class="ad-content">
-                    <i class="fas fa-bullhorn"></i>
-                    <p><strong>Sponsor This Space</strong></p>
-                    <small>Reach thousands of readers daily</small>
+                    {% get_ad_by_position 'sidebar' as ad %}
+                    {% if ad %}
+                        <a href="{{ ad.link_url }}" target="_blank">
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                        </a>
+                        <span class="ad-sponsor">Sponsored</span>
+                    {% else %}
+                        <i class="fas fa-bullhorn"></i>
+                        <p><strong>Sponsor This Space</strong></p>
+                        <small>Reach thousands of readers daily</small>
+                    {% endif %}
                 </div>
             </div>
         </div>

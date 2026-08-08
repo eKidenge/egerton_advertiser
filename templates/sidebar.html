@@ -33,6 +33,31 @@
         </ul>
     </div>
 
+    <!-- ✅ ADVERTISEMENT WIDGET -->
+    {% load advertisements_tags %}
+    <div class="sidebar-widget">
+        <div class="widget-title">
+            <i class="fas fa-bullhorn"></i> Advertisement
+        </div>
+        {% get_ad_by_position 'sidebar' as ad %}
+        {% if ad %}
+            <div class="sidebar-ad">
+                <span class="ad-label">Sponsored</span>
+                <a href="{{ ad.link_url }}" target="{{ ad.link_target|default:'_blank' }}">
+                    <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="img-fluid">
+                </a>
+            </div>
+        {% else %}
+            <div class="sidebar-ad-placeholder">
+                <i class="fas fa-ad"></i>
+                <p>Advertise With Us</p>
+                <small>Reach our readers</small>
+                <a href="{% url 'advertisements:list' %}" class="btn btn-primary btn-sm">Learn More</a>
+            </div>
+        {% endif %}
+    </div>
+    <!-- ✅ END ADVERTISEMENT WIDGET -->
+
     <!-- Tags Widget -->
     <div class="sidebar-widget">
         <div class="widget-title">
@@ -139,5 +164,57 @@
     font-family: 'Times New Roman', serif;
     color: #6c757d;
     font-size: 14px;
+}
+
+/* Ad Styles */
+.sidebar-ad {
+    position: relative;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px;
+}
+.sidebar-ad .ad-label {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    padding: 0 10px;
+    font-family: 'Times New Roman', serif;
+    font-size: 10px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.sidebar-ad img {
+    max-width: 100%;
+    height: auto;
+}
+.sidebar-ad-placeholder {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 4px;
+    padding: 30px 20px;
+    text-align: center;
+    font-family: 'Times New Roman', serif;
+}
+.sidebar-ad-placeholder i {
+    font-size: 32px;
+    color: #adb5bd;
+    display: block;
+    margin-bottom: 10px;
+}
+.sidebar-ad-placeholder p {
+    font-size: 16px;
+    font-weight: 700;
+    color: #495057;
+    margin: 0;
+}
+.sidebar-ad-placeholder small {
+    color: #6c757d;
+    display: block;
+    margin-bottom: 10px;
 }
 </style>

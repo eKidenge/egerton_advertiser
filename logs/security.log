@@ -19,3 +19,4 @@ WARNING 2026-08-04 13:16:53,256 log 1872 516 Forbidden (CSRF token from POST inc
 WARNING 2026-08-04 13:17:00,393 log 1872 516 Forbidden (CSRF token from POST incorrect.): /admin/login/
 WARNING 2026-08-04 14:15:12,040 log 8728 7040 Forbidden (CSRF token from POST incorrect.): /admin/categories/category/add/
 WARNING 2026-08-04 15:36:30,804 log 8176 1360 Forbidden (CSRF token from POST incorrect.): /admin/login/
+WARNING 2026-08-08 13:46:12,687 log 9488 9964 Forbidden (CSRF token from POST incorrect.): /admin/login/
