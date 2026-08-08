@@ -3,23 +3,25 @@ import os
 from django.core.management.base import BaseCommand
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
+from django.utils.text import slugify
 from apps.categories.models import Category
 from apps.tags.models import Tag
 from apps.settings_manager.models import SiteSetting
-from apps.media_library.models import MediaCategory  # Add this import
+from apps.media_library.models import MediaCategory
 
 User = get_user_model()
 
 class Command(BaseCommand):
-    help = 'Clean database setup for client - Only categories, tags, settings, and essential users'
+    help = 'Seed database with initial data - Categories, Tags, Settings, Media Categories, and Essential Users'
 
     def handle(self, *args, **kwargs):
-        self.stdout.write('🌱 Setting up clean client database...')
+        self.stdout.write('🌱 Seeding database with initial data...')
+        self.stdout.write('=' * 60)
         
         # ============================================
         # 1. CREATE SETTINGS
         # ============================================
-        self.stdout.write('📝 Creating site settings...')
+        self.stdout.write('\n📝 Creating site settings...')
         settings_data = [
             ('general', 'site_name', 'The Egerton Advertiser'),
             ('general', 'site_tagline', 'Informing Society · Empowering Business'),
@@ -40,27 +42,26 @@ class Command(BaseCommand):
         ]
         
         for category, key, value in settings_data:
-            SiteSetting.objects.get_or_create(
+            obj, created = SiteSetting.objects.get_or_create(
                 category=category,
                 key=key,
                 defaults={'value': value}
             )
+            if created:
+                self.stdout.write(f'   ✅ Created setting: {category}/{key}')
         
         # ============================================
-        # 2. CREATE ARTICLE CATEGORIES - ALL NAVIGATION SECTIONS
+        # 2. CREATE ARTICLE CATEGORIES
         # ============================================
-        self.stdout.write('📂 Creating article categories...')
+        self.stdout.write('\n📂 Creating article categories...')
         
         categories = [
-            # Main Navigation Categories
             {'name': 'Community & National News', 'slug': 'community-national', 'description': 'Community and national news coverage', 'is_active': True},
             {'name': 'Environment', 'slug': 'environment', 'description': 'Environmental news, climate action, and conservation', 'is_active': True},
             {'name': 'Education & Research', 'slug': 'education', 'description': 'Education news, research, and academic developments', 'is_active': True},
             {'name': 'Agriculture', 'slug': 'agriculture', 'description': 'Agricultural news, farming, and food security', 'is_active': True},
             {'name': 'Health', 'slug': 'health', 'description': 'Health news, wellness, and healthcare', 'is_active': True},
             {'name': 'Business & Directory', 'slug': 'business', 'description': 'Business news, economy, and directory', 'is_active': True},
-            
-            # More Dropdown Categories
             {'name': 'Photos', 'slug': 'photos', 'description': 'Photo galleries and visual stories', 'is_active': True},
             {'name': 'Opinion', 'slug': 'opinion', 'description': 'Opinion pieces, editorials, and commentary', 'is_active': True},
             {'name': 'Technology', 'slug': 'technology', 'description': 'Technology news, innovation, and digital trends', 'is_active': True},
@@ -71,19 +72,19 @@ class Command(BaseCommand):
         ]
         
         for cat_data in categories:
-            category, created = Category.objects.get_or_create(
+            obj, created = Category.objects.get_or_create(
                 slug=cat_data['slug'],
                 defaults=cat_data
             )
             if created:
-                self.stdout.write(f'   ✅ Created article category: {category.name}')
+                self.stdout.write(f'   ✅ Created article category: {obj.name}')
             else:
-                self.stdout.write(f'   ⚠️ Article category already exists: {category.name}')
+                self.stdout.write(f'   ⚠️ Article category already exists: {obj.name}')
         
         # ============================================
         # 3. CREATE MEDIA LIBRARY CATEGORIES
         # ============================================
-        self.stdout.write('📸 Creating media library categories...')
+        self.stdout.write('\n📸 Creating media library categories...')
         
         media_categories = [
             {'name': 'Events', 'slug': 'events', 'description': 'Event photography and media coverage', 'parent': None},
@@ -101,7 +102,7 @@ class Command(BaseCommand):
         ]
         
         for cat_data in media_categories:
-            category, created = MediaCategory.objects.get_or_create(
+            obj, created = MediaCategory.objects.get_or_create(
                 slug=cat_data['slug'],
                 defaults={
                     'name': cat_data['name'],
@@ -109,14 +110,14 @@ class Command(BaseCommand):
                 }
             )
             if created:
-                self.stdout.write(f'   ✅ Created media category: {category.name}')
+                self.stdout.write(f'   ✅ Created media category: {obj.name}')
             else:
-                self.stdout.write(f'   ⚠️ Media category already exists: {category.name}')
+                self.stdout.write(f'   ⚠️ Media category already exists: {obj.name}')
         
         # ============================================
-        # 4. CREATE MEDIA CATEGORY HIERARCHY (Optional Sub-Categories)
+        # 4. CREATE MEDIA SUB-CATEGORIES (Hierarchy)
         # ============================================
-        self.stdout.write('📸 Creating media sub-categories...')
+        self.stdout.write('\n📸 Creating media sub-categories...')
         
         sub_categories = [
             {'name': 'Local News', 'slug': 'local-news', 'description': 'Local news and community stories', 'parent_slug': 'news'},
@@ -136,7 +137,7 @@ class Command(BaseCommand):
         for cat_data in sub_categories:
             try:
                 parent = MediaCategory.objects.get(slug=cat_data['parent_slug'])
-                category, created = MediaCategory.objects.get_or_create(
+                obj, created = MediaCategory.objects.get_or_create(
                     slug=cat_data['slug'],
                     defaults={
                         'name': cat_data['name'],
@@ -145,16 +146,16 @@ class Command(BaseCommand):
                     }
                 )
                 if created:
-                    self.stdout.write(f'   ✅ Created media sub-category: {category.name} (parent: {parent.name})')
+                    self.stdout.write(f'   ✅ Created media sub-category: {obj.name} (parent: {parent.name})')
                 else:
-                    self.stdout.write(f'   ⚠️ Media sub-category already exists: {category.name}')
+                    self.stdout.write(f'   ⚠️ Media sub-category already exists: {obj.name}')
             except MediaCategory.DoesNotExist:
                 self.stdout.write(f'   ❌ Parent category not found for: {cat_data["name"]} (parent: {cat_data["parent_slug"]})')
         
         # ============================================
         # 5. CREATE TAGS
         # ============================================
-        self.stdout.write('🏷️ Creating tags...')
+        self.stdout.write('\n🏷️ Creating tags...')
         
         tags = [
             {'name': 'Breaking News', 'slug': 'breaking-news', 'is_active': True},
@@ -177,15 +178,17 @@ class Command(BaseCommand):
         ]
         
         for tag_data in tags:
-            Tag.objects.get_or_create(
+            obj, created = Tag.objects.get_or_create(
                 slug=tag_data['slug'],
                 defaults=tag_data
             )
+            if created:
+                self.stdout.write(f'   ✅ Created tag: {obj.name}')
         
         # ============================================
         # 6. CREATE ESSENTIAL USERS
         # ============================================
-        self.stdout.write('👤 Creating essential users...')
+        self.stdout.write('\n👤 Creating essential users...')
         
         users_data = [
             # Super Admin
@@ -291,9 +294,8 @@ class Command(BaseCommand):
         # ============================================
         # SUMMARY
         # ============================================
-        self.stdout.write(self.style.SUCCESS('\n🎉 Client database setup complete!'))
-        self.stdout.write('=' * 60)
-        self.stdout.write('📊 SUMMARY')
+        self.stdout.write('\n' + '=' * 60)
+        self.stdout.write('📊 SEED DATA SUMMARY')
         self.stdout.write('=' * 60)
         self.stdout.write(f'   Article Categories: {Category.objects.count()}')
         self.stdout.write(f'   Media Categories: {MediaCategory.objects.count()}')
@@ -306,10 +308,8 @@ class Command(BaseCommand):
             self.stdout.write(f'   • {cat.name} (slug: {cat.slug})')
         
         self.stdout.write('\n📸 MEDIA CATEGORIES:')
-        # Show parent categories
         for cat in MediaCategory.objects.filter(parent__isnull=True).order_by('name'):
             self.stdout.write(f'   • {cat.name} (slug: {cat.slug})')
-            # Show sub-categories
             subcats = MediaCategory.objects.filter(parent=cat).order_by('name')
             for sub in subcats:
                 self.stdout.write(f'      └─ {sub.name} (slug: {sub.slug})')
@@ -336,8 +336,8 @@ class Command(BaseCommand):
         self.stdout.write(f'   Login with any user account above')
         
         self.stdout.write('\n' + '=' * 60)
-        self.stdout.write(self.style.SUCCESS('✅ Database is clean and ready for client use!'))
-        self.stdout.write('   • No articles, comments, or other content created')
-        self.stdout.write('   • All categories, tags, and settings are pre-configured')
-        self.stdout.write('   • The client can start creating content immediately')
+        self.stdout.write(self.style.SUCCESS('✅ Database seeded successfully!'))
+        self.stdout.write('   • All categories, tags, and settings are configured')
+        self.stdout.write('   • Essential users created')
+        self.stdout.write('   • Ready to start creating content!')
         self.stdout.write('=' * 60)
