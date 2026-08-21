@@ -34,13 +34,19 @@ SECRET_KEY = env('SECRET_KEY', default='django-insecure-^@*8h8i&y3s@3b0=z$5xq9@v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', default=False)
 
-# ALLOWED_HOSTS
+# ============================================
+# ALLOWED HOSTS - UPDATED FOR BRAYSONS HOST
+# ============================================
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=[
-    'localhost', 
-    '127.0.0.1', 
+    'localhost',
+    '127.0.0.1',
     '.theegertonadvertiser.com',
     'egerton-advertiser.onrender.com',
     '.onrender.com',
+    # Braysons Host
+    'egertonadvertiser.co.ke',
+    'www.egertonadvertiser.co.ke',
+    '155.133.27.149',  # Server IP
 ])
 
 # Application definition
@@ -74,7 +80,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'django_cleanup.apps.CleanupConfig',
-    # 'django_ratelimit',  # COMMENTED OUT - was causing issues with Redis
     'django_recaptcha',
     
     # Local apps
@@ -147,7 +152,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'egerton_advertiser.wsgi.application'
 
 # ============================================
-# DATABASE CONFIGURATION - SUPABASE POSTGRESQL
+# DATABASE CONFIGURATION - UNCHANGED
 # ============================================
 
 # Use DATABASE_URL from environment (Supabase on Render)
@@ -320,6 +325,9 @@ CORS_ALLOWED_ORIGINS = env('CORS_ALLOWED_ORIGINS', default=[
     'http://localhost:8000',
     'https://egerton-advertiser.onrender.com',
     'http://egerton-advertiser.onrender.com',
+    # Braysons Host
+    'https://egertonadvertiser.co.ke',
+    'http://egertonadvertiser.co.ke',
 ])
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
@@ -342,7 +350,7 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # ============================================
-# CSRF SETTINGS
+# CSRF SETTINGS - UPDATED FOR BRAYSONS HOST
 # ============================================
 
 CSRF_COOKIE_NAME = 'egerton_csrftoken'
@@ -352,6 +360,11 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.egertonadvertiser.com',
     'https://egerton-advertiser.onrender.com',
     'http://egerton-advertiser.onrender.com',
+    # Braysons Host
+    'https://egertonadvertiser.co.ke',
+    'http://egertonadvertiser.co.ke',
+    'https://www.egertonadvertiser.co.ke',
+    'http://www.egertonadvertiser.co.ke',
 ]
 
 # ============================================
@@ -422,8 +435,6 @@ RECAPTCHA_REQUIRED_SCORE = 0.85
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
-
-# Add the CKEDITOR_BASEPATH setting
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
 CKEDITOR_CONFIGS = {
