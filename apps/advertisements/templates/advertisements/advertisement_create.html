@@ -219,11 +219,6 @@
     font-style: italic;
 }
 
-.form-control[readonly] {
-    background: #f9f6f0;
-    cursor: not-allowed;
-}
-
 /* File Upload */
 .file-upload-area {
     border: 2px dashed #d4cdc0;
@@ -310,46 +305,6 @@ textarea.form-control {
 
 .form-row .form-group {
     margin-bottom: 0;
-}
-
-/* ============================================
-   CHECKBOXES - NICE AND CLEAN
-   ============================================ */
-.checkbox-group {
-    display: flex;
-    gap: 25px;
-    flex-wrap: wrap;
-    padding: 15px 20px;
-    background: #f9f6f0;
-    border-radius: 6px;
-    border: 2px solid #d4cdc0;
-}
-
-.checkbox-group .form-check {
-    display: flex;
-    align-items: center;
-    margin: 0;
-}
-
-.checkbox-group .form-check-input {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    cursor: pointer;
-    accent-color: var(--secondary-green);
-}
-
-.checkbox-group .form-check-input:checked {
-    background-color: var(--secondary-green);
-    border-color: var(--secondary-green);
-}
-
-.checkbox-group .form-check-label {
-    font-family: 'Times New Roman', serif;
-    font-weight: 600;
-    color: var(--primary-green);
-    font-size: 15px;
-    cursor: pointer;
 }
 
 /* ============================================
@@ -617,10 +572,6 @@ textarea.form-control {
         font-size: 15px;
         padding: 10px 14px;
     }
-    .checkbox-group {
-        flex-direction: column;
-        gap: 12px;
-    }
     .form-actions {
         flex-direction: column;
     }
@@ -747,9 +698,7 @@ textarea.form-control {
                                 <i class="fas fa-heading"></i> Ad Title <span class="required-star">*</span>
                             </label>
                             {{ form.title }}
-                            {% if form.title.help_text %}
-                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.title.help_text }}</div>
-                            {% endif %}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> A clear title for your ad (shown to administrators)</div>
                             {% if form.title.errors %}
                             <span class="text-danger">{{ form.title.errors }}</span>
                             {% endif %}
@@ -761,9 +710,7 @@ textarea.form-control {
                                 <i class="fas fa-align-left"></i> Description
                             </label>
                             {{ form.description }}
-                            {% if form.description.help_text %}
-                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.description.help_text }}</div>
-                            {% endif %}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Describe your product, service, or promotion</div>
                             {% if form.description.errors %}
                             <span class="text-danger">{{ form.description.errors }}</span>
                             {% endif %}
@@ -795,7 +742,7 @@ textarea.form-control {
                                 <img id="previewImage" src="#" alt="Image preview">
                                 <div class="file-name" id="fileName"></div>
                             </div>
-                            <div class="help-text"><i class="fas fa-info-circle"></i> Recommended size: 1200 x 628 pixels for best results</div>
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Supported formats: JPG, PNG, GIF, WEBP</div>
                             {% if form.image.errors %}
                             <span class="text-danger">{{ form.image.errors }}</span>
                             {% endif %}
@@ -803,71 +750,33 @@ textarea.form-control {
 
                         <!-- Image Alt Text -->
                         <div class="form-group">
-                            <label for="{{ form.image_alt_text.id_for_label }}">
+                            <label for="{{ form.image_alt.id_for_label }}">
                                 <i class="fas fa-tag"></i> Image Description (Alt Text)
                             </label>
-                            {{ form.image_alt_text }}
+                            {{ form.image_alt }}
                             <div class="help-text"><i class="fas fa-info-circle"></i> Describe the image for people who can't see it (accessibility)</div>
-                            {% if form.image_alt_text.errors %}
-                            <span class="text-danger">{{ form.image_alt_text.errors }}</span>
+                            {% if form.image_alt.errors %}
+                            <span class="text-danger">{{ form.image_alt.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Video URL (Optional) -->
+                        <div class="form-group">
+                            <label for="{{ form.video_url.id_for_label }}">
+                                <i class="fas fa-video"></i> Video URL (Optional)
+                            </label>
+                            {{ form.video_url }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> If you have a video ad, enter the URL here (YouTube, Vimeo, etc.)</div>
+                            {% if form.video_url.errors %}
+                            <span class="text-danger">{{ form.video_url.errors }}</span>
                             {% endif %}
                         </div>
 
                         <!-- ==========================================
-                        SECTION 3: ADVERTISER INFORMATION
+                        SECTION 3: AD PLACEMENT
                         ========================================== -->
                         <div class="section-title" style="margin-top: 30px;">
                             <span class="section-number">3</span>
-                            <i class="fas fa-user-tie"></i> Your Contact Details
-                        </div>
-
-                        <div class="help-text" style="margin-bottom: 15px;">
-                            <i class="fas fa-info-circle"></i> We'll use these details to contact you about your advertisement.
-                        </div>
-
-                        <!-- Business / Company Name -->
-                        <div class="form-group">
-                            <label for="{{ form.business_name.id_for_label }}">
-                                <i class="fas fa-building"></i> Your Name or Company Name <span class="required-star">*</span>
-                            </label>
-                            {{ form.business_name }}
-                            {% if form.business_name.help_text %}
-                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.business_name.help_text }}</div>
-                            {% endif %}
-                            {% if form.business_name.errors %}
-                            <span class="text-danger">{{ form.business_name.errors }}</span>
-                            {% endif %}
-                        </div>
-
-                        <!-- Contact Email -->
-                        <div class="form-group">
-                            <label for="{{ form.contact_email.id_for_label }}">
-                                <i class="fas fa-envelope"></i> Contact Email <span class="required-star">*</span>
-                            </label>
-                            {{ form.contact_email }}
-                            <div class="help-text"><i class="fas fa-info-circle"></i> We'll send all communication to this email address</div>
-                            {% if form.contact_email.errors %}
-                            <span class="text-danger">{{ form.contact_email.errors }}</span>
-                            {% endif %}
-                        </div>
-
-                        <!-- Contact Phone -->
-                        <div class="form-group">
-                            <label for="{{ form.contact_phone.id_for_label }}">
-                                <i class="fas fa-phone"></i> Contact Phone <span class="required-star">*</span>
-                            </label>
-                            {{ form.contact_phone }}
-                            <div class="help-text"><i class="fas fa-info-circle"></i> We'll call you if we need to discuss your ad</div>
-                            {% if form.contact_phone.errors %}
-                            <span class="text-danger">{{ form.contact_phone.errors }}</span>
-                            {% endif %}
-                        </div>
-
-                        <!-- ==========================================
-                        SECTION 4: WHERE TO SHOW YOUR AD
-                        ========================================== -->
-                        <div class="section-title" style="margin-top: 30px;">
-                            <span class="section-number">4</span>
                             <i class="fas fa-map-pin"></i> Where to Show Your Ad
                         </div>
 
@@ -884,6 +793,18 @@ textarea.form-control {
                         </div>
 
                         <div class="form-row">
+                            <!-- Link Target -->
+                            <div class="form-group">
+                                <label for="{{ form.link_target.id_for_label }}">
+                                    <i class="fas fa-window-restore"></i> Open Link In <span class="required-star">*</span>
+                                </label>
+                                {{ form.link_target }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Should the link open in the same window or a new tab?</div>
+                                {% if form.link_target.errors %}
+                                <span class="text-danger">{{ form.link_target.errors }}</span>
+                                {% endif %}
+                            </div>
+
                             <!-- Position -->
                             <div class="form-group">
                                 <label for="{{ form.position.id_for_label }}">
@@ -895,16 +816,66 @@ textarea.form-control {
                                 <span class="text-danger">{{ form.position.errors }}</span>
                                 {% endif %}
                             </div>
+                        </div>
 
-                            <!-- Business Website -->
+                        <!-- Size -->
+                        <div class="form-group">
+                            <label for="{{ form.size.id_for_label }}">
+                                <i class="fas fa-expand"></i> Ad Size <span class="required-star">*</span>
+                            </label>
+                            {{ form.size }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Choose the size of your ad banner</div>
+                            {% if form.size.errors %}
+                            <span class="text-danger">{{ form.size.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- ==========================================
+                        SECTION 4: ADVERTISER INFORMATION
+                        ========================================== -->
+                        <div class="section-title" style="margin-top: 30px;">
+                            <span class="section-number">4</span>
+                            <i class="fas fa-user-tie"></i> Your Contact Details
+                        </div>
+
+                        <div class="help-text" style="margin-bottom: 15px;">
+                            <i class="fas fa-info-circle"></i> We'll use these details to contact you about your advertisement.
+                        </div>
+
+                        <!-- Company Name -->
+                        <div class="form-group">
+                            <label for="{{ form.company_name.id_for_label }}">
+                                <i class="fas fa-building"></i> Company Name <span class="required-star">*</span>
+                            </label>
+                            {{ form.company_name }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Your company or organization name</div>
+                            {% if form.company_name.errors %}
+                            <span class="text-danger">{{ form.company_name.errors }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-row">
+                            <!-- Contact Email -->
                             <div class="form-group">
-                                <label for="{{ form.business_website.id_for_label }}">
-                                    <i class="fas fa-globe"></i> Your Business Website
+                                <label for="{{ form.contact_email.id_for_label }}">
+                                    <i class="fas fa-envelope"></i> Contact Email <span class="required-star">*</span>
                                 </label>
-                                {{ form.business_website }}
-                                <div class="help-text"><i class="fas fa-info-circle"></i> Your company website (if different from the link above)</div>
-                                {% if form.business_website.errors %}
-                                <span class="text-danger">{{ form.business_website.errors }}</span>
+                                {{ form.contact_email }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> We'll send all communication to this email address</div>
+                                {% if form.contact_email.errors %}
+                                <span class="text-danger">{{ form.contact_email.errors }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Contact Phone -->
+                            <div class="form-group">
+                                <label for="{{ form.contact_phone.id_for_label }}">
+                                    <i class="fas fa-phone"></i> Contact Phone <span class="required-star">*</span>
+                                </label>
+                                {{ form.contact_phone }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> We'll call you if we need to discuss your ad</div>
+                                {% if form.contact_phone.errors %}
+                                <span class="text-danger">{{ form.contact_phone.errors }}</span>
                                 {% endif %}
                             </div>
                         </div>
@@ -921,7 +892,7 @@ textarea.form-control {
                             <!-- Start Date -->
                             <div class="form-group">
                                 <label for="{{ form.start_date.id_for_label }}">
-                                    <i class="fas fa-calendar-plus"></i> Start Date <span class="required-star">*</span>
+                                    <i class="fas fa-calendar-plus"></i> Start Date & Time <span class="required-star">*</span>
                                 </label>
                                 {{ form.start_date }}
                                 <div class="help-text"><i class="fas fa-info-circle"></i> When should the ad start showing?</div>
@@ -933,7 +904,7 @@ textarea.form-control {
                             <!-- End Date -->
                             <div class="form-group">
                                 <label for="{{ form.end_date.id_for_label }}">
-                                    <i class="fas fa-calendar-times"></i> End Date <span class="required-star">*</span>
+                                    <i class="fas fa-calendar-times"></i> End Date & Time <span class="required-star">*</span>
                                 </label>
                                 {{ form.end_date }}
                                 <div class="help-text"><i class="fas fa-info-circle"></i> When should the ad stop showing?</div>
@@ -944,11 +915,11 @@ textarea.form-control {
                         </div>
 
                         <!-- ==========================================
-                        SECTION 6: BUDGET
+                        SECTION 6: BUDGET & PRICING
                         ========================================== -->
                         <div class="section-title" style="margin-top: 30px;">
                             <span class="section-number">6</span>
-                            <i class="fas fa-coins"></i> Your Budget
+                            <i class="fas fa-coins"></i> Budget & Pricing
                         </div>
 
                         <div class="form-row">
@@ -964,68 +935,144 @@ textarea.form-control {
                                 {% endif %}
                             </div>
 
-                            <!-- Payment Status -->
+                            <!-- Cost Per Click -->
                             <div class="form-group">
-                                <label for="{{ form.payment_status.id_for_label }}">
-                                    <i class="fas fa-credit-card"></i> Payment Status
+                                <label for="{{ form.cost_per_click.id_for_label }}">
+                                    <i class="fas fa-mouse-pointer"></i> Cost Per Click (KES) <span class="required-star">*</span>
                                 </label>
-                                {{ form.payment_status }}
-                                <div class="help-text"><i class="fas fa-info-circle"></i> Have you already paid for this ad?</div>
-                                {% if form.payment_status.errors %}
-                                <span class="text-danger">{{ form.payment_status.errors }}</span>
+                                {{ form.cost_per_click }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> How much you pay each time someone clicks your ad</div>
+                                {% if form.cost_per_click.errors %}
+                                <span class="text-danger">{{ form.cost_per_click.errors }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <!-- Cost Per Impression -->
+                            <div class="form-group">
+                                <label for="{{ form.cost_per_impression.id_for_label }}">
+                                    <i class="fas fa-eye"></i> Cost Per 1000 Impressions (KES) <span class="required-star">*</span>
+                                </label>
+                                {{ form.cost_per_impression }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> How much you pay for 1000 views (CPM)</div>
+                                {% if form.cost_per_impression.errors %}
+                                <span class="text-danger">{{ form.cost_per_impression.errors }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Status -->
+                            <div class="form-group">
+                                <label for="{{ form.status.id_for_label }}">
+                                    <i class="fas fa-flag"></i> Status <span class="required-star">*</span>
+                                </label>
+                                {{ form.status }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Choose the initial status of your ad</div>
+                                {% if form.status.errors %}
+                                <span class="text-danger">{{ form.status.errors }}</span>
                                 {% endif %}
                             </div>
                         </div>
 
                         <!-- ==========================================
-                        SECTION 7: EXTRA OPTIONS
+                        SECTION 7: LIMITS
                         ========================================== -->
                         <div class="section-title" style="margin-top: 30px;">
                             <span class="section-number">7</span>
-                            <i class="fas fa-cog"></i> Extra Options
+                            <i class="fas fa-sliders-h"></i> Campaign Limits
                         </div>
 
-                        <!-- Featured Ad -->
-                        <div class="form-group">
-                            <label><i class="fas fa-star"></i> Featured Ad</label>
-                            <div class="checkbox-group">
-                                <div class="form-check">
-                                    {{ form.is_featured }}
-                                    <label for="{{ form.is_featured.id_for_label }}" class="form-check-label">
-                                        <i class="fas fa-star" style="color: var(--accent-gold);"></i> Yes, feature my ad prominently
-                                    </label>
-                                </div>
+                        <div class="help-text" style="margin-bottom: 15px;">
+                            <i class="fas fa-info-circle"></i> Set limits to control how much your ad runs (0 = unlimited)
+                        </div>
+
+                        <div class="form-row">
+                            <!-- Max Clicks -->
+                            <div class="form-group">
+                                <label for="{{ form.max_clicks.id_for_label }}">
+                                    <i class="fas fa-mouse-pointer"></i> Maximum Clicks <span class="required-star">*</span>
+                                </label>
+                                {{ form.max_clicks }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Stop the ad after this many clicks (0 = unlimited)</div>
+                                {% if form.max_clicks.errors %}
+                                <span class="text-danger">{{ form.max_clicks.errors }}</span>
+                                {% endif %}
                             </div>
-                            <div class="help-text"><i class="fas fa-info-circle"></i> Featured ads get better placement and more visibility</div>
+
+                            <!-- Max Impressions -->
+                            <div class="form-group">
+                                <label for="{{ form.max_impressions.id_for_label }}">
+                                    <i class="fas fa-eye"></i> Maximum Impressions <span class="required-star">*</span>
+                                </label>
+                                {{ form.max_impressions }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Stop the ad after this many views (0 = unlimited)</div>
+                                {% if form.max_impressions.errors %}
+                                <span class="text-danger">{{ form.max_impressions.errors }}</span>
+                                {% endif %}
+                            </div>
                         </div>
 
-                        <!-- Display Order -->
-                        <div class="form-group">
-                            <label for="{{ form.display_order.id_for_label }}">
-                                <i class="fas fa-sort-numeric-up"></i> Display Priority
-                            </label>
-                            {{ form.display_order }}
-                            <div class="help-text"><i class="fas fa-info-circle"></i> Lower numbers appear first (0 = highest priority)</div>
-                            {% if form.display_order.errors %}
-                            <span class="text-danger">{{ form.display_order.errors }}</span>
-                            {% endif %}
+                        <div class="form-row">
+                            <!-- Daily Limit -->
+                            <div class="form-group">
+                                <label for="{{ form.daily_limit.id_for_label }}">
+                                    <i class="fas fa-sun"></i> Daily Impression Limit <span class="required-star">*</span>
+                                </label>
+                                {{ form.daily_limit }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Maximum views per day (0 = unlimited)</div>
+                                {% if form.daily_limit.errors %}
+                                <span class="text-danger">{{ form.daily_limit.errors }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Priority -->
+                            <div class="form-group">
+                                <label for="{{ form.priority.id_for_label }}">
+                                    <i class="fas fa-star"></i> Priority <span class="required-star">*</span>
+                                </label>
+                                {{ form.priority }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Higher priority ads show first (0-100, 0 = highest)</div>
+                                {% if form.priority.errors %}
+                                <span class="text-danger">{{ form.priority.errors }}</span>
+                                {% endif %}
+                            </div>
                         </div>
 
                         <!-- ==========================================
-                        ADMIN NOTES (Hidden from clients)
+                        SECTION 8: TARGETING (Optional)
                         ========================================== -->
-                        {% if user.is_staff or user.is_superuser %}
                         <div class="section-title" style="margin-top: 30px;">
-                            <i class="fas fa-user-cog"></i> Admin Notes
+                            <span class="section-number">8</span>
+                            <i class="fas fa-bullseye"></i> Targeting (Optional)
                         </div>
+
+                        <div class="help-text" style="margin-bottom: 15px;">
+                            <i class="fas fa-info-circle"></i> Target your ad to specific categories, articles, or locations. Leave blank to show everywhere.
+                        </div>
+
+                        <!-- Targeted Categories -->
                         <div class="form-group">
-                            <label for="{{ form.admin_notes.id_for_label }}">
-                                <i class="fas fa-sticky-note"></i> Internal Notes
+                            <label for="{{ form.targeted_categories.id_for_label }}">
+                                <i class="fas fa-folder"></i> Targeted Categories
                             </label>
-                            {{ form.admin_notes }}
-                            <div class="help-text"><i class="fas fa-info-circle"></i> These notes are only visible to administrators</div>
+                            {{ form.targeted_categories }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Show ad only on these categories (hold Ctrl to select multiple)</div>
+                            {% if form.targeted_categories.errors %}
+                            <span class="text-danger">{{ form.targeted_categories.errors }}</span>
+                            {% endif %}
                         </div>
-                        {% endif %}
+
+                        <!-- Targeted Articles -->
+                        <div class="form-group">
+                            <label for="{{ form.targeted_articles.id_for_label }}">
+                                <i class="fas fa-newspaper"></i> Targeted Articles
+                            </label>
+                            {{ form.targeted_articles }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Show ad only on these specific articles (hold Ctrl to select multiple)</div>
+                            {% if form.targeted_articles.errors %}
+                            <span class="text-danger">{{ form.targeted_articles.errors }}</span>
+                            {% endif %}
+                        </div>
 
                         <!-- ==========================================
                         FORM ACTIONS
@@ -1070,7 +1117,7 @@ textarea.form-control {
             ============================================ -->
             <div class="col-lg-4">
 
-                <!-- Help & Guidelines -->
+                <!-- How It Works -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-info-circle"></i> How It Works</h5>
                     <div class="tip-item">
@@ -1095,11 +1142,11 @@ textarea.form-control {
                     </div>
                 </div>
 
-                <!-- Position Examples -->
+                <!-- Ad Positions -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-map-pin"></i> Ad Positions</h5>
                     <div class="position-example">
-                        <div class="pos-label">📌 Header</div>
+                        <div class="pos-label">📌 Header Banner</div>
                         <div class="pos-desc">Top of page — Highest visibility, most premium</div>
                     </div>
                     <div class="position-example" style="margin-top: 8px;">
@@ -1107,20 +1154,28 @@ textarea.form-control {
                         <div class="pos-desc">Side column — Good balance of visibility and cost</div>
                     </div>
                     <div class="position-example" style="margin-top: 8px;">
-                        <div class="pos-label">📌 Footer</div>
-                        <div class="pos-desc">Bottom of page — Cost-effective option</div>
+                        <div class="pos-label">📌 In-Article</div>
+                        <div class="pos-desc">Inside articles — High engagement from readers</div>
                     </div>
                     <div class="position-example" style="margin-top: 8px;">
-                        <div class="pos-label">📌 In Article</div>
-                        <div class="pos-desc">Inside articles — High engagement from readers</div>
+                        <div class="pos-label">📌 Footer</div>
+                        <div class="pos-desc">Bottom of page — Cost-effective option</div>
                     </div>
                     <div class="position-example" style="margin-top: 8px;">
                         <div class="pos-label">📌 Popup</div>
                         <div class="pos-desc">Attention-grabbing — Use sparingly for best results</div>
                     </div>
+                    <div class="position-example" style="margin-top: 8px;">
+                        <div class="pos-label">📌 Video Ad</div>
+                        <div class="pos-desc">Video format — Engaging and memorable</div>
+                    </div>
+                    <div class="position-example" style="margin-top: 8px;">
+                        <div class="pos-label">📌 Sponsored Content</div>
+                        <div class="pos-desc">Native advertising — Blends with content</div>
+                    </div>
                 </div>
 
-                <!-- Tips for Better Ads -->
+                <!-- Tips for Success -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-lightbulb"></i> Tips for Success</h5>
                     <div class="tip-item">
@@ -1142,6 +1197,11 @@ textarea.form-control {
                         <span class="tip-icon"><i class="fas fa-chart-line" style="color: var(--accent-gold);"></i></span>
                         <span class="tip-text">Monitor Performance</span>
                         <div class="tip-desc">Track your ad's performance and adjust if needed</div>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon"><i class="fas fa-clock" style="color: var(--accent-gold);"></i></span>
+                        <span class="tip-text">Set Realistic Budget</span>
+                        <div class="tip-desc">Start with a test budget and scale up based on results</div>
                     </div>
                 </div>
 
@@ -1217,6 +1277,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const startDateInput = document.querySelector('input[name="start_date"]');
     if (startDateInput && !startDateInput.value) {
         const now = new Date();
+        now.setMinutes(now.getMinutes() + 5);
         const formatted = now.toISOString().slice(0, 16);
         startDateInput.value = formatted;
     }
@@ -1230,16 +1291,47 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================
-    // SET DEFAULT DISPLAY ORDER
+    // SET DEFAULTS FOR NUMERIC FIELDS
     // ============================================
-    const orderInput = document.querySelector('input[name="display_order"]');
-    if (orderInput && !orderInput.value) {
-        orderInput.value = 0;
+    const priorityInput = document.querySelector('input[name="priority"]');
+    if (priorityInput && !priorityInput.value) {
+        priorityInput.value = 0;
+    }
+
+    const maxClicksInput = document.querySelector('input[name="max_clicks"]');
+    if (maxClicksInput && !maxClicksInput.value) {
+        maxClicksInput.value = 0;
+    }
+
+    const maxImpressionsInput = document.querySelector('input[name="max_impressions"]');
+    if (maxImpressionsInput && !maxImpressionsInput.value) {
+        maxImpressionsInput.value = 0;
+    }
+
+    const dailyLimitInput = document.querySelector('input[name="daily_limit"]');
+    if (dailyLimitInput && !dailyLimitInput.value) {
+        dailyLimitInput.value = 0;
+    }
+
+    const budgetInput = document.querySelector('input[name="budget"]');
+    if (budgetInput && !budgetInput.value) {
+        budgetInput.value = 0;
+    }
+
+    const costPerClickInput = document.querySelector('input[name="cost_per_click"]');
+    if (costPerClickInput && !costPerClickInput.value) {
+        costPerClickInput.value = 0;
+    }
+
+    const costPerImpressionInput = document.querySelector('input[name="cost_per_impression"]');
+    if (costPerImpressionInput && !costPerImpressionInput.value) {
+        costPerImpressionInput.value = 0;
     }
 
     console.log('📢 Advertisement Form loaded successfully');
     console.log('📸 Image preview is ready');
     console.log('📅 Dates have been set to default values');
+    console.log('🔢 Default values set for all numeric fields');
 });
 </script>
 {% endblock %}
