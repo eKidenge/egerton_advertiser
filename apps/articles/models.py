@@ -1,3 +1,5 @@
+# apps/articles/models.py
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -237,6 +239,90 @@ class Article(models.Model):
     def increment_like(self):
         self.likes_count += 1
         self.save(update_fields=['likes_count'])
+    
+    # Helper methods for images
+    def get_featured_image(self):
+        """Get the featured image or first image"""
+        featured = self.images.filter(is_featured=True).first()
+        if featured:
+            return featured.image
+        return self.images.first().image if self.images.exists() else None
+    
+    def get_featured_image_caption(self):
+        """Get caption of featured image"""
+        featured = self.images.filter(is_featured=True).first()
+        if featured and featured.caption:
+            return featured.caption
+        return self.featured_image_caption or ''
+    
+    def get_featured_image_byline(self):
+        """Get byline of featured image"""
+        featured = self.images.filter(is_featured=True).first()
+        if featured and featured.byline:
+            return featured.byline
+        return ''
+    
+    def get_images_with_captions(self):
+        """Get all images with their captions and bylines"""
+        return self.images.all()
+
+
+class ArticleImage(models.Model):
+    """Model for article images with captions and bylines"""
+    article = models.ForeignKey(
+        Article, 
+        on_delete=models.CASCADE, 
+        related_name='images'
+    )
+    image = models.ImageField(
+        upload_to='article_images/%Y/%m/%d/',
+        help_text="Upload an image for the article"
+    )
+    caption = models.CharField(
+        max_length=500, 
+        blank=True,
+        help_text="Photo caption - describes what's in the image"
+    )
+    byline = models.CharField(
+        max_length=200, 
+        blank=True,
+        help_text="Photographer or image source credit (e.g., 'Photo by John Doe')"
+    )
+    is_featured = models.BooleanField(
+        default=False, 
+        help_text="Set as the main/featured image for this article"
+    )
+    order = models.PositiveIntegerField(
+        default=0, 
+        help_text="Display order (lower numbers appear first)"
+    )
+    alt_text = models.CharField(
+        max_length=200, 
+        blank=True,
+        help_text="Alternative text for accessibility and SEO"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'article_images'
+        ordering = ['order', 'created_at']
+        indexes = [
+            models.Index(fields=['article', 'is_featured']),
+            models.Index(fields=['article', 'order']),
+        ]
+    
+    def __str__(self):
+        return f"Image for {self.article.title}: {self.caption[:50] if self.caption else 'No caption'}"
+    
+    def save(self, *args, **kwargs):
+        # If this image is set as featured, unset other featured images for this article
+        if self.is_featured:
+            ArticleImage.objects.filter(
+                article=self.article, 
+                is_featured=True
+            ).exclude(id=self.id).update(is_featured=False)
+        super().save(*args, **kwargs)
 
 
 class ArticleVersion(models.Model):

@@ -6,13 +6,14 @@
 {% block extra_css %}
 <style>
 /* ============================================
-   ARTICLE FORM - GOVERNMENT STYLE
+   ARTICLE FORM - PROFESSIONAL GOVERNMENT STYLE
    ============================================ */
 :root {
     --primary-green: #0d2a1a;
     --secondary-green: #1a5c3a;
     --accent-gold: #8B7355;
     --cream: #f5f0e8;
+    --light-bg: #f8f5f0;
 }
 
 .article-form-container {
@@ -23,14 +24,14 @@
 }
 
 /* ============================================
-   FORM CARD
+   MAIN FORM CARD
    ============================================ */
 .form-card {
     background: #ffffff;
     border: 2px solid var(--accent-gold);
-    border-radius: 8px;
-    padding: 40px 45px;
-    box-shadow: 0 8px 50px rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 45px 50px;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.08);
     position: relative;
 }
 
@@ -40,9 +41,9 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 5px;
     background: linear-gradient(90deg, var(--secondary-green), var(--accent-gold), var(--secondary-green));
-    border-radius: 8px 8px 0 0;
+    border-radius: 12px 12px 0 0;
 }
 
 /* ============================================
@@ -50,8 +51,8 @@
    ============================================ */
 .form-header {
     text-align: center;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
+    padding-bottom: 25px;
+    margin-bottom: 35px;
     border-bottom: 3px solid var(--accent-gold);
 }
 
@@ -59,13 +60,13 @@
     display: inline-block;
     border: 3px solid var(--accent-gold);
     border-radius: 50%;
-    padding: 15px;
-    margin-bottom: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
     background: #f9f6f0;
 }
 
 .form-header .header-icon i {
-    font-size: 32px;
+    font-size: 36px;
     color: var(--accent-gold);
 }
 
@@ -73,7 +74,7 @@
     font-family: 'Playfair Display', serif;
     font-weight: 900;
     color: var(--primary-green);
-    font-size: 30px;
+    font-size: 32px;
     letter-spacing: 3px;
     text-transform: uppercase;
     margin: 0;
@@ -83,15 +84,15 @@
     font-family: 'Times New Roman', serif;
     font-style: italic;
     color: #6c757d;
-    font-size: 16px;
-    margin-top: 5px;
+    font-size: 17px;
+    margin-top: 8px;
 }
 
 /* ============================================
    FORM GROUPS
    ============================================ */
 .form-group {
-    margin-bottom: 22px;
+    margin-bottom: 25px;
 }
 
 .form-group label {
@@ -99,32 +100,38 @@
     font-weight: 700;
     color: var(--secondary-green);
     display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
+    margin-bottom: 8px;
+    font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 1.5px;
 }
 
+.form-group label .required-star {
+    color: #dc3545;
+    margin-left: 4px;
+}
+
 .form-group label i {
     color: var(--accent-gold);
-    margin-right: 8px;
+    margin-right: 10px;
+    width: 20px;
 }
 
 .form-control {
     font-family: 'Times New Roman', serif;
-    border-radius: 4px;
-    border: 1px solid #d4cdc0;
-    padding: 10px 15px;
+    border-radius: 6px;
+    border: 2px solid #d4cdc0;
+    padding: 12px 18px;
     width: 100%;
     background: #fff;
-    font-size: 15px;
+    font-size: 16px;
     transition: all 0.3s ease;
     color: #1a1a1a;
 }
 
 .form-control:focus {
     border-color: var(--accent-gold);
-    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+    box-shadow: 0 0 0 4px rgba(139, 115, 85, 0.12);
     outline: none;
 }
 
@@ -133,49 +140,54 @@
     font-style: italic;
 }
 
+.form-control-file {
+    padding: 10px 0;
+}
+
 .help-text {
     font-family: 'Times New Roman', serif;
-    font-size: 12px;
+    font-size: 13px;
     color: #6c757d;
-    margin-top: 4px;
+    margin-top: 6px;
     font-style: italic;
 }
 
 .text-danger {
     font-family: 'Times New Roman', serif;
-    font-size: 13px;
+    font-size: 14px;
     color: #dc3545;
+    margin-top: 4px;
 }
 
 /* ============================================
-   CONTENT EDITOR - SIMPLE BUT EFFECTIVE
+   CONTENT EDITOR
    ============================================ */
 .content-editor-wrapper {
     border: 2px solid #d4cdc0;
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
     background: #fff;
 }
 
 .content-editor-wrapper:focus-within {
     border-color: var(--accent-gold);
-    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+    box-shadow: 0 0 0 4px rgba(139, 115, 85, 0.1);
 }
 
 .content-toolbar {
     background: #f9f6f0;
-    padding: 8px 12px;
-    border-bottom: 1px solid #d4cdc0;
+    padding: 10px 15px;
+    border-bottom: 2px solid #d4cdc0;
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 5px;
     align-items: center;
 }
 
 .content-toolbar .toolbar-btn {
     background: transparent;
-    border: 1px solid transparent;
-    padding: 6px 12px;
+    border: 2px solid transparent;
+    padding: 6px 14px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
@@ -191,32 +203,32 @@
 }
 
 .content-toolbar .toolbar-btn i {
-    margin-right: 4px;
+    margin-right: 5px;
 }
 
 .content-toolbar .toolbar-divider {
-    width: 1px;
-    height: 28px;
+    width: 2px;
+    height: 30px;
     background: #d4cdc0;
-    margin: 0 4px;
+    margin: 0 6px;
 }
 
 .content-toolbar .toolbar-label {
     font-family: 'Times New Roman', serif;
-    font-size: 11px;
+    font-size: 12px;
     color: #6c757d;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 700;
-    margin-right: 8px;
+    margin-right: 10px;
 }
 
 .content-textarea {
     font-family: 'Times New Roman', serif;
-    font-size: 16px;
-    line-height: 1.9;
-    min-height: 350px;
-    padding: 18px 20px;
+    font-size: 17px;
+    line-height: 2;
+    min-height: 400px;
+    padding: 20px 25px;
     width: 100%;
     border: none;
     resize: vertical;
@@ -228,22 +240,14 @@
     outline: none;
 }
 
-/* ============================================
-   CHARACTER COUNT
-   ============================================ */
 .char-count {
     font-family: 'Times New Roman', serif;
-    font-size: 12px;
+    font-size: 13px;
     color: #6c757d;
     text-align: right;
-    padding: 4px 12px;
+    padding: 6px 15px;
     background: #f9f6f0;
     border-top: 1px solid #d4cdc0;
-}
-
-.char-count .warning {
-    color: #dc3545;
-    font-weight: 700;
 }
 
 /* ============================================
@@ -251,14 +255,14 @@
    ============================================ */
 .live-preview {
     background: #f9f6f0;
-    border: 1px solid #d4cdc0;
-    border-radius: 4px;
-    padding: 20px 25px;
+    border: 2px solid #d4cdc0;
+    border-radius: 6px;
+    padding: 25px 30px;
     margin-top: 15px;
-    min-height: 100px;
+    min-height: 120px;
     font-family: 'Times New Roman', serif;
-    font-size: 16px;
-    line-height: 1.9;
+    font-size: 17px;
+    line-height: 2;
     color: #1a1a1a;
 }
 
@@ -267,6 +271,7 @@
     font-weight: 700;
     color: var(--primary-green);
     margin-top: 20px;
+    font-size: 28px;
 }
 
 .live-preview h3 {
@@ -274,62 +279,55 @@
     font-weight: 700;
     color: var(--secondary-green);
     margin-top: 15px;
+    font-size: 24px;
 }
 
 .live-preview ul, .live-preview ol {
-    margin: 10px 0 15px 25px;
+    margin: 12px 0 15px 30px;
 }
 
 .live-preview li {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 .live-preview blockquote {
-    border-left: 4px solid var(--accent-gold);
-    padding: 10px 20px;
+    border-left: 5px solid var(--accent-gold);
+    padding: 12px 25px;
     margin: 15px 0;
     background: #f5f0e8;
     font-style: italic;
 }
 
-.live-preview strong {
-    font-weight: 700;
-}
-
-.live-preview em {
-    font-style: italic;
-}
-
 /* ============================================
-   TAGS
+   TAG INPUT
    ============================================ */
 .tag-input-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    padding: 8px 10px;
-    border: 1px solid #d4cdc0;
-    border-radius: 4px;
-    min-height: 50px;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 2px solid #d4cdc0;
+    border-radius: 6px;
+    min-height: 55px;
     background: #fff;
     transition: all 0.3s ease;
 }
 
 .tag-input-container:focus-within {
     border-color: var(--accent-gold);
-    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+    box-shadow: 0 0 0 4px rgba(139, 115, 85, 0.1);
 }
 
 .tag-badge {
     background: var(--secondary-green);
     color: #fff;
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-family: 'Times New Roman', serif;
-    font-size: 13px;
+    font-size: 14px;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     font-weight: 600;
 }
 
@@ -338,7 +336,8 @@
     color: var(--accent-gold);
     margin-left: 4px;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 18px;
+    transition: color 0.3s ease;
 }
 
 .tag-badge .remove-tag:hover {
@@ -349,11 +348,11 @@
     border: none;
     outline: none;
     font-family: 'Times New Roman', serif;
-    padding: 4px 8px;
+    padding: 6px 10px;
     flex: 1;
-    min-width: 100px;
+    min-width: 120px;
     background: transparent;
-    font-size: 14px;
+    font-size: 15px;
     color: #1a1a1a;
 }
 
@@ -363,17 +362,219 @@
 }
 
 /* ============================================
+   IMAGE UPLOAD SECTION - WITH CAPTION AND BYLINE
+   ============================================ */
+.image-upload-section {
+    background: #f9f6f0;
+    border: 2px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 25px 30px;
+    margin: 30px 0;
+}
+
+.image-upload-section h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--primary-green);
+    border-bottom: 2px solid var(--accent-gold);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.image-upload-section h4 i {
+    color: var(--accent-gold);
+    font-size: 28px;
+}
+
+.image-upload-section .section-help {
+    color: #6c757d;
+    font-size: 15px;
+    margin-bottom: 25px;
+    font-style: italic;
+    padding: 10px 15px;
+    background: #fff;
+    border-radius: 6px;
+    border-left: 4px solid var(--accent-gold);
+}
+
+.image-form-item {
+    background: #ffffff;
+    border: 2px solid #d4cdc0;
+    border-radius: 8px;
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.image-form-item:hover {
+    border-color: var(--accent-gold);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.image-form-item.existing-image {
+    border-color: #28a745;
+    background: #f8fff8;
+}
+
+.image-form-item .image-number {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.image-form-item .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.image-form-item .form-row-full {
+    grid-column: 1 / -1;
+}
+
+.image-form-item .image-preview-wrapper {
+    margin-top: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+.image-form-item .image-preview {
+    max-height: 180px;
+    max-width: 250px;
+    border-radius: 6px;
+    border: 2px solid #dee2e6;
+    object-fit: cover;
+}
+
+.image-form-item .featured-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #007bff;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.image-form-item .featured-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.image-form-item .featured-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.image-form-item .featured-checkbox label {
+    font-weight: 600;
+    color: var(--secondary-green);
+    cursor: pointer;
+    margin: 0;
+    font-size: 14px;
+}
+
+.image-form-item .delete-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    margin-top: 5px;
+}
+
+.image-form-item .delete-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.image-form-item .delete-checkbox label {
+    color: #dc3545;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0;
+    font-size: 14px;
+}
+
+.image-form-item .form-group {
+    margin-bottom: 8px;
+}
+
+.image-form-item .form-group label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #495057;
+    margin-bottom: 4px;
+}
+
+.image-form-item .form-group .form-control {
+    font-size: 14px;
+    padding: 8px 14px;
+}
+
+.image-form-item .form-group .help-text {
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.image-form-item .photo-credit-hint {
+    color: #6c757d;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+.btn-add-image {
+    background: var(--secondary-green);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-add-image:hover {
+    background: var(--primary-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(13, 42, 26, 0.25);
+}
+
+.btn-add-image i {
+    margin-right: 8px;
+}
+
+/* ============================================
    FEATURED TOGGLE
    ============================================ */
 .featured-toggle {
     display: flex;
-    gap: 25px;
+    gap: 30px;
     align-items: center;
-    padding: 12px 18px;
+    padding: 15px 20px;
     background: #f9f6f0;
-    border-radius: 4px;
+    border-radius: 6px;
     flex-wrap: wrap;
-    border: 1px solid #d4cdc0;
+    border: 2px solid #d4cdc0;
 }
 
 .featured-toggle .form-check {
@@ -383,9 +584,9 @@
 }
 
 .featured-toggle .form-check-input {
-    margin-right: 8px;
-    width: 18px;
-    height: 18px;
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
 }
 
@@ -398,7 +599,7 @@
     font-family: 'Times New Roman', serif;
     font-weight: 600;
     color: var(--primary-green);
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
 }
 
@@ -406,22 +607,22 @@
    FORM ACTIONS
    ============================================ */
 .form-actions {
-    margin-top: 30px;
-    padding-top: 25px;
-    border-top: 2px solid #d4cdc0;
+    margin-top: 35px;
+    padding-top: 30px;
+    border-top: 3px solid #d4cdc0;
     display: flex;
-    gap: 12px;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
 .form-actions .btn {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    padding: 12px 30px;
-    border-radius: 4px;
+    padding: 14px 35px;
+    border-radius: 6px;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    font-size: 14px;
+    font-size: 15px;
     transition: all 0.3s ease;
     border: 2px solid transparent;
 }
@@ -437,7 +638,7 @@
     border-color: var(--primary-green);
     color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(13, 42, 26, 0.2);
+    box-shadow: 0 4px 20px rgba(13, 42, 26, 0.25);
 }
 
 .btn-outline-success {
@@ -465,23 +666,31 @@
 }
 
 /* ============================================
-   RESPONSIVE
+   RESPONSIVE DESIGN
    ============================================ */
+@media (max-width: 992px) {
+    .form-card {
+        padding: 30px;
+    }
+}
+
 @media (max-width: 768px) {
     .form-card {
         padding: 20px;
+        border-radius: 8px;
     }
     .form-header h2 {
         font-size: 24px;
     }
     .form-header .header-icon i {
-        font-size: 24px;
+        font-size: 28px;
     }
     .form-header .header-icon {
-        padding: 12px;
+        padding: 14px;
     }
     .content-toolbar {
         flex-wrap: wrap;
+        gap: 4px;
     }
     .content-toolbar .toolbar-btn {
         font-size: 12px;
@@ -490,12 +699,23 @@
     .featured-toggle {
         flex-direction: column;
         align-items: flex-start;
+        gap: 12px;
     }
     .form-actions {
         flex-direction: column;
     }
     .form-actions .btn {
         width: 100%;
+        text-align: center;
+    }
+    .image-form-item .form-row {
+        grid-template-columns: 1fr;
+    }
+    .image-upload-section {
+        padding: 15px;
+    }
+    .image-form-item {
+        padding: 15px;
     }
 }
 
@@ -507,13 +727,16 @@
         font-size: 20px;
     }
     .content-textarea {
-        min-height: 200px;
-        font-size: 14px;
-        padding: 12px 15px;
+        min-height: 250px;
+        font-size: 15px;
+        padding: 15px;
     }
     .live-preview {
-        font-size: 14px;
+        font-size: 15px;
         padding: 15px;
+    }
+    .form-group label {
+        font-size: 13px;
     }
 }
 </style>
@@ -537,136 +760,160 @@
                     </div>
 
                     <!-- ============================================
-                    FORM
+                    FORM - MAIN
                     ============================================ -->
                     <form method="post" enctype="multipart/form-data" id="articleForm">
                         {% csrf_token %}
-                        
-                        <!-- Title & Slug -->
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <label for="id_title"><i class="fas fa-heading"></i> Article Title</label>
-                                    <input type="text" name="title" id="id_title" class="form-control" 
-                                           placeholder="Enter a compelling title" required
-                                           value="{{ form.title.value|default:'' }}">
-                                    {% if form.title.errors %}
-                                    <small class="text-danger">{{ form.title.errors }}</small>
-                                    {% endif %}
-                                    <small class="help-text">A strong, descriptive title helps readers find your article</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="id_slug"><i class="fas fa-link"></i> URL Slug</label>
-                                    <input type="text" name="slug" id="id_slug" class="form-control" 
-                                           placeholder="auto-generated" readonly
-                                           value="{{ form.slug.value|default:'' }}">
-                                    {% if form.slug.errors %}
-                                    <small class="text-danger">{{ form.slug.errors }}</small>
-                                    {% endif %}
-                                    <small class="help-text">Auto-generated from title</small>
-                                </div>
-                            </div>
+
+                        <!-- ==========================================
+                        ARTICLE TITLE
+                        ========================================== -->
+                        <div class="form-group">
+                            <label for="id_title">
+                                <i class="fas fa-heading"></i> Article Title <span class="required-star">*</span>
+                            </label>
+                            <input type="text" name="title" id="id_title" class="form-control" 
+                                   placeholder="Enter a compelling title for your article" required
+                                   value="{{ form.title.value|default:'' }}">
+                            {% if form.title.errors %}
+                            <div class="text-danger">{{ form.title.errors }}</div>
+                            {% endif %}
+                            <div class="help-text">A strong, descriptive title helps readers find your article and improves search visibility.</div>
                         </div>
 
-                        <!-- Excerpt -->
+                        <!-- ==========================================
+                        URL SLUG (Auto-generated)
+                        ========================================== -->
                         <div class="form-group">
-                            <label for="id_excerpt"><i class="fas fa-align-left"></i> Excerpt</label>
+                            <label for="id_slug">
+                                <i class="fas fa-link"></i> URL Slug
+                            </label>
+                            <input type="text" name="slug" id="id_slug" class="form-control" 
+                                   placeholder="Auto-generated from title" readonly
+                                   value="{{ form.slug.value|default:'' }}">
+                            {% if form.slug.errors %}
+                            <div class="text-danger">{{ form.slug.errors }}</div>
+                            {% endif %}
+                            <div class="help-text">This is the web address for your article. Automatically created from the title.</div>
+                        </div>
+
+                        <!-- ==========================================
+                        EXCERPT / SUMMARY
+                        ========================================== -->
+                        <div class="form-group">
+                            <label for="id_excerpt">
+                                <i class="fas fa-align-left"></i> Article Summary (Excerpt)
+                            </label>
                             <textarea name="excerpt" id="id_excerpt" class="form-control" rows="3" 
-                                      placeholder="A short summary of your article"
+                                      placeholder="Write a short summary of your article. This appears in search results and article listings."
                                       maxlength="300">{{ form.excerpt.value|default:'' }}</textarea>
                             {% if form.excerpt.errors %}
-                            <small class="text-danger">{{ form.excerpt.errors }}</small>
+                            <div class="text-danger">{{ form.excerpt.errors }}</div>
                             {% endif %}
-                            <small class="help-text">Displayed in article listings and search results (max 300 characters)</small>
-                            <small class="help-text" id="excerptCount">0 / 300 characters</small>
+                            <div class="help-text">
+                                <span id="excerptCount">0</span> / 300 characters - A compelling summary encourages readers to click and read more.
+                            </div>
                         </div>
 
-                        <!-- Content - Simple Editor with Toolbar -->
+                        <!-- ==========================================
+                        ARTICLE CONTENT - WITH TOOLBAR
+                        ========================================== -->
                         <div class="form-group">
-                            <label><i class="fas fa-file-alt"></i> Content</label>
-                            
+                            <label for="id_content">
+                                <i class="fas fa-file-alt"></i> Article Content <span class="required-star">*</span>
+                            </label>
+
                             <div class="content-editor-wrapper">
                                 <!-- Toolbar -->
                                 <div class="content-toolbar">
                                     <span class="toolbar-label">Format:</span>
-                                    <button type="button" class="toolbar-btn" data-format="bold" title="Bold">
-                                        <i class="fas fa-bold"></i>
+                                    <button type="button" class="toolbar-btn" data-format="bold" title="Bold Text">
+                                        <i class="fas fa-bold"></i> Bold
                                     </button>
-                                    <button type="button" class="toolbar-btn" data-format="italic" title="Italic">
-                                        <i class="fas fa-italic"></i>
+                                    <button type="button" class="toolbar-btn" data-format="italic" title="Italic Text">
+                                        <i class="fas fa-italic"></i> Italic
                                     </button>
-                                    <button type="button" class="toolbar-btn" data-format="underline" title="Underline">
-                                        <i class="fas fa-underline"></i>
+                                    <button type="button" class="toolbar-btn" data-format="underline" title="Underline Text">
+                                        <i class="fas fa-underline"></i> Underline
                                     </button>
-                                    
+
                                     <span class="toolbar-divider"></span>
-                                    
+
                                     <button type="button" class="toolbar-btn" data-format="h2" title="Heading 2">
-                                        <i class="fas fa-heading"></i> H2
+                                        <i class="fas fa-heading"></i> Heading
                                     </button>
                                     <button type="button" class="toolbar-btn" data-format="h3" title="Heading 3">
-                                        <i class="fas fa-heading"></i> H3
+                                        <i class="fas fa-heading"></i> Sub-Heading
                                     </button>
-                                    
+
                                     <span class="toolbar-divider"></span>
-                                    
+
                                     <button type="button" class="toolbar-btn" data-format="ul" title="Bullet List">
-                                        <i class="fas fa-list-ul"></i>
+                                        <i class="fas fa-list-ul"></i> Bullets
                                     </button>
                                     <button type="button" class="toolbar-btn" data-format="ol" title="Numbered List">
-                                        <i class="fas fa-list-ol"></i>
+                                        <i class="fas fa-list-ol"></i> Numbers
                                     </button>
-                                    
+
                                     <span class="toolbar-divider"></span>
-                                    
-                                    <button type="button" class="toolbar-btn" data-format="blockquote" title="Quote">
-                                        <i class="fas fa-quote-right"></i>
+
+                                    <button type="button" class="toolbar-btn" data-format="blockquote" title="Quote Block">
+                                        <i class="fas fa-quote-right"></i> Quote
                                     </button>
                                     <button type="button" class="toolbar-btn" data-format="link" title="Insert Link">
-                                        <i class="fas fa-link"></i>
+                                        <i class="fas fa-link"></i> Link
                                     </button>
                                 </div>
-                                
+
                                 <!-- Textarea -->
                                 <textarea name="content" id="id_content" class="content-textarea" 
-                                          placeholder="Write your article content here...">{{ form.content.value|default:'' }}</textarea>
-                                
+                                          placeholder="Write your article content here... Use the toolbar above to format your text.">{{ form.content.value|default:'' }}</textarea>
+
                                 <!-- Character Count -->
                                 <div class="char-count">
                                     <span id="contentCount">0</span> characters
                                 </div>
                             </div>
-                            
+
                             {% if form.content.errors %}
-                            <small class="text-danger">{{ form.content.errors }}</small>
+                            <div class="text-danger">{{ form.content.errors }}</div>
                             {% endif %}
-                            <small class="help-text">Use the toolbar above to format your content. No HTML knowledge needed!</small>
+                            <div class="help-text">Use the toolbar to format your content. Keyboard shortcuts: Ctrl+B (Bold), Ctrl+I (Italic), Ctrl+U (Underline).</div>
                         </div>
 
-                        <!-- Live Preview -->
+                        <!-- ==========================================
+                        LIVE PREVIEW
+                        ========================================== -->
                         <div class="form-group">
-                            <label><i class="fas fa-eye"></i> Live Preview</label>
+                            <label for="livePreview">
+                                <i class="fas fa-eye"></i> Live Preview
+                            </label>
                             <div class="live-preview" id="livePreview">
-                                <p style="color: #adb5bd; font-style: italic;">Your article content will appear here as you type...</p>
+                                <p style="color: #adb5bd; font-style: italic;">Your article content will appear here as you type... This shows how your article will look when published.</p>
                             </div>
                         </div>
 
-                        <!-- Category & Tags -->
+                        <!-- ==========================================
+                        CATEGORY AND TAGS
+                        ========================================== -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="id_category"><i class="fas fa-folder"></i> Category</label>
+                                    <label for="id_category">
+                                        <i class="fas fa-folder"></i> Category <span class="required-star">*</span>
+                                    </label>
                                     {{ form.category }}
                                     {% if form.category.errors %}
-                                    <small class="text-danger">{{ form.category.errors }}</small>
+                                    <div class="text-danger">{{ form.category.errors }}</div>
                                     {% endif %}
+                                    <div class="help-text">Select the primary category for your article.</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><i class="fas fa-tags"></i> Tags</label>
+                                    <label>
+                                        <i class="fas fa-tags"></i> Tags
+                                    </label>
                                     <div class="tag-input-container" id="tagContainer">
                                         {% for tag in form.tags.value %}
                                         <span class="tag-badge">
@@ -675,86 +922,256 @@
                                         </span>
                                         {% endfor %}
                                         <input type="text" class="tag-input" id="tagInput" 
-                                               placeholder="Type tag and press Enter">
+                                               placeholder="Type a tag and press Enter">
                                     </div>
-                                    <small class="help-text">Press Enter to add tags. Tags help readers find related content.</small>
+                                    <div class="help-text">Press Enter to add each tag. Tags help readers find related articles. Examples: Politics, Health, Education, Business.</div>
                                     <input type="hidden" name="tags" id="id_tags" value="{{ form.tags.value|join:',' }}">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Featured Image -->
+                        <!-- ==========================================
+                        FEATURED IMAGE (Main Image)
+                        ========================================== -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="id_featured_image"><i class="fas fa-image"></i> Featured Image</label>
+                                    <label for="id_featured_image">
+                                        <i class="fas fa-image"></i> Featured Image
+                                    </label>
                                     <input type="file" name="featured_image" id="id_featured_image" 
-                                           class="form-control" accept="image/*">
+                                           class="form-control-file form-control" accept="image/*">
                                     {% if form.featured_image.errors %}
-                                    <small class="text-danger">{{ form.featured_image.errors }}</small>
+                                    <div class="text-danger">{{ form.featured_image.errors }}</div>
                                     {% endif %}
-                                    <small class="help-text">Recommended size: 1200x630 pixels</small>
+                                    <div class="help-text">The main image for your article. Recommended size: 1200 x 630 pixels for best display.</div>
+                                    {% if form.instance.featured_image %}
+                                    <div class="mt-2">
+                                        <p class="help-text">Current image: {{ form.instance.featured_image.name|slice:"20" }}...</p>
+                                        <img src="{{ form.instance.featured_image.url }}" 
+                                             alt="Current featured image" 
+                                             style="max-height: 100px; border-radius: 4px; border: 2px solid #dee2e6;">
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="id_featured_image_alt"><i class="fas fa-font"></i> Image Alt Text</label>
+                                    <label for="id_featured_image_alt">
+                                        <i class="fas fa-font"></i> Image Description (Alt Text)
+                                    </label>
                                     <input type="text" name="featured_image_alt" id="id_featured_image_alt" 
-                                           class="form-control" placeholder="Describe the image for accessibility"
+                                           class="form-control" placeholder="Describe the image for accessibility and search engines"
                                            value="{{ form.featured_image_alt.value|default:'' }}">
                                     {% if form.featured_image_alt.errors %}
-                                    <small class="text-danger">{{ form.featured_image_alt.errors }}</small>
+                                    <div class="text-danger">{{ form.featured_image_alt.errors }}</div>
                                     {% endif %}
+                                    <div class="help-text">Describe what the image shows. This helps visually impaired readers and improves SEO.</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Status & Settings -->
+                        <div class="form-group">
+                            <label for="id_featured_image_caption">
+                                <i class="fas fa-camera"></i> Featured Image Caption
+                            </label>
+                            <input type="text" name="featured_image_caption" id="id_featured_image_caption" 
+                                   class="form-control" placeholder="Enter a caption for the featured image"
+                                   value="{{ form.featured_image_caption.value|default:'' }}">
+                            {% if form.featured_image_caption.errors %}
+                            <div class="text-danger">{{ form.featured_image_caption.errors }}</div>
+                            {% endif %}
+                            <div class="help-text">A brief description that appears below the featured image. Include photo credits if applicable.</div>
+                        </div>
+
+                        <!-- ==========================================
+                        ADDITIONAL IMAGES - WITH CAPTION AND BYLINE
+                        ========================================== -->
+                        <div class="image-upload-section">
+                            <h4>
+                                <i class="fas fa-images"></i> Additional Images with Captions and Credits
+                            </h4>
+                            <div class="section-help">
+                                Add more images to your article. Each image can have a caption (describing what's in the photo) 
+                                and a byline (crediting the photographer or source). You can also mark one image as the featured image.
+                            </div>
+
+                            <!-- Image Formset -->
+                            {{ image_formset.management_form }}
+
+                            <div id="image-formset">
+                                {% for image_form in image_formset %}
+                                <div class="image-form-item {% if image_form.instance.pk %}existing-image{% endif %}" id="image-form-{{ forloop.counter0 }}">
+                                    {% if image_form.instance.pk %}
+                                    <div class="image-number">📸 Image #{{ forloop.counter }}</div>
+                                    {% else %}
+                                    <div class="image-number">📸 New Image #{{ forloop.counter }}</div>
+                                    {% endif %}
+
+                                    <!-- Image Upload -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.image.id_for_label }}">
+                                            <i class="fas fa-upload"></i> Upload Image
+                                        </label>
+                                        {{ image_form.image }}
+                                        {% if image_form.image.errors %}
+                                        <div class="text-danger">{{ image_form.image.errors }}</div>
+                                        {% endif %}
+                                        {% if image_form.instance.image %}
+                                        <div class="image-preview-wrapper">
+                                            <img src="{{ image_form.instance.image.url }}" 
+                                                 class="image-preview" 
+                                                 alt="{{ image_form.instance.caption|default:'Image preview' }}">
+                                            {% if image_form.instance.is_featured %}
+                                            <span class="featured-badge">⭐ Featured</span>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                        <div class="help-text">Accepted formats: JPG, PNG, GIF, WEBP. Max size: 10MB.</div>
+                                    </div>
+
+                                    <!-- Caption -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.caption.id_for_label }}">
+                                            <i class="fas fa-quote-left"></i> Photo Caption
+                                        </label>
+                                        {{ image_form.caption }}
+                                        {% if image_form.caption.errors %}
+                                        <div class="text-danger">{{ image_form.caption.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text">Describe what is happening in the photo. This helps readers understand the image context.</div>
+                                    </div>
+
+                                    <!-- Byline / Photographer Credit -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.byline.id_for_label }}">
+                                            <i class="fas fa-user-edit"></i> Photographer Credit (Byline)
+                                        </label>
+                                        {{ image_form.byline }}
+                                        {% if image_form.byline.errors %}
+                                        <div class="text-danger">{{ image_form.byline.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text">Credit the photographer or source. Examples: "Photo by John Doe" or "Image courtesy of Egerton University".</div>
+                                    </div>
+
+                                    <!-- Alt Text -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.alt_text.id_for_label }}">
+                                            <i class="fas fa-universal-access"></i> Accessibility Description (Alt Text)
+                                        </label>
+                                        {{ image_form.alt_text }}
+                                        {% if image_form.alt_text.errors %}
+                                        <div class="text-danger">{{ image_form.alt_text.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text">Describe the image in detail for visually impaired readers and search engines.</div>
+                                    </div>
+
+                                    <!-- Display Order -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.order.id_for_label }}">
+                                            <i class="fas fa-sort-numeric-up"></i> Display Order
+                                        </label>
+                                        {{ image_form.order }}
+                                        {% if image_form.order.errors %}
+                                        <div class="text-danger">{{ image_form.order.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text">Lower numbers appear first in the article. Images are displayed in order from lowest to highest.</div>
+                                    </div>
+
+                                    <!-- Featured Image Toggle -->
+                                    <div class="featured-checkbox">
+                                        {{ image_form.is_featured }}
+                                        <label for="{{ image_form.is_featured.id_for_label }}">
+                                            ⭐ Set as Featured Image
+                                        </label>
+                                        {% if image_form.is_featured.errors %}
+                                        <div class="text-danger">{{ image_form.is_featured.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text" style="margin-left: 30px;">Check this box to make this image the main image for your article.</div>
+                                    </div>
+
+                                    <!-- Delete Image -->
+                                    {% if image_form.instance.pk %}
+                                    <div class="delete-checkbox">
+                                        {{ image_form.DELETE }}
+                                        <label for="{{ image_form.DELETE.id_for_label }}" style="color: #dc3545;">
+                                            <i class="fas fa-trash-alt"></i> Delete this image
+                                        </label>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Add Image Button -->
+                            <button type="button" class="btn-add-image" id="add-image-form">
+                                <i class="fas fa-plus-circle"></i> Add Another Image
+                            </button>
+                            <div class="help-text" style="margin-top: 10px;">You can add up to 20 images to your article.</div>
+                        </div>
+
+                        <!-- ==========================================
+                        STATUS AND SETTINGS
+                        ========================================== -->
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label><i class="fas fa-star"></i> Featured Settings</label>
+                                    <label>
+                                        <i class="fas fa-star"></i> Article Settings
+                                    </label>
                                     <div class="featured-toggle">
                                         <div class="form-check">
                                             <input type="checkbox" name="is_featured" id="id_is_featured" 
                                                    class="form-check-input" {% if form.is_featured.value %}checked{% endif %}>
-                                            <label for="id_is_featured" class="form-check-label">Featured</label>
+                                            <label for="id_is_featured" class="form-check-label">⭐ Featured</label>
                                         </div>
                                         <div class="form-check">
                                             <input type="checkbox" name="is_breaking" id="id_is_breaking" 
                                                    class="form-check-input" {% if form.is_breaking.value %}checked{% endif %}>
-                                            <label for="id_is_breaking" class="form-check-label">Breaking News</label>
+                                            <label for="id_is_breaking" class="form-check-label">🔴 Breaking News</label>
                                         </div>
                                         <div class="form-check">
                                             <input type="checkbox" name="is_exclusive" id="id_is_exclusive" 
                                                    class="form-check-input" {% if form.is_exclusive.value %}checked{% endif %}>
-                                            <label for="id_is_exclusive" class="form-check-label">Exclusive</label>
+                                            <label for="id_is_exclusive" class="form-check-label">💎 Exclusive</label>
                                         </div>
+                                    </div>
+                                    <div class="help-text" style="margin-top: 8px;">Select these options to highlight your article on the website.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_status">
+                                        <i class="fas fa-flag"></i> Article Status
+                                    </label>
+                                    {{ form.status }}
+                                    {% if form.status.errors %}
+                                    <div class="text-danger">{{ form.status.errors }}</div>
+                                    {% endif %}
+                                    <div class="help-text">
+                                        <strong>Draft:</strong> Save as work in progress<br>
+                                        <strong>Pending Review:</strong> Submit for approval<br>
+                                        <strong>Published:</strong> Make live immediately
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="id_status"><i class="fas fa-flag"></i> Status</label>
-                                    {{ form.status }}
-                                    {% if form.status.errors %}
-                                    <small class="text-danger">{{ form.status.errors }}</small>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="id_scheduled_for"><i class="fas fa-calendar-plus"></i> Schedule</label>
+                                    <label for="id_scheduled_for">
+                                        <i class="fas fa-calendar-plus"></i> Schedule Publication
+                                    </label>
                                     {{ form.scheduled_for }}
                                     {% if form.scheduled_for.errors %}
-                                    <small class="text-danger">{{ form.scheduled_for.errors }}</small>
+                                    <div class="text-danger">{{ form.scheduled_for.errors }}</div>
                                     {% endif %}
-                                    <small class="help-text">Leave blank to publish immediately</small>
+                                    <div class="help-text">Leave blank to publish immediately. Select a future date and time to schedule publication.</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Form Actions -->
+                        <!-- ==========================================
+                        FORM ACTIONS
+                        ========================================== -->
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Save Article
@@ -766,6 +1183,17 @@
                                 <i class="fas fa-times"></i> Cancel
                             </a>
                         </div>
+
+                        <!-- Form Errors -->
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger mt-3">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {% for error in form.non_field_errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
                     </form>
                 </div>
             </div>
@@ -774,19 +1202,21 @@
 </div>
 
 <!-- ============================================
-   JAVASCRIPT
+   JAVASCRIPT - FULL FUNCTIONALITY
    ============================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('📝 Article Form loaded successfully');
+
     // ============================================
-    // SLUG GENERATION
+    // 1. SLUG GENERATION
     // ============================================
     const titleInput = document.getElementById('id_title');
     const slugInput = document.getElementById('id_slug');
     
     if (titleInput && slugInput) {
         titleInput.addEventListener('keyup', function() {
-            if (!slugInput.value || slugInput.value === slugInput.defaultValue) {
+            if (!slugInput.value || slugInput.value === slugInput.defaultValue || slugInput.readOnly) {
                 const slug = this.value
                     .toLowerCase()
                     .replace(/[^a-z0-9]+/g, '-')
@@ -797,7 +1227,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================
-    // EXCERPT CHARACTER COUNT
+    // 2. EXCERPT CHARACTER COUNT
     // ============================================
     const excerptInput = document.getElementById('id_excerpt');
     const excerptCount = document.getElementById('excerptCount');
@@ -806,70 +1236,75 @@ document.addEventListener('DOMContentLoaded', function() {
         excerptInput.addEventListener('input', function() {
             const len = this.value.length;
             const max = 300;
-            excerptCount.textContent = len + ' / ' + max + ' characters';
+            excerptCount.textContent = len;
+            const countEl = excerptCount;
             if (len > max) {
-                excerptCount.style.color = '#dc3545';
-                excerptCount.style.fontWeight = '700';
+                countEl.style.color = '#dc3545';
+                countEl.style.fontWeight = '700';
             } else {
-                excerptCount.style.color = '#6c757d';
-                excerptCount.style.fontWeight = 'normal';
+                countEl.style.color = '#6c757d';
+                countEl.style.fontWeight = 'normal';
             }
         });
         excerptInput.dispatchEvent(new Event('input'));
     }
 
     // ============================================
-    // CONTENT TOOLBAR
+    // 3. CONTENT TOOLBAR AND LIVE PREVIEW
     // ============================================
     const contentTextarea = document.getElementById('id_content');
     const livePreview = document.getElementById('livePreview');
     const contentCount = document.getElementById('contentCount');
     
-    // Update live preview
+    // Function to update live preview
     function updatePreview() {
         let text = contentTextarea.value;
         
-        // Convert newlines to <br> for display
+        // Convert simple markdown-like formatting to HTML
         let previewText = text
-            .replace(/\n/g, '<br>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // **bold**
-            .replace(/\*(.*?)\*/g, '<em>$1</em>')              // *italic*
-            .replace(/__(.*?)__/g, '<u>$1</u>');               // __underline__
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/__(.*?)__/g, '<u>$1</u>')
+            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
         
-        // Simple heading detection (lines starting with ##)
+        // Handle headings
         previewText = previewText.replace(/^##\s+(.*?)$/gm, '<h2>$1</h2>');
         previewText = previewText.replace(/^###\s+(.*?)$/gm, '<h3>$1</h3>');
         
-        // Simple list detection (lines starting with - or *)
-        const lines = previewText.split('<br>');
+        // Handle blockquotes
+        previewText = previewText.replace(/^>\s+(.*?)$/gm, '<blockquote>$1</blockquote>');
+        
+        // Handle lists
+        const lines = previewText.split('\n');
+        let result = [];
         let inList = false;
         let listType = '';
-        let result = [];
-        let currentList = [];
+        let listItems = [];
         
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
+            
             if (line.match(/^[\s]*[-*]\s+(.*)/)) {
                 const content = line.replace(/^[\s]*[-*]\s+/, '');
                 if (!inList) {
                     inList = true;
                     listType = 'ul';
-                    currentList = [];
+                    listItems = [];
                 }
-                currentList.push(content);
+                listItems.push(content);
             } else if (line.match(/^[\s]*\d+\.\s+(.*)/)) {
                 const content = line.replace(/^[\s]*\d+\.\s+/, '');
                 if (!inList) {
                     inList = true;
                     listType = 'ol';
-                    currentList = [];
+                    listItems = [];
                 }
-                currentList.push(content);
+                listItems.push(content);
             } else {
-                if (inList && currentList.length > 0) {
-                    const listItems = currentList.map(item => '<li>' + item + '</li>').join('');
-                    result.push('<' + listType + '>' + listItems + '</' + listType + '>');
-                    currentList = [];
+                if (inList && listItems.length > 0) {
+                    const items = listItems.map(item => '<li>' + item + '</li>').join('');
+                    result.push('<' + listType + '>' + items + '</' + listType + '>');
+                    listItems = [];
                     inList = false;
                 }
                 if (line.trim()) {
@@ -878,17 +1313,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        if (inList && currentList.length > 0) {
-            const listItems = currentList.map(item => '<li>' + item + '</li>').join('');
-            result.push('<' + listType + '>' + listItems + '</' + listType + '>');
+        if (inList && listItems.length > 0) {
+            const items = listItems.map(item => '<li>' + item + '</li>').join('');
+            result.push('<' + listType + '>' + items + '</' + listType + '>');
         }
         
-        previewText = result.join('');
+        previewText = result.join('<br>');
         
-        if (previewText.trim()) {
-            livePreview.innerHTML = previewText;
+        // If empty, show placeholder
+        if (previewText.trim() === '' || previewText.trim() === '<br>') {
+            livePreview.innerHTML = '<p style="color: #adb5bd; font-style: italic;">Your article content will appear here as you type... This shows how your article will look when published.</p>';
         } else {
-            livePreview.innerHTML = '<p style="color: #adb5bd; font-style: italic;">Your article content will appear here as you type...</p>';
+            livePreview.innerHTML = previewText;
         }
         
         // Update character count
@@ -956,7 +1392,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     break;
                 case 'link':
-                    const url = prompt('Enter the URL:', 'https://');
+                    const url = prompt('Enter the web address (URL):', 'https://');
                     if (url) {
                         newText = '[' + (selectedText || 'link text') + '](' + url + ')';
                         cursorOffset = 1;
@@ -968,6 +1404,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (format === 'link' && !newText) return;
             
+            // Insert the formatted text
             if (selectedText) {
                 textarea.setRangeText(newText, start, end, 'end');
             } else {
@@ -989,36 +1426,41 @@ document.addEventListener('DOMContentLoaded', function() {
         contentTextarea.addEventListener('input', updatePreview);
         contentTextarea.dispatchEvent(new Event('input'));
     }
-    
+
     // ============================================
-    // PREVIEW BUTTON
+    // 4. PREVIEW BUTTON - Scroll to preview
     // ============================================
     const previewBtn = document.getElementById('previewBtn');
     if (previewBtn) {
         previewBtn.addEventListener('click', function() {
             const preview = document.getElementById('livePreview');
             if (preview) {
-                preview.scrollIntoView({ behavior: 'smooth' });
+                preview.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 preview.style.borderColor = 'var(--accent-gold)';
                 preview.style.borderWidth = '3px';
+                preview.style.boxShadow = '0 0 30px rgba(139, 115, 85, 0.2)';
                 setTimeout(() => {
                     preview.style.borderColor = '#d4cdc0';
-                    preview.style.borderWidth = '1px';
-                }, 2000);
+                    preview.style.borderWidth = '2px';
+                    preview.style.boxShadow = 'none';
+                }, 3000);
             }
         });
     }
 
     // ============================================
-    // TAGS
+    // 5. TAGS MANAGEMENT
     // ============================================
     const tagInput = document.getElementById('tagInput');
     const tagContainer = document.getElementById('tagContainer');
     const tagsHidden = document.getElementById('id_tags');
     let tags = [];
 
-    function updateTags() {
+    function updateTagsDisplay() {
+        // Remove existing tag badges (except the input)
         tagContainer.querySelectorAll('.tag-badge').forEach(el => el.remove());
+        
+        // Add all tags
         tags.forEach(tag => {
             const badge = document.createElement('span');
             badge.className = 'tag-badge';
@@ -1026,7 +1468,7 @@ document.addEventListener('DOMContentLoaded', function() {
             badge.querySelector('.remove-tag').addEventListener('click', function() {
                 const name = this.dataset.tagName;
                 tags = tags.filter(t => t !== name);
-                updateTags();
+                updateTagsDisplay();
                 updateHidden();
             });
             tagContainer.insertBefore(badge, tagInput);
@@ -1038,34 +1480,133 @@ document.addEventListener('DOMContentLoaded', function() {
         tagsHidden.value = tags.join(',');
     }
 
-    tagInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const tag = this.value.trim();
-            if (tag && !tags.includes(tag)) {
-                tags.push(tag);
-                updateTags();
-                this.value = '';
+    if (tagInput) {
+        tagInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const tag = this.value.trim();
+                if (tag && !tags.includes(tag) && tag.length > 0) {
+                    tags.push(tag);
+                    updateTagsDisplay();
+                    this.value = '';
+                } else if (tag && tags.includes(tag)) {
+                    alert('This tag already exists. Please enter a different tag.');
+                    this.value = '';
+                }
             }
-        }
-    });
+        });
 
-    // Existing tags from form
-    const existingTags = tagsHidden.value ? tagsHidden.value.split(',') : [];
-    tags = existingTags.filter(t => t);
-    updateTags();
+        // Allow comma as separator
+        tagInput.addEventListener('keyup', function(e) {
+            if (e.key === ',') {
+                const tag = this.value.trim().replace(/,/g, '');
+                if (tag && !tags.includes(tag) && tag.length > 0) {
+                    tags.push(tag);
+                    updateTagsDisplay();
+                    this.value = '';
+                }
+            }
+        });
+    }
+
+    // Load existing tags from hidden input
+    if (tagsHidden) {
+        const existingTags = tagsHidden.value ? tagsHidden.value.split(',').filter(t => t) : [];
+        tags = existingTags;
+        updateTagsDisplay();
+    }
 
     // ============================================
-    // KEYBOARD SHORTCUTS
+    // 6. IMAGE FORMSET - Add/Remove Images
+    // ============================================
+    const addImageBtn = document.getElementById('add-image-form');
+    const formsetContainer = document.getElementById('image-formset');
+    const totalForms = document.getElementById('id_images-TOTAL_FORMS');
+    const maxForms = 20;
+
+    if (addImageBtn && formsetContainer && totalForms) {
+        addImageBtn.addEventListener('click', function() {
+            const currentForms = parseInt(totalForms.value);
+            
+            if (currentForms >= maxForms) {
+                alert('You can only add up to ' + maxForms + ' images per article.');
+                return;
+            }
+            
+            const newFormIndex = currentForms;
+            
+            // Get the last form as template
+            const lastForm = formsetContainer.querySelector('.image-form-item:last-child');
+            if (!lastForm) return;
+            
+            const newForm = lastForm.cloneNode(true);
+            
+            // Update all form field IDs and names
+            const regex = new RegExp('images-(\\d+)-', 'g');
+            newForm.innerHTML = newForm.innerHTML.replace(regex, `images-${newFormIndex}-`);
+            
+            // Clear input values
+            newForm.querySelectorAll('input').forEach(input => {
+                if (input.type !== 'checkbox' && input.type !== 'file') {
+                    input.value = '';
+                } else if (input.type === 'checkbox') {
+                    input.checked = false;
+                } else if (input.type === 'file') {
+                    input.value = '';
+                }
+            });
+            
+            // Clear textarea values
+            newForm.querySelectorAll('textarea').forEach(textarea => {
+                textarea.value = '';
+            });
+            
+            // Remove image preview
+            const previewImg = newForm.querySelector('.image-preview');
+            if (previewImg) {
+                previewImg.remove();
+            }
+            
+            // Remove featured badge
+            const badge = newForm.querySelector('.featured-badge');
+            if (badge) {
+                badge.remove();
+            }
+            
+            // Remove delete checkbox (only for existing images)
+            const deleteCheckbox = newForm.querySelector('.delete-checkbox');
+            if (deleteCheckbox) {
+                deleteCheckbox.remove();
+            }
+            
+            // Update image number
+            const numberEl = newForm.querySelector('.image-number');
+            if (numberEl) {
+                numberEl.textContent = '📸 New Image #' + (newFormIndex + 1);
+            }
+            
+            // Remove existing class
+            newForm.classList.remove('existing-image');
+            
+            // Append to container
+            formsetContainer.appendChild(newForm);
+            
+            // Update total forms count
+            totalForms.value = newFormIndex + 1;
+        });
+    }
+
+    // ============================================
+    // 7. KEYBOARD SHORTCUTS
     // ============================================
     document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey || e.metaKey) {
+        if ((e.ctrlKey || e.metaKey) && document.activeElement === contentTextarea) {
             let format = null;
             if (e.key === 'b') format = 'bold';
             else if (e.key === 'i') format = 'italic';
             else if (e.key === 'u') format = 'underline';
             
-            if (format && document.activeElement === contentTextarea) {
+            if (format) {
                 e.preventDefault();
                 const btn = document.querySelector(`.toolbar-btn[data-format="${format}"]`);
                 if (btn) btn.click();
@@ -1073,7 +1614,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    console.log('📝 Article Form loaded successfully');
+    // ============================================
+    // 8. FORM VALIDATION - Warn before leaving
+    // ============================================
+    let formChanged = false;
+    const form = document.getElementById('articleForm');
+    
+    if (form) {
+        form.querySelectorAll('input, textarea, select').forEach(function(element) {
+            element.addEventListener('change', function() {
+                formChanged = true;
+            });
+            element.addEventListener('input', function() {
+                if (this.type !== 'checkbox' && this.type !== 'file') {
+                    formChanged = true;
+                }
+            });
+        });
+        
+        window.addEventListener('beforeunload', function(e) {
+            if (formChanged) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                return e.returnValue;
+            }
+        });
+        
+        // Reset flag on form submit
+        form.addEventListener('submit', function() {
+            formChanged = false;
+        });
+    }
+
+    console.log('✅ All features loaded successfully!');
+    console.log('📸 You can add images with captions and photographer credits.');
     console.log('⌨️  Keyboard shortcuts: Ctrl+B (bold), Ctrl+I (italic), Ctrl+U (underline)');
 });
 </script>

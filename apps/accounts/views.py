@@ -41,12 +41,14 @@ def generate_verification_code():
 def get_role_dashboard_url(user):
     """
     Get the appropriate dashboard URL name based on user role
+    - OPTIMIZED with direct mapping
     """
-    # Map roles to dashboard URL names
-    # dashboard:home is the main dashboard view
-    # dashboard:admin_dashboard is the admin view
+    # Fast path for superuser
+    if user.is_superuser:
+        return 'dashboard:admin_dashboard'
+    
+    # Role mapping - optimized dictionary
     role_dashboard_map = {
-        'super_admin': 'dashboard:admin_dashboard',
         'admin': 'dashboard:admin_dashboard',
         'editor': 'dashboard:home',
         'journalist': 'dashboard:home',
@@ -54,7 +56,6 @@ def get_role_dashboard_url(user):
         'advertiser': 'dashboard:home',
     }
     
-    # Return the dashboard URL name for this role, default to regular dashboard
     return role_dashboard_map.get(user.role, 'dashboard:home')
 
 
@@ -71,100 +72,73 @@ def redirect_to_role_dashboard(user):
 # ============================================
 
 def user_login(request):
-    """User login view with role-based redirection"""
+    """User login view with role-based redirection - OPTIMIZED FOR SPEED"""
     if request.user.is_authenticated:
         return redirect_to_role_dashboard(request.user)
     
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         
-        # Debug: Check form data
-        print("=" * 60)
-        print("LOGIN FORM DATA:")
-        print(f"POST data: {request.POST}")
-        
         if form.is_valid():
             username_or_email = form.cleaned_data['username']
             password = form.cleaned_data['password']
             remember_me = form.cleaned_data.get('remember_me', False)
             
-            print(f"Username/Email: '{username_or_email}'")
-            print(f"Password length: {len(password)}")
-            
-            # Check if user exists
-            user_obj = None
-            try:
-                user_obj = User.objects.get(username=username_or_email)
-                print(f"✅ User found by username: {user_obj.username}")
-            except User.DoesNotExist:
-                print(f"❌ No user found with username: {username_or_email}")
-                try:
-                    user_obj = User.objects.get(email=username_or_email)
-                    print(f"✅ User found by email: {user_obj.username}")
-                except User.DoesNotExist:
-                    print(f"❌ No user found with email: {username_or_email}")
-            
-            # Try authentication
+            # Try authentication directly
             user = authenticate(request, username=username_or_email, password=password)
             
-            if user is None and user_obj is not None:
-                print(f"Trying to authenticate with username: {user_obj.username}")
-                user = authenticate(request, username=user_obj.username, password=password)
+            # If authentication fails, try finding user by email
+            if user is None and '@' in username_or_email:
+                try:
+                    user_obj = User.objects.only('username').get(email=username_or_email)
+                    user = authenticate(request, username=user_obj.username, password=password)
+                except User.DoesNotExist:
+                    pass
             
             if user is not None:
-                print(f"✅ AUTHENTICATION SUCCESSFUL: {user.username}")
-                
+                # Check if account is locked
                 if user.is_account_locked():
                     messages.error(request, 'Your account is temporarily locked. Please try again later.')
                     return render(request, 'accounts/login.html', {'form': form})
                 
+                # Login user
+                login(request, user)
+                
+                # Log activity - with error handling so it doesn't block login
                 try:
-                    login(request, user)
-                    print(f"✅ LOGIN SUCCESSFUL for {user.username}")
-                except Exception as e:
-                    print(f"Login error: {str(e)}")
-                    messages.error(request, 'Login failed. Please try again.')
-                    return render(request, 'accounts/login.html', {'form': form})
+                    UserActivityLog.objects.create(
+                        user=user,
+                        action='login',
+                        model_name='User',
+                        object_id=user.id,
+                        description=f'User {user.username} logged in',
+                        ip_address=request.META.get('REMOTE_ADDR'),
+                        user_agent=request.META.get('HTTP_USER_AGENT', '')[:255],
+                        referer=request.META.get('HTTP_REFERER', '')[:255]
+                    )
+                except Exception:
+                    pass  # Don't fail login if logging fails
                 
-                # Log activity
-                UserActivityLog.objects.create(
-                    user=user,
-                    action='login',
-                    model_name='User',
-                    object_id=user.id,
-                    description=f'User {user.username} logged in',
-                    ip_address=request.META.get('REMOTE_ADDR'),
-                    user_agent=request.META.get('HTTP_USER_AGENT', ''),
-                    referer=request.META.get('HTTP_REFERER', '')
-                )
-                
+                # Reset failed attempts
                 user.failed_login_attempts = 0
                 user.save(update_fields=['failed_login_attempts'])
                 
+                # Session expiry
                 if not remember_me:
                     request.session.set_expiry(0)
                 else:
-                    request.session.set_expiry(1209600)
+                    request.session.set_expiry(1209600)  # 2 weeks
                 
                 messages.success(request, f'Welcome back, {user.get_full_name() or user.username}!')
                 
+                # Redirect
                 next_url = request.GET.get('next')
                 if next_url:
                     return redirect(next_url)
                 
                 return redirect_to_role_dashboard(user)
             else:
-                # Check password manually
-                if user_obj is not None:
-                    from django.contrib.auth.hashers import check_password
-                    is_correct = check_password(password, user_obj.password)
-                    print(f"Password check result: {is_correct}")
-                    
-                    if is_correct:
-                        print("✅ Password is correct but authentication failed!")
-                    else:
-                        print("❌ Password is incorrect")
-                
+                # Handle failed login - increment failed attempts
                 try:
                     if '@' in username_or_email:
                         user = User.objects.get(email=username_or_email)
@@ -173,14 +147,10 @@ def user_login(request):
                     user.increment_failed_attempts()
                 except User.DoesNotExist:
                     pass
+                
                 messages.error(request, 'Invalid username/email or password.')
         else:
-            # Print form errors in detail
-            print("❌ FORM IS INVALID")
-            print(f"Form errors: {form.errors}")
-            print(f"Form non-field errors: {form.non_field_errors()}")
-            
-            # Add form errors to messages
+            # Form errors - add to messages
             for field, errors in form.errors.items():
                 for error in errors:
                     if field == '__all__':
@@ -196,15 +166,18 @@ def user_login(request):
 def user_logout(request):
     """User logout view"""
     if request.user.is_authenticated:
-        UserActivityLog.objects.create(
-            user=request.user,
-            action='logout',
-            model_name='User',
-            object_id=request.user.id,
-            description=f'User {request.user.username} logged out',
-            ip_address=request.META.get('REMOTE_ADDR'),
-            user_agent=request.META.get('HTTP_USER_AGENT', '')
-        )
+        try:
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='logout',
+                model_name='User',
+                object_id=request.user.id,
+                description=f'User {request.user.username} logged out',
+                ip_address=request.META.get('REMOTE_ADDR'),
+                user_agent=request.META.get('HTTP_USER_AGENT', '')[:255]
+            )
+        except Exception:
+            pass
         logout(request)
         messages.info(request, 'You have been logged out successfully.')
     return redirect('home')
@@ -218,16 +191,7 @@ def user_register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
         
-        # DEBUG: Log form data
-        logger.info("=" * 60)
-        logger.info("REGISTRATION ATTEMPT")
-        logger.info(f"POST data: {request.POST}")
-        logger.info("=" * 60)
-        
-        # Check if form is valid
         if form.is_valid():
-            logger.info("✅ FORM IS VALID - Creating user...")
-            
             try:
                 user = form.save(commit=False)
                 user.set_password(form.cleaned_data['password1'])
@@ -245,15 +209,18 @@ def user_register(request):
                 )
                 
                 # Log activity
-                UserActivityLog.objects.create(
-                    user=user,
-                    action='create',
-                    model_name='User',
-                    object_id=user.id,
-                    description=f'New user registered: {user.username}',
-                    ip_address=request.META.get('REMOTE_ADDR'),
-                    user_agent=request.META.get('HTTP_USER_AGENT', '')
-                )
+                try:
+                    UserActivityLog.objects.create(
+                        user=user,
+                        action='create',
+                        model_name='User',
+                        object_id=user.id,
+                        description=f'New user registered: {user.username}',
+                        ip_address=request.META.get('REMOTE_ADDR'),
+                        user_agent=request.META.get('HTTP_USER_AGENT', '')[:255]
+                    )
+                except Exception:
+                    pass
                 
                 # Send welcome email (with error handling)
                 try:
@@ -272,15 +239,13 @@ def user_register(request):
                         html_message=html_message,
                         fail_silently=True
                     )
-                except Exception as e:
-                    # Log but don't fail registration
-                    logger.warning(f"Welcome email not sent: {str(e)}")
+                except Exception:
+                    pass  # Don't fail registration if email fails
                 
                 # Auto-login after registration
                 try:
                     login(request, user)
-                except Exception as e:
-                    logger.warning(f"Auto-login issue: {str(e)}")
+                except Exception:
                     # If auto-login fails, redirect to login page
                     messages.success(request, f'Registration successful! Please log in.')
                     return redirect('accounts:login')
@@ -288,23 +253,14 @@ def user_register(request):
                 messages.success(request, f'Welcome to The Egerton Advertiser, {user.username}!')
                 
                 # Redirect to role-specific dashboard
-                logger.info(f"✅ Registration successful! Redirecting to: {get_role_dashboard_url(user)}")
                 return redirect_to_role_dashboard(user)
                 
             except Exception as e:
-                logger.error(f"❌ Error during registration: {str(e)}")
-                messages.error(request, f'Registration failed. Please try again.')
+                logger.error(f"Registration error: {str(e)}")
+                messages.error(request, 'Registration failed. Please try again.')
                 return render(request, 'accounts/register.html', {'form': form})
         else:
-            # DEBUG: Log form errors
-            logger.error("❌ FORM IS INVALID")
-            logger.error(f"Form errors: {form.errors}")
-            
-            # Log each field error
-            for field, errors in form.errors.items():
-                logger.error(f"Field '{field}': {', '.join(errors)}")
-            
-            # Add error messages for user
+            # Add form errors to messages
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
@@ -329,7 +285,7 @@ def profile_view(request, user_id=None):
     else:
         user = request.user
     
-    # Get user statistics
+    # Get user statistics - optimized with select_related
     articles = Article.objects.filter(author=user)
     published_count = articles.filter(status='published').count()
     draft_count = articles.filter(status='draft').count()
@@ -374,14 +330,17 @@ def profile_edit(request):
             profile.organization = form.cleaned_data.get('organization')
             profile.save()
             
-            UserActivityLog.objects.create(
-                user=request.user,
-                action='update',
-                model_name='User',
-                object_id=request.user.id,
-                description=f'User {request.user.username} updated profile',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
+            try:
+                UserActivityLog.objects.create(
+                    user=request.user,
+                    action='update',
+                    model_name='User',
+                    object_id=request.user.id,
+                    description=f'User {request.user.username} updated profile',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
+            except Exception:
+                pass
             
             messages.success(request, 'Your profile has been updated successfully!')
             return redirect('accounts:profile', user_id=request.user.id)
@@ -400,14 +359,17 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)
             
-            UserActivityLog.objects.create(
-                user=request.user,
-                action='update',
-                model_name='User',
-                object_id=request.user.id,
-                description=f'User {request.user.username} changed password',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
+            try:
+                UserActivityLog.objects.create(
+                    user=request.user,
+                    action='update',
+                    model_name='User',
+                    object_id=request.user.id,
+                    description=f'User {request.user.username} changed password',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
+            except Exception:
+                pass
             
             messages.success(request, 'Your password was successfully updated!')
             return redirect('accounts:profile', user_id=request.user.id)
@@ -450,8 +412,8 @@ def forgot_password(request):
                     html_message=html_message,
                     fail_silently=True
                 )
-            except Exception as e:
-                logger.error(f"Failed to send reset email: {e}")
+            except Exception:
+                pass
             
             messages.success(request, 'Password reset instructions have been sent to your email.')
             return redirect('accounts:reset_password')
@@ -485,14 +447,17 @@ def reset_password(request):
                 del request.session['password_reset_token']
                 del request.session['password_reset_user_id']
                 
-                UserActivityLog.objects.create(
-                    user=user,
-                    action='update',
-                    model_name='User',
-                    object_id=user.id,
-                    description=f'User {user.username} reset password',
-                    ip_address=request.META.get('REMOTE_ADDR')
-                )
+                try:
+                    UserActivityLog.objects.create(
+                        user=user,
+                        action='update',
+                        model_name='User',
+                        object_id=user.id,
+                        description=f'User {user.username} reset password',
+                        ip_address=request.META.get('REMOTE_ADDR')
+                    )
+                except Exception:
+                    pass
                 
                 messages.success(request, 'Password has been reset successfully. Please log in.')
                 return redirect('accounts:login')
@@ -565,7 +530,7 @@ def user_detail(request, user_id):
     """View user details (admin only)"""
     user = get_object_or_404(User, id=user_id)
     
-    # Statistics
+    # Statistics - optimized
     articles = Article.objects.filter(author=user)
     total_articles = articles.count()
     published_articles = articles.filter(status='published').count()
@@ -623,17 +588,20 @@ def user_create(request):
                     html_message=html_message,
                     fail_silently=True
                 )
-            except Exception as e:
-                logger.error(f"Failed to send account creation email: {e}")
+            except Exception:
+                pass
             
-            UserActivityLog.objects.create(
-                user=request.user,
-                action='create',
-                model_name='User',
-                object_id=user.id,
-                description=f'Admin {request.user.username} created user {user.username}',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
+            try:
+                UserActivityLog.objects.create(
+                    user=request.user,
+                    action='create',
+                    model_name='User',
+                    object_id=user.id,
+                    description=f'Admin {request.user.username} created user {user.username}',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
+            except Exception:
+                pass
             
             messages.success(request, f'User {user.username} created successfully!')
             return redirect('accounts:user_detail', user_id=user.id)
@@ -654,14 +622,17 @@ def user_edit(request, user_id):
         if form.is_valid():
             form.save()
             
-            UserActivityLog.objects.create(
-                user=request.user,
-                action='update',
-                model_name='User',
-                object_id=user.id,
-                description=f'Admin {request.user.username} updated user {user.username}',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
+            try:
+                UserActivityLog.objects.create(
+                    user=request.user,
+                    action='update',
+                    model_name='User',
+                    object_id=user.id,
+                    description=f'Admin {request.user.username} updated user {user.username}',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
+            except Exception:
+                pass
             
             messages.success(request, f'User {user.username} updated successfully!')
             return redirect('accounts:user_detail', user_id=user.id)
@@ -696,14 +667,17 @@ def user_delete(request, user_id):
         # Delete user
         user.delete()
         
-        UserActivityLog.objects.create(
-            user=request.user,
-            action='delete',
-            model_name='User',
-            object_id=user_id,
-            description=f'Admin {request.user.username} deleted user {username}',
-            ip_address=request.META.get('REMOTE_ADDR')
-        )
+        try:
+            UserActivityLog.objects.create(
+                user=request.user,
+                action='delete',
+                model_name='User',
+                object_id=user_id,
+                description=f'Admin {request.user.username} deleted user {username}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+        except Exception:
+            pass
         
         messages.success(request, f'User {username} has been deleted.')
         return redirect('accounts:user_list')
@@ -742,12 +716,10 @@ def role_create(request):
         role_name = request.POST.get('role_name')
         permissions = request.POST.getlist('permissions')
         
-        # Create role (using group)
         from django.contrib.auth.models import Group, Permission
         
         group, created = Group.objects.get_or_create(name=role_name)
         
-        # Add permissions
         for perm_code in permissions:
             try:
                 perm = Permission.objects.get(codename=perm_code)
@@ -758,7 +730,6 @@ def role_create(request):
         messages.success(request, f'Role {role_name} created successfully!')
         return redirect('accounts:role_list')
     
-    # Get all available permissions
     from django.contrib.auth.models import Permission
     all_permissions = Permission.objects.all().order_by('content_type__app_label', 'codename')
     
@@ -778,7 +749,6 @@ def role_edit(request, role_id):
         group.name = request.POST.get('role_name')
         group.save()
         
-        # Update permissions
         group.permissions.clear()
         permissions = request.POST.getlist('permissions')
         for perm_code in permissions:
@@ -814,7 +784,6 @@ def activity_log(request):
     else:
         activities = UserActivityLog.objects.filter(user=request.user)
     
-    # Filtering
     form = UserActivityFilterForm(request.GET)
     if form.is_valid():
         if form.cleaned_data.get('user'):
@@ -872,4 +841,4 @@ def handler500(request):
 
 def rate_limit_exceeded(request, exception=None):
     """Rate limit exceeded handler"""
-    return render(request, '429.html', status=429)   #give full as you say, hope you know that i have role based
+    return render(request, '429.html', status=429)

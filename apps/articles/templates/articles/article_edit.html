@@ -194,6 +194,208 @@
 }
 
 /* ============================================
+   IMAGE UPLOAD SECTION - WITH CAPTION AND BYLINE
+   ============================================ */
+.image-upload-section {
+    background: #f9f6f0;
+    border: 2px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 25px 30px;
+    margin: 30px 0;
+}
+
+.image-upload-section h4 {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--primary-green);
+    border-bottom: 2px solid var(--accent-gold);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.image-upload-section h4 i {
+    color: var(--accent-gold);
+    font-size: 28px;
+}
+
+.image-upload-section .section-help {
+    color: #6c757d;
+    font-size: 15px;
+    margin-bottom: 25px;
+    font-style: italic;
+    padding: 10px 15px;
+    background: #fff;
+    border-radius: 6px;
+    border-left: 4px solid var(--accent-gold);
+}
+
+.image-form-item {
+    background: #ffffff;
+    border: 2px solid #d4cdc0;
+    border-radius: 8px;
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.image-form-item:hover {
+    border-color: var(--accent-gold);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.image-form-item.existing-image {
+    border-color: #28a745;
+    background: #f8fff8;
+}
+
+.image-form-item .image-number {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.image-form-item .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.image-form-item .form-row-full {
+    grid-column: 1 / -1;
+}
+
+.image-form-item .image-preview-wrapper {
+    margin-top: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+.image-form-item .image-preview {
+    max-height: 180px;
+    max-width: 250px;
+    border-radius: 6px;
+    border: 2px solid #dee2e6;
+    object-fit: cover;
+}
+
+.image-form-item .featured-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #007bff;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.image-form-item .featured-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.image-form-item .featured-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.image-form-item .featured-checkbox label {
+    font-weight: 600;
+    color: var(--secondary-green);
+    cursor: pointer;
+    margin: 0;
+    font-size: 14px;
+}
+
+.image-form-item .delete-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    margin-top: 5px;
+}
+
+.image-form-item .delete-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.image-form-item .delete-checkbox label {
+    color: #dc3545;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0;
+    font-size: 14px;
+}
+
+.image-form-item .form-group {
+    margin-bottom: 8px;
+}
+
+.image-form-item .form-group label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #495057;
+    margin-bottom: 4px;
+}
+
+.image-form-item .form-group .form-control {
+    font-size: 14px;
+    padding: 8px 14px;
+}
+
+.image-form-item .form-group .help-text {
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.image-form-item .photo-credit-hint {
+    color: #6c757d;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+.btn-add-image {
+    background: var(--secondary-green);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-add-image:hover {
+    background: var(--primary-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(13, 42, 26, 0.25);
+}
+
+.btn-add-image i {
+    margin-right: 8px;
+}
+
+/* ============================================
    TAGS - OFFICIAL STYLE
    ============================================ */
 .tag-input-container {
@@ -545,6 +747,15 @@
     .sidebar-card {
         margin-top: 15px;
     }
+    .image-form-item .form-row {
+        grid-template-columns: 1fr;
+    }
+    .image-upload-section {
+        padding: 15px;
+    }
+    .image-form-item {
+        padding: 15px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -565,6 +776,9 @@
     .tag-badge {
         font-size: 12px;
         padding: 3px 10px;
+    }
+    .image-upload-section h4 {
+        font-size: 16px;
     }
 }
 </style>
@@ -593,7 +807,7 @@
                     <!-- ============================================
                     FORM
                     ============================================ -->
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" id="articleForm">
                         {% csrf_token %}
                         
                         <!-- Title & Slug -->
@@ -694,14 +908,169 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="id_featured_image_caption"><i class="fas fa-quote-left"></i> Featured Image Caption</label>
+                                    <input type="text" name="featured_image_caption" id="id_featured_image_caption" 
+                                           class="form-control" placeholder="Enter caption for the featured image"
+                                           value="{{ form.featured_image_caption.value|default:article.featured_image_caption }}">
+                                    {% if form.featured_image_caption.errors %}
+                                    <small class="text-danger">{{ form.featured_image_caption.errors }}</small>
+                                    {% endif %}
+                                    <small class="help-text">A brief description that appears below the featured image.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="id_featured_image_alt"><i class="fas fa-font"></i> Image Alt Text</label>
                                     <input type="text" name="featured_image_alt" id="id_featured_image_alt" 
-                                           class="form-control" value="{{ form.featured_image_alt.value|default:article.featured_image_alt }}">
+                                           class="form-control" placeholder="Describe the image for accessibility"
+                                           value="{{ form.featured_image_alt.value|default:article.featured_image_alt }}">
                                     {% if form.featured_image_alt.errors %}
                                     <small class="text-danger">{{ form.featured_image_alt.errors }}</small>
                                     {% endif %}
+                                    <small class="help-text">Describe the image for screen readers and SEO.</small>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_featured_image_credit"><i class="fas fa-camera"></i> Image Credit (Byline)</label>
+                                    <input type="text" name="featured_image_credit" id="id_featured_image_credit" 
+                                           class="form-control" placeholder="Photo by [Photographer Name]"
+                                           value="{{ form.featured_image_credit.value|default:article.featured_image_credit }}">
+                                    {% if form.featured_image_credit.errors %}
+                                    <small class="text-danger">{{ form.featured_image_credit.errors }}</small>
+                                    {% endif %}
+                                    <small class="help-text">Credit the photographer or source of the image.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ============================================
+                        ADDITIONAL IMAGES - WITH CAPTION AND BYLINE
+                        ============================================ -->
+                        <div class="image-upload-section">
+                            <h4>
+                                <i class="fas fa-images"></i> Additional Images with Captions and Credits
+                            </h4>
+                            <div class="section-help">
+                                Add more images to your article. Each image can have a caption (describing what's in the photo) 
+                                and a byline (crediting the photographer or source). You can also mark one image as the featured image.
+                            </div>
+
+                            <!-- Image Formset -->
+                            {{ image_formset.management_form }}
+
+                            <div id="image-formset">
+                                {% for image_form in image_formset %}
+                                <div class="image-form-item {% if image_form.instance.pk %}existing-image{% endif %}" id="image-form-{{ forloop.counter0 }}">
+                                    {% if image_form.instance.pk %}
+                                    <div class="image-number">📸 Image #{{ forloop.counter }}</div>
+                                    {% else %}
+                                    <div class="image-number">📸 New Image #{{ forloop.counter }}</div>
+                                    {% endif %}
+
+                                    <!-- Image Upload -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.image.id_for_label }}">
+                                            <i class="fas fa-upload"></i> Upload Image
+                                        </label>
+                                        {{ image_form.image }}
+                                        {% if image_form.image.errors %}
+                                        <div class="text-danger">{{ image_form.image.errors }}</div>
+                                        {% endif %}
+                                        {% if image_form.instance.image %}
+                                        <div class="image-preview-wrapper">
+                                            <img src="{{ image_form.instance.image.url }}" 
+                                                 class="image-preview" 
+                                                 alt="{{ image_form.instance.caption|default:'Image preview' }}">
+                                            {% if image_form.instance.is_featured %}
+                                            <span class="featured-badge">⭐ Featured</span>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                        <div class="help-text">Accepted formats: JPG, PNG, GIF, WEBP. Max size: 10MB.</div>
+                                    </div>
+
+                                    <!-- Caption -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.caption.id_for_label }}">
+                                            <i class="fas fa-quote-left"></i> Photo Caption
+                                        </label>
+                                        {{ image_form.caption }}
+                                        {% if image_form.caption.errors %}
+                                        <div class="text-danger">{{ image_form.caption.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text">Describe what is happening in the photo. This helps readers understand the image context.</div>
+                                    </div>
+
+                                    <!-- Byline / Photographer Credit -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.byline.id_for_label }}">
+                                            <i class="fas fa-user-edit"></i> Photographer Credit (Byline)
+                                        </label>
+                                        {{ image_form.byline }}
+                                        {% if image_form.byline.errors %}
+                                        <div class="text-danger">{{ image_form.byline.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text">Credit the photographer or source. Examples: "Photo by John Doe" or "Image courtesy of Egerton University".</div>
+                                    </div>
+
+                                    <!-- Alt Text -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.alt_text.id_for_label }}">
+                                            <i class="fas fa-universal-access"></i> Accessibility Description (Alt Text)
+                                        </label>
+                                        {{ image_form.alt_text }}
+                                        {% if image_form.alt_text.errors %}
+                                        <div class="text-danger">{{ image_form.alt_text.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text">Describe the image in detail for visually impaired readers and search engines.</div>
+                                    </div>
+
+                                    <!-- Display Order -->
+                                    <div class="form-group">
+                                        <label for="{{ image_form.order.id_for_label }}">
+                                            <i class="fas fa-sort-numeric-up"></i> Display Order
+                                        </label>
+                                        {{ image_form.order }}
+                                        {% if image_form.order.errors %}
+                                        <div class="text-danger">{{ image_form.order.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text">Lower numbers appear first in the article. Images are displayed in order from lowest to highest.</div>
+                                    </div>
+
+                                    <!-- Featured Image Toggle -->
+                                    <div class="featured-checkbox">
+                                        {{ image_form.is_featured }}
+                                        <label for="{{ image_form.is_featured.id_for_label }}">
+                                            ⭐ Set as Featured Image
+                                        </label>
+                                        {% if image_form.is_featured.errors %}
+                                        <div class="text-danger">{{ image_form.is_featured.errors }}</div>
+                                        {% endif %}
+                                        <div class="help-text" style="margin-left: 30px;">Check this box to make this image the main image for your article.</div>
+                                    </div>
+
+                                    <!-- Delete Image -->
+                                    {% if image_form.instance.pk %}
+                                    <div class="delete-checkbox">
+                                        {{ image_form.DELETE }}
+                                        <label for="{{ image_form.DELETE.id_for_label }}" style="color: #dc3545;">
+                                            <i class="fas fa-trash-alt"></i> Delete this image
+                                        </label>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Add Image Button -->
+                            <button type="button" class="btn-add-image" id="add-image-form">
+                                <i class="fas fa-plus-circle"></i> Add Another Image
+                            </button>
+                            <div class="help-text" style="margin-top: 10px;">You can add up to 20 images to your article.</div>
                         </div>
 
                         <!-- Status & Settings -->
@@ -756,6 +1125,14 @@
                                     <small class="help-text">Leave blank to publish immediately</small>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Change Notes -->
+                        <div class="form-group">
+                            <label for="id_change_notes"><i class="fas fa-pencil-alt"></i> Change Notes</label>
+                            <textarea name="change_notes" id="id_change_notes" class="form-control" rows="2" 
+                                      placeholder="Describe what changes you made to this article...">{{ request.POST.change_notes|default:'' }}</textarea>
+                            <small class="help-text">This will be saved in the version history for reference.</small>
                         </div>
 
                         <!-- Form Actions -->
@@ -854,11 +1231,13 @@
 </div>
 
 <!-- ============================================
-   JAVASCRIPT - TAG HANDLING
+   JAVASCRIPT - TAG HANDLING & IMAGE FORMSET
    ============================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Tag input handling
+    // ============================================
+    // TAG INPUT HANDLING
+    // ============================================
     const tagInput = document.getElementById('tagInput');
     const tagContainer = document.getElementById('tagContainer');
     const tagsHidden = document.getElementById('id_tags');
@@ -885,24 +1264,28 @@ document.addEventListener('DOMContentLoaded', function() {
         tagsHidden.value = tags.join(',');
     }
 
-    tagInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const tag = this.value.trim();
-            if (tag && !tags.includes(tag)) {
-                tags.push(tag);
-                updateTags();
-                this.value = '';
+    if (tagInput) {
+        tagInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const tag = this.value.trim();
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    updateTags();
+                    this.value = '';
+                }
             }
-        }
-    });
+        });
+    }
 
     // Existing tags from article
     const existingTags = tagsHidden.value ? tagsHidden.value.split(',') : [];
     tags = existingTags.filter(t => t);
     updateTags();
 
-    // Auto-generate slug from title
+    // ============================================
+    // SLUG GENERATION
+    // ============================================
     const titleInput = document.getElementById('id_title');
     const slugInput = document.getElementById('id_slug');
     
@@ -917,6 +1300,89 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // ============================================
+    // IMAGE FORMSET - ADD/REMOVE IMAGES
+    // ============================================
+    const addImageBtn = document.getElementById('add-image-form');
+    const formsetContainer = document.getElementById('image-formset');
+    const totalForms = document.getElementById('id_images-TOTAL_FORMS');
+    const maxForms = 20;
+
+    if (addImageBtn && formsetContainer && totalForms) {
+        addImageBtn.addEventListener('click', function() {
+            const currentForms = parseInt(totalForms.value);
+            
+            if (currentForms >= maxForms) {
+                alert('You can only add up to ' + maxForms + ' images per article.');
+                return;
+            }
+            
+            const newFormIndex = currentForms;
+            
+            // Get the last form as template
+            const lastForm = formsetContainer.querySelector('.image-form-item:last-child');
+            if (!lastForm) return;
+            
+            const newForm = lastForm.cloneNode(true);
+            
+            // Update all form field IDs and names
+            const regex = new RegExp('images-(\\d+)-', 'g');
+            newForm.innerHTML = newForm.innerHTML.replace(regex, `images-${newFormIndex}-`);
+            
+            // Clear input values
+            newForm.querySelectorAll('input').forEach(input => {
+                if (input.type !== 'checkbox' && input.type !== 'file') {
+                    input.value = '';
+                } else if (input.type === 'checkbox') {
+                    input.checked = false;
+                } else if (input.type === 'file') {
+                    input.value = '';
+                }
+            });
+            
+            // Clear textarea values
+            newForm.querySelectorAll('textarea').forEach(textarea => {
+                textarea.value = '';
+            });
+            
+            // Remove image preview
+            const previewImg = newForm.querySelector('.image-preview');
+            if (previewImg) {
+                previewImg.remove();
+            }
+            
+            // Remove featured badge
+            const badge = newForm.querySelector('.featured-badge');
+            if (badge) {
+                badge.remove();
+            }
+            
+            // Remove delete checkbox (only for existing images)
+            const deleteCheckbox = newForm.querySelector('.delete-checkbox');
+            if (deleteCheckbox) {
+                deleteCheckbox.remove();
+            }
+            
+            // Update image number
+            const numberEl = newForm.querySelector('.image-number');
+            if (numberEl) {
+                numberEl.textContent = '📸 New Image #' + (newFormIndex + 1);
+            }
+            
+            // Remove existing class
+            newForm.classList.remove('existing-image');
+            
+            // Append to container
+            formsetContainer.appendChild(newForm);
+            
+            // Update total forms count
+            totalForms.value = newFormIndex + 1;
+        });
+    }
+
+    console.log('📝 Edit Article Form loaded successfully');
+    console.log('📸 You can add/remove images with captions and photographer credits.');
 });
 </script>
 {% endblock %}

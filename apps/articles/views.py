@@ -11,8 +11,8 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 import json
-from .models import Article, ArticleVersion, ArticleStatistics, RelatedArticle
-from .forms import ArticleForm, ArticleFilterForm
+from .models import Article, ArticleVersion, ArticleStatistics, RelatedArticle, ArticleImage
+from .forms import ArticleForm, ArticleFilterForm, ArticleImageFormSet
 from apps.categories.models import Category
 from apps.tags.models import Tag
 from apps.comments.models import Comment
@@ -313,7 +313,7 @@ def video(request):
 def article_detail(request, slug):
     article = get_object_or_404(
         Article.objects.select_related('author', 'category')
-        .prefetch_related('tags', 'related_articles'),
+        .prefetch_related('tags', 'related_articles', 'images'),
         slug=slug,
         status='published'
     )
@@ -350,8 +350,12 @@ def article_detail(request, slug):
         author=article.author
     ).exclude(id=article.id).select_related('category')[:5]
     
+    # Get article images with captions and bylines
+    article_images = article.images.all()
+    
     context = {
         'article': article,
+        'article_images': article_images,
         'related_articles': related_articles,
         'comments': comments,
         'author_articles': author_articles,
@@ -837,7 +841,9 @@ def article_create(request):
     
     if request.method == 'POST':
         form = ArticleForm(request.POST, request.FILES)
-        if form.is_valid():
+        image_formset = ArticleImageFormSet(request.POST, request.FILES, instance=None, prefix='images')
+        
+        if form.is_valid() and image_formset.is_valid():
             article = form.save(commit=False)
             article.author = request.user
             
@@ -855,24 +861,48 @@ def article_create(request):
             # Save many-to-many fields
             form.save_m2m()
             
+            # Save images with captions and bylines
+            images = image_formset.save(commit=False)
+            for image in images:
+                image.article = article
+                image.save()
+            
+            # Delete any images marked for deletion
+            for deleted_image in image_formset.deleted_objects:
+                deleted_image.delete()
+            
             # Log activity
             UserActivityLog.objects.create(
                 user=request.user,
                 action='create',
                 model_name='Article',
                 object_id=article.id,
-                description=f'Created article: {article.title}',
+                description=f'Created article: {article.title} with {len(images)} images',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
             
-            messages.success(request, f'Article "{article.title}" created successfully!')
+            messages.success(request, f'Article "{article.title}" created successfully with {len(images)} images!')
             
             if article.status == 'draft':
                 return redirect('articles:article_edit', article_id=article.id)
             else:
                 return redirect('articles:detail', slug=article.slug)
+        else:
+            # Show form errors
+            if not form.is_valid():
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
+            
+            if not image_formset.is_valid():
+                for form_errors in image_formset.errors:
+                    if form_errors:
+                        for field, errors in form_errors.items():
+                            for error in errors:
+                                messages.error(request, f'Image Error: {error}')
     else:
         form = ArticleForm()
+        image_formset = ArticleImageFormSet(instance=None, prefix='images')
     
     # Get categories and tags for the form
     categories = Category.objects.filter(is_active=True)
@@ -880,10 +910,12 @@ def article_create(request):
     
     context = {
         'form': form,
+        'image_formset': image_formset,
         'categories': categories,
         'tags': tags,
         'action': 'create',
         'page_title': 'Create Article - The Egerton Avenue',
+        'show_image_upload': True,
     }
     return render(request, 'articles/article_create.html', context)
 
@@ -899,7 +931,9 @@ def article_edit(request, article_id):
     
     if request.method == 'POST':
         form = ArticleForm(request.POST, request.FILES, instance=article)
-        if form.is_valid():
+        image_formset = ArticleImageFormSet(request.POST, request.FILES, instance=article, prefix='images')
+        
+        if form.is_valid() and image_formset.is_valid():
             # Save version before update
             ArticleVersion.objects.create(
                 article=article,
@@ -927,6 +961,16 @@ def article_edit(request, article_id):
             article.save()
             form.save_m2m()
             
+            # Save/update images with captions and bylines
+            images = image_formset.save(commit=False)
+            for image in images:
+                image.article = article
+                image.save()
+            
+            # Delete removed images
+            for deleted_image in image_formset.deleted_objects:
+                deleted_image.delete()
+            
             # Log activity
             UserActivityLog.objects.create(
                 user=request.user,
@@ -937,10 +981,24 @@ def article_edit(request, article_id):
                 ip_address=request.META.get('REMOTE_ADDR')
             )
             
-            messages.success(request, f'Article "{article.title}" updated successfully!')
+            messages.success(request, f'✅ Article "{article.title}" updated successfully with {len(images)} images!')
             return redirect('articles:detail', slug=article.slug)
+        else:
+            # Show form errors
+            if not form.is_valid():
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
+            
+            if not image_formset.is_valid():
+                for form_errors in image_formset.errors:
+                    if form_errors:
+                        for field, errors in form_errors.items():
+                            for error in errors:
+                                messages.error(request, f'Image Error: {error}')
     else:
         form = ArticleForm(instance=article)
+        image_formset = ArticleImageFormSet(instance=article, prefix='images')
     
     categories = Category.objects.filter(is_active=True)
     tags = Tag.objects.all()
@@ -948,12 +1006,14 @@ def article_edit(request, article_id):
     
     context = {
         'form': form,
+        'image_formset': image_formset,
         'article': article,
         'categories': categories,
         'tags': tags,
         'versions': versions,
         'action': 'edit',
         'page_title': f'Edit {article.title} - The Egerton Avenue',
+        'show_image_upload': True,
     }
     return render(request, 'articles/article_edit.html', context)
 
@@ -1432,7 +1492,9 @@ def create_section_article(request, section_slug, section_name):
     
     if request.method == 'POST':
         form = ArticleForm(request.POST, request.FILES)
-        if form.is_valid():
+        image_formset = ArticleImageFormSet(request.POST, request.FILES, instance=None, prefix='images')
+        
+        if form.is_valid() and image_formset.is_valid():
             article = form.save(commit=False)
             article.author = request.user
             article.category = category  # Force the section category
@@ -1457,6 +1519,16 @@ def create_section_article(request, section_slug, section_name):
             article.save()
             form.save_m2m()
             
+            # Save images with captions and bylines
+            images = image_formset.save(commit=False)
+            for image in images:
+                image.article = article
+                image.save()
+            
+            # Delete any images marked for deletion
+            for deleted_image in image_formset.deleted_objects:
+                deleted_image.delete()
+            
             # Log activity
             UserActivityLog.objects.create(
                 user=request.user,
@@ -1477,13 +1549,28 @@ def create_section_article(request, section_slug, section_name):
                 messages.success(request, f'🎉 Your {section_name} article "{article.title}" published successfully!')
             
             return redirect('articles:article_list')
+        else:
+            # Show form errors
+            if not form.is_valid():
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
+            
+            if not image_formset.is_valid():
+                for form_errors in image_formset.errors:
+                    if form_errors:
+                        for field, errors in form_errors.items():
+                            for error in errors:
+                                messages.error(request, f'Image Error: {error}')
     else:
         form = ArticleForm(initial={'category': category})
+        image_formset = ArticleImageFormSet(instance=None, prefix='images')
     
     tags = Tag.objects.filter(is_active=True)
     
     context = {
         'form': form,
+        'image_formset': image_formset,
         'section_name': section_name,
         'section_slug': section_slug,
         'category': category,
@@ -1494,6 +1581,7 @@ def create_section_article(request, section_slug, section_name):
         'is_journalist': request.user.role == 'journalist',
         'needs_approval': request.user.role == 'journalist',
         'section_icon': get_section_icon(section_slug),
+        'show_image_upload': True,
     }
     return render(request, 'articles/article_create.html', context)
 
@@ -1624,6 +1712,7 @@ def reject_article(request, article_id):
         return redirect('dashboard:article_list')
     
     return render(request, 'articles/reject_article.html', {'article': article})
+
 
 def arts_culture(request):
     """Arts & Culture section"""

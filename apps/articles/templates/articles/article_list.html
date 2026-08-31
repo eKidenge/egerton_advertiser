@@ -404,6 +404,59 @@
 }
 
 /* ============================================
+   IMAGE STATUS BADGE
+   ============================================ */
+.badge-image-status {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.badge-image-status.has-images {
+    background: #28a745;
+    color: #fff;
+}
+
+.badge-image-status.no-images {
+    background: #6c757d;
+    color: #fff;
+}
+
+.badge-image-status .image-count {
+    background: rgba(255,255,255,0.25);
+    padding: 1px 8px;
+    border-radius: 10px;
+    margin-left: 4px;
+}
+
+.btn-view-images {
+    background: transparent;
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-view-images:hover {
+    background: var(--accent-gold);
+    color: #0d2a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(139, 115, 85, 0.2);
+}
+
+/* ============================================
    ACTION BUTTONS
    ============================================ */
 .btn-action-group {
@@ -573,6 +626,130 @@
 }
 
 /* ============================================
+   IMAGE PREVIEW MODAL
+   ============================================ */
+.image-preview-modal .modal-content {
+    border-radius: 8px;
+    border: 2px solid var(--accent-gold);
+    font-family: 'Times New Roman', serif;
+}
+
+.image-preview-modal .modal-header {
+    background: var(--secondary-green);
+    color: #fff;
+    border-bottom: 3px solid var(--accent-gold);
+}
+
+.image-preview-modal .modal-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.image-preview-modal .modal-title {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.image-preview-modal .modal-body {
+    padding: 25px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.image-preview-modal .modal-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.image-preview-modal .modal-body::-webkit-scrollbar-track {
+    background: #f9f6f0;
+}
+
+.image-preview-modal .modal-body::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+    border-radius: 2px;
+}
+
+.image-preview-item {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    border-bottom: 1px solid #f0ebe3;
+    align-items: center;
+}
+
+.image-preview-item:last-child {
+    border-bottom: none;
+}
+
+.image-preview-item .thumb {
+    width: 100px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #d4cdc0;
+    flex-shrink: 0;
+}
+
+.image-preview-item .info {
+    flex: 1;
+}
+
+.image-preview-item .info .caption {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--dark-text);
+    margin-bottom: 3px;
+}
+
+.image-preview-item .info .caption i {
+    color: var(--accent-gold);
+    margin-right: 6px;
+}
+
+.image-preview-item .info .byline {
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.image-preview-item .info .byline i {
+    color: var(--accent-gold);
+    margin-right: 6px;
+}
+
+.image-preview-item .info .badge-featured-preview {
+    background: var(--accent-gold);
+    color: #0d2a1a;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.image-preview-item .info .order-badge {
+    background: #e9ecef;
+    color: #495057;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.no-images-message {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}
+
+.no-images-message i {
+    font-size: 48px;
+    color: #d4cdc0;
+    margin-bottom: 10px;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 992px) {
@@ -656,6 +833,14 @@
     .empty-state h4 {
         font-size: 18px;
     }
+    .image-preview-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    .image-preview-item .thumb {
+        width: 100%;
+        height: 120px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -711,6 +896,20 @@
     }
     .pagination .page-link {
         padding: 6px 10px;
+        font-size: 12px;
+    }
+    .btn-view-images {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+    .badge-image-status {
+        font-size: 9px;
+        padding: 2px 8px;
+    }
+    .image-preview-item .info .caption {
+        font-size: 13px;
+    }
+    .image-preview-item .info .byline {
         font-size: 12px;
     }
 }
@@ -799,7 +998,7 @@
         <div class="filters-bar">
             <div class="filters-title"><i class="fas fa-filter" style="color: #8B7355; margin-right: 8px;"></i> Filter Articles</div>
             <form method="get" class="row g-3">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <input type="text" name="search" class="form-control" placeholder="Search articles..." 
                            value="{{ request.GET.search|default:'' }}">
                 </div>
@@ -824,15 +1023,28 @@
                     </select>
                 </div>
                 <div class="col-md-2">
+                    <select name="has_images" class="form-select">
+                        <option value="">All Articles</option>
+                        <option value="yes" {% if request.GET.has_images == 'yes' %}selected{% endif %}>With Images</option>
+                        <option value="no" {% if request.GET.has_images == 'no' %}selected{% endif %}>Without Images</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from|default:'' }}" placeholder="Date From">
                 </div>
                 <div class="col-md-2">
-                    <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to|default:'' }}" placeholder="Date To">
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" class="btn-filter">
-                        <i class="fas fa-search"></i>
-                    </button>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button type="submit" class="btn-filter">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'articles:article_list' %}" class="btn-reset" style="padding: 10px 0;">
+                                <i class="fas fa-undo"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -848,6 +1060,7 @@
                         <th>Author</th>
                         <th>Category</th>
                         <th>Status</th>
+                        <th>Images</th>
                         <th>Views</th>
                         <th>Published</th>
                         <th>Actions</th>
@@ -874,6 +1087,29 @@
                                 {{ article.get_status_display }}
                             </span>
                         </td>
+                        <td>
+                            {% with image_count=article.images.count %}
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                {% if image_count > 0 %}
+                                <span class="badge-image-status has-images">
+                                    <i class="fas fa-image"></i> {{ image_count }}
+                                    <span class="image-count">{{ image_count }}</span>
+                                </span>
+                                <button class="btn-view-images" data-bs-toggle="modal" 
+                                        data-bs-target="#imageModal{{ article.id }}">
+                                    <i class="fas fa-images"></i> View Images
+                                </button>
+                                {% else %}
+                                <span class="badge-image-status no-images">
+                                    <i class="fas fa-image"></i> No Images
+                                </span>
+                                <a href="{% url 'articles:article_edit' article.id %}" class="btn-view-images" style="border-color: #6c757d; color: #6c757d;">
+                                    <i class="fas fa-plus"></i> Add Images
+                                </a>
+                                {% endif %}
+                            </div>
+                            {% endwith %}
+                        </td>
                         <td>{{ article.views_count }}</td>
                         <td>{{ article.published_at|date:"M d, Y"|default:"-" }}</td>
                         <td>
@@ -895,9 +1131,82 @@
                             </div>
                         </td>
                     </tr>
+
+                    <!-- ============================================
+                    IMAGE PREVIEW MODAL FOR EACH ARTICLE
+                    ============================================ -->
+                    <div class="modal fade image-preview-modal" id="imageModal{{ article.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        <i class="fas fa-images" style="margin-right: 10px;"></i>
+                                        Images for: {{ article.title|truncatewords:10 }}
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% with images=article.images.all %}
+                                    {% if images %}
+                                    <div class="image-preview-list">
+                                        {% for image in images %}
+                                        <div class="image-preview-item">
+                                            <img src="{{ image.image.url }}" alt="{{ image.caption|default:article.title }}" class="thumb">
+                                            <div class="info">
+                                                <div class="caption">
+                                                    <i class="fas fa-quote-left"></i>
+                                                    {% if image.caption %}
+                                                    {{ image.caption }}
+                                                    {% else %}
+                                                    <span style="color: #adb5bd; font-style: italic;">No caption</span>
+                                                    {% endif %}
+                                                    {% if image.is_featured %}
+                                                    <span class="badge-featured-preview">⭐ Featured</span>
+                                                    {% endif %}
+                                                    <span class="order-badge">Order: {{ image.order }}</span>
+                                                </div>
+                                                <div class="byline">
+                                                    <i class="fas fa-camera"></i>
+                                                    {% if image.byline %}
+                                                    Photo by: {{ image.byline }}
+                                                    {% else %}
+                                                    <span style="color: #adb5bd; font-style: italic;">No credit</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mt-3 text-muted small">
+                                        <i class="fas fa-info-circle"></i> 
+                                        Total: {{ images|length }} image{% if images|length > 1 %}s{% endif %}
+                                        {% with featured_count=images|length %}
+                                        | Featured: {{ images|length }}
+                                        {% endwith %}
+                                    </div>
+                                    {% else %}
+                                    <div class="no-images-message">
+                                        <i class="fas fa-image"></i>
+                                        <p>No images have been added to this article yet.</p>
+                                        <a href="{% url 'articles:article_edit' article.id %}" class="btn-create-empty" style="padding: 8px 20px; font-size: 14px;">
+                                            <i class="fas fa-plus"></i> Add Images
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="{% url 'articles:article_edit' article.id %}" class="btn btn-primary" style="font-family: 'Times New Roman', serif; background: var(--secondary-green); border: none;">
+                                        <i class="fas fa-edit"></i> Manage Images
+                                    </a>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-family: 'Times New Roman', serif;">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% empty %}
                     <tr>
-                        <td colspan="7">
+                        <td colspan="8">
                             <div class="empty-state">
                                 <i class="fas fa-inbox"></i>
                                 <h4>No Articles Found</h4>
@@ -975,4 +1284,14 @@
         {% endif %}
     </div>
 </div>
+
+<!-- ============================================
+   JAVASCRIPT
+   ============================================ -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📋 Article Management - Image Gallery Enabled');
+    console.log('📸 Click "View Images" button to see article images with captions and bylines');
+});
+</script>
 {% endblock %}

@@ -436,6 +436,176 @@ body {
 }
 
 /* ============================================
+   PHOTO GALLERY - HOME PAGE
+   ============================================ */
+.photo-gallery-section {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 22px 28px;
+    border: 1px solid #d4cdc0;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+    position: relative;
+}
+
+.photo-gallery-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-gold);
+    border-radius: 8px 8px 0 0;
+}
+
+.photo-gallery-section .section-header {
+    border-bottom: 2px solid var(--secondary-green);
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.photo-gallery-section .section-header h3 {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--secondary-green);
+    font-size: 20px;
+    margin: 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.photo-gallery-section .section-header h3 i {
+    color: var(--accent-gold);
+    margin-right: 10px;
+}
+
+.photo-gallery-section .section-header .view-all {
+    font-family: 'Times New Roman', serif;
+    font-size: 13px;
+    color: var(--secondary-green);
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    padding: 4px 12px;
+    border: 1px solid transparent;
+}
+
+.photo-gallery-section .section-header .view-all:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+.photo-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.photo-gallery-item {
+    background: #faf8f5;
+    border: 1px solid #d4cdc0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border-radius: 4px;
+}
+
+.photo-gallery-item:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border-color: var(--accent-gold);
+    transform: translateY(-3px);
+}
+
+.photo-gallery-item .image-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: #f0ebe3;
+    height: 180px;
+}
+
+.photo-gallery-item .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.photo-gallery-item:hover .image-wrapper img {
+    transform: scale(1.05);
+}
+
+.photo-gallery-item .image-wrapper .featured-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--accent-gold);
+    color: #0d2a1a;
+    padding: 3px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 2px;
+}
+
+.photo-gallery-item .image-info {
+    padding: 12px 16px 14px;
+    background: #ffffff;
+}
+
+.photo-gallery-item .image-info .photo-caption {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #2a2a2a;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.photo-gallery-item .image-info .photo-caption strong {
+    color: var(--secondary-green);
+    font-style: normal;
+    font-weight: 700;
+}
+
+.photo-gallery-item .image-info .photo-byline {
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-top: 1px solid #f0ebe3;
+    padding-top: 8px;
+}
+
+.photo-gallery-item .image-info .photo-byline i {
+    color: var(--accent-gold);
+    font-size: 13px;
+}
+
+.photo-gallery-item .image-info .photo-byline .article-link {
+    color: var(--secondary-green);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.photo-gallery-item .image-info .photo-byline .article-link:hover {
+    text-decoration: underline;
+    color: var(--accent-gold);
+}
+
+/* ============================================
    SIDEBAR WIDGETS
    ============================================ */
 .sidebar-widget {
@@ -720,6 +890,10 @@ body {
     .featured-article .featured-content h2 {
         font-size: 24px;
     }
+    .photo-gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
 }
 
 @media (max-width: 992px) {
@@ -734,6 +908,13 @@ body {
     }
     .category-section {
         padding: 18px 20px;
+    }
+    .photo-gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    .photo-gallery-item .image-wrapper {
+        height: 160px;
     }
 }
 
@@ -782,6 +963,22 @@ body {
         padding: 4px 12px;
         bottom: 12px;
         left: 12px;
+    }
+    .photo-gallery-section {
+        padding: 15px 16px;
+    }
+    .photo-gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .photo-gallery-item .image-wrapper {
+        height: 140px;
+    }
+    .photo-gallery-item .image-info .photo-caption {
+        font-size: 13px;
+    }
+    .photo-gallery-item .image-info .photo-byline {
+        font-size: 11px;
     }
 }
 
@@ -859,6 +1056,33 @@ body {
         width: 12px;
         height: 12px;
     }
+    .photo-gallery-section .section-header h3 {
+        font-size: 15px;
+    }
+    .photo-gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .photo-gallery-item .image-wrapper {
+        height: 120px;
+    }
+    .photo-gallery-item .image-info {
+        padding: 10px 12px 12px;
+    }
+    .photo-gallery-item .image-info .photo-caption {
+        font-size: 12px;
+        -webkit-line-clamp: 1;
+    }
+    .photo-gallery-item .image-info .photo-byline {
+        font-size: 10px;
+        padding-top: 5px;
+    }
+    .photo-gallery-item .image-wrapper .featured-tag {
+        font-size: 8px;
+        padding: 2px 8px;
+        top: 6px;
+        right: 6px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -878,6 +1102,19 @@ body {
         font-size: 10px;
         padding: 3px 6px;
         min-width: 40px;
+    }
+    .photo-gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .photo-gallery-item .image-wrapper {
+        height: 100px;
+    }
+    .photo-gallery-item .image-info .photo-caption {
+        font-size: 11px;
+    }
+    .photo-gallery-item .image-info .photo-byline {
+        font-size: 9px;
     }
 }
 </style>
@@ -977,6 +1214,49 @@ body {
                     <span class="time">{{ article.published_at|date:"H:i" }}</span>
                 </div>
                 {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- ============================================
+            PHOTO GALLERY - WITH CAPTIONS AND BYLINES
+            ============================================ -->
+            {% if photos_articles %}
+            <div class="photo-gallery-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-images"></i> Photo Gallery</h3>
+                    <a href="{% url 'articles:photos' %}" class="view-all">View All →</a>
+                </div>
+                <div class="photo-gallery-grid">
+                    {% for article in photos_articles|slice:":6" %}
+                    <div class="photo-gallery-item">
+                        <div class="image-wrapper">
+                            {% if article.featured_image %}
+                            <img src="{{ article.featured_image.url }}" alt="{{ article.title }}">
+                            {% else %}
+                            <img src="{% static 'images/default-featured.jpg' %}" alt="Default image">
+                            {% endif %}
+                            {% if article.is_featured %}
+                            <span class="featured-tag">⭐ Featured</span>
+                            {% endif %}
+                        </div>
+                        <div class="image-info">
+                            {% if article.featured_image_caption %}
+                            <div class="photo-caption">
+                                <strong>📝 Caption:</strong> {{ article.featured_image_caption|truncatewords:15 }}
+                            </div>
+                            {% endif %}
+                            <div class="photo-byline">
+                                <i class="fas fa-camera"></i>
+                                {% if article.featured_image_credit %}
+                                Photo by: {{ article.featured_image_credit }}
+                                {% else %}
+                                <a href="{{ article.get_absolute_url }}" class="article-link">View Article →</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
             {% endif %}
 
