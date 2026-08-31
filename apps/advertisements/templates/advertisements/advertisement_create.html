@@ -1,187 +1,267 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
-{% load humanize %}
 
-{% block title %}Create Advertisement - The Egerton Advertiser{% endblock %}
+{% block title %}Place Your Advertisement - The Egerton Advertiser{% endblock %}
 
 {% block extra_css %}
 <style>
+/* ============================================
+   ADVERTISEMENT FORM - USER-FRIENDLY
+   ============================================ */
 :root {
-    --admin-primary: #0a1a2a;
-    --admin-secondary: #1a3c5e;
-    --admin-gold: #c9a84c;
-    --admin-red: #8b1a1a;
-    --admin-green: #1a5a3a;
-    --admin-blue: #1a3c5e;
-    --admin-cream: #f5f0e8;
+    --primary-green: #0d2a1a;
+    --secondary-green: #1a5c3a;
+    --accent-gold: #8B7355;
+    --cream: #f5f0e8;
+    --light-green: #a5d6a7;
 }
 
 .ad-create-container {
-    padding: 30px 0;
-    background: var(--admin-cream);
+    padding: 40px 0 60px;
+    background: var(--cream);
     min-height: calc(100vh - 200px);
     font-family: 'Times New Roman', serif;
 }
 
-.ad-create-header {
-    background: linear-gradient(135deg, #0a1a2a 0%, #1a3c5e 50%, #2c5a7a 100%);
-    color: #fff;
-    padding: 25px 35px;
-    border-radius: 8px;
-    margin-bottom: 25px;
+/* ============================================
+   PAGE HEADER - OFFICIAL STYLE
+   ============================================ */
+.ad-page-header {
+    background: linear-gradient(135deg, #0d2a1a 0%, #1a5c3a 50%, #2d7a4a 100%);
+    color: #ffffff;
+    padding: 30px 35px;
+    border-radius: 12px;
+    margin-bottom: 30px;
     position: relative;
     overflow: hidden;
-    border-bottom: 4px solid var(--admin-gold);
+    border-bottom: 5px solid var(--accent-gold);
 }
-.ad-create-header::before {
-    content: 'ADVERTISEMENT';
+
+.ad-page-header::before {
+    content: 'ADVERTISE';
     position: absolute;
     right: -20px;
     top: -30px;
     font-size: 120px;
     font-weight: 900;
-    color: rgba(201,168,76,0.04);
+    color: rgba(255,255,255,0.03);
     font-family: 'Playfair Display', serif;
     letter-spacing: 15px;
 }
-.ad-create-header .seal {
+
+.ad-page-header .seal-icon {
     display: inline-block;
-    border: 2px solid var(--admin-gold);
+    border: 3px solid var(--accent-gold);
     border-radius: 50%;
-    padding: 10px;
+    padding: 12px 15px;
     margin-right: 15px;
+    background: rgba(255,255,255,0.05);
 }
-.ad-create-header .seal i {
-    font-size: 28px;
-    color: var(--admin-gold);
+
+.ad-page-header .seal-icon i {
+    font-size: 30px;
+    color: var(--accent-gold);
 }
-.ad-create-header h1 {
+
+.ad-page-header h1 {
     font-family: 'Playfair Display', serif;
     font-weight: 900;
-    font-size: 28px;
-    letter-spacing: 2px;
+    font-size: 30px;
+    letter-spacing: 3px;
     text-transform: uppercase;
+    margin: 0;
 }
-.ad-create-header .subtitle {
+
+.ad-page-header .subtitle {
     font-family: 'Times New Roman', serif;
-    color: rgba(255,255,255,0.7);
-    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    font-size: 16px;
     font-style: italic;
     letter-spacing: 1px;
+    margin-top: 4px;
 }
-.ad-create-header .badge {
-    font-size: 11px;
-    padding: 5px 20px;
-    background: var(--admin-gold);
-    color: #0a1a2a;
+
+.ad-page-header .badge-status {
+    font-size: 12px;
+    padding: 6px 20px;
+    background: var(--accent-gold);
+    color: #0d2a1a;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
     border-radius: 20px;
+    display: inline-block;
 }
 
+/* ============================================
+   MAIN FORM CARD
+   ============================================ */
 .ad-form-card {
-    background: #fff;
-    border-radius: 8px;
-    padding: 35px;
-    border: 1px solid #d4cdc0;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.04);
-    margin-bottom: 25px;
+    background: #ffffff;
+    border: 2px solid #d4cdc0;
+    border-radius: 12px;
+    padding: 35px 40px;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.04);
+    position: relative;
 }
-.ad-form-card .form-section-title {
+
+.ad-form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-green), var(--accent-gold), var(--secondary-green));
+    border-radius: 12px 12px 0 0;
+}
+
+/* ============================================
+   SECTION HEADERS
+   ============================================ */
+.section-title {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    color: var(--admin-primary);
-    border-bottom: 2px solid var(--admin-gold);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
+    color: var(--primary-green);
+    border-bottom: 3px solid var(--accent-gold);
+    padding-bottom: 12px;
+    margin-bottom: 22px;
+    letter-spacing: 1.5px;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
 }
-.ad-form-card .form-section-title i {
-    color: var(--admin-gold);
-    margin-right: 8px;
+
+.section-title i {
+    color: var(--accent-gold);
+    margin-right: 12px;
+    font-size: 24px;
 }
+
+.section-title .section-number {
+    display: inline-block;
+    background: var(--secondary-green);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    border-radius: 50%;
+    font-size: 14px;
+    margin-right: 12px;
+    font-family: 'Times New Roman', serif;
+}
+
+/* ============================================
+   FORM GROUPS - USER FRIENDLY
+   ============================================ */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
+
 .form-group label {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    color: var(--admin-primary);
-    font-size: 14px;
+    color: var(--secondary-green);
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
     letter-spacing: 0.5px;
 }
-.form-group label .required {
-    color: var(--admin-red);
+
+.form-group label .required-star {
+    color: #dc3545;
     font-weight: 900;
+    font-size: 18px;
+    margin-left: 4px;
 }
+
+.form-group label i {
+    color: var(--accent-gold);
+    margin-right: 8px;
+    width: 20px;
+}
+
 .form-group .help-text {
-    font-family: 'Times New Roman', serif;
-    font-size: 12px;
-    color: #6c757d;
-    font-style: italic;
-    margin-top: 4px;
-}
-.form-control {
-    font-family: 'Times New Roman', serif;
-    border: 1px solid #d4cdc0;
-    border-radius: 4px;
-    padding: 10px 15px;
-    font-size: 15px;
-    transition: all 0.3s;
-    width: 100%;
-}
-.form-control:focus {
-    border-color: var(--admin-gold);
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
-}
-.form-control.is-invalid {
-    border-color: var(--admin-red);
-}
-.form-control.is-valid {
-    border-color: var(--admin-green);
-}
-select.form-control {
-    appearance: auto;
-    background: #fff;
-}
-textarea.form-control {
-    resize: vertical;
-    min-height: 120px;
-}
-.file-upload-wrapper {
-    position: relative;
-    border: 2px dashed #d4cdc0;
-    border-radius: 6px;
-    padding: 30px;
-    text-align: center;
-    transition: all 0.3s;
-    cursor: pointer;
-    background: #faf8f5;
-}
-.file-upload-wrapper:hover {
-    border-color: var(--admin-gold);
-    background: #f5f0e8;
-}
-.file-upload-wrapper i {
-    font-size: 40px;
-    color: var(--admin-gold);
-    display: block;
-    margin-bottom: 10px;
-}
-.file-upload-wrapper .file-label {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    color: var(--admin-primary);
-    font-size: 16px;
-}
-.file-upload-wrapper .file-help {
     font-family: 'Times New Roman', serif;
     font-size: 13px;
     color: #6c757d;
+    margin-top: 6px;
+    font-style: italic;
+    line-height: 1.5;
 }
-.file-upload-wrapper input[type="file"] {
+
+.form-group .help-text i {
+    color: var(--accent-gold);
+    margin-right: 4px;
+}
+
+.form-control, .form-select {
+    font-family: 'Times New Roman', serif;
+    border-radius: 6px;
+    border: 2px solid #d4cdc0;
+    padding: 12px 16px;
+    width: 100%;
+    background: #ffffff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    color: #1a1a1a;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 4px rgba(139, 115, 85, 0.12);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.form-control[readonly] {
+    background: #f9f6f0;
+    cursor: not-allowed;
+}
+
+/* File Upload */
+.file-upload-area {
+    border: 2px dashed #d4cdc0;
+    border-radius: 8px;
+    padding: 35px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: #faf8f5;
+    cursor: pointer;
+    position: relative;
+}
+
+.file-upload-area:hover {
+    border-color: var(--accent-gold);
+    background: #f5f0e8;
+}
+
+.file-upload-area i {
+    font-size: 48px;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 10px;
+}
+
+.file-upload-area .upload-label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--primary-green);
+    font-size: 18px;
+}
+
+.file-upload-area .upload-help {
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.file-upload-area input[type="file"] {
     position: absolute;
     top: 0;
     left: 0;
@@ -190,178 +270,290 @@ textarea.form-control {
     opacity: 0;
     cursor: pointer;
 }
+
 .file-preview {
     margin-top: 15px;
     padding: 15px;
     background: #f8f5f0;
-    border-radius: 4px;
-    border: 1px solid #d4cdc0;
+    border-radius: 6px;
+    border: 1px solid var(--accent-gold);
     display: none;
 }
+
 .file-preview img {
     max-height: 150px;
     max-width: 100%;
     border-radius: 4px;
 }
+
 .file-preview .file-name {
     font-family: 'Times New Roman', serif;
     font-weight: 600;
-    color: var(--admin-primary);
+    color: var(--secondary-green);
     margin-top: 8px;
 }
 
+/* Textareas */
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ============================================
+   TWO COLUMN LAYOUT
+   ============================================ */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    margin-bottom: 0;
+}
+
+/* ============================================
+   CHECKBOXES - NICE AND CLEAN
+   ============================================ */
+.checkbox-group {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    padding: 15px 20px;
+    background: #f9f6f0;
+    border-radius: 6px;
+    border: 2px solid #d4cdc0;
+}
+
+.checkbox-group .form-check {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.checkbox-group .form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: var(--secondary-green);
+}
+
+.checkbox-group .form-check-input:checked {
+    background-color: var(--secondary-green);
+    border-color: var(--secondary-green);
+}
+
+.checkbox-group .form-check-label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 600;
+    color: var(--primary-green);
+    font-size: 15px;
+    cursor: pointer;
+}
+
+/* ============================================
+   FORM ACTIONS
+   ============================================ */
 .form-actions {
-    padding-top: 20px;
-    border-top: 2px solid #d4cdc0;
-    margin-top: 10px;
+    margin-top: 35px;
+    padding-top: 30px;
+    border-top: 3px solid #d4cdc0;
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
 }
-.btn-official {
+
+.form-actions .btn {
     font-family: 'Times New Roman', serif;
     font-weight: 700;
-    padding: 10px 30px;
-    border-radius: 4px;
-    letter-spacing: 1px;
+    padding: 14px 35px;
+    border-radius: 6px;
     text-transform: uppercase;
-    font-size: 14px;
-    transition: all 0.3s;
+    letter-spacing: 1.5px;
+    font-size: 15px;
+    transition: all 0.3s ease;
     border: none;
-    cursor: pointer;
     text-decoration: none;
-    display: inline-block;
-}
-.btn-official:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-.btn-official-primary {
-    background: var(--admin-primary);
-    color: #fff;
-}
-.btn-official-primary:hover {
-    background: #0d2640;
-    color: #fff;
-}
-.btn-official-gold {
-    background: var(--admin-gold);
-    color: #0a1a2a;
-}
-.btn-official-gold:hover {
-    background: #b8973e;
-    color: #0a1a2a;
-}
-.btn-official-secondary {
-    background: #6c757d;
-    color: #fff;
-}
-.btn-official-secondary:hover {
-    background: #5a6268;
-    color: #fff;
-}
-.btn-official-danger {
-    background: var(--admin-red);
-    color: #fff;
-}
-.btn-official-danger:hover {
-    background: #6b1515;
-    color: #fff;
-}
-.btn-official-outline {
-    background: transparent;
-    color: var(--admin-primary);
-    border: 2px solid var(--admin-primary);
-}
-.btn-official-outline:hover {
-    background: var(--admin-primary);
-    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.sidebar-card {
-    background: #fff;
-    border: 1px solid #d4cdc0;
-    border-radius: 8px;
-    padding: 25px;
-    margin-bottom: 25px;
+.btn-submit {
+    background: var(--secondary-green);
+    color: #ffffff;
 }
+
+.btn-submit:hover {
+    background: var(--primary-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(13, 42, 26, 0.25);
+    color: #ffffff;
+}
+
+.btn-draft {
+    background: #6c757d;
+    color: #ffffff;
+}
+
+.btn-draft:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    color: #ffffff;
+}
+
+.btn-cancel {
+    background: transparent;
+    color: var(--secondary-green);
+    border: 2px solid var(--secondary-green);
+}
+
+.btn-cancel:hover {
+    background: var(--secondary-green);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   SIDEBAR - GUIDANCE
+   ============================================ */
+.sidebar-card {
+    background: #ffffff;
+    border: 2px solid #d4cdc0;
+    border-radius: 12px;
+    padding: 25px 28px;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.sidebar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-gold), var(--secondary-green));
+    border-radius: 12px 12px 0 0;
+}
+
 .sidebar-card h5 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    color: var(--admin-primary);
-    border-bottom: 2px solid var(--admin-gold);
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+    color: var(--primary-green);
+    border-bottom: 2px solid var(--accent-gold);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    font-size: 18px;
     letter-spacing: 1px;
-}
-.sidebar-card h5 i {
-    color: var(--admin-gold);
-    margin-right: 8px;
-}
-.sidebar-card .tip-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #f0ebe3;
-    font-family: 'Times New Roman', serif;
-}
-.sidebar-card .tip-item:last-child {
-    border-bottom: none;
-}
-.sidebar-card .tip-item .tip-icon {
-    color: var(--admin-gold);
-    margin-right: 10px;
-}
-.sidebar-card .tip-item .tip-text {
-    color: #1a1a1a;
-    font-size: 14px;
-}
-.sidebar-card .tip-item .tip-sub {
-    font-size: 12px;
-    color: #6c757d;
-    margin-top: 3px;
-}
-.position-example {
-    background: #f8f5f0;
-    border: 1px solid #d4cdc0;
-    border-radius: 4px;
-    padding: 15px;
-    text-align: center;
-    margin-top: 10px;
-}
-.position-example .position-label {
-    font-family: 'Times New Roman', serif;
-    font-weight: 700;
-    color: var(--admin-primary);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-.position-example .position-box {
-    background: #e8e0d8;
-    padding: 20px;
-    border-radius: 4px;
-    margin-top: 8px;
-    min-height: 60px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-family: 'Times New Roman', serif;
-    font-size: 13px;
-    color: #6c757d;
-    border: 1px dashed #c9a84c;
 }
 
+.sidebar-card h5 i {
+    color: var(--accent-gold);
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.tip-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0ebe3;
+}
+
+.tip-item:last-child {
+    border-bottom: none;
+}
+
+.tip-item .tip-icon {
+    color: var(--accent-gold);
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.tip-item .tip-text {
+    font-family: 'Times New Roman', serif;
+    color: var(--primary-green);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.tip-item .tip-desc {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 13px;
+    margin-top: 3px;
+    padding-left: 28px;
+}
+
+.position-example {
+    background: #f9f6f0;
+    border: 1px solid #d4cdc0;
+    border-radius: 6px;
+    padding: 12px 15px;
+    margin-top: 8px;
+}
+
+.position-example .pos-label {
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    color: var(--secondary-green);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.position-example .pos-desc {
+    font-family: 'Times New Roman', serif;
+    color: #6c757d;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.quick-link {
+    display: block;
+    padding: 10px 0;
+    color: var(--secondary-green);
+    text-decoration: none;
+    font-family: 'Times New Roman', serif;
+    border-bottom: 1px solid #f0ebe3;
+    transition: color 0.3s ease;
+}
+
+.quick-link:last-child {
+    border-bottom: none;
+}
+
+.quick-link:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+.quick-link i {
+    color: var(--accent-gold);
+    width: 24px;
+    margin-right: 8px;
+}
+
+/* ============================================
+   ERROR MESSAGES
+   ============================================ */
 .error-container {
-    background: #f8f0e8;
-    border-left: 4px solid var(--admin-red);
+    background: #fdf0ed;
+    border-left: 4px solid #dc3545;
     padding: 15px 20px;
     border-radius: 4px;
+    margin-top: 20px;
 }
+
 .error-container p {
     font-family: 'Times New Roman', serif;
-    color: var(--admin-red);
+    color: #dc3545;
     font-weight: 700;
-    margin: 0;
+    margin: 0 0 5px;
 }
+
 .error-container ul {
     margin: 5px 0 0;
     padding-left: 20px;
@@ -369,33 +561,138 @@ textarea.form-control {
     color: #6c757d;
 }
 
+.text-danger {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 992px) {
+    .ad-form-card {
+        padding: 25px;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
-    .ad-create-header {
-        padding: 20px;
+    .ad-page-header {
+        padding: 20px 25px;
     }
-    .ad-create-header h1 {
-        font-size: 22px;
+    .ad-page-header h1 {
+        font-size: 24px;
+        letter-spacing: 2px;
     }
-    .ad-create-header::before {
+    .ad-page-header::before {
         font-size: 60px;
         right: -10px;
         top: -10px;
+        letter-spacing: 8px;
+    }
+    .ad-page-header .seal-icon {
+        padding: 8px 12px;
+    }
+    .ad-page-header .seal-icon i {
+        font-size: 24px;
     }
     .ad-form-card {
         padding: 20px;
+        border-radius: 8px;
+    }
+    .section-title {
+        font-size: 18px;
+    }
+    .section-title .section-number {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 12px;
+    }
+    .form-control, .form-select {
+        font-size: 15px;
+        padding: 10px 14px;
+    }
+    .checkbox-group {
+        flex-direction: column;
+        gap: 12px;
     }
     .form-actions {
         flex-direction: column;
     }
-    .form-actions .btn-official {
+    .form-actions .btn {
         width: 100%;
-        text-align: center;
+        justify-content: center;
+        padding: 12px 20px;
+        font-size: 14px;
     }
-    .file-upload-wrapper {
-        padding: 20px;
+    .file-upload-area {
+        padding: 25px 15px;
     }
-    .file-upload-wrapper i {
-        font-size: 30px;
+    .file-upload-area i {
+        font-size: 36px;
+    }
+    .sidebar-card {
+        padding: 18px 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .ad-page-header h1 {
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+    .ad-page-header .subtitle {
+        font-size: 13px;
+    }
+    .ad-page-header .badge-status {
+        font-size: 10px;
+        padding: 4px 14px;
+    }
+    .ad-form-card {
+        padding: 15px;
+    }
+    .section-title {
+        font-size: 16px;
+    }
+    .section-title .section-number {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        font-size: 11px;
+        margin-right: 8px;
+    }
+    .form-group label {
+        font-size: 13px;
+    }
+    .form-control, .form-select {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    .form-group .help-text {
+        font-size: 12px;
+    }
+    .file-upload-area {
+        padding: 20px 10px;
+    }
+    .file-upload-area i {
+        font-size: 28px;
+    }
+    .file-upload-area .upload-label {
+        font-size: 15px;
+    }
+    .file-upload-area .upload-help {
+        font-size: 12px;
+    }
+    .tip-item .tip-text {
+        font-size: 14px;
+    }
+    .tip-item .tip-desc {
+        font-size: 12px;
     }
 }
 </style>
@@ -403,453 +700,354 @@ textarea.form-control {
 
 {% block content %}
 <div class="ad-create-container">
-    <div class="container-fluid">
-        <!-- HEADER -->
-        <div class="ad-create-header">
+    <div class="container">
+
+        <!-- ============================================
+        PAGE HEADER - OFFICIAL STYLE
+        ============================================ -->
+        <div class="ad-page-header">
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <div class="d-flex align-items-center">
-                        <div class="seal">
+                        <div class="seal-icon">
                             <i class="fas fa-gavel"></i>
                         </div>
                         <div>
-                            <h1><i class="fas fa-ad" style="color: #c9a84c; font-size: 24px;"></i> Create Advertisement</h1>
-                            <p class="subtitle">Official Gazette of Egerton, Kenya — Advertising Registration</p>
+                            <h1><i class="fas fa-ad" style="color: #c9a84c; font-size: 28px;"></i> Place Your Advertisement</h1>
+                            <p class="subtitle">Official Gazette of The Egerton Advertiser — Njoro, Egerton, Nakuru County</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 text-end">
-                    <span class="badge"><i class="fas fa-user-shield"></i> {{ user.get_full_name|default:user.username }}</span>
-                    <span class="badge ms-1"><i class="fas fa-flag"></i> {{ user.get_role_display }}</span>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <span class="badge-status"><i class="fas fa-user-shield"></i> {{ user.get_full_name|default:user.username }}</span>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <!-- MAIN FORM -->
+            <!-- ============================================
+            MAIN FORM - LEFT COLUMN
+            ============================================ -->
             <div class="col-lg-8">
                 <div class="ad-form-card">
-                    <form method="post" enctype="multipart/form-data" id="adForm" novalidate>
+                    <form method="post" enctype="multipart/form-data" id="adForm">
                         {% csrf_token %}
 
                         <!-- ==========================================
                         SECTION 1: BASIC INFORMATION
                         ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-file-signature"></i> Basic Information
+                        <div class="section-title">
+                            <span class="section-number">1</span>
+                            <i class="fas fa-file-signature"></i> Ad Information
                         </div>
 
-                        <!-- Title -->
+                        <!-- Ad Title -->
                         <div class="form-group">
                             <label for="{{ form.title.id_for_label }}">
-                                <i class="fas fa-heading" style="color: #c9a84c;"></i> Ad Title <span class="required">*</span>
+                                <i class="fas fa-heading"></i> Ad Title <span class="required-star">*</span>
                             </label>
                             {{ form.title }}
-                            <div class="help-text">Enter a compelling title for your advertisement</div>
+                            {% if form.title.help_text %}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.title.help_text }}</div>
+                            {% endif %}
                             {% if form.title.errors %}
-                            <div class="text-danger">{{ form.title.errors }}</div>
+                            <span class="text-danger">{{ form.title.errors }}</span>
                             {% endif %}
                         </div>
 
                         <!-- Description -->
                         <div class="form-group">
                             <label for="{{ form.description.id_for_label }}">
-                                <i class="fas fa-align-left" style="color: #c9a84c;"></i> Description
+                                <i class="fas fa-align-left"></i> Description
                             </label>
                             {{ form.description }}
-                            <div class="help-text">Describe your product, service, or promotion</div>
+                            {% if form.description.help_text %}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.description.help_text }}</div>
+                            {% endif %}
                             {% if form.description.errors %}
-                            <div class="text-danger">{{ form.description.errors }}</div>
+                            <span class="text-danger">{{ form.description.errors }}</span>
                             {% endif %}
                         </div>
 
                         <!-- ==========================================
                         SECTION 2: MEDIA
                         ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-image"></i> Media
+                        <div class="section-title" style="margin-top: 30px;">
+                            <span class="section-number">2</span>
+                            <i class="fas fa-image"></i> Ad Image
                         </div>
 
-                        <!-- Image -->
+                        <div class="help-text" style="margin-bottom: 15px;">
+                            <i class="fas fa-info-circle"></i> Upload a high-quality image for your advertisement. 
+                            Clear, professional images get more attention and clicks.
+                        </div>
+
+                        <!-- Image Upload -->
                         <div class="form-group">
-                            <label><i class="fas fa-cloud-upload-alt" style="color: #c9a84c;"></i> Ad Image <span class="required">*</span></label>
-                            <div class="file-upload-wrapper" id="fileUploadWrapper">
+                            <label><i class="fas fa-cloud-upload-alt"></i> Upload Image <span class="required-star">*</span></label>
+                            <div class="file-upload-area" id="fileUploadArea">
                                 <i class="fas fa-cloud-upload-alt"></i>
-                                <div class="file-label">Upload Ad Image</div>
-                                <div class="file-help">PNG, JPG, GIF or WebP (Max 5MB)</div>
+                                <div class="upload-label">Click to Upload Ad Image</div>
+                                <div class="upload-help">PNG, JPG, GIF or WebP • Max 5MB</div>
                                 {{ form.image }}
                             </div>
                             <div class="file-preview" id="filePreview">
-                                <img id="previewImage" src="#" alt="Preview">
+                                <img id="previewImage" src="#" alt="Image preview">
                                 <div class="file-name" id="fileName"></div>
                             </div>
-                            <div class="help-text">Recommended size: 1200 x 628 pixels for best results</div>
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Recommended size: 1200 x 628 pixels for best results</div>
                             {% if form.image.errors %}
-                            <div class="text-danger">{{ form.image.errors }}</div>
+                            <span class="text-danger">{{ form.image.errors }}</span>
                             {% endif %}
                         </div>
 
                         <!-- Image Alt Text -->
                         <div class="form-group">
-                            <label for="{{ form.image_alt.id_for_label }}">
-                                <i class="fas fa-tag" style="color: #c9a84c;"></i> Image Alt Text
+                            <label for="{{ form.image_alt_text.id_for_label }}">
+                                <i class="fas fa-tag"></i> Image Description (Alt Text)
                             </label>
-                            {{ form.image_alt }}
-                            <div class="help-text">Alternative text for accessibility and SEO</div>
-                            {% if form.image_alt.errors %}
-                            <div class="text-danger">{{ form.image_alt.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Video URL -->
-                        <div class="form-group">
-                            <label for="{{ form.video_url.id_for_label }}">
-                                <i class="fas fa-video" style="color: #c9a84c;"></i> Video URL
-                            </label>
-                            {{ form.video_url }}
-                            <div class="help-text">URL for video ads (YouTube, Vimeo, etc.)</div>
-                            {% if form.video_url.errors %}
-                            <div class="text-danger">{{ form.video_url.errors }}</div>
+                            {{ form.image_alt_text }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Describe the image for people who can't see it (accessibility)</div>
+                            {% if form.image_alt_text.errors %}
+                            <span class="text-danger">{{ form.image_alt_text.errors }}</span>
                             {% endif %}
                         </div>
 
                         <!-- ==========================================
                         SECTION 3: ADVERTISER INFORMATION
                         ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-user-tie"></i> Advertiser Information
+                        <div class="section-title" style="margin-top: 30px;">
+                            <span class="section-number">3</span>
+                            <i class="fas fa-user-tie"></i> Your Contact Details
                         </div>
 
-                        <!-- Company Name -->
+                        <div class="help-text" style="margin-bottom: 15px;">
+                            <i class="fas fa-info-circle"></i> We'll use these details to contact you about your advertisement.
+                        </div>
+
+                        <!-- Business / Company Name -->
                         <div class="form-group">
-                            <label for="{{ form.company_name.id_for_label }}">
-                                <i class="fas fa-building" style="color: #c9a84c;"></i> Company Name <span class="required">*</span>
+                            <label for="{{ form.business_name.id_for_label }}">
+                                <i class="fas fa-building"></i> Your Name or Company Name <span class="required-star">*</span>
                             </label>
-                            {{ form.company_name }}
-                            <div class="help-text">Your company or organization name</div>
-                            {% if form.company_name.errors %}
-                            <div class="text-danger">{{ form.company_name.errors }}</div>
+                            {{ form.business_name }}
+                            {% if form.business_name.help_text %}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> {{ form.business_name.help_text }}</div>
+                            {% endif %}
+                            {% if form.business_name.errors %}
+                            <span class="text-danger">{{ form.business_name.errors }}</span>
                             {% endif %}
                         </div>
 
                         <!-- Contact Email -->
                         <div class="form-group">
                             <label for="{{ form.contact_email.id_for_label }}">
-                                <i class="fas fa-envelope" style="color: #c9a84c;"></i> Contact Email <span class="required">*</span>
+                                <i class="fas fa-envelope"></i> Contact Email <span class="required-star">*</span>
                             </label>
                             {{ form.contact_email }}
-                            <div class="help-text">Email for advertising inquiries and communication</div>
+                            <div class="help-text"><i class="fas fa-info-circle"></i> We'll send all communication to this email address</div>
                             {% if form.contact_email.errors %}
-                            <div class="text-danger">{{ form.contact_email.errors }}</div>
+                            <span class="text-danger">{{ form.contact_email.errors }}</span>
                             {% endif %}
                         </div>
 
                         <!-- Contact Phone -->
                         <div class="form-group">
                             <label for="{{ form.contact_phone.id_for_label }}">
-                                <i class="fas fa-phone" style="color: #c9a84c;"></i> Contact Phone <span class="required">*</span>
+                                <i class="fas fa-phone"></i> Contact Phone <span class="required-star">*</span>
                             </label>
                             {{ form.contact_phone }}
-                            <div class="help-text">Phone number for advertising inquiries</div>
+                            <div class="help-text"><i class="fas fa-info-circle"></i> We'll call you if we need to discuss your ad</div>
                             {% if form.contact_phone.errors %}
-                            <div class="text-danger">{{ form.contact_phone.errors }}</div>
+                            <span class="text-danger">{{ form.contact_phone.errors }}</span>
                             {% endif %}
                         </div>
 
                         <!-- ==========================================
-                        SECTION 4: AD PLACEMENT
+                        SECTION 4: WHERE TO SHOW YOUR AD
                         ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-map-pin"></i> Ad Placement
+                        <div class="section-title" style="margin-top: 30px;">
+                            <span class="section-number">4</span>
+                            <i class="fas fa-map-pin"></i> Where to Show Your Ad
                         </div>
 
-                        <!-- Link URL -->
+                        <!-- Destination URL -->
                         <div class="form-group">
                             <label for="{{ form.link_url.id_for_label }}">
-                                <i class="fas fa-link" style="color: #c9a84c;"></i> Destination URL <span class="required">*</span>
+                                <i class="fas fa-link"></i> Where Should Visitors Go? <span class="required-star">*</span>
                             </label>
                             {{ form.link_url }}
-                            <div class="help-text">Where should users go when they click your ad?</div>
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Enter the website address (URL) you want people to visit when they click your ad</div>
                             {% if form.link_url.errors %}
-                            <div class="text-danger">{{ form.link_url.errors }}</div>
+                            <span class="text-danger">{{ form.link_url.errors }}</span>
                             {% endif %}
                         </div>
 
-                        <!-- Link Target -->
-                        <div class="form-group">
-                            <label for="{{ form.link_target.id_for_label }}">
-                                <i class="fas fa-window-restore" style="color: #c9a84c;"></i> Link Target <span class="required">*</span>
-                            </label>
-                            {{ form.link_target }}
-                            <div class="help-text">Should the link open in the same or new window?</div>
-                            {% if form.link_target.errors %}
-                            <div class="text-danger">{{ form.link_target.errors }}</div>
-                            {% endif %}
-                        </div>
+                        <div class="form-row">
+                            <!-- Position -->
+                            <div class="form-group">
+                                <label for="{{ form.position.id_for_label }}">
+                                    <i class="fas fa-map-pin"></i> Ad Position <span class="required-star">*</span>
+                                </label>
+                                {{ form.position }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Where should your ad appear on the website?</div>
+                                {% if form.position.errors %}
+                                <span class="text-danger">{{ form.position.errors }}</span>
+                                {% endif %}
+                            </div>
 
-                        <!-- Position -->
-                        <div class="form-group">
-                            <label for="{{ form.position.id_for_label }}">
-                                <i class="fas fa-map-pin" style="color: #c9a84c;"></i> Ad Position <span class="required">*</span>
-                            </label>
-                            {{ form.position }}
-                            <div class="help-text">Choose where your ad should appear on the site</div>
-                            {% if form.position.errors %}
-                            <div class="text-danger">{{ form.position.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Size -->
-                        <div class="form-group">
-                            <label for="{{ form.size.id_for_label }}">
-                                <i class="fas fa-expand" style="color: #c9a84c;"></i> Ad Size <span class="required">*</span>
-                            </label>
-                            {{ form.size }}
-                            <div class="help-text">Choose the size of your ad</div>
-                            {% if form.size.errors %}
-                            <div class="text-danger">{{ form.size.errors }}</div>
-                            {% endif %}
+                            <!-- Business Website -->
+                            <div class="form-group">
+                                <label for="{{ form.business_website.id_for_label }}">
+                                    <i class="fas fa-globe"></i> Your Business Website
+                                </label>
+                                {{ form.business_website }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Your company website (if different from the link above)</div>
+                                {% if form.business_website.errors %}
+                                <span class="text-danger">{{ form.business_website.errors }}</span>
+                                {% endif %}
+                            </div>
                         </div>
 
                         <!-- ==========================================
                         SECTION 5: SCHEDULE
                         ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-calendar-alt"></i> Schedule
+                        <div class="section-title" style="margin-top: 30px;">
+                            <span class="section-number">5</span>
+                            <i class="fas fa-calendar-alt"></i> When Should Your Ad Run?
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.start_date.id_for_label }}">
-                                        <i class="fas fa-calendar-plus" style="color: #c9a84c;"></i> Start Date <span class="required">*</span>
-                                    </label>
-                                    {{ form.start_date }}
-                                    <div class="help-text">When should the ad start showing?</div>
-                                    {% if form.start_date.errors %}
-                                    <div class="text-danger">{{ form.start_date.errors }}</div>
-                                    {% endif %}
-                                </div>
+                        <div class="form-row">
+                            <!-- Start Date -->
+                            <div class="form-group">
+                                <label for="{{ form.start_date.id_for_label }}">
+                                    <i class="fas fa-calendar-plus"></i> Start Date <span class="required-star">*</span>
+                                </label>
+                                {{ form.start_date }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> When should the ad start showing?</div>
+                                {% if form.start_date.errors %}
+                                <span class="text-danger">{{ form.start_date.errors }}</span>
+                                {% endif %}
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.end_date.id_for_label }}">
-                                        <i class="fas fa-calendar-times" style="color: #c9a84c;"></i> End Date <span class="required">*</span>
-                                    </label>
-                                    {{ form.end_date }}
-                                    <div class="help-text">When should the ad stop showing?</div>
-                                    {% if form.end_date.errors %}
-                                    <div class="text-danger">{{ form.end_date.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- ==========================================
-                        SECTION 6: BUDGET & PRICING
-                        ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-coins"></i> Budget & Pricing
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="{{ form.budget.id_for_label }}">
-                                        <i class="fas fa-wallet" style="color: #c9a84c;"></i> Budget <span class="required">*</span>
-                                    </label>
-                                    {{ form.budget }}
-                                    <div class="help-text">Total budget for this campaign (KES)</div>
-                                    {% if form.budget.errors %}
-                                    <div class="text-danger">{{ form.budget.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="{{ form.cost_per_click.id_for_label }}">
-                                        <i class="fas fa-mouse-pointer" style="color: #c9a84c;"></i> Cost Per Click <span class="required">*</span>
-                                    </label>
-                                    {{ form.cost_per_click }}
-                                    <div class="help-text">Cost per click (CPC) in KES</div>
-                                    {% if form.cost_per_click.errors %}
-                                    <div class="text-danger">{{ form.cost_per_click.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="{{ form.cost_per_impression.id_for_label }}">
-                                        <i class="fas fa-eye" style="color: #c9a84c;"></i> Cost Per Impression <span class="required">*</span>
-                                    </label>
-                                    {{ form.cost_per_impression }}
-                                    <div class="help-text">Cost per 1000 impressions (CPM) in KES</div>
-                                    {% if form.cost_per_impression.errors %}
-                                    <div class="text-danger">{{ form.cost_per_impression.errors }}</div>
-                                    {% endif %}
-                                </div>
+                            <!-- End Date -->
+                            <div class="form-group">
+                                <label for="{{ form.end_date.id_for_label }}">
+                                    <i class="fas fa-calendar-times"></i> End Date <span class="required-star">*</span>
+                                </label>
+                                {{ form.end_date }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> When should the ad stop showing?</div>
+                                {% if form.end_date.errors %}
+                                <span class="text-danger">{{ form.end_date.errors }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
                         <!-- ==========================================
-                        SECTION 7: LIMITS
+                        SECTION 6: BUDGET
                         ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-sliders-h"></i> Campaign Limits
+                        <div class="section-title" style="margin-top: 30px;">
+                            <span class="section-number">6</span>
+                            <i class="fas fa-coins"></i> Your Budget
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="{{ form.max_clicks.id_for_label }}">
-                                        <i class="fas fa-mouse-pointer" style="color: #c9a84c;"></i> Max Clicks <span class="required">*</span>
-                                    </label>
-                                    {{ form.max_clicks }}
-                                    <div class="help-text">Maximum clicks (0 = unlimited)</div>
-                                    {% if form.max_clicks.errors %}
-                                    <div class="text-danger">{{ form.max_clicks.errors }}</div>
-                                    {% endif %}
-                                </div>
+                        <div class="form-row">
+                            <!-- Budget -->
+                            <div class="form-group">
+                                <label for="{{ form.budget.id_for_label }}">
+                                    <i class="fas fa-wallet"></i> Total Budget (KES) <span class="required-star">*</span>
+                                </label>
+                                {{ form.budget }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> How much are you willing to spend in total?</div>
+                                {% if form.budget.errors %}
+                                <span class="text-danger">{{ form.budget.errors }}</span>
+                                {% endif %}
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="{{ form.max_impressions.id_for_label }}">
-                                        <i class="fas fa-eye" style="color: #c9a84c;"></i> Max Impressions <span class="required">*</span>
-                                    </label>
-                                    {{ form.max_impressions }}
-                                    <div class="help-text">Maximum impressions (0 = unlimited)</div>
-                                    {% if form.max_impressions.errors %}
-                                    <div class="text-danger">{{ form.max_impressions.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="{{ form.daily_limit.id_for_label }}">
-                                        <i class="fas fa-sun" style="color: #c9a84c;"></i> Daily Limit <span class="required">*</span>
-                                    </label>
-                                    {{ form.daily_limit }}
-                                    <div class="help-text">Daily impression limit (0 = unlimited)</div>
-                                    {% if form.daily_limit.errors %}
-                                    <div class="text-danger">{{ form.daily_limit.errors }}</div>
-                                    {% endif %}
-                                </div>
+
+                            <!-- Payment Status -->
+                            <div class="form-group">
+                                <label for="{{ form.payment_status.id_for_label }}">
+                                    <i class="fas fa-credit-card"></i> Payment Status
+                                </label>
+                                {{ form.payment_status }}
+                                <div class="help-text"><i class="fas fa-info-circle"></i> Have you already paid for this ad?</div>
+                                {% if form.payment_status.errors %}
+                                <span class="text-danger">{{ form.payment_status.errors }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
                         <!-- ==========================================
-                        SECTION 8: PRIORITY & STATUS
+                        SECTION 7: EXTRA OPTIONS
                         ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-cog"></i> Priority & Status
+                        <div class="section-title" style="margin-top: 30px;">
+                            <span class="section-number">7</span>
+                            <i class="fas fa-cog"></i> Extra Options
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.priority.id_for_label }}">
-                                        <i class="fas fa-star" style="color: #c9a84c;"></i> Priority <span class="required">*</span>
-                                    </label>
-                                    {{ form.priority }}
-                                    <div class="help-text">Higher priority ads appear more frequently (0-100)</div>
-                                    {% if form.priority.errors %}
-                                    <div class="text-danger">{{ form.priority.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.status.id_for_label }}">
-                                        <i class="fas fa-flag" style="color: #c9a84c;"></i> Status <span class="required">*</span>
-                                    </label>
-                                    {{ form.status }}
-                                    <div class="help-text">Choose the initial status of your ad</div>
-                                    {% if form.status.errors %}
-                                    <div class="text-danger">{{ form.status.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ==========================================
-                        SECTION 9: TARGETING
-                        ========================================== -->
-                        <div class="form-section-title">
-                            <i class="fas fa-bullseye"></i> Targeting (Optional)
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.targeted_categories.id_for_label }}">
-                                        <i class="fas fa-folder" style="color: #c9a84c;"></i> Targeted Categories
-                                    </label>
-                                    {{ form.targeted_categories }}
-                                    <div class="help-text">Show ad only on these categories (leave blank for all)</div>
-                                    {% if form.targeted_categories.errors %}
-                                    <div class="text-danger">{{ form.targeted_categories.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="{{ form.targeted_articles.id_for_label }}">
-                                        <i class="fas fa-newspaper" style="color: #c9a84c;"></i> Targeted Articles
-                                    </label>
-                                    {{ form.targeted_articles }}
-                                    <div class="help-text">Show ad only on these specific articles</div>
-                                    {% if form.targeted_articles.errors %}
-                                    <div class="text-danger">{{ form.targeted_articles.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Target Countries -->
+                        <!-- Featured Ad -->
                         <div class="form-group">
-                            <label for="{{ form.target_countries.id_for_label }}">
-                                <i class="fas fa-globe-africa" style="color: #c9a84c;"></i> Target Countries
+                            <label><i class="fas fa-star"></i> Featured Ad</label>
+                            <div class="checkbox-group">
+                                <div class="form-check">
+                                    {{ form.is_featured }}
+                                    <label for="{{ form.is_featured.id_for_label }}" class="form-check-label">
+                                        <i class="fas fa-star" style="color: var(--accent-gold);"></i> Yes, feature my ad prominently
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Featured ads get better placement and more visibility</div>
+                        </div>
+
+                        <!-- Display Order -->
+                        <div class="form-group">
+                            <label for="{{ form.display_order.id_for_label }}">
+                                <i class="fas fa-sort-numeric-up"></i> Display Priority
                             </label>
-                            {{ form.target_countries }}
-                            <div class="help-text">Target specific countries (JSON format)</div>
-                            {% if form.target_countries.errors %}
-                            <div class="text-danger">{{ form.target_countries.errors }}</div>
+                            {{ form.display_order }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> Lower numbers appear first (0 = highest priority)</div>
+                            {% if form.display_order.errors %}
+                            <span class="text-danger">{{ form.display_order.errors }}</span>
                             {% endif %}
                         </div>
 
-                        <!-- Target Cities -->
-                        <div class="form-group">
-                            <label for="{{ form.target_cities.id_for_label }}">
-                                <i class="fas fa-city" style="color: #c9a84c;"></i> Target Cities
-                            </label>
-                            {{ form.target_cities }}
-                            <div class="help-text">Target specific cities (JSON format)</div>
-                            {% if form.target_cities.errors %}
-                            <div class="text-danger">{{ form.target_cities.errors }}</div>
-                            {% endif %}
+                        <!-- ==========================================
+                        ADMIN NOTES (Hidden from clients)
+                        ========================================== -->
+                        {% if user.is_staff or user.is_superuser %}
+                        <div class="section-title" style="margin-top: 30px;">
+                            <i class="fas fa-user-cog"></i> Admin Notes
                         </div>
+                        <div class="form-group">
+                            <label for="{{ form.admin_notes.id_for_label }}">
+                                <i class="fas fa-sticky-note"></i> Internal Notes
+                            </label>
+                            {{ form.admin_notes }}
+                            <div class="help-text"><i class="fas fa-info-circle"></i> These notes are only visible to administrators</div>
+                        </div>
+                        {% endif %}
 
                         <!-- ==========================================
                         FORM ACTIONS
                         ========================================== -->
                         <div class="form-actions">
-                            <button type="submit" class="btn-official btn-official-gold">
+                            <button type="submit" class="btn btn-submit">
                                 <i class="fas fa-paper-plane"></i> Submit for Review
                             </button>
-                            <button type="submit" name="save_draft" value="draft" class="btn-official btn-official-secondary">
+                            <button type="submit" name="save_draft" value="draft" class="btn btn-draft">
                                 <i class="fas fa-save"></i> Save as Draft
                             </button>
-                            <a href="{% url 'advertisements:list' %}" class="btn-official btn-official-outline">
+                            <a href="{% url 'advertisements:list' %}" class="btn btn-cancel">
                                 <i class="fas fa-times"></i> Cancel
                             </a>
                         </div>
 
                         <!-- ==========================================
-                        ERRORS
+                        FORM ERRORS
                         ========================================== -->
                         {% if form.errors %}
-                        <div class="mt-3 error-container">
-                            <p><i class="fas fa-exclamation-triangle"></i> Please correct the errors below</p>
+                        <div class="error-container">
+                            <p><i class="fas fa-exclamation-triangle"></i> Please correct the following errors:</p>
                             <ul>
                                 {% for field in form %}
                                     {% for error in field.errors %}
@@ -867,102 +1065,134 @@ textarea.form-control {
                 </div>
             </div>
 
-            <!-- ==========================================
-            SIDEBAR
-            ========================================== -->
+            <!-- ============================================
+            SIDEBAR - RIGHT COLUMN
+            ============================================ -->
             <div class="col-lg-4">
-                <!-- Guidelines -->
+
+                <!-- Help & Guidelines -->
                 <div class="sidebar-card">
-                    <h5><i class="fas fa-info-circle"></i> Advertising Guidelines</h5>
+                    <h5><i class="fas fa-info-circle"></i> How It Works</h5>
                     <div class="tip-item">
                         <span class="tip-icon"><i class="fas fa-check-circle" style="color: #1a5a3a;"></i></span>
-                        <span class="tip-text">High-quality images get more clicks</span>
-                        <div class="tip-sub">Use clear, professional images</div>
+                        <span class="tip-text">1. Fill in Your Details</span>
+                        <div class="tip-desc">Complete all required fields marked with *</div>
                     </div>
                     <div class="tip-item">
                         <span class="tip-icon"><i class="fas fa-check-circle" style="color: #1a5a3a;"></i></span>
-                        <span class="tip-text">Clear call-to-action</span>
-                        <div class="tip-sub">Tell users what to do next</div>
+                        <span class="tip-text">2. Upload Your Ad Image</span>
+                        <div class="tip-desc">Use a high-quality, professional image</div>
                     </div>
                     <div class="tip-item">
                         <span class="tip-icon"><i class="fas fa-check-circle" style="color: #1a5a3a;"></i></span>
-                        <span class="tip-text">Relevant targeting</span>
-                        <div class="tip-sub">Choose the right position for your audience</div>
+                        <span class="tip-text">3. Submit for Review</span>
+                        <div class="tip-desc">Our team will review and approve your ad</div>
                     </div>
                     <div class="tip-item">
                         <span class="tip-icon"><i class="fas fa-check-circle" style="color: #1a5a3a;"></i></span>
-                        <span class="tip-text">Monitor performance</span>
-                        <div class="tip-sub">Track views, clicks, and CTR</div>
+                        <span class="tip-text">4. Track Performance</span>
+                        <div class="tip-desc">Monitor views, clicks, and engagement</div>
                     </div>
                 </div>
 
                 <!-- Position Examples -->
                 <div class="sidebar-card">
-                    <h5><i class="fas fa-map-pin"></i> Position Examples</h5>
+                    <h5><i class="fas fa-map-pin"></i> Ad Positions</h5>
                     <div class="position-example">
-                        <div class="position-label">📌 Header</div>
-                        <div class="position-box">Top of page — Highest visibility</div>
+                        <div class="pos-label">📌 Header</div>
+                        <div class="pos-desc">Top of page — Highest visibility, most premium</div>
                     </div>
-                    <div class="position-example mt-2">
-                        <div class="position-label">📌 Sidebar</div>
-                        <div class="position-box">Side column — Good for targeted ads</div>
+                    <div class="position-example" style="margin-top: 8px;">
+                        <div class="pos-label">📌 Sidebar</div>
+                        <div class="pos-desc">Side column — Good balance of visibility and cost</div>
                     </div>
-                    <div class="position-example mt-2">
-                        <div class="position-label">📌 Footer</div>
-                        <div class="position-box">Bottom of page — Cost-effective</div>
+                    <div class="position-example" style="margin-top: 8px;">
+                        <div class="pos-label">📌 Footer</div>
+                        <div class="pos-desc">Bottom of page — Cost-effective option</div>
                     </div>
-                    <div class="position-example mt-2">
-                        <div class="position-label">📌 In Article</div>
-                        <div class="position-box">Within content — High engagement</div>
+                    <div class="position-example" style="margin-top: 8px;">
+                        <div class="pos-label">📌 In Article</div>
+                        <div class="pos-desc">Inside articles — High engagement from readers</div>
                     </div>
-                    <div class="position-example mt-2">
-                        <div class="position-label">📌 Popup</div>
-                        <div class="position-box">Attention-grabbing — Use sparingly</div>
+                    <div class="position-example" style="margin-top: 8px;">
+                        <div class="pos-label">📌 Popup</div>
+                        <div class="pos-desc">Attention-grabbing — Use sparingly for best results</div>
+                    </div>
+                </div>
+
+                <!-- Tips for Better Ads -->
+                <div class="sidebar-card">
+                    <h5><i class="fas fa-lightbulb"></i> Tips for Success</h5>
+                    <div class="tip-item">
+                        <span class="tip-icon"><i class="fas fa-image" style="color: var(--accent-gold);"></i></span>
+                        <span class="tip-text">Use High-Quality Images</span>
+                        <div class="tip-desc">Clear, professional images get 3x more clicks</div>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon"><i class="fas fa-bullhorn" style="color: var(--accent-gold);"></i></span>
+                        <span class="tip-text">Clear Call to Action</span>
+                        <div class="tip-desc">Tell people exactly what you want them to do</div>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon"><i class="fas fa-bullseye" style="color: var(--accent-gold);"></i></span>
+                        <span class="tip-text">Know Your Audience</span>
+                        <div class="tip-desc">Choose the right position for your target customers</div>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon"><i class="fas fa-chart-line" style="color: var(--accent-gold);"></i></span>
+                        <span class="tip-text">Monitor Performance</span>
+                        <div class="tip-desc">Track your ad's performance and adjust if needed</div>
                     </div>
                 </div>
 
                 <!-- Quick Links -->
                 <div class="sidebar-card">
                     <h5><i class="fas fa-link"></i> Quick Links</h5>
-                    <div class="quick-links">
-                        <a href="{% url 'advertisements:list' %}" class="d-block" style="padding: 6px 0; color: var(--admin-primary); text-decoration: none; font-family: 'Times New Roman', serif; border-bottom: 1px solid #f0ebe3;">
-                            <i class="fas fa-list" style="width: 20px; color: var(--admin-gold);"></i> My Ads
-                        </a>
-                        <a href="{% url 'advertisements:statistics' %}" class="d-block" style="padding: 6px 0; color: var(--admin-primary); text-decoration: none; font-family: 'Times New Roman', serif; border-bottom: 1px solid #f0ebe3;">
-                            <i class="fas fa-chart-line" style="width: 20px; color: var(--admin-gold);"></i> Ad Statistics
-                        </a>
-                        <a href="{% url 'advertisements:positions' %}" class="d-block" style="padding: 6px 0; color: var(--admin-primary); text-decoration: none; font-family: 'Times New Roman', serif; border-bottom: 1px solid #f0ebe3;">
-                            <i class="fas fa-map-pin" style="width: 20px; color: var(--admin-gold);"></i> Ad Positions
-                        </a>
-                        <a href="{% url 'home' %}" class="d-block" style="padding: 6px 0; color: var(--admin-primary); text-decoration: none; font-family: 'Times New Roman', serif;">
-                            <i class="fas fa-globe" style="width: 20px; color: var(--admin-gold);"></i> View Site
-                        </a>
+                    <a href="{% url 'advertisements:list' %}" class="quick-link">
+                        <i class="fas fa-list"></i> My Advertisements
+                    </a>
+                    <a href="{% url 'advertisements:statistics' %}" class="quick-link">
+                        <i class="fas fa-chart-bar"></i> Ad Statistics
+                    </a>
+                    <a href="{% url 'home' %}" class="quick-link">
+                        <i class="fas fa-globe"></i> View Website
+                    </a>
+                    <a href="{% url 'contacts:contact' %}" class="quick-link" style="border-bottom: none;">
+                        <i class="fas fa-headset"></i> Contact Support
+                    </a>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="sidebar-card" style="background: #f9f6f0; border-color: var(--accent-gold);">
+                    <h5><i class="fas fa-phone"></i> Need Help?</h5>
+                    <p style="font-family: 'Times New Roman', serif; color: #4a4a4a; font-size: 15px; line-height: 1.8;">
+                        Our advertising team is here to help you create effective campaigns.
+                    </p>
+                    <div style="font-family: 'Times New Roman', serif; font-size: 14px;">
+                        <p style="margin: 5px 0;"><i class="fas fa-phone" style="color: var(--accent-gold);"></i> +254 703 672 732</p>
+                        <p style="margin: 5px 0;"><i class="fas fa-envelope" style="color: var(--accent-gold);"></i> theegertonadvertiser@gmail.com</p>
+                        <p style="margin: 5px 0;"><i class="fas fa-map-marker-alt" style="color: var(--accent-gold);"></i> Njoro, Egerton, Nakuru County</p>
                     </div>
                 </div>
 
-                <!-- Support -->
-                <div class="sidebar-card">
-                    <h5><i class="fas fa-headset"></i> Need Help?</h5>
-                    <p style="font-family: 'Times New Roman', serif; color: #6c757d; font-size: 14px; margin-bottom: 10px;">
-                        Our advertising team is here to help you create effective campaigns.
-                    </p>
-                    <a href="{% url 'contacts:contact' %}" class="btn-official btn-official-primary" style="display: block; text-align: center; padding: 10px; text-decoration: none;">
-                        <i class="fas fa-envelope"></i> Contact Support
-                    </a>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- ============================================
+   JAVASCRIPT - FILE PREVIEW & DEFAULTS
+   ============================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // File upload preview
+    // ============================================
+    // FILE UPLOAD PREVIEW
+    // ============================================
     const fileInput = document.querySelector('input[type="file"]');
     const filePreview = document.getElementById('filePreview');
     const previewImage = document.getElementById('previewImage');
     const fileName = document.getElementById('fileName');
-    const fileUploadWrapper = document.getElementById('fileUploadWrapper');
+    const fileUploadArea = document.getElementById('fileUploadArea');
 
     if (fileInput) {
         fileInput.addEventListener('change', function(e) {
@@ -972,16 +1202,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     filePreview.style.display = 'block';
-                    fileName.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
-                    fileUploadWrapper.style.borderColor = '#1a5a3a';
-                    fileUploadWrapper.style.background = '#e8f5e9';
+                    fileName.textContent = '📸 ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
+                    fileUploadArea.style.borderColor = '#1a5a3a';
+                    fileUploadArea.style.background = '#e8f5e9';
                 }
                 reader.readAsDataURL(file);
             }
         });
     }
 
-    // Set default date values
+    // ============================================
+    // SET DEFAULT DATES
+    // ============================================
     const startDateInput = document.querySelector('input[name="start_date"]');
     if (startDateInput && !startDateInput.value) {
         const now = new Date();
@@ -997,11 +1229,17 @@ document.addEventListener('DOMContentLoaded', function() {
         endDateInput.value = formatted;
     }
 
-    // Priority default
-    const priorityInput = document.querySelector('input[name="priority"]');
-    if (priorityInput && !priorityInput.value) {
-        priorityInput.value = 0;
+    // ============================================
+    // SET DEFAULT DISPLAY ORDER
+    // ============================================
+    const orderInput = document.querySelector('input[name="display_order"]');
+    if (orderInput && !orderInput.value) {
+        orderInput.value = 0;
     }
+
+    console.log('📢 Advertisement Form loaded successfully');
+    console.log('📸 Image preview is ready');
+    console.log('📅 Dates have been set to default values');
 });
 </script>
 {% endblock %}
