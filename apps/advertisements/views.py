@@ -85,6 +85,7 @@ def advertisement_detail(request, ad_id):
     ).order_by('day')
     
     context = {
+        'advertisement': ad,  # <-- FIXED: Use 'advertisement' instead of 'ad'
         'ad': ad,
         'total_views': total_views,
         'total_clicks': total_clicks,
@@ -149,6 +150,8 @@ def advertisement_edit(request, ad_id):
     
     return render(request, 'advertisements/advertisement_edit.html', {'form': form, 'ad': ad})
 
+# apps/advertisements/views.py - Fix the delete view
+
 @login_required
 def advertisement_delete(request, ad_id):
     ad = get_object_or_404(Advertisement, id=ad_id)
@@ -173,7 +176,12 @@ def advertisement_delete(request, ad_id):
         messages.success(request, f'Advertisement "{title}" deleted successfully!')
         return redirect('advertisements:list')
     
-    return render(request, 'advertisements/advertisement_delete.html', {'ad': ad})
+    # FIX: Pass both 'ad' and 'advertisement' for compatibility
+    context = {
+        'ad': ad,
+        'advertisement': ad,  # Add this for template compatibility
+    }
+    return render(request, 'advertisements/advertisement_delete.html', context)
 
 @login_required
 @user_passes_test(lambda u: u.can_manage_users)
@@ -302,3 +310,40 @@ def admin_ad_reject(request, ad_id):
     
     messages.warning(request, f'Advertisement "{ad.title}" rejected!')
     return redirect('advertisements:list')
+
+# apps/advertisements/views.py - Add this function
+
+@login_required
+@user_passes_test(lambda u: u.can_manage_users)
+def advertisement_toggle(request, ad_id):
+    """
+    Toggle advertisement status between active and paused
+    """
+    ad = get_object_or_404(Advertisement, id=ad_id)
+    
+    if ad.status == 'active':
+        ad.status = 'paused'
+        action = 'paused'
+        message = f'Advertisement "{ad.title}" has been paused.'
+    elif ad.status == 'paused':
+        ad.status = 'active'
+        action = 'resumed'
+        message = f'Advertisement "{ad.title}" has been resumed.'
+    else:
+        messages.warning(request, f'Advertisement "{ad.title}" cannot be toggled (current status: {ad.get_status_display()})')
+        return redirect('advertisements:detail', ad_id=ad.id)
+    
+    ad.save()
+    
+    # Log activity
+    UserActivityLog.objects.create(
+        user=request.user,
+        action='toggle',
+        model_name='Advertisement',
+        object_id=ad.id,
+        description=f'{action.capitalize()} advertisement: {ad.title}',
+        ip_address=request.META.get('REMOTE_ADDR')
+    )
+    
+    messages.success(request, message)
+    return redirect('advertisements:detail', ad_id=ad.id)
