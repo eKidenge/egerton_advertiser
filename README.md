@@ -18,6 +18,13 @@ Subscriber / Reader — views published content, comments, and receives updates.
 
 Each role is assigned granular permissions through Django's authentication and authorization framework, so access to the dashboard, publishing tools, and administrative functions is tightly controlled. This role-based structure improves security, streamlines editorial workflows, and ensures accountability across the platform.
 
+```mermaid
+flowchart TD
+    A[Login] --> B{Role?}
+    B --> C[Admin]
+    B --> D[Editor]
+```
+
 ---
 
 ## Features
