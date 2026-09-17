@@ -4,6 +4,20 @@ The Egerton Advertiser is a modern online newspaper and content management syste
 
 Unlike WordPress-based newspaper websites, this project is being developed entirely from code, making it highly customizable, scalable, and easy to extend as new requirements emerge.
 
+The system features role-based authentication and access control, ensuring that each user interacts only with the tools and content relevant to their role. Roles include:
+
+Administrator — full system access; manages users, roles, site settings, and overall platform configuration.
+
+Editor — reviews, approves, edits, and publishes articles submitted by writers; manages categories and content workflow.
+
+Writer / Journalist — creates and submits articles, uploads media, and tracks the status of their submissions.
+
+Contributor — submits content for review with limited publishing privileges.
+
+Subscriber / Reader — views published content, comments, and receives updates.
+
+Each role is assigned granular permissions through Django's authentication and authorization framework, so access to the dashboard, publishing tools, and administrative functions is tightly controlled. This role-based structure improves security, streamlines editorial workflows, and ensures accountability across the platform.
+
 ---
 
 ## Features
