@@ -26,14 +26,20 @@ mkdir -p apps/dashboard/static
 echo ""
 echo "🗄️  Checking database configuration..."
 
-# Check if we're using PostgreSQL or SQLite
-if [[ "$DATABASE_URL" == postgresql://* ]] || [[ "$DATABASE_URL" == postgres://* ]]; then
-    echo "✅ Using PostgreSQL database"
-    DATABASE_TYPE="postgresql"
-else
-    echo "⚠️ Using SQLite database (fallback)"
-    DATABASE_TYPE="sqlite"
-fi
+# FORCED SQLITE — matches USE_POSTGRES=False in settings.py
+# To switch back to Postgres later, uncomment the block below
+# and comment out the forced SQLite line.
+#
+# if [[ "$DATABASE_URL" == postgresql://* ]] || [[ "$DATABASE_URL" == postgres://* ]]; then
+#     echo "✅ Using PostgreSQL database"
+#     DATABASE_TYPE="postgresql"
+# else
+#     echo "⚠️ Using SQLite database (fallback)"
+#     DATABASE_TYPE="sqlite"
+# fi
+
+echo "⚠️ Using SQLite database (forced)"
+DATABASE_TYPE="sqlite"
 
 # ============================================
 # DATABASE MIGRATIONS
