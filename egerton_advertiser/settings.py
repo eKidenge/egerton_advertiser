@@ -151,13 +151,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'egerton_advertiser.wsgi.application'
 
 # ============================================
-# DATABASE CONFIGURATION - UNCHANGED
+# DATABASE CONFIGURATION
 # ============================================
 
-# Use DATABASE_URL from environment (Supabase on Render)
+# ---- Switch ----
+# Set USE_POSTGRES = True later when you want Postgres back.
+# Right now, SQLite is forced regardless of DATABASE_URL.
+USE_POSTGRES = False
+# ----------------
+
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-if DATABASE_URL:
+if USE_POSTGRES and DATABASE_URL:
     # Production: Use Supabase PostgreSQL
     DATABASES = {
         'default': dj_database_url.config(
@@ -168,7 +173,7 @@ if DATABASE_URL:
         )
     }
 else:
-    # Development: Use SQLite (fallback)
+    # Development / current: Use SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -176,8 +181,8 @@ else:
         }
     }
 
-# Additional database configuration for production
-if not DEBUG:
+# Additional database configuration for production (Postgres only)
+if not DEBUG and USE_POSTGRES:
     DATABASES['default']['CONN_MAX_AGE'] = 600
     DATABASES['default']['CONN_HEALTH_CHECKS'] = True
     DATABASES['default']['OPTIONS'] = {
