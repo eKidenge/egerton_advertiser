@@ -452,7 +452,7 @@ The Egerton Advertiser newspaper management system has been fully developed, tes
 - Performance and scalability enhancements
 - Production configuration and deployment
 - Full system testing and verification on Render
-- Successful testing and approval at egertonadvertiser.onrender.com
+- Successful testing and approval at: https://egerton-advertiser.onrender.com
 
 Following successful testing and approval, the completed system was deployed to the client's production domain:
 
